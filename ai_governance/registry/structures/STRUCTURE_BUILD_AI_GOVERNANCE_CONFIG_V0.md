@@ -72,6 +72,7 @@ artifact_discovery:
   - AC
   - RB
   - STRUCTURE
+  - VOCAB
 output_configuration:
   artifacts:
     layer: PROTOCOL_BUILD_ROOT
