@@ -63,7 +63,8 @@ License provisioning intent is a protocol entry point:
 ## Machine
 
 ```yaml
-in_code: IN_PROVISION_AI_LICENSE_V0
+fqdn: ai_governance::IN_PROVISION_AI_LICENSE_V0
+artifact_kind: INTENT
 version: v0
 governed_by: fb.intent::CONSTITUTION_INTENT_V0
 

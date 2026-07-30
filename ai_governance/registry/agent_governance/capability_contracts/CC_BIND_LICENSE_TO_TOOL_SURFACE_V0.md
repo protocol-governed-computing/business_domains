@@ -66,7 +66,8 @@ License-to-tool binding is the fourth governance gate:
 ## Machine
 
 ```yaml
-cc_code: CC_BIND_LICENSE_TO_TOOL_SURFACE_V0
+fqdn: ai_governance::CC_BIND_LICENSE_TO_TOOL_SURFACE_V0
+artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 

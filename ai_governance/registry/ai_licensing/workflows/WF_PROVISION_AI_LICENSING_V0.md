@@ -64,7 +64,8 @@ No admission requirements - test exception to allow provisioning without employe
 ## Machine
 
 ```yaml
-wf_code: WF_PROVISION_AI_LICENSING_V0
+fqdn: ai_governance::WF_PROVISION_AI_LICENSING_V0
+artifact_kind: WORKFLOW
 version: v0
 governed_by: fb.workflow::CONSTITUTION_WORKFLOW_V0
 
@@ -74,6 +75,7 @@ structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
 
 core:
   summary: Process AI license provisioning request
+  actor_context: ai_governance::AC_EMPLOYEE_V0
 
   start_node: IN_PROVISION_AI_LICENSE_V0
 
@@ -141,13 +143,11 @@ core:
     EXIT_PROVISIONED:
       type: EXIT
       reason: COMPLETED
-      emit: EV_LICENSE_PROVISIONED_V0
-
+      emit: ai_governance::EV_LICENSE_PROVISIONED_V0
     EXIT_DENIED:
       type: EXIT
       reason: COMPLETED
-      emit: EV_PROVISION_DENIED_V0
-
+      emit: ai_governance::EV_PROVISION_DENIED_V0
     EXIT_REJECTED:
       type: EXIT
       reason: EXITED

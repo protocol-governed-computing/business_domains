@@ -65,7 +65,8 @@ All agent actions normalize to a single governed intent:
 ## Machine
 
 ```yaml
-in_code: IN_AGENT_ACTION_REQUESTED_V0
+fqdn: ai_governance::IN_AGENT_ACTION_REQUESTED_V0
+artifact_kind: INTENT
 version: v0
 governed_by: fb.intent::CONSTITUTION_INTENT_V0
 

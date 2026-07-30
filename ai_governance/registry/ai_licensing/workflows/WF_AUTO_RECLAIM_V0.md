@@ -66,7 +66,8 @@ License must be provisioned but not yet revoked.
 ## Machine
 
 ```yaml
-wf_code: WF_AUTO_RECLAIM_V0
+fqdn: ai_governance::WF_AUTO_RECLAIM_V0
+artifact_kind: WORKFLOW
 version: v0
 governed_by: fb.workflow::CONSTITUTION_WORKFLOW_V0
 
@@ -76,6 +77,7 @@ structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
 
 core:
   summary: Autonomous license reclamation
+  actor_context: ai_governance::AC_SYSTEM_V0
 
   admission:
     requires:
@@ -104,10 +106,11 @@ core:
         license_id: $.payload.license_id
         employee_id: $.payload.context.employee_id
         last_active_date: $.payload.context.last_active_date
+        evaluation_date: $.payload.context.evaluation_date
         threshold_days: $.payload.threshold_days
       next:
         SUCCESS: CC_APPEND_AUDIT_EVENT_RECLAIMED
-        ACTIVE: EXIT_ACTIVE
+        VIOLATION: EXIT_ACTIVE
         NOT_FOUND: EXIT_ERROR
         BACKEND_ERROR: EXIT_ERROR
 
@@ -130,8 +133,7 @@ core:
     EXIT_RECLAIMED:
       type: EXIT
       reason: COMPLETED
-      emit: EV_LICENSE_REVOKED_V0
-
+      emit: ai_governance::EV_LICENSE_REVOKED_V0
     EXIT_ACTIVE:
       type: EXIT
       reason: COMPLETED

@@ -48,7 +48,8 @@ Denial is a first-class terminal outcome:
 ## Machine
 
 ```yaml
-ev_code: EV_PROVISION_DENIED_V0
+fqdn: ai_governance::EV_PROVISION_DENIED_V0
+artifact_kind: EVENT
 version: v0
 governed_by: fb.event::CONSTITUTION_EVENT_V0
 

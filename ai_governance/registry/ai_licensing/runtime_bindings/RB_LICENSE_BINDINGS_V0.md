@@ -47,7 +47,8 @@ Runtime bindings provide environment-specific execution wiring:
 ## Machine
 
 ```yaml
-rb_code: RB_LICENSE_BINDINGS_V0
+fqdn: ai_governance::RB_LICENSE_BINDINGS_V0
+artifact_kind: RUNTIME_BINDING
 version: v0
 governed_by: fb.runtime_binding::CONSTITUTION_RUNTIME_BINDING_V0
 
@@ -57,7 +58,7 @@ parameters:
 core:
   summary: Runtime binding of license management capability side effects
   description: Declares which concrete host implementations are used to satisfy capability pipelines during license management execution.
-  storage_structure: ai_governance::STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0
+  storage_structure: ai_governance::STRUCTURE_AI_LICENSING_STORAGE_V0
 
   bindings:
     capability_side_effects::CS_REGISTRY_V0:

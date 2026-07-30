@@ -51,7 +51,8 @@ Authorization events record successful governance mediation:
 ## Machine
 
 ```yaml
-ev_code: EV_AGENT_ACTION_AUTHORIZED_V0
+fqdn: ai_governance::EV_AGENT_ACTION_AUTHORIZED_V0
+artifact_kind: EVENT
 version: v0
 governed_by: fb.event::CONSTITUTION_EVENT_V0
 

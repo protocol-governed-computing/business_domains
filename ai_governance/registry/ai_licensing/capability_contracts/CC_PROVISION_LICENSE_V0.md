@@ -66,7 +66,8 @@ License provisioning is a protocol-governed transition:
 ## Machine
 
 ```yaml
-cc_code: CC_PROVISION_LICENSE_V0
+fqdn: ai_governance::CC_PROVISION_LICENSE_V0
+artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 

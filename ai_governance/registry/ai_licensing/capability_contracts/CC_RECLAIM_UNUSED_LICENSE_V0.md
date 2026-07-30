@@ -71,7 +71,8 @@ Autonomous reclamation enforces use-it-or-lose-it:
 ## Machine
 
 ```yaml
-cc_code: CC_RECLAIM_UNUSED_LICENSE_V0
+fqdn: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0
+artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 
@@ -89,6 +90,10 @@ core:
       type: string
       format: date-time
       required: true
+    evaluation_date:
+      type: string
+      format: date-time
+      required: true
     threshold_days:
       type: integer
       required: true
@@ -103,25 +108,23 @@ core:
       type: integer
 
   result_status_contract:
-    allowed: [SUCCESS, ACTIVE, NOT_FOUND, BACKEND_ERROR]
+    allowed: [SUCCESS, VIOLATION, NOT_FOUND, BACKEND_ERROR]
     on_input_failure: VIOLATION
 
   pipeline:
     - step: evaluate_inactivity
-      transform: capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0
+      transform: ai_governance::CT_PURE_EVALUATE_INACTIVITY_V0
       inputs:
         last_active_date: $.inputs.last_active_date
+        evaluation_date: $.inputs.evaluation_date
         threshold_days: $.inputs.threshold_days
       outputs:
-        is_inactive: $.capability_result.value.is_inactive
-        days_inactive: $.capability_result.value.days_inactive
-      on_ct_result:
-        on_success: SUCCESS
-        on_failure: ACTIVE
-      result_surface: [SUCCESS, ACTIVE]
+        is_inactive: $.capability_result.is_inactive
+        days_inactive: $.capability_result.days_inactive
+      result_surface: [SUCCESS, VIOLATION]
       on_result:
         SUCCESS: continue
-        ACTIVE: exit
+        VIOLATION: exit
 
     - step: deregister_license
       side_effect: capability_side_effects::CS_REGISTRY_V0

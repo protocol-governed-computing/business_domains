@@ -70,7 +70,8 @@ Denial recording is symmetric with authorization:
 ## Machine
 
 ```yaml
-cc_code: CC_RECORD_DENIED_ACTION_V0
+fqdn: ai_governance::CC_RECORD_DENIED_ACTION_V0
+artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 

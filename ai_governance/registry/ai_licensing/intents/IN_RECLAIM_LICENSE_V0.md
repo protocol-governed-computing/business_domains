@@ -63,7 +63,8 @@ Reclamation intent enables autonomous license management:
 ## Machine
 
 ```yaml
-in_code: IN_RECLAIM_LICENSE_V0
+fqdn: ai_governance::IN_RECLAIM_LICENSE_V0
+artifact_kind: INTENT
 version: v0
 governed_by: fb.intent::CONSTITUTION_INTENT_V0
 
@@ -83,7 +84,7 @@ core:
     context:
       type: object
       required: false
-      description: Runtime context data (employee_id, last_active_date, days_inactive)
+      description: Runtime context data (employee_id, last_active_date, evaluation_date, days_inactive)
 
   outcomes:
     ACK:

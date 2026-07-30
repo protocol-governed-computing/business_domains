@@ -46,7 +46,8 @@ The enterprise runtime executes governed side effects:
 ## Machine
 
 ```yaml
-ac_code: AC_ENTERPRISE_RUNTIME_V0
+fqdn: ai_governance::AC_ENTERPRISE_RUNTIME_V0
+artifact_kind: ACTOR
 version: v0
 governed_by: fb.governance::CONSTITUTION_GOVERNANCE_V0
 

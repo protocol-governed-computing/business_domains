@@ -1,9 +1,0 @@
-{
-  "tool_name": "write_file",
-  "parameters": {
-    "path": "out.txt"
-  },
-  "requesting_user_id": "EMP_ENT_001",
-  "domain_context": "agent_admission",
-  "request_id": "REQ_ADMISSION_006"
-}

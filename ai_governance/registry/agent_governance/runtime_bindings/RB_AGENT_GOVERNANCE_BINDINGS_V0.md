@@ -48,7 +48,8 @@ Runtime bindings provide environment-specific execution wiring:
 ## Machine
 
 ```yaml
-rb_code: RB_AGENT_GOVERNANCE_BINDINGS_V0
+fqdn: ai_governance::RB_AGENT_GOVERNANCE_BINDINGS_V0
+artifact_kind: RUNTIME_BINDING
 version: v0
 governed_by: fb.runtime_binding::CONSTITUTION_RUNTIME_BINDING_V0
 

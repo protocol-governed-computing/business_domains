@@ -88,14 +88,17 @@ No admission constraints in v0.
 ## Machine
 
 ```yaml
-wf_code: WF_GOVERN_AGENT_ACTION_V0
+fqdn: ai_governance::WF_GOVERN_AGENT_ACTION_V0
+artifact_kind: WORKFLOW
 version: v0
 governed_by: fb.workflow::CONSTITUTION_WORKFLOW_V0
 runtime_binding: ai_governance::RB_AGENT_GOVERNANCE_BINDINGS_V0
 subdomain: agent_governance
+structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
 
 core:
   summary: Constitutional mediation of agent-proposed actions with license-tier authority binding
+  actor_context: ai_governance::AC_SYSTEM_GOVERNOR_V0
 
   start_node: IN_AGENT_ACTION_REQUESTED_V0
 
@@ -229,28 +232,23 @@ core:
     EXIT_SUCCESS:
       type: EXIT
       reason: COMPLETED
-      emit: EV_AGENT_ACTION_AUTHORIZED_V0
-
+      emit: ai_governance::EV_AGENT_ACTION_AUTHORIZED_V0
     EXIT_UNDECLARED_TOOL:
       type: EXIT
       reason: COMPLETED
-      emit: EV_AGENT_ACTION_DENIED_V0
-
+      emit: ai_governance::EV_AGENT_ACTION_DENIED_V0
     EXIT_UNAUTHORIZED_ACTOR:
       type: EXIT
       reason: COMPLETED
-      emit: EV_AGENT_ACTION_DENIED_V0
-
+      emit: ai_governance::EV_AGENT_ACTION_DENIED_V0
     EXIT_UNAUTHORIZED_TOOL:
       type: EXIT
       reason: COMPLETED
-      emit: EV_AGENT_ACTION_DENIED_V0
-
+      emit: ai_governance::EV_AGENT_ACTION_DENIED_V0
     EXIT_PARAMETER_VIOLATION:
       type: EXIT
       reason: COMPLETED
-      emit: EV_AGENT_ACTION_DENIED_V0
-
+      emit: ai_governance::EV_AGENT_ACTION_DENIED_V0
     EXIT_ERROR:
       type: EXIT
       reason: FAILED

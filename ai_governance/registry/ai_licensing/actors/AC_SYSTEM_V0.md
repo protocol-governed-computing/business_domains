@@ -46,7 +46,8 @@ System actors enable protocol automation:
 ## Machine
 
 ```yaml
-ac_code: AC_SYSTEM_V0
+fqdn: ai_governance::AC_SYSTEM_V0
+artifact_kind: ACTOR
 version: v0
 governed_by: fb.governance::CONSTITUTION_GOVERNANCE_V0
 

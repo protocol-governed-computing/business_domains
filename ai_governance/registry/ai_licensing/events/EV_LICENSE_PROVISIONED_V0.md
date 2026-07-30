@@ -48,7 +48,8 @@ License provisioning is a protocol-governed transition:
 ## Machine
 
 ```yaml
-ev_code: EV_LICENSE_PROVISIONED_V0
+fqdn: ai_governance::EV_LICENSE_PROVISIONED_V0
+artifact_kind: EVENT
 version: v0
 governed_by: fb.event::CONSTITUTION_EVENT_V0
 

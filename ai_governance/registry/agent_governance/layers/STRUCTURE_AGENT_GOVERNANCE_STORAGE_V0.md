@@ -31,16 +31,16 @@ Storage paths are a governance concern, not a runtime implementation detail. Thi
 **Principle:** One store per domain entity type.
 
 **Entity Types:**
-- LICENSE_FACTS: Read-only license tier and status feed
+- LICENSE_FACTS: Read-only license tier and status feed (owned by `ai_licensing`)
 - GOVERNANCE_AUDIT: Append-only agent governance decision audit trail
-- LICENSE_AUDIT: Append-only license lifecycle audit trail
 
 ---
 
 ## Machine
 
 ```yaml
-structure_code: STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0
+fqdn: ai_governance::STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0
+artifact_kind: STRUCTURE
 version: v0
 governed_by: fb.structure::CONSTITUTION_STRUCTURE_V0
 
@@ -57,14 +57,11 @@ core:
 
   entity_stores:
     LICENSE_FACTS:
-      description: "Read-only license tier and status fact feed (user_id → license record)"
+      description: "Read-only license tier and status fact feed (user_id → license record) — owned by ai_licensing, consumed here"
       path: "ai_governance/ai_licensing/license_facts.json"
     GOVERNANCE_AUDIT:
       description: "Append-only audit trail for agent governance authorization and denial decisions"
       path: "ai_governance/agent_governance/governance_audit.jsonl"
-    LICENSE_AUDIT:
-      description: "Append-only audit trail for license provisioning, denial, and reclaim decisions"
-      path: "ai_governance/ai_licensing/audit_log.jsonl"
 
   resolution:
     description: "Runtime path resolution strategy"
@@ -77,6 +74,5 @@ core:
       - "Each entity type has dedicated storage"
       - "LICENSE_FACTS is read-only — agent governance may not mutate license facts"
       - "GOVERNANCE_AUDIT is append-only — agent governance audit records are immutable"
-      - "LICENSE_AUDIT is append-only — license audit records are immutable"
       - "Storage paths resolved via STRUCTURE only"
 ```

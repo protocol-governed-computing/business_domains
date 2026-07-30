@@ -54,7 +54,8 @@ CC_APPEND_AUDIT_EVENT_V0
 ## Machine
 
 ```yaml
-wf_code: WF_DENY_PROVISION_V0
+fqdn: ai_governance::WF_DENY_PROVISION_V0
+artifact_kind: WORKFLOW
 version: v0
 governed_by: fb.workflow::CONSTITUTION_WORKFLOW_V0
 
@@ -64,6 +65,7 @@ structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
 
 core:
   summary: Handle provisioning denial
+  actor_context: ai_governance::AC_SYSTEM_V0
 
   start_node: IN_DENY_PROVISION_V0
 
@@ -94,8 +96,7 @@ core:
     EXIT_DENIED:
       type: EXIT
       reason: COMPLETED
-      emit: EV_PROVISION_DENIED_V0
-
+      emit: ai_governance::EV_PROVISION_DENIED_V0
     EXIT_ERROR:
       type: EXIT
       reason: FAILED

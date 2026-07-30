@@ -68,7 +68,8 @@ Eligibility validation is a protocol gate:
 ## Machine
 
 ```yaml
-cc_code: CC_VALIDATE_ELIGIBILITY_V0
+fqdn: ai_governance::CC_VALIDATE_ELIGIBILITY_V0
+artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 
@@ -90,10 +91,10 @@ core:
       required: true
 
   outputs:
-    result_status:
-      type: string
-    reason_code:
-      type: string
+    is_eligible:
+      type: boolean
+    quota_available:
+      type: boolean
 
   result_status_contract:
     allowed: [SUCCESS, VIOLATION]
@@ -101,23 +102,23 @@ core:
 
   pipeline:
     - step: check_training_status
-      transform: capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0
+      transform: ai_governance::CT_PURE_CHECK_TRAINING_STATUS_V0
       inputs:
         training_completed: $.inputs.training_completed
       outputs:
-        is_eligible: $.training_eligible
+        is_eligible: $.capability_result.training_eligible
       result_surface: [SUCCESS, VIOLATION]
       on_result:
         SUCCESS: continue
         VIOLATION: exit
 
     - step: check_quota_available
-      transform: capability_transforms::CT_PURE_CHECK_QUOTA_AVAILABLE_V0
+      transform: ai_governance::CT_PURE_CHECK_QUOTA_AVAILABLE_V0
       inputs:
         assigned_count: $.inputs.assigned_count
         quota: $.inputs.cap
       outputs:
-        quota_available: $.quota_available
+        quota_available: $.capability_result.quota_available
       result_surface: [SUCCESS, VIOLATION]
       on_result:
         SUCCESS: exit

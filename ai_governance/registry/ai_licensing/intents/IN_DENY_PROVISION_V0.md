@@ -62,7 +62,8 @@ Denial handling intent provides first-class terminal outcome:
 ## Machine
 
 ```yaml
-in_code: IN_DENY_PROVISION_V0
+fqdn: ai_governance::IN_DENY_PROVISION_V0
+artifact_kind: INTENT
 version: v0
 governed_by: fb.intent::CONSTITUTION_INTENT_V0
 

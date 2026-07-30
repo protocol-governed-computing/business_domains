@@ -69,7 +69,8 @@ Audit logging is a protocol requirement:
 ## Machine
 
 ```yaml
-cc_code: CC_APPEND_AUDIT_EVENT_V0
+fqdn: ai_governance::CC_APPEND_AUDIT_EVENT_V0
+artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 
