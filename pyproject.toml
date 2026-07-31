@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pgs_ai_governance"
-version = "1.0.0"
-description = "PGS AI Governance Domain — agent governance and AI licensing capability transforms"
+name = "business_domains"
+dynamic = ["version"]
+description = "PGC business domains — independently governed domains compiled against the governance surface"
 readme = "README.md"
 requires-python = ">=3.10"
 
@@ -17,7 +17,7 @@ authors = [
 
 dependencies = []
 
-keywords = ["pgs", "protocol", "ai-governance", "capability-transforms", "agent-governance"]
+keywords = ["pgc", "protocol", "ai-governance", "capability-transforms", "business-domain"]
 
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -30,12 +30,19 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/bachipeachy/pgs_ai_governance"
-Repository = "https://github.com/bachipeachy/pgs_ai_governance"
+Homepage = "https://github.com/protocol-governed-computing/business_domains"
+Repository = "https://github.com/protocol-governed-computing/business_domains"
 
+# NOT installed into the workspace venv — same posture as protocol_transport and
+# conformance_workloads. Domain CT/CS implementations are resolved by handler_ref module path
+# from an env-provisioned import root (PGC_IMPL_ROOTS), so installing this would create a
+# second, competing resolution path. This file exists to declare identity and version only.
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["pgs_ai_governance*"]
+include = ["ai_governance*"]
 
 [tool.setuptools]
 include-package-data = true
+
+[tool.setuptools.dynamic]
+version = {file = "VERSION"}
