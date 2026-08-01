@@ -60,7 +60,6 @@ core:
           staff_id: $.inputs.staff_id
           operation: $.inputs.operation
           subject: $.inputs.subject
-          timestamp: "{{timestamp}}"
       outputs:
         result_status: $.result_status
       result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]

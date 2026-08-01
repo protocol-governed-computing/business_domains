@@ -1,9 +1,8 @@
 {
-  "snapshot_id": "15128a8c4491a70901083b7968077f750a02a33b88ac8ac03273c7cd44cf6358",
-  "artifact_count": 306,
+  "snapshot_id": "9055cdab74c2229fce3b3f14573a31dcd3f4143a56502a4ac3f378c110a5c160",
+  "artifact_count": 281,
   "domains": [
     "ai_governance",
-    "book_library_mgmt",
     "inspection",
     "platform",
     "transformation",
