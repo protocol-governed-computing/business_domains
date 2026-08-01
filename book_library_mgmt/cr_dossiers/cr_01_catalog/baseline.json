@@ -1,5 +1,11 @@
 {
-  "snapshot_id": "50915d2615947a2ab8833407bb34ddc332062cbb824d803d7c142eb74dd4f683",
+  "snapshot_id": "8526ceb80673062caced46a04bdab8037a30cce87a2be0edf5e21445baf04e0b",
   "artifact_count": 267,
-  "domains": ["ai_governance", "inspection", "platform", "transformation", "workload"]
+  "domains": [
+    "ai_governance",
+    "inspection",
+    "platform",
+    "transformation",
+    "workload"
+  ]
 }
