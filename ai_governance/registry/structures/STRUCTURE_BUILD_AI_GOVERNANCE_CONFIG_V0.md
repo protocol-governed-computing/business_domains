@@ -41,6 +41,7 @@ artifact_kind: STRUCTURE
 version: V0
 governed_by: fb.structure::CONSTITUTION_STRUCTURE_V0
 structure_scope: ai_governance
+reuse_visibility: business
 core:
   summary: Build-time STRUCTURE manifest (AI governance business-domain scope)
   description: 'Compiles the ai_governance domain''s own artifacts (WF/IN/CC/CT/EV/AC/RB/STRUCTURE),
