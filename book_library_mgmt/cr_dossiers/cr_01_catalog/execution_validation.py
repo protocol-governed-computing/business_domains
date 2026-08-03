@@ -26,7 +26,8 @@ DATA_ROOT = Path("/tmp/cr01_execution_validation")
 STORE = DATA_ROOT / "book_library_mgmt" / "catalog"
 
 STAFF = "staff-001"
-UNAUTHORIZED = "staff-999"
+UNKNOWN = "staff-999"          # absent from the staff register entirely
+DENIED_STAFF = "staff-777"     # present, and recorded as not authorized
 
 
 def reset() -> None:
@@ -34,8 +35,14 @@ def reset() -> None:
     if DATA_ROOT.exists():
         shutil.rmtree(DATA_ROOT)
     STORE.mkdir(parents=True)
-    (STORE / "catalog_staff.json").write_text(json.dumps(
-        {STAFF: {"staff_id": STAFF, "authorized": True}}))
+    # Both kinds of caller the criterion covers. Seeding only the unknown one is what let an
+    # authorization check that tested key *presence* rather than the `authorized` field pass for
+    # months: AC-7 as written covers a staff member who is not authorized, and a staff member
+    # recorded as `authorized: false` is exactly that.
+    (STORE / "catalog_staff.json").write_text(json.dumps({
+        STAFF: {"staff_id": STAFF, "authorized": True},
+        DENIED_STAFF: {"staff_id": DENIED_STAFF, "authorized": False},
+    }))
     (STORE / "bibliographic_works.json").write_text("{}")
     (STORE / "physical_copies.json").write_text("{}")
     (STORE / "catalog_operations.jsonl").write_text("")
@@ -142,13 +149,25 @@ def scenarios(snap: str) -> list[tuple[str, callable]]:
         return st == "SUCCESS", f"status={st}"
 
     def c7():
+        """Neither an unknown caller nor a known-but-unauthorized one may act.
+
+        Both are "a staff member who is not authorized". Testing only the unknown one leaves the
+        entire authorization decision unexercised — a check that merely confirms the staff record
+        exists passes it, and that is precisely the defect this criterion failed to catch until a
+        populated catalog exposed it.
+        """
         reset()
-        st, _ = run("WF_REGISTER_BOOK_V0", {
-            "staff_id": UNAUTHORIZED, "work_id": "work-002",
+        unknown, _ = run("WF_REGISTER_BOOK_V0", {
+            "staff_id": UNKNOWN, "work_id": "work-002",
             "bibliographic_information": {"title": "Smuggled"}}, snap)
+        after_unknown = len(works())
+
+        denied, _ = run("WF_REGISTER_BOOK_V0", {
+            "staff_id": DENIED_STAFF, "work_id": "work-003",
+            "bibliographic_information": {"title": "Also smuggled"}}, snap)
         # The operation must not have happened, whatever the workflow reported.
-        return st != "SUCCESS" and len(works()) == 0, \
-            f"status={st} records_written={len(works())}"
+        return (unknown != "SUCCESS" and denied != "SUCCESS" and len(works()) == 0), \
+            f"unknown={unknown} denied={denied} records_written={len(works())}"
 
     def c8():
         reset()

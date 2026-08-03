@@ -27,10 +27,8 @@ fqdn: book_library_mgmt::CC_REGISTER_BIBLIOGRAPHIC_WORK_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
-
 core:
   summary: Register a bibliographic work as an authoritative record
-
   inputs:
     work_id:
       type: string
@@ -38,62 +36,69 @@ core:
     bibliographic_information:
       type: object
       required: true
-
   outputs:
     result_status:
       type: string
     work_record:
       type: object
-
   result_status_contract:
-    allowed: [SUCCESS, ALREADY_EXISTS, VIOLATION, BACKEND_ERROR]
+    allowed:
+    - VIOLATION
+    - BACKEND_ERROR
+    - ALREADY_EXISTS
+    - SUCCESS
     on_input_failure: VIOLATION
-
   pipeline:
-    - step: check_existing
-      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
-      op: EXISTS
-      store: BIBLIOGRAPHIC_WORKS
-      inputs:
-        key: $.inputs.work_id
-      outputs:
-        result_status: $.result_status
-      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]
-      on_result:
-        SUCCESS: continue
-        VIOLATION: exit
-        BACKEND_ERROR: exit
-
-    - step: require_absent
-      transform: book_library_mgmt::CT_PURE_REQUIRE_CONDITION_V0
-      inputs:
-        condition: $.results.check_existing.capability_result.exists
-        expected: false
-      outputs:
-        result_status: $.result_status
-      result_surface: [SUCCESS, ALREADY_EXISTS, VIOLATION]
-      on_result:
-        SUCCESS: continue
-        ALREADY_EXISTS: exit
-        VIOLATION: exit
-
-    - step: write_work_record
-      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
-      op: WRITE
-      store: BIBLIOGRAPHIC_WORKS
-      inputs:
-        key: $.inputs.work_id
-        value:
-          work_id: $.inputs.work_id
-          bibliographic_information: $.inputs.bibliographic_information
-          retired: false
-      outputs:
-        work_record: $.capability_result.value
-        result_status: $.result_status
-      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]
-      on_result:
-        SUCCESS: exit
-        VIOLATION: exit
-        BACKEND_ERROR: exit
-
+  - step: check_existing
+    side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
+    op: EXISTS
+    store: BIBLIOGRAPHIC_WORKS
+    inputs:
+      key: $.inputs.work_id
+    outputs:
+      result_status: $.result_status
+    result_surface:
+    - SUCCESS
+    - VIOLATION
+    - BACKEND_ERROR
+    on_result:
+      SUCCESS: continue
+      VIOLATION: exit
+      BACKEND_ERROR: exit
+  - step: require_absent
+    transform: book_library_mgmt::CT_PURE_REQUIRE_CONDITION_V0
+    inputs:
+      condition: $.results.check_existing.capability_result.exists
+      expected: false
+    outputs:
+      result_status: $.result_status
+    result_surface:
+    - SUCCESS
+    - ALREADY_EXISTS
+    - VIOLATION
+    on_result:
+      SUCCESS: continue
+      ALREADY_EXISTS: exit
+      VIOLATION: exit
+  - step: write_work_record
+    side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
+    op: WRITE
+    store: BIBLIOGRAPHIC_WORKS
+    inputs:
+      key: $.inputs.work_id
+      value:
+        work_id: $.inputs.work_id
+        bibliographic_information: $.inputs.bibliographic_information
+        retired: false
+    outputs:
+      work_record: $.capability_result.value
+      result_status: $.result_status
+    result_surface:
+    - SUCCESS
+    - VIOLATION
+    - BACKEND_ERROR
+    on_result:
+      SUCCESS: exit
+      VIOLATION: exit
+      BACKEND_ERROR: exit
 ```
