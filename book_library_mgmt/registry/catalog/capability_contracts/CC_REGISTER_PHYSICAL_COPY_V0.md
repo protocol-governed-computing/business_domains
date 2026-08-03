@@ -39,8 +39,6 @@ core:
   outputs:
     result_status:
       type: string
-    copy_record:
-      type: object
   result_status_contract:
     allowed:
     - VIOLATION
@@ -90,7 +88,6 @@ core:
         copy_id: $.inputs.copy_id
         work_id: $.inputs.work_id
     outputs:
-      copy_record: $.capability_result.value
       result_status: $.result_status
     result_surface:
     - SUCCESS

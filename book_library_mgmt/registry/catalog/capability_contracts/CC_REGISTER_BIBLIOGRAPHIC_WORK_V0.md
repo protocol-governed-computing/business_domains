@@ -39,8 +39,6 @@ core:
   outputs:
     result_status:
       type: string
-    work_record:
-      type: object
   result_status_contract:
     allowed:
     - VIOLATION
@@ -91,7 +89,6 @@ core:
         bibliographic_information: $.inputs.bibliographic_information
         retired: false
     outputs:
-      work_record: $.capability_result.value
       result_status: $.result_status
     result_surface:
     - SUCCESS

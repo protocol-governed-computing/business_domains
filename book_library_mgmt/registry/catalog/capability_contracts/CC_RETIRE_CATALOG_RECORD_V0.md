@@ -36,8 +36,6 @@ core:
   outputs:
     result_status:
       type: string
-    retired_record:
-      type: object
   result_status_contract:
     allowed:
     - NOT_FOUND
@@ -74,7 +72,6 @@ core:
         work_id: $.inputs.work_id
         retired: true
     outputs:
-      retired_record: $.capability_result.value
       result_status: $.result_status
     result_surface:
     - SUCCESS
