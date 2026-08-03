@@ -58,12 +58,28 @@ core:
         key: $.inputs.work_id
       outputs:
         result_status: $.result_status
-      result_surface: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]
+      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]
+      on_result:
+        SUCCESS: continue
+        VIOLATION: exit
+        BACKEND_ERROR: exit
+
+    # EXISTS answers SUCCESS whether or not the key is there, carrying what it found in `exists`.
+    # Routing the previous step on NOT_FOUND was routing on a status it can never return, so a copy
+    # could be registered against a work that was never catalogued. The observation is interpreted
+    # here, and the workflow routes on the interpretation.
+    - step: require_work_registered
+      transform: book_library_mgmt::CT_PURE_REQUIRE_CONDITION_V0
+      inputs:
+        condition: $.results.confirm_work_registered.capability_result.exists
+        expected: true
+      outputs:
+        result_status: $.result_status
+      result_surface: [SUCCESS, NOT_FOUND, VIOLATION]
       on_result:
         SUCCESS: continue
         NOT_FOUND: exit
         VIOLATION: exit
-        BACKEND_ERROR: exit
 
     - step: write_copy_record
       side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
