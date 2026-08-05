@@ -37,7 +37,7 @@ operations that maintain that description, and it governs none of the nine remai
 | Catalog | The function holding the library's authoritative description of the materials it holds. |
 | Book | A published material the library catalogs, identified by its title, author and publication year. The general term for anything the library catalogs, including published materials that are not books. |
 | Bibliographic Information | A book's descriptive content: title, author, publication year and subject. |
-| Subject | What kind of book it is; what staff search on when looking for material rather than for a known title. |
+| Subject | What kind of book it is, stated as free text; what staff search on when looking for material rather than for a known title. |
 | Physical Copy | An individual copy the library owns, belonging to exactly one book, identified by its barcode. |
 | Barcode | The identifier the library assigns to a physical copy, which distinguishes that copy from every other copy the library owns. |
 | Catalog Record | The single authoritative record for one book or one physical copy. |
@@ -74,6 +74,9 @@ operations that maintain that description, and it governs none of the nine remai
 | A book's bibliographic information is its title, author, publication year and subject. | HIGH |
 | A book carries at least one subject and may carry several. | HIGH |
 | Subject says what kind of book it is, and is what staff search on when looking for material rather than for a known title. | HIGH |
+| A book's subject is free text; the library maintains no list of permitted subjects. | HIGH |
+| Staff search the catalog by subject or by title. | HIGH |
+| A search returns the bibliographic information of each matching registered book, and nothing about its physical copies. | HIGH |
 | Title, author and publication year together identify a book. | HIGH |
 | Each physical copy belongs to exactly one book. | HIGH |
 | Registering a book requires at least one physical copy; a book is never registered without a copy. | HIGH |
@@ -227,6 +230,8 @@ operations that maintain that description, and it governs none of the nine remai
 | Authorized staff can retire a book record, and its physical copies are unaffected. |
 | Authorized staff can retire a physical copy, and the book record is unaffected, including when it is the last copy. |
 | Authorized staff can search by subject and locate registered books of that kind. |
+| Authorized staff can search by title and locate a registered book by name. |
+| A search returns the bibliographic information of each matching book and nothing about its physical copies. |
 | A retired book does not appear in search results, and its details can still be retrieved. |
 | Authorized staff can retrieve the complete details of a registered book, including the physical copies the library holds of it. |
 | Authorized staff can register a physical copy against a retired book. |

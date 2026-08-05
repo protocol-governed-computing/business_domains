@@ -27,7 +27,7 @@ came from. S1 interrogates; it does not author — no row states business conten
 | Catalog | The function holding the library's authoritative description of the materials it holds. | CR seed §2 Business Vocabulary #2 |
 | Book | A published material the library catalogs, identified by its title, author and publication year. The general term for anything the library catalogs, including published materials that are not books. | CR seed §2 Business Vocabulary #3 |
 | Bibliographic Information | A book's descriptive content: title, author, publication year and subject. | CR seed §2 Business Vocabulary #4 |
-| Subject | What kind of book it is; what staff search on when looking for material rather than for a known title. | CR seed §2 Business Vocabulary #5 |
+| Subject | What kind of book it is, stated as free text; what staff search on when looking for material rather than for a known title. | CR seed §2 Business Vocabulary #5 |
 | Physical Copy | An individual copy the library owns, belonging to exactly one book, identified by its barcode. | CR seed §2 Business Vocabulary #6 |
 | Barcode | The identifier the library assigns to a physical copy, which distinguishes that copy from every other copy the library owns. | CR seed §2 Business Vocabulary #7 |
 | Catalog Record | The single authoritative record for one book or one physical copy. | CR seed §2 Business Vocabulary #8 |
@@ -68,29 +68,32 @@ came from. S1 interrogates; it does not author — no row states business conten
 | A book's bibliographic information is its title, author, publication year and subject. | HIGH | CR seed §4 Known Facts — Business Truths #9 |
 | A book carries at least one subject and may carry several. | HIGH | CR seed §4 Known Facts — Business Truths #10 |
 | Subject says what kind of book it is, and is what staff search on when looking for material rather than for a known title. | HIGH | CR seed §4 Known Facts — Business Truths #11 |
-| Title, author and publication year together identify a book. | HIGH | CR seed §4 Known Facts — Business Truths #12 |
-| Each physical copy belongs to exactly one book. | HIGH | CR seed §4 Known Facts — Business Truths #13 |
-| Registering a book requires at least one physical copy; a book is never registered without a copy. | HIGH | CR seed §4 Known Facts — Business Truths #14 |
-| Each physical copy carries a barcode the library assigns, which identifies that copy among all the copies the library owns. | HIGH | CR seed §4 Known Facts — Business Truths #15 |
-| A physical copy may be retired on its own, when it is lost or damaged. | HIGH | CR seed §4 Known Facts — Business Truths #16 |
-| A physical copy may be registered against a retired book. | HIGH | CR seed §4 Known Facts — Business Truths #17 |
-| Authorized staff may return a retired book record or a retired physical copy to the registered state. | HIGH | CR seed §4 Known Facts — Business Truths #18 |
-| An update to bibliographic information may change the title, author or publication year. | HIGH | CR seed §4 Known Facts — Business Truths #19 |
-| An update is refused when the changed title, author and publication year would match another registered book. | HIGH | CR seed §4 Known Facts — Business Truths #20 |
-| No retirement follows automatically from another: retiring a book does not retire its copies, and retiring the last copy does not retire the book. | HIGH | CR seed §4 Known Facts — Business Truths #21 |
-| A registration whose title, author and publication year match a registered book is refused, because the book already exists. | HIGH | CR seed §4 Known Facts — Business Truths #22 |
-| A retired book is excluded from search results, and its details remain retrievable. | HIGH | CR seed §4 Known Facts — Business Truths #23 |
-| Retrieving complete book details returns the book's bibliographic information and the physical copies the library holds of it. | HIGH | CR seed §4 Known Facts — Business Truths #24 |
-| The catalog does not manage which staff are authorized; it requires staff to be authorized. | HIGH | CR seed §4 Known Facts — Business Truths #25 |
-| Deciding who is authorized belongs to the staff function, which governs library employees. | HIGH | CR seed §4 Known Facts — Business Truths #26 |
-| Patrons are library users, not employees, and the patron function does not decide staff authorization. | HIGH | CR seed §4 Known Facts — Business Truths #27 |
-| Only authorized staff may perform catalog operations. | HIGH | CR seed §4 Known Facts — Business Truths #28 |
-| Every business operation must be traceable and auditable. | HIGH | CR seed §4 Known Facts — Business Truths #29 |
-| The catalog starts empty; the records staff maintain manually today are not imported by this change. | HIGH | CR seed §4 Known Facts — Business Truths #30 |
-| The operations required of the catalog are: register a new book, register a physical copy, update bibliographic information, retire an obsolete record, search the catalog, retrieve complete book details. | HIGH | CR seed §4 Known Facts — Business Truths #31 |
-| Borrowing, reservations, fines, patron management, acquisitions and inventory reconciliation are excluded from this release. | HIGH | CR seed §4 Known Facts — Business Truths #32 |
-| The excluded capabilities are expected to be introduced through future governed change requests. | HIGH | CR seed §4 Known Facts — Business Truths #33 |
-| The excluded capabilities must not be designed into the initial solution. | HIGH | CR seed §4 Known Facts — Business Truths #34 |
+| A book's subject is free text; the library maintains no list of permitted subjects. | HIGH | CR seed §4 Known Facts — Business Truths #12 |
+| Staff search the catalog by subject or by title. | HIGH | CR seed §4 Known Facts — Business Truths #13 |
+| A search returns the bibliographic information of each matching registered book, and nothing about its physical copies. | HIGH | CR seed §4 Known Facts — Business Truths #14 |
+| Title, author and publication year together identify a book. | HIGH | CR seed §4 Known Facts — Business Truths #15 |
+| Each physical copy belongs to exactly one book. | HIGH | CR seed §4 Known Facts — Business Truths #16 |
+| Registering a book requires at least one physical copy; a book is never registered without a copy. | HIGH | CR seed §4 Known Facts — Business Truths #17 |
+| Each physical copy carries a barcode the library assigns, which identifies that copy among all the copies the library owns. | HIGH | CR seed §4 Known Facts — Business Truths #18 |
+| A physical copy may be retired on its own, when it is lost or damaged. | HIGH | CR seed §4 Known Facts — Business Truths #19 |
+| A physical copy may be registered against a retired book. | HIGH | CR seed §4 Known Facts — Business Truths #20 |
+| Authorized staff may return a retired book record or a retired physical copy to the registered state. | HIGH | CR seed §4 Known Facts — Business Truths #21 |
+| An update to bibliographic information may change the title, author or publication year. | HIGH | CR seed §4 Known Facts — Business Truths #22 |
+| An update is refused when the changed title, author and publication year would match another registered book. | HIGH | CR seed §4 Known Facts — Business Truths #23 |
+| No retirement follows automatically from another: retiring a book does not retire its copies, and retiring the last copy does not retire the book. | HIGH | CR seed §4 Known Facts — Business Truths #24 |
+| A registration whose title, author and publication year match a registered book is refused, because the book already exists. | HIGH | CR seed §4 Known Facts — Business Truths #25 |
+| A retired book is excluded from search results, and its details remain retrievable. | HIGH | CR seed §4 Known Facts — Business Truths #26 |
+| Retrieving complete book details returns the book's bibliographic information and the physical copies the library holds of it. | HIGH | CR seed §4 Known Facts — Business Truths #27 |
+| The catalog does not manage which staff are authorized; it requires staff to be authorized. | HIGH | CR seed §4 Known Facts — Business Truths #28 |
+| Deciding who is authorized belongs to the staff function, which governs library employees. | HIGH | CR seed §4 Known Facts — Business Truths #29 |
+| Patrons are library users, not employees, and the patron function does not decide staff authorization. | HIGH | CR seed §4 Known Facts — Business Truths #30 |
+| Only authorized staff may perform catalog operations. | HIGH | CR seed §4 Known Facts — Business Truths #31 |
+| Every business operation must be traceable and auditable. | HIGH | CR seed §4 Known Facts — Business Truths #32 |
+| The catalog starts empty; the records staff maintain manually today are not imported by this change. | HIGH | CR seed §4 Known Facts — Business Truths #33 |
+| The operations required of the catalog are: register a new book, register a physical copy, update bibliographic information, retire an obsolete record, search the catalog, retrieve complete book details. | HIGH | CR seed §4 Known Facts — Business Truths #34 |
+| Borrowing, reservations, fines, patron management, acquisitions and inventory reconciliation are excluded from this release. | HIGH | CR seed §4 Known Facts — Business Truths #35 |
+| The excluded capabilities are expected to be introduced through future governed change requests. | HIGH | CR seed §4 Known Facts — Business Truths #36 |
+| The excluded capabilities must not be designed into the initial solution. | HIGH | CR seed §4 Known Facts — Business Truths #37 |
 
 ---
 
@@ -241,15 +244,17 @@ came from. S1 interrogates; it does not author — no row states business conten
 | Authorized staff can retire a book record, and its physical copies are unaffected. | CR seed §15 Acceptance Criteria #7 |
 | Authorized staff can retire a physical copy, and the book record is unaffected, including when it is the last copy. | CR seed §15 Acceptance Criteria #8 |
 | Authorized staff can search by subject and locate registered books of that kind. | CR seed §15 Acceptance Criteria #9 |
-| A retired book does not appear in search results, and its details can still be retrieved. | CR seed §15 Acceptance Criteria #10 |
-| Authorized staff can retrieve the complete details of a registered book, including the physical copies the library holds of it. | CR seed §15 Acceptance Criteria #11 |
-| Authorized staff can register a physical copy against a retired book. | CR seed §15 Acceptance Criteria #12 |
-| Authorized staff can return a retired book record to the registered state, and it appears in search again. | CR seed §15 Acceptance Criteria #13 |
-| Authorized staff can return a retired physical copy to the registered state. | CR seed §15 Acceptance Criteria #14 |
-| An update that would make a book's title, author and publication year match another registered book is refused. | CR seed §15 Acceptance Criteria #15 |
-| A copy registration whose barcode matches a copy the library already owns is refused. | CR seed §15 Acceptance Criteria #16 |
-| A staff member who is not authorized cannot perform any catalog operation. | CR seed §15 Acceptance Criteria #17 |
-| Every catalog operation performed can be traced and audited afterwards. | CR seed §15 Acceptance Criteria #18 |
+| Authorized staff can search by title and locate a registered book by name. | CR seed §15 Acceptance Criteria #10 |
+| A search returns the bibliographic information of each matching book and nothing about its physical copies. | CR seed §15 Acceptance Criteria #11 |
+| A retired book does not appear in search results, and its details can still be retrieved. | CR seed §15 Acceptance Criteria #12 |
+| Authorized staff can retrieve the complete details of a registered book, including the physical copies the library holds of it. | CR seed §15 Acceptance Criteria #13 |
+| Authorized staff can register a physical copy against a retired book. | CR seed §15 Acceptance Criteria #14 |
+| Authorized staff can return a retired book record to the registered state, and it appears in search again. | CR seed §15 Acceptance Criteria #15 |
+| Authorized staff can return a retired physical copy to the registered state. | CR seed §15 Acceptance Criteria #16 |
+| An update that would make a book's title, author and publication year match another registered book is refused. | CR seed §15 Acceptance Criteria #17 |
+| A copy registration whose barcode matches a copy the library already owns is refused. | CR seed §15 Acceptance Criteria #18 |
+| A staff member who is not authorized cannot perform any catalog operation. | CR seed §15 Acceptance Criteria #19 |
+| Every catalog operation performed can be traced and audited afterwards. | CR seed §15 Acceptance Criteria #20 |
 
 ---
 

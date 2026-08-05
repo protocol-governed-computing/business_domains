@@ -89,6 +89,11 @@ and retiring the last copy does not retire the book. Staff retire each record ex
 A registration whose title, author and publication year match a registered book is refused, because
 the book already exists. Staff register a further physical copy against it instead.
 
+A book's subject is free text. The library maintains no list of permitted subjects.
+
+Staff search the catalog by subject or by title. A search returns the bibliographic information of
+each matching registered book, and nothing about its physical copies.
+
 A retired book is excluded from search results, and its details remain retrievable.
 
 Retrieving complete book details returns the book's bibliographic information and the physical copies
