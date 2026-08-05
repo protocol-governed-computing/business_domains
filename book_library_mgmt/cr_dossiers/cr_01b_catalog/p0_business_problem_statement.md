@@ -76,6 +76,8 @@ A physical copy may be retired on its own, when it is lost or damaged.
 
 A physical copy may be registered against a retired book.
 
+A catalog record is never deleted. Retirement is the only way a record leaves use.
+
 Retirement may be reversed: authorized staff may return a retired book record or a retired physical
 copy to the registered state.
 

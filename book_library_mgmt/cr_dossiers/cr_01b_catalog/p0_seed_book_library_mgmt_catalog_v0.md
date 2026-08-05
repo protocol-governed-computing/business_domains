@@ -83,6 +83,7 @@ operations that maintain that description, and it governs none of the nine remai
 | Each physical copy carries a barcode the library assigns, which identifies that copy among all the copies the library owns. | HIGH |
 | A physical copy may be retired on its own, when it is lost or damaged. | HIGH |
 | A physical copy may be registered against a retired book. | HIGH |
+| A catalog record is never deleted; retirement is the only way a record leaves use. | HIGH |
 | Authorized staff may return a retired book record or a retired physical copy to the registered state. | HIGH |
 | An update to bibliographic information may change the title, author or publication year. | HIGH |
 | An update is refused when the changed title, author and publication year would match another registered book. | HIGH |
@@ -142,6 +143,7 @@ operations that maintain that description, and it governs none of the nine remai
 | No two registered books share the same title, author and publication year. |
 | A book carries at least one subject. |
 | No two physical copies the library owns share the same barcode. |
+| No catalog record is ever deleted. |
 | Every business operation performed against the catalog is traceable and auditable. |
 | Only authorized staff perform catalog operations. |
 

@@ -77,23 +77,24 @@ came from. S1 interrogates; it does not author — no row states business conten
 | Each physical copy carries a barcode the library assigns, which identifies that copy among all the copies the library owns. | HIGH | CR seed §4 Known Facts — Business Truths #18 |
 | A physical copy may be retired on its own, when it is lost or damaged. | HIGH | CR seed §4 Known Facts — Business Truths #19 |
 | A physical copy may be registered against a retired book. | HIGH | CR seed §4 Known Facts — Business Truths #20 |
-| Authorized staff may return a retired book record or a retired physical copy to the registered state. | HIGH | CR seed §4 Known Facts — Business Truths #21 |
-| An update to bibliographic information may change the title, author or publication year. | HIGH | CR seed §4 Known Facts — Business Truths #22 |
-| An update is refused when the changed title, author and publication year would match another registered book. | HIGH | CR seed §4 Known Facts — Business Truths #23 |
-| No retirement follows automatically from another: retiring a book does not retire its copies, and retiring the last copy does not retire the book. | HIGH | CR seed §4 Known Facts — Business Truths #24 |
-| A registration whose title, author and publication year match a registered book is refused, because the book already exists. | HIGH | CR seed §4 Known Facts — Business Truths #25 |
-| A retired book is excluded from search results, and its details remain retrievable. | HIGH | CR seed §4 Known Facts — Business Truths #26 |
-| Retrieving complete book details returns the book's bibliographic information and the physical copies the library holds of it. | HIGH | CR seed §4 Known Facts — Business Truths #27 |
-| The catalog does not manage which staff are authorized; it requires staff to be authorized. | HIGH | CR seed §4 Known Facts — Business Truths #28 |
-| Deciding who is authorized belongs to the staff function, which governs library employees. | HIGH | CR seed §4 Known Facts — Business Truths #29 |
-| Patrons are library users, not employees, and the patron function does not decide staff authorization. | HIGH | CR seed §4 Known Facts — Business Truths #30 |
-| Only authorized staff may perform catalog operations. | HIGH | CR seed §4 Known Facts — Business Truths #31 |
-| Every business operation must be traceable and auditable. | HIGH | CR seed §4 Known Facts — Business Truths #32 |
-| The catalog starts empty; the records staff maintain manually today are not imported by this change. | HIGH | CR seed §4 Known Facts — Business Truths #33 |
-| The operations required of the catalog are: register a new book, register a physical copy, update bibliographic information, retire an obsolete record, search the catalog, retrieve complete book details. | HIGH | CR seed §4 Known Facts — Business Truths #34 |
-| Borrowing, reservations, fines, patron management, acquisitions and inventory reconciliation are excluded from this release. | HIGH | CR seed §4 Known Facts — Business Truths #35 |
-| The excluded capabilities are expected to be introduced through future governed change requests. | HIGH | CR seed §4 Known Facts — Business Truths #36 |
-| The excluded capabilities must not be designed into the initial solution. | HIGH | CR seed §4 Known Facts — Business Truths #37 |
+| A catalog record is never deleted; retirement is the only way a record leaves use. | HIGH | CR seed §4 Known Facts — Business Truths #21 |
+| Authorized staff may return a retired book record or a retired physical copy to the registered state. | HIGH | CR seed §4 Known Facts — Business Truths #22 |
+| An update to bibliographic information may change the title, author or publication year. | HIGH | CR seed §4 Known Facts — Business Truths #23 |
+| An update is refused when the changed title, author and publication year would match another registered book. | HIGH | CR seed §4 Known Facts — Business Truths #24 |
+| No retirement follows automatically from another: retiring a book does not retire its copies, and retiring the last copy does not retire the book. | HIGH | CR seed §4 Known Facts — Business Truths #25 |
+| A registration whose title, author and publication year match a registered book is refused, because the book already exists. | HIGH | CR seed §4 Known Facts — Business Truths #26 |
+| A retired book is excluded from search results, and its details remain retrievable. | HIGH | CR seed §4 Known Facts — Business Truths #27 |
+| Retrieving complete book details returns the book's bibliographic information and the physical copies the library holds of it. | HIGH | CR seed §4 Known Facts — Business Truths #28 |
+| The catalog does not manage which staff are authorized; it requires staff to be authorized. | HIGH | CR seed §4 Known Facts — Business Truths #29 |
+| Deciding who is authorized belongs to the staff function, which governs library employees. | HIGH | CR seed §4 Known Facts — Business Truths #30 |
+| Patrons are library users, not employees, and the patron function does not decide staff authorization. | HIGH | CR seed §4 Known Facts — Business Truths #31 |
+| Only authorized staff may perform catalog operations. | HIGH | CR seed §4 Known Facts — Business Truths #32 |
+| Every business operation must be traceable and auditable. | HIGH | CR seed §4 Known Facts — Business Truths #33 |
+| The catalog starts empty; the records staff maintain manually today are not imported by this change. | HIGH | CR seed §4 Known Facts — Business Truths #34 |
+| The operations required of the catalog are: register a new book, register a physical copy, update bibliographic information, retire an obsolete record, search the catalog, retrieve complete book details. | HIGH | CR seed §4 Known Facts — Business Truths #35 |
+| Borrowing, reservations, fines, patron management, acquisitions and inventory reconciliation are excluded from this release. | HIGH | CR seed §4 Known Facts — Business Truths #36 |
+| The excluded capabilities are expected to be introduced through future governed change requests. | HIGH | CR seed §4 Known Facts — Business Truths #37 |
+| The excluded capabilities must not be designed into the initial solution. | HIGH | CR seed §4 Known Facts — Business Truths #38 |
 
 ---
 
@@ -142,8 +143,9 @@ came from. S1 interrogates; it does not author — no row states business conten
 | No two registered books share the same title, author and publication year. | CR seed §8 Business Invariants #4 |
 | A book carries at least one subject. | CR seed §8 Business Invariants #5 |
 | No two physical copies the library owns share the same barcode. | CR seed §8 Business Invariants #6 |
-| Every business operation performed against the catalog is traceable and auditable. | CR seed §8 Business Invariants #7 |
-| Only authorized staff perform catalog operations. | CR seed §8 Business Invariants #8 |
+| No catalog record is ever deleted. | CR seed §8 Business Invariants #7 |
+| Every business operation performed against the catalog is traceable and auditable. | CR seed §8 Business Invariants #8 |
+| Only authorized staff perform catalog operations. | CR seed §8 Business Invariants #9 |
 
 ---
 
