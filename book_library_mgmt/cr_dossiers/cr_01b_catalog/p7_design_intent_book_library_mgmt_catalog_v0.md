@@ -453,6 +453,7 @@ Every binding names a field the capability declares, read from the pinned baseli
 | book_library_mgmt::CC_REGISTER_BOOK_V0 | INPUT | identity_key | string | YES |  | The key formed from a book's title, author and publication year |
 | book_library_mgmt::CC_REGISTER_BOOK_V0 | INPUT | book_fields | object | YES |  | The book's bibliographic information |
 | book_library_mgmt::CC_REGISTER_BOOK_V0 | INPUT | book_schema | object | YES |  | The fields a book record must carry |
+| book_library_mgmt::CC_REGISTER_BOOK_V0 | OUTPUT | book_record | object | YES |  | The book's authoritative record |
 | book_library_mgmt::CC_REGISTER_PHYSICAL_COPY_V0 | INPUT | identity_key | string | YES |  | The key formed from a book's title, author and publication year |
 | book_library_mgmt::CC_REGISTER_PHYSICAL_COPY_V0 | INPUT | barcode | string | YES |  | The barcode the library assigned to the copy |
 | book_library_mgmt::CC_REGISTER_PHYSICAL_COPY_V0 | INPUT | copy_fields | object | YES |  | The copy's recorded detail |
@@ -461,9 +462,13 @@ Every binding names a field the capability declares, read from the pinned baseli
 | book_library_mgmt::CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0 | INPUT | updated_fields | object | YES |  | The changed bibliographic information |
 | book_library_mgmt::CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0 | OUTPUT | book_record | object | YES |  | The book's authoritative record |
 | book_library_mgmt::CC_RETIRE_BOOK_RECORD_V0 | INPUT | identity_key | string | YES |  | The key formed from a book's title, author and publication year |
+| book_library_mgmt::CC_RETIRE_BOOK_RECORD_V0 | OUTPUT | restated_record | object | YES |  | The record as written, carrying its new state |
 | book_library_mgmt::CC_RETIRE_PHYSICAL_COPY_V0 | INPUT | barcode | string | YES |  | The barcode the library assigned to the copy |
+| book_library_mgmt::CC_RETIRE_PHYSICAL_COPY_V0 | OUTPUT | restated_record | object | YES |  | The record as written, carrying its new state |
 | book_library_mgmt::CC_REINSTATE_BOOK_RECORD_V0 | INPUT | identity_key | string | YES |  | The key formed from a book's title, author and publication year |
+| book_library_mgmt::CC_REINSTATE_BOOK_RECORD_V0 | OUTPUT | restated_record | object | YES |  | The record as written, carrying its new state |
 | book_library_mgmt::CC_REINSTATE_PHYSICAL_COPY_V0 | INPUT | barcode | string | YES |  | The barcode the library assigned to the copy |
+| book_library_mgmt::CC_REINSTATE_PHYSICAL_COPY_V0 | OUTPUT | restated_record | object | YES |  | The record as written, carrying its new state |
 | book_library_mgmt::CC_SEARCH_CATALOG_V0 | INPUT | search_criteria | object | YES |  | What staff are searching by, and the states to include |
 | book_library_mgmt::CC_SEARCH_CATALOG_V0 | OUTPUT | matching_books | array | YES |  | The registered books matching what was searched for |
 | book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | INPUT | identity_key | string | YES |  | The key formed from a book's title, author and publication year |
