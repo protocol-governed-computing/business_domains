@@ -1,8 +1,8 @@
-# CC_REGISTER_PHYSICAL_COPY_V0
+# CC_REGISTER_BOOK_V0
 
 ## Header (Mandatory)
 
-- **Artifact Code:** CC_REGISTER_PHYSICAL_COPY_V0
+- **Artifact Code:** CC_REGISTER_BOOK_V0
 - **Artifact Kind:** capability_contract
 - **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
 - **Version:** V0
@@ -13,27 +13,27 @@
 
 ## 1. Intent
 
-Record a copy against exactly one book
+Record a book's bibliographic information as the catalog's authoritative description
 
 ---
 
 ## Machine
 
 ```yaml
-fqdn: book_library_mgmt::CC_REGISTER_PHYSICAL_COPY_V0
+fqdn: book_library_mgmt::CC_REGISTER_BOOK_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 core:
-  summary: Record a copy against exactly one book
+  summary: Record a book's bibliographic information as the catalog's authoritative description
   inputs:
     identity_key:
       type: string
       required: true
-    barcode:
-      type: string
+    book_fields:
+      type: object
       required: true
-    copy_fields:
+    book_schema:
       type: object
       required: true
   outputs:
@@ -42,53 +42,49 @@ core:
       required: true
   result_status_contract:
     allowed:
-    - NOT_FOUND
     - VIOLATION
-    - BACKEND_ERROR
     - SUCCESS
+    - BACKEND_ERROR
     on_input_failure: VIOLATION
   pipeline:
-  - step: read_book_record
-    side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
-    op: READ
-    store: BOOKS
+  - step: validate_book_fields
+    transform: capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0
     inputs:
-      key: $.inputs.identity_key
+      record: $.inputs.book_fields
+      schema: $.inputs.book_schema
     outputs:
-      book_record: $.capability_result.value
-      result_status: $.result_status
+      violations: $.capability_result.violations
     result_surface:
     - SUCCESS
-    - NOT_FOUND
     - VIOLATION
-    - BACKEND_ERROR
     on_result:
       SUCCESS: continue
-      NOT_FOUND: exit
       VIOLATION: exit
-      BACKEND_ERROR: exit
-  - step: assemble_copy_record
+  - step: assemble_book_record
     transform: capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0
     inputs:
       fields:
         identity_key: $.inputs.identity_key
-        barcode: $.inputs.barcode
-        state: $.inputs.copy_fields.state
+        title: $.inputs.book_fields.title
+        author: $.inputs.book_fields.author
+        publication_year: $.inputs.book_fields.publication_year
+        subject: $.inputs.book_fields.subject
+        state: $.inputs.book_fields.state
     outputs:
-      copy_record: $.capability_result.record
+      book_record: $.capability_result.record
     result_surface:
     - SUCCESS
     - VIOLATION
     on_result:
       SUCCESS: continue
       VIOLATION: exit
-  - step: write_copy_record
+  - step: write_book_record
     side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
     op: WRITE
-    store: PHYSICAL_COPIES
+    store: BOOKS
     inputs:
-      key: $.inputs.barcode
-      value: $.results.assemble_copy_record.copy_record
+      key: $.inputs.identity_key
+      value: $.results.assemble_book_record.book_record
     outputs:
       result_status: $.result_status
     result_surface:

@@ -13,10 +13,7 @@
 
 ## 1. Intent
 
-Updating the description of a registered work.
-
-Authorization is confirmed first and the operation is journalled last, so every catalog operation
-is performed by someone entitled to and leaves an account of itself.
+Changing a book's description without making it a duplicate
 
 ---
 
@@ -31,7 +28,7 @@ runtime_binding: book_library_mgmt::RB_CATALOG_BINDINGS_V0
 subdomain: catalog
 structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
-  summary: Update the description of a registered work
+  summary: Changing a book's description without making it a duplicate
   actor_context: book_library_mgmt::AC_LIBRARY_STAFF_V0
   start_node: IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
   nodes:
@@ -45,19 +42,27 @@ core:
       type: CC
       code: CC_CONFIRM_STAFF_AUTHORIZED_V0
       inputs:
-        staff_id: $.payload.staff_id
+        staff_credentials: $.payload.staff_credentials
+        authorization_rules: $.payload.authorization_rules
+      next:
+        SUCCESS: CC_RESOLVE_BOOK_IDENTITY_V0
+        VIOLATION: EXIT_REJECTED
+    CC_RESOLVE_BOOK_IDENTITY_V0:
+      type: CC
+      code: CC_RESOLVE_BOOK_IDENTITY_V0
+      inputs:
+        identity_key: $.payload.identity_key
       next:
         SUCCESS: CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
         NOT_FOUND: EXIT_REJECTED
-        DENIED: EXIT_REJECTED
         VIOLATION: EXIT_REJECTED
         BACKEND_ERROR: EXIT_REJECTED
     CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0:
       type: CC
       code: CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
       inputs:
-        work_id: $.payload.work_id
-        bibliographic_information: $.payload.bibliographic_information
+        identity_key: $.payload.identity_key
+        updated_fields: $.payload.updated_fields
       next:
         SUCCESS: CC_APPEND_CATALOG_OPERATION_V0
         NOT_FOUND: EXIT_REJECTED
@@ -69,7 +74,10 @@ core:
       inputs:
         staff_id: $.payload.staff_id
         operation: UPDATE_BIBLIOGRAPHIC_INFORMATION
-        subject: $.payload.work_id
+        record:
+          operation: UPDATE_BIBLIOGRAPHIC_INFORMATION
+          staff_id: $.payload.staff_id
+          subject: $.payload.identity_key
       next:
         SUCCESS: EXIT_COMPLETED
         VIOLATION: EXIT_REJECTED

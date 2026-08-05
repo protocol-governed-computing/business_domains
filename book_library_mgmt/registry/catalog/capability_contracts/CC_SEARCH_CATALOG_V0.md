@@ -13,10 +13,7 @@
 
 ## 1. Intent
 
-Select the current records matching the staff member's terms.
-
-Retired records are withheld: they remain stored for audit but are not current, and offering one
-as a result would defeat the reason it was retired.
+Select the registered books matching a subject or title, excluding retired ones
 
 ---
 
@@ -27,39 +24,48 @@ fqdn: book_library_mgmt::CC_SEARCH_CATALOG_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
-
 core:
-  summary: Search the catalog for current records
-
+  summary: Select the registered books matching a subject or title, excluding retired ones
   inputs:
-    search_terms:
+    search_criteria:
       type: object
       required: true
-
   outputs:
-    result_status:
-      type: string
-    matching_records:
+    matching_books:
       type: array
-
+      required: true
   result_status_contract:
-    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]
+    allowed:
+    - BACKEND_ERROR
+    - SUCCESS
+    - VIOLATION
     on_input_failure: VIOLATION
-
   pipeline:
-    - step: select_current_records
-      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
-      op: LIST
-      store: BIBLIOGRAPHIC_WORKS
-      inputs:
-        filter: $.inputs.search_terms
-      outputs:
-        matching_records: $.capability_result.keys
-        result_status: $.result_status
-      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]
-      on_result:
-        SUCCESS: exit
-        VIOLATION: exit
-        BACKEND_ERROR: exit
-
+  - step: select_book_records
+    side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
+    op: SELECT
+    store: BOOKS
+    inputs: {}
+    outputs:
+      records: $.capability_result.records
+      result_status: $.result_status
+    result_surface:
+    - SUCCESS
+    - BACKEND_ERROR
+    on_result:
+      SUCCESS: continue
+      BACKEND_ERROR: exit
+  - step: select_matching_books
+    transform: capability_transforms::CT_PURE_FILTER_RECORDS_V0
+    inputs:
+      source: $.results.select_book_records.records
+      filter: $.inputs.search_criteria
+    outputs:
+      matching_books: $.capability_result.extracted
+    result_surface:
+    - SUCCESS
+    - VIOLATION
+    on_result:
+      SUCCESS: exit
+      VIOLATION: exit
 ```

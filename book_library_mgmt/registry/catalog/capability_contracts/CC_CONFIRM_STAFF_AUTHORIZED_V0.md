@@ -13,10 +13,7 @@
 
 ## 1. Intent
 
-Confirm the staff member may perform catalog operations.
-
-The catalog reads authorization; it never grants it. Deciding who is authorized belongs to the
-patron subdomain and is deferred to a future change request.
+Confirm the staff member may perform catalog operations
 
 ---
 
@@ -28,58 +25,35 @@ artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 core:
-  summary: Confirm the staff member is authorized
+  summary: Confirm the staff member may perform catalog operations
   inputs:
-    staff_id:
-      type: string
+    staff_credentials:
+      type: object
+      required: true
+    authorization_rules:
+      type: array
       required: true
   outputs:
-    result_status:
-      type: string
-    authorized:
+    is_authorized:
       type: boolean
+      required: true
   result_status_contract:
     allowed:
-    - NOT_FOUND
-    - VIOLATION
-    - BACKEND_ERROR
     - SUCCESS
-    - DENIED
+    - VIOLATION
     on_input_failure: VIOLATION
   pipeline:
-  - step: read_authorization
-    side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
-    op: READ
-    store: CATALOG_STAFF
+  - step: confirm_authorization
+    transform: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
     inputs:
-      key: $.inputs.staff_id
+      parameters: $.inputs.staff_credentials
+      rules: $.inputs.authorization_rules
     outputs:
-      staff_record: $.capability_result.value
-      result_status: $.result_status
+      is_authorized: $.capability_result.valid
     result_surface:
     - SUCCESS
-    - NOT_FOUND
-    - VIOLATION
-    - BACKEND_ERROR
-    on_result:
-      SUCCESS: continue
-      NOT_FOUND: exit
-      VIOLATION: exit
-      BACKEND_ERROR: exit
-  - step: require_authorized
-    transform: book_library_mgmt::CT_PURE_REQUIRE_CONDITION_V0
-    inputs:
-      condition: $.results.read_authorization.capability_result.value.authorized
-      expected: true
-    outputs:
-      authorized: $.capability_result.condition_held
-      result_status: $.result_status
-    result_surface:
-    - SUCCESS
-    - DENIED
     - VIOLATION
     on_result:
       SUCCESS: exit
-      DENIED: exit
       VIOLATION: exit
 ```

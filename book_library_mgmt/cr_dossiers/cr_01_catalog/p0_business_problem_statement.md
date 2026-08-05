@@ -43,6 +43,10 @@ several.
 Title, author and publication year together identify a book. Two registrations with the same title,
 author and publication year describe the same book, and the catalog holds one record for it.
 
+Title and author are compared without regard to letter case or repeated spacing. "The Odyssey" and
+"the odyssey" are the same title. Case and spacing do not change which book is meant, so they must not
+produce two records.
+
 The system shall allow authorized staff to:
 
 - register new books

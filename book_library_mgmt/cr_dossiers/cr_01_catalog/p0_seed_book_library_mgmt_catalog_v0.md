@@ -78,6 +78,7 @@ operations that maintain that description, and it governs none of the nine remai
 | Staff search the catalog by subject or by title. | HIGH |
 | A search returns the bibliographic information of each matching registered book, and nothing about its physical copies. | HIGH |
 | Title, author and publication year together identify a book. | HIGH |
+| Title and author are compared without regard to letter case or repeated spacing; case and spacing do not change which book is meant. | HIGH |
 | Each physical copy belongs to exactly one book. | HIGH |
 | Registering a book requires at least one physical copy; a book is never registered without a copy. | HIGH |
 | Each physical copy carries a barcode the library assigns, which identifies that copy among all the copies the library owns. | HIGH |
@@ -249,7 +250,7 @@ operations that maintain that description, and it governs none of the nine remai
 <!-- register:identity_and_sameness business_language optional -->
 | Business Object | Identified By | Two Are The Same When |
 |-----------------|---------------|-----------------------|
-| Book | Its title, author and publication year together. | Their title, author and publication year all match. |
+| Book | Its title, author and publication year together. | Their publication year matches and their titles and authors match without regard to letter case or repeated spacing. |
 | Physical Copy | The barcode the library assigns to it. | Their barcodes match. |
 
 ## 17. Lifecycle Transitions

@@ -1,8 +1,8 @@
-# IN_RETIRE_CATALOG_RECORD_V0
+# IN_RETIRE_BOOK_RECORD_V0
 
 ## Header (Mandatory)
 
-- **Artifact Code:** IN_RETIRE_CATALOG_RECORD_V0
+- **Artifact Code:** IN_RETIRE_BOOK_RECORD_V0
 - **Artifact Kind:** intent
 - **Governed By:** CONSTITUTION_INTENT_V0
 - **Version:** V0
@@ -13,31 +13,33 @@
 
 ## 1. Intent
 
-A request to retire an obsolete record. Retirement withholds; it never deletes.
+A request to retire a book record judged obsolete
 
 ---
 
 ## Machine
 
 ```yaml
-fqdn: book_library_mgmt::IN_RETIRE_CATALOG_RECORD_V0
+fqdn: book_library_mgmt::IN_RETIRE_BOOK_RECORD_V0
 artifact_kind: INTENT
 version: v0
 governed_by: fb.intent::CONSTITUTION_INTENT_V0
-
 core:
-  summary: Request retirement of an obsolete record
-  workflow: WF_RETIRE_CATALOG_RECORD_V0
-
+  summary: A request to retire a book record judged obsolete
+  workflow: WF_RETIRE_BOOK_RECORD_V0
   inputs:
+    staff_credentials:
+      type: object
+      required: true
+    authorization_rules:
+      type: array
+      required: true
+    identity_key:
+      type: string
+      required: true
     staff_id:
       type: string
       required: true
-      description: The staff member performing the operation
-    work_id:
-      type: string
-      required: true
-
   outcomes:
     ACK:
       description: Request accepted for processing

@@ -66,10 +66,10 @@ is why both record stores hold state as data rather than by which store a record
 <!-- register:identity_semantics business_language=identity_field,source,uniqueness_rule,cross_subdomain_relationship -->
 | Store Name | Identity Field | Source | Uniqueness Rule | Cross-Subdomain Relationship | Source Finding |
 |------------|----------------|--------|-----------------|------------------------------|----------------|
-| Book record | Title, author and publication year together | Supplied by the staff member registering the book | Two registrations carrying the same title, author and publication year describe the same book, and the second is refused | None | S1 identity_and_sameness #1 |
+| Book record | Title, author and publication year together | Supplied by the staff member registering the book | Two registrations carrying the same publication year, and the same title and author without regard to letter case or repeated spacing, describe the same book, and the second is refused | None | S1 identity_and_sameness #1 |
 | Physical copy record | Barcode | Assigned by the library and supplied when the copy is registered | Two records carrying the same barcode describe the same copy, and the second is refused | Names exactly one book record | S1 identity_and_sameness #2 |
 | Catalog audit trail | Append position | Assigned when the entry is appended | Each performed operation appends exactly one entry, and no entry is amended or removed | Names the staff member who performed the operation | S4 resources Catalog audit trail |
-| Book identity registry | The key formed from title, author and publication year | Formed by the catalog from the book's identifying attributes | The key is claimed once; a second claim on it fails and the registration is refused | None | S4 design_decisions #3 |
+| Book identity registry | The key formed from title, author and publication year | Formed by the catalog, comparing title and author without regard to letter case or repeated spacing | The key is claimed once; a second claim on it fails and the registration is refused | None | S4 design_decisions #3 |
 | Copy barcode registry | Barcode | Assigned by the library | The barcode is claimed once; a second claim on it fails and the copy registration is refused | None | S1 business_invariants #6 |
 
 ---

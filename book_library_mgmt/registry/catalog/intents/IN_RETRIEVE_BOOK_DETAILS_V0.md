@@ -13,7 +13,7 @@
 
 ## 1. Intent
 
-A request for the complete details of a registered book.
+A request for a book's complete details with the copies held
 
 ---
 
@@ -24,20 +24,22 @@ fqdn: book_library_mgmt::IN_RETRIEVE_BOOK_DETAILS_V0
 artifact_kind: INTENT
 version: v0
 governed_by: fb.intent::CONSTITUTION_INTENT_V0
-
 core:
-  summary: Request the complete details of a book
+  summary: A request for a book's complete details with the copies held
   workflow: WF_RETRIEVE_BOOK_DETAILS_V0
-
   inputs:
+    staff_credentials:
+      type: object
+      required: true
+    authorization_rules:
+      type: array
+      required: true
+    identity_key:
+      type: string
+      required: true
     staff_id:
       type: string
       required: true
-      description: The staff member performing the operation
-    work_id:
-      type: string
-      required: true
-
   outcomes:
     ACK:
       description: Request accepted for processing

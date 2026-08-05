@@ -13,7 +13,7 @@
 
 ## 1. Intent
 
-A request to replace the descriptive content of a registered work's record.
+A request to change a registered book's description
 
 ---
 
@@ -24,23 +24,34 @@ fqdn: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
 artifact_kind: INTENT
 version: v0
 governed_by: fb.intent::CONSTITUTION_INTENT_V0
-
 core:
-  summary: Request an update to a registered work
+  summary: A request to change a registered book's description
   workflow: WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-
   inputs:
+    staff_credentials:
+      type: object
+      required: true
+    authorization_rules:
+      type: array
+      required: true
+    identity_key:
+      type: string
+      required: true
+    title:
+      type: string
+      required: true
+    author:
+      type: string
+      required: true
+    publication_year:
+      type: integer
+      required: true
+    updated_fields:
+      type: object
+      required: true
     staff_id:
       type: string
       required: true
-      description: The staff member performing the operation
-    work_id:
-      type: string
-      required: true
-    bibliographic_information:
-      type: object
-      required: true
-
   outcomes:
     ACK:
       description: Request accepted for processing

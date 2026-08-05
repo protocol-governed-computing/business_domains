@@ -13,10 +13,7 @@
 
 ## 1. Intent
 
-Assemble a work's record together with the copies belonging to it.
-
-Complete details are the work and its copies read together; neither store holds the whole answer,
-which is why this is a composition rather than a single read.
+Assemble a book's record with the copies recorded against it
 
 ---
 
@@ -28,18 +25,21 @@ artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 core:
-  summary: Assemble a work with the copies belonging to it
+  summary: Assemble a book's record with the copies recorded against it
   inputs:
-    work_id:
+    identity_key:
       type: string
       required: true
-  outputs:
-    result_status:
-      type: string
-    book_details:
+    copy_criteria:
       type: object
-    copies:
+      required: true
+  outputs:
+    book_record:
+      type: object
+      required: true
+    copies_held:
       type: array
+      required: true
   result_status_contract:
     allowed:
     - NOT_FOUND
@@ -48,14 +48,14 @@ core:
     - SUCCESS
     on_input_failure: VIOLATION
   pipeline:
-  - step: read_work_record
+  - step: read_book_record
     side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
     op: READ
-    store: BIBLIOGRAPHIC_WORKS
+    store: BOOKS
     inputs:
-      key: $.inputs.work_id
+      key: $.inputs.identity_key
     outputs:
-      book_details: $.capability_result.value
+      book_record: $.capability_result.value
       result_status: $.result_status
     result_surface:
     - SUCCESS
@@ -67,22 +67,31 @@ core:
       NOT_FOUND: exit
       VIOLATION: exit
       BACKEND_ERROR: exit
-  - step: read_copies
+  - step: select_copy_records
     side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
-    op: LIST
+    op: SELECT
     store: PHYSICAL_COPIES
-    inputs:
-      filter:
-        work_id: $.inputs.work_id
+    inputs: {}
     outputs:
-      copies: $.capability_result.keys
+      records: $.capability_result.records
       result_status: $.result_status
     result_surface:
     - SUCCESS
-    - VIOLATION
     - BACKEND_ERROR
+    on_result:
+      SUCCESS: continue
+      BACKEND_ERROR: exit
+  - step: select_copies_of_book
+    transform: capability_transforms::CT_PURE_FILTER_RECORDS_V0
+    inputs:
+      source: $.results.select_copy_records.records
+      filter: $.inputs.copy_criteria
+    outputs:
+      copies_held: $.capability_result.extracted
+    result_surface:
+    - SUCCESS
+    - VIOLATION
     on_result:
       SUCCESS: exit
       VIOLATION: exit
-      BACKEND_ERROR: exit
 ```

@@ -1,8 +1,8 @@
-# IN_SEARCH_CATALOG_V0
+# IN_REINSTATE_PHYSICAL_COPY_V0
 
 ## Header (Mandatory)
 
-- **Artifact Code:** IN_SEARCH_CATALOG_V0
+- **Artifact Code:** IN_REINSTATE_PHYSICAL_COPY_V0
 - **Artifact Kind:** intent
 - **Governed By:** CONSTITUTION_INTENT_V0
 - **Version:** V0
@@ -13,20 +13,20 @@
 
 ## 1. Intent
 
-A request to locate material by subject or by title
+A request to return a retired copy to the registered state
 
 ---
 
 ## Machine
 
 ```yaml
-fqdn: book_library_mgmt::IN_SEARCH_CATALOG_V0
+fqdn: book_library_mgmt::IN_REINSTATE_PHYSICAL_COPY_V0
 artifact_kind: INTENT
 version: v0
 governed_by: fb.intent::CONSTITUTION_INTENT_V0
 core:
-  summary: A request to locate material by subject or by title
-  workflow: WF_SEARCH_CATALOG_V0
+  summary: A request to return a retired copy to the registered state
+  workflow: WF_REINSTATE_PHYSICAL_COPY_V0
   inputs:
     staff_credentials:
       type: object
@@ -34,8 +34,8 @@ core:
     authorization_rules:
       type: array
       required: true
-    search_criteria:
-      type: object
+    barcode:
+      type: string
       required: true
     staff_id:
       type: string

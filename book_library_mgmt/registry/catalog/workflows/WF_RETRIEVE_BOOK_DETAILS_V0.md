@@ -13,10 +13,7 @@
 
 ## 1. Intent
 
-Assembling a work's record together with the copies belonging to it.
-
-Authorization is confirmed first and the operation is journalled last, so every catalog operation
-is performed by someone entitled to and leaves an account of itself.
+Assembling a book with the copies the library holds of it
 
 ---
 
@@ -31,7 +28,7 @@ runtime_binding: book_library_mgmt::RB_CATALOG_BINDINGS_V0
 subdomain: catalog
 structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
-  summary: Assemble a work with the copies belonging to it
+  summary: Assembling a book with the copies the library holds of it
   actor_context: book_library_mgmt::AC_LIBRARY_STAFF_V0
   start_node: IN_RETRIEVE_BOOK_DETAILS_V0
   nodes:
@@ -45,20 +42,20 @@ core:
       type: CC
       code: CC_CONFIRM_STAFF_AUTHORIZED_V0
       inputs:
-        staff_id: $.payload.staff_id
+        staff_credentials: $.payload.staff_credentials
+        authorization_rules: $.payload.authorization_rules
       next:
-        SUCCESS: CC_ASSEMBLE_BOOK_DETAILS_V0
-        NOT_FOUND: EXIT_REJECTED
-        DENIED: EXIT_REJECTED
+        SUCCESS: CC_APPEND_CATALOG_OPERATION_V0
         VIOLATION: EXIT_REJECTED
-        BACKEND_ERROR: EXIT_REJECTED
     CC_ASSEMBLE_BOOK_DETAILS_V0:
       type: CC
       code: CC_ASSEMBLE_BOOK_DETAILS_V0
       inputs:
-        work_id: $.payload.work_id
+        identity_key: $.payload.identity_key
+        copy_criteria:
+          identity_key: $.payload.identity_key
       next:
-        SUCCESS: CC_APPEND_CATALOG_OPERATION_V0
+        SUCCESS: EXIT_COMPLETED
         NOT_FOUND: EXIT_REJECTED
         VIOLATION: EXIT_REJECTED
         BACKEND_ERROR: EXIT_REJECTED
@@ -68,9 +65,12 @@ core:
       inputs:
         staff_id: $.payload.staff_id
         operation: RETRIEVE_BOOK_DETAILS
-        subject: $.payload.work_id
+        record:
+          operation: RETRIEVE_BOOK_DETAILS
+          staff_id: $.payload.staff_id
+          subject: $.payload.identity_key
       next:
-        SUCCESS: EXIT_COMPLETED
+        SUCCESS: CC_ASSEMBLE_BOOK_DETAILS_V0
         VIOLATION: EXIT_REJECTED
         BACKEND_ERROR: EXIT_REJECTED
     EXIT_COMPLETED:

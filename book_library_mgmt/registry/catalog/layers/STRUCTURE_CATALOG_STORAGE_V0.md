@@ -13,8 +13,7 @@
 
 ## 1. Intent
 
-The stores the catalog subdomain owns. A subdomain owns its stores exclusively: no peer writes
-these, and the catalog writes no peer's.
+Declares the five stores the catalog owns and the paths they occupy
 
 ---
 
@@ -25,43 +24,20 @@ fqdn: book_library_mgmt::STRUCTURE_CATALOG_STORAGE_V0
 artifact_kind: STRUCTURE
 version: v0
 governed_by: fb.structure::CONSTITUTION_STRUCTURE_V0
-
 core:
-  summary: Catalog subdomain storage topology
-  description: Maps catalog record stores to paths under the instance data root.
-
+  summary: Declares the five stores the catalog owns and the paths they occupy
   layer: DOMAINS
   domain: book_library_mgmt
   subdomain: catalog
-
-  storage_roots:
-    base_path: "{{module_data_root}}"
-    description: "Root path for all catalog storage (resolved at runtime)"
-
   entity_stores:
-    BIBLIOGRAPHIC_WORKS:
-      description: "The authoritative record of each cataloged work — owned by catalog"
-      path: "book_library_mgmt/catalog/bibliographic_works.json"
+    BOOKS:
+      path: book_library_mgmt/catalog/books.json
     PHYSICAL_COPIES:
-      description: "The authoritative record of each copy the library owns, each naming one work"
-      path: "book_library_mgmt/catalog/physical_copies.json"
+      path: book_library_mgmt/catalog/physical_copies.json
     CATALOG_OPERATIONS:
-      description: "Append-only account of every catalog operation performed"
-      path: "book_library_mgmt/catalog/catalog_operations.jsonl"
-    CATALOG_STAFF:
-      description: "Which staff members are authorized — read here, granted by patron in a future change"
-      path: "book_library_mgmt/catalog/catalog_staff.json"
-
-  resolution:
-    description: "Runtime path resolution strategy"
-    algorithm: "base_path / entity_stores[entity_type].path"
-    example: "{{module_data_root}}/book_library_mgmt/catalog/bibliographic_works.json"
-
-  isolation:
-    description: "Entity storage isolation constraints"
-    rules:
-      - "Each entity type has dedicated storage"
-      - "CATALOG_OPERATIONS is append-only — a performed operation is never rewritten"
-      - "All paths are scoped under book_library_mgmt/catalog — no cross-subdomain writes"
-      - "Storage paths resolved via STRUCTURE only"
+      path: book_library_mgmt/catalog/catalog_operations.jsonl
+    BOOK_IDENTITY_REGISTRY:
+      path: book_library_mgmt/catalog/book_identity_registry.json
+    COPY_BARCODE_REGISTRY:
+      path: book_library_mgmt/catalog/copy_barcode_registry.json
 ```
