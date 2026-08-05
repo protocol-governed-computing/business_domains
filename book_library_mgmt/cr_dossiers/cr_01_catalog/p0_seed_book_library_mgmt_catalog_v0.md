@@ -188,3 +188,27 @@ is ordered, or what is owed.
 | A staff member who is not authorized cannot perform any catalog operation. |
 | Registering the same book twice does not produce two authoritative records for it. |
 | Every catalog operation performed can be traced and audited after the fact. |
+
+## 16. Identity and Sameness
+
+<!-- register:identity_and_sameness business_language optional -->
+| Business Object | Identified By | Two Are The Same When |
+|-----------------|---------------|-----------------------|
+
+## 17. Lifecycle Transitions
+
+<!-- register:lifecycle_transitions business_language optional -->
+| Object | From State | To State | Triggered By | Cascade |
+|--------|------------|----------|--------------|---------|
+
+## 18. Operation Refusals
+
+<!-- register:operation_refusals business_language optional -->
+| Operation | Refused When | Business Reason |
+|-----------|--------------|-----------------|
+
+## 19. Authority Deferrals
+
+<!-- register:authority_deferrals business_language optional -->
+| Business Object | Deferred To | Until |
+|-----------------|-------------|-------|
