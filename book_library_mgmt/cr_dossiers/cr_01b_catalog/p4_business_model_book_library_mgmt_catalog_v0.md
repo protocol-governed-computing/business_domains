@@ -85,6 +85,7 @@ the capability graph exactly as Stage 3 stated it.
 | Retire a physical copy | S3 authoring_decisions Retire a physical copy | CRITICAL | GAP-10 | Nothing in the composition satisfies it. |
 | Return a retired book record to the registered state | S3 authoring_decisions Return a retired book record to the registered state | CRITICAL | GAP-11 | Nothing in the composition satisfies it. |
 | Return a retired physical copy to the registered state | S3 authoring_decisions Return a retired physical copy to the registered state | CRITICAL | GAP-12 | Nothing in the composition satisfies it. |
+| Read every book record so that a search can select among them by content | S3 authoring_decisions Read every book record so that a search can select among them by content | CRITICAL | GAP-17 | Owned by platform: an existing mechanism amended to publish records. |
 | Search the catalog by subject or title, excluding retired books | S3 authoring_decisions Search the catalog by subject or title, excluding retired books | CRITICAL | GAP-13 | Nothing in the composition satisfies it. |
 | Retrieve a book's complete details with the copies the library holds | S3 authoring_decisions Retrieve a book's complete details with the copies the library holds | CRITICAL | GAP-14 | Nothing in the composition satisfies it. |
 | A governed entry point for each catalog operation | S3 authoring_decisions A governed entry point for each catalog operation | CRITICAL | GAP-15 | Nothing in the composition satisfies it. |
@@ -153,6 +154,7 @@ reads whether a staff member is authorized and never decides it.
 | GAP-14 | S3 authoring_decisions Retrieve a book's complete details with the copies the library holds | Retrieve a book's complete details with the copies the library holds | catalog | NEW |
 | GAP-15 | S3 authoring_decisions A governed entry point for each catalog operation | A governed entry point for each catalog operation | catalog | NEW |
 | GAP-16 | S3 authoring_decisions A business moment for each of the five catalog events | A business moment for each of the five catalog events | catalog | NEW |
+| GAP-17 | S3 authoring_decisions Read every book record so that a search can select among them by content | Read every book record so that a search can select among them by content | platform | EXTEND |
 
 ---
 
@@ -171,6 +173,7 @@ reads whether a staff member is authorized and never decides it.
 | 8 | Authorization is read on every operation and granted nowhere in this change. | S1 authority_deferrals #1 | The catalog requires staff to be authorized; deciding who is authorized belongs to the staff function, which a future change request introduces. | The catalog authors an authorization read and no authorization grant; the dependency on the staff function is that peer's gap. |
 | 9 | Subject is free text, so no value-set validation applies. | S3 analysis_findings #6 | The business chose free text. Decided by the business owner. | One fewer reuse candidate; search by kind is only as consistent as what staff type. |
 | 10 | Search excludes retired books while retrieval serves them. | S3 analysis_findings #4 | A retired record must stay auditable and retrievable without appearing as current stock. | Both read paths select by stated criteria, with the record's state as one of them. |
+| 11 | The durable-record mechanism is extended to publish records, rather than the catalog keeping a second copy of every book for searching. | S3 analysis_findings #7 | The implementation already returned records and only the declaration withheld them; a projection store would duplicate every book and need syncing on every update, retirement and reinstatement. Decided by the business owner. | One additive operation on a platform side effect; the catalog holds no second copy of a book. |
 
 ---
 
@@ -196,6 +199,8 @@ reads whether a staff member is authorized and never decides it.
 | Retrieve a book's complete details with the copies the library holds | GAP-14 |
 | A governed entry point for each catalog operation | GAP-15 |
 | A business moment for each of the five catalog events | GAP-16 |
+
+| Read every book record so that a search can select among them by content | GAP-17 |
 
 ### Deferred — Future CR
 | Capability | Deferred Reason |

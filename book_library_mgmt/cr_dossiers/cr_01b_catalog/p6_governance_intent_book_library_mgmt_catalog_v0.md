@@ -40,6 +40,7 @@ perform catalog operations.
 | Retrieve a book's complete details with the copies held | catalog | OWNED |  | S4 authoring_scope GAP-13 |
 | Confirm the staff member performing an operation is authorized | catalog | OWNED |  | S4 authoring_scope GAP-04 |
 | Record every performed catalog operation in the catalog's own audit trail | catalog | OWNED |  | S4 authoring_scope GAP-01 |
+| Read every book record so that a search can select among them by content | platform | OWNED |  | S4 authoring_scope GAP-17 |
 | Hold a durable record that can be read, listed and updated in place | platform | SATISFIED | capability_side_effects::CS_MUTABLE_JSON_V0 | S3 authoring_decisions Hold a book record durably and update it in place |
 | Claim a value once so a second claim on it fails | platform | SATISFIED | capability_side_effects::CS_REGISTRY_V0 | S3 authoring_decisions Enforce that one book exists per title, author and publication year |
 | Append an entry to a trail that cannot be amended | platform | SATISFIED | capability_side_effects::CS_APPENDONLY_JSONL_V0 | S3 authoring_decisions Append an entry to an append-only trail |
@@ -90,7 +91,7 @@ called.
 <!-- register:pps_artifacts_requiring_action optional -->
 | FQDN | Current Status | Action (REPLACE, REVIEW, REUSE) | Source Finding |
 |------|----------------|----------------------------------|----------------|
-| capability_side_effects::CS_MUTABLE_JSON_V0 | Declared and in use by ai_governance and workload | REUSE | S3 impact_analysis capability_side_effects::CS_MUTABLE_JSON_V0 |
+| capability_side_effects::CS_MUTABLE_JSON_V0 | Declared and in use by ai_governance and workload | EXTEND | S3 impact_analysis capability_side_effects::CS_MUTABLE_JSON_V0 |
 | capability_side_effects::CS_REGISTRY_V0 | Declared and in use by ai_governance | REUSE | S3 impact_analysis capability_side_effects::CS_REGISTRY_V0 |
 | capability_side_effects::CS_APPENDONLY_JSONL_V0 | Declared and in use by ai_governance | REUSE | S3 impact_analysis capability_side_effects::CS_APPENDONLY_JSONL_V0 |
 | capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 | Declared, no current consumer | REUSE | S3 impact_analysis capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 |

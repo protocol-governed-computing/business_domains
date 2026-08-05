@@ -37,6 +37,7 @@ ordered, who the library's patrons are, or which staff are authorized.
 | Retrieve a book's complete details with the copies held | IN_SCOPE | Serves retired books as well as registered ones | S4 authoring_scope GAP-13 |
 | Confirm the staff member performing an operation is authorized | IN_SCOPE | The catalog reads authorization; it never grants it | S4 authoring_scope GAP-04 |
 | Record every performed catalog operation in the catalog's own audit trail | IN_SCOPE | The catalog owns the trail it appends to | S4 authoring_scope GAP-01 |
+| Read every book record so that a search can select among them by content | IN_SCOPE | An existing mechanism amended to publish records; owned by platform, not by the catalog | S4 authoring_scope GAP-17 |
 | Deciding which staff are authorized | DEFERRED | Belongs to the staff function, which a future change request introduces | S1 authority_deferrals #1 |
 | Deleting a catalog record | DEFERRED | Not deferred but excluded: a record is never deleted, so no capability is authored for it | S1 business_invariants #9 |
 | Importing the records staff maintain manually today | DEFERRED | The catalog starts empty | S1 out_of_scope Import of the records staff maintain manually today |
