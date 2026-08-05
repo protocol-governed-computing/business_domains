@@ -52,6 +52,8 @@ wrote rather than to a conversation.
 | Are the existing manual records imported? | No. The catalog starts empty. |
 | Are the three assumptions true as written? | Confirmed: no performance requirement, one collection, the nine remaining functions establish future scope only. |
 | Is `NEW_SUBDOMAIN` the right classification? | Confirmed. |
+| May a retired book or copy return to the registered state? | Yes — authorized staff may reinstate either. Retirement final would leave a re-acquired book's copies invisible to search, and a found copy with nothing to come back as. |
+| May an update change the title, author or publication year? | Yes, and the update is refused when the result would match another registered book. Forbidding it would force retire-and-re-register, which orphans the copies. |
 
 ---
 
@@ -60,7 +62,7 @@ wrote rather than to a conversation.
 | Source | Count | What it covers |
 |---|---|---|
 | **Observed** — read from the baseline | 7 | namespace absence, vocabulary collisions, stores, subdomains, reusable capabilities |
-| **Provided** — answered by the business author | 20 | every question above, each written into the statement |
+| **Provided** — answered by the business author | 22 | every question above, each written into the statement |
 | **Quoted** — restated from the statement | all remaining seed rows | reorganization, not enrichment |
 | **Inferred** — asserted by the pipeline and not validated | 0 | — |
 
@@ -77,12 +79,16 @@ put the answers:
 | Register | Why it was missing | What it now holds |
 |---|---|---|
 | §16 Identity and Sameness | Identity blocked every other question and had been landing in Known Facts, where no phase reads it as a rule | Book identified by title + author + publication year; copy by barcode |
-| §17 Lifecycle Transitions | §9 records states but not what moves between them, so a deliberate *no cascade* decision had nowhere to live and a later phase would be free to invent one | Four transitions, each declaring its cascade as none |
-| §18 Operation Refusals | Refusals were scattered between Known Facts and Constraints; an omitted refusal becomes a path that succeeds where the business requires failure | Five refusals |
+| §17 Lifecycle Transitions | §9 records states but not what moves between them, so a deliberate *no cascade* decision had nowhere to live and a later phase would be free to invent one | Six transitions, each declaring its cascade as none |
+| §18 Operation Refusals | Refusals were scattered between Known Facts and Constraints; an omitted refusal becomes a path that succeeds where the business requires failure | Seven refusals |
 | §19 Authority Deferrals | §11 can only name an owner, so a deferral was indistinguishable from ownership and P6 would place against a function that does not exist | Staff authorization deferred to `staff` |
 
 The elicitation table in the P0 template gained a question for each — none of the four was among the
 sixteen it previously asked.
+
+The last two answers came from a cold reproduction rather than from the walk: a worker authoring the
+same seed with no access to the elicitation raised both as blocking, and the statement was silent on
+each. See `p0_cold_reproduction.md`.
 
 **Verdict:** ADMISSIBLE, 0 findings over 80 declared rules, figure of merit ★★★★★ 5/5 with no open
 clarifications.

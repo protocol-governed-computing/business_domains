@@ -76,6 +76,13 @@ A physical copy may be retired on its own, when it is lost or damaged.
 
 A physical copy may be registered against a retired book.
 
+Retirement may be reversed: authorized staff may return a retired book record or a retired physical
+copy to the registered state.
+
+An update to bibliographic information may change the title, author or publication year. The update
+is refused when the changed title, author and publication year would match another registered book,
+because that would make one book a duplicate of another.
+
 No retirement follows automatically from another: retiring a book record does not retire its copies,
 and retiring the last copy does not retire the book. Staff retire each record explicitly.
 

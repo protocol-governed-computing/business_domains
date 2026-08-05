@@ -80,6 +80,9 @@ operations that maintain that description, and it governs none of the nine remai
 | Each physical copy carries a barcode the library assigns, which identifies that copy among all the copies the library owns. | HIGH |
 | A physical copy may be retired on its own, when it is lost or damaged. | HIGH |
 | A physical copy may be registered against a retired book. | HIGH |
+| Authorized staff may return a retired book record or a retired physical copy to the registered state. | HIGH |
+| An update to bibliographic information may change the title, author or publication year. | HIGH |
+| An update is refused when the changed title, author and publication year would match another registered book. | HIGH |
 | No retirement follows automatically from another: retiring a book does not retire its copies, and retiring the last copy does not retire the book. | HIGH |
 | A registration whose title, author and publication year match a registered book is refused, because the book already exists. | HIGH |
 | A retired book is excluded from search results, and its details remain retrievable. | HIGH |
@@ -145,9 +148,9 @@ operations that maintain that description, and it governs none of the nine remai
 | Object | State | Meaning |
 |--------|-------|---------|
 | Book | Registered | The book has been registered and the catalog holds its authoritative record. |
-| Book | Retired | The record has been judged obsolete and is no longer to be used; the book is excluded from search and its details remain retrievable. |
+| Book | Retired | The record has been judged obsolete and is no longer to be used; the book is excluded from search, its details remain retrievable, and staff may return it to Registered. |
 | Physical Copy | Registered | The copy has been registered against exactly one book. |
-| Physical Copy | Retired | The copy has been lost or damaged and is no longer held by the library. |
+| Physical Copy | Retired | The copy has been lost or damaged and is no longer held by the library; staff may return it to Registered. |
 
 ## 10. Business Events
 
@@ -227,6 +230,9 @@ operations that maintain that description, and it governs none of the nine remai
 | A retired book does not appear in search results, and its details can still be retrieved. |
 | Authorized staff can retrieve the complete details of a registered book, including the physical copies the library holds of it. |
 | Authorized staff can register a physical copy against a retired book. |
+| Authorized staff can return a retired book record to the registered state, and it appears in search again. |
+| Authorized staff can return a retired physical copy to the registered state. |
+| An update that would make a book's title, author and publication year match another registered book is refused. |
 | A copy registration whose barcode matches a copy the library already owns is refused. |
 | A staff member who is not authorized cannot perform any catalog operation. |
 | Every catalog operation performed can be traced and audited afterwards. |
@@ -246,8 +252,10 @@ operations that maintain that description, and it governs none of the nine remai
 |--------|------------|----------|--------------|---------|
 | Book | — | Registered | Authorized staff register the book together with its first physical copy. | None beyond the first copy being registered with it. |
 | Book | Registered | Retired | Authorized staff judge the record obsolete and retire it. | None — the book's physical copies are unaffected. |
+| Book | Retired | Registered | Authorized staff return the retired book record to the registered state. | None — the book's physical copies are unaffected. |
 | Physical Copy | — | Registered | Authorized staff register the copy against a registered book. | None. |
 | Physical Copy | Registered | Retired | Authorized staff retire a copy that is lost or damaged. | None — the book record is unaffected, including when it is the last copy. |
+| Physical Copy | Retired | Registered | Authorized staff return the retired copy to the registered state. | None — the book record is unaffected. |
 
 ## 18. Operation Refusals
 
@@ -259,6 +267,7 @@ operations that maintain that description, and it governs none of the nine remai
 | Register a book | It carries no subject. | A book carries at least one subject, and subject is what staff search on. |
 | Register a physical copy | The book it names is not registered. | Each physical copy belongs to exactly one book. |
 | Register a physical copy | Its barcode matches a copy the library already owns. | A barcode identifies one copy; no two copies share one. |
+| Update bibliographic information | The changed title, author and publication year would match another registered book. | Title, author and publication year identify a book; an update must not make one book a duplicate of another. |
 | Any catalog operation | The staff member performing it is not authorized. | Only authorized staff may perform catalog operations. |
 
 ## 19. Authority Deferrals
