@@ -9,6 +9,8 @@
 
 ## 1. Subdomain Purpose
 
+<!-- register:subdomain_purpose business_language -->
+
 The catalog governs the library's authoritative description of what it holds: one record for each book
 it catalogs, and one for each physical copy it owns. It establishes the authority to state what the
 library has — a book exists in the collection because the catalog says so, and a copy belongs to
@@ -18,6 +20,11 @@ that any change to the library's description of itself can be traced afterwards.
 those records are maintained by hand today, which produces inconsistent descriptions, duplicate
 entries and difficulty locating materials. It does not govern who borrows the collection, what is
 ordered, who the library's patrons are, or which staff are authorized.
+
+<!-- register:purpose_provenance business_language=refinement -->
+| Source | Disposition (INHERITED, REFINED) | Refinement |
+|--------|----------------------------------|------------|
+| CR seed §0 Subdomain Purpose | REFINED | States the authority the subdomain establishes — a book exists in the collection because the catalog says so — the lifecycle it manages from registration through retirement and back, and the four functions it explicitly does not govern. The seed states what the catalog is for and why it exists; none of these four additions contradicts it. |
 
 ---
 
