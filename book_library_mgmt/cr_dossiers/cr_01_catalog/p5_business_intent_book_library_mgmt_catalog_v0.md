@@ -120,7 +120,7 @@ is why both record stores hold state as data rather than by which store a record
 ## 7. Provisional Artifact Codes
 
 <!-- register:provisional_codes business_language=summary -->
-| Provisional Code | Family (AC, IN, WF, CC) | Summary | Source Finding |
+| Provisional Code | Family (AC, IN, WF, CC, CT, EV, RB, STRUCTURE) | Summary | Source Finding |
 |------------------|-------------------------|---------|----------------|
 | AC_LIBRARY_STAFF_V0 | AC | The authorized staff member who performs a catalog operation | S4 actors Authorized staff member |
 | IN_REGISTER_BOOK_V0 | IN | A request to register a book together with its first physical copy | S5 actions Register |
@@ -154,7 +154,16 @@ is why both record stores hold state as data rather than by which store a record
 | CC_SEARCH_CATALOG_V0 | CC | Select the registered books matching a subject or title, excluding retired ones | S4 capability_graph Search the catalog by subject or title, excluding retired books |
 | CC_ASSEMBLE_BOOK_DETAILS_V0 | CC | Assemble a book's record with the copies recorded against it | S4 capability_graph Retrieve a book's complete details with the copies the library holds |
 | CC_APPEND_CATALOG_OPERATION_V0 | CC | Append a durable account of a performed operation to the catalog's own audit trail | S4 capability_graph Record a performed catalog operation in the catalog's audit trail |
-
+| CT_PURE_FORM_BOOK_IDENTITY_KEY_V0 | CT | Forms the single key claimed for a book from its title, author and publication year | S4 gap_register GAP-06 |
+| CC_VALIDATE_BOOK_SUBMISSION_V0 | CC | Confirms a registration carries what a book record requires, before any identity is claimed | S4 gap_register GAP-06 |
+| CC_RESOLVE_BOOK_IDENTITY_V0 | CC | Resolves a registered book by its identifying key, so an update names the book independently of the attributes it changes | S4 gap_register GAP-08 |
+| EV_BOOK_REGISTERED_V0 | EV | The moment a book enters the catalog | S4 gap_register GAP-16 |
+| EV_PHYSICAL_COPY_REGISTERED_V0 | EV | The moment the library records another copy it owns | S4 gap_register GAP-16 |
+| EV_BIBLIOGRAPHIC_INFORMATION_UPDATED_V0 | EV | The moment a book's authoritative description changes | S4 gap_register GAP-16 |
+| EV_BOOK_RETIRED_V0 | EV | The moment a book record is judged obsolete | S4 gap_register GAP-16 |
+| EV_PHYSICAL_COPY_RETIRED_V0 | EV | The moment the library no longer holds a copy | S4 gap_register GAP-16 |
+| RB_CATALOG_BINDINGS_V0 | RB | Binds the catalog's operations to the stores and mechanisms they use | S4 gap_register GAP-03 |
+| STRUCTURE_CATALOG_STORAGE_V0 | STRUCTURE | Declares the stores the catalog owns and the paths they occupy | S4 gap_register GAP-02 |
 ---
 
 ## 8. Cross-Subdomain References
