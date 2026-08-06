@@ -1,4 +1,4 @@
-# STRUCTURE_BUILD_AI_GOVERNANCE_CONFIG_V0
+# STRUCTURE_BUILD_BOOK_LIBRARY_MGMT_CONFIG_V0
 
 **Artifact Type**: STRUCTURE
 **Version**: V0
@@ -8,7 +8,7 @@
 
 ## Purpose
 
-Self-describing build manifest for the **AI governance business domain** (`ai_governance::`) — an
+Self-describing build manifest for the **AI governance business domain** (`book_library_mgmt::`) — an
 independently-authored domain compiled **against** the already-compiled governance surface, then
 composed into the assembled universe.
 
@@ -19,7 +19,7 @@ the immutable `STRUCTURE_DISCOVERY_V0` / `STRUCTURE_IDENTITY_V0`.
 
 ## Subdomains
 
-The domain is one namespace (`ai_governance`) partitioned into two subdomains, each carried by the
+The domain is one namespace (`book_library_mgmt`) partitioned into two subdomains, each carried by the
 `subdomain:` declaration on its workflows and resolved by recursive discovery under `registry/`:
 
 | Subdomain | Concern |
@@ -36,32 +36,32 @@ deleting its folder — no other artifact is touched.
 ## Machine
 
 ```yaml
-fqdn: ai_governance::STRUCTURE_BUILD_AI_GOVERNANCE_CONFIG_V0
+fqdn: book_library_mgmt::STRUCTURE_BUILD_BOOK_LIBRARY_MGMT_CONFIG_V0
 artifact_kind: STRUCTURE
 version: V0
 governed_by: fb.structure::CONSTITUTION_STRUCTURE_V0
-structure_scope: ai_governance
+structure_scope: book_library_mgmt
 reuse_visibility: business
 core:
-  summary: Build-time STRUCTURE manifest (AI governance business-domain scope)
-  description: 'Compiles the ai_governance domain''s own artifacts (WF/IN/CC/CT/EV/AC/RB/STRUCTURE),
+  summary: Build-time STRUCTURE manifest (book library management business-domain scope)
+  description: 'Compiles the book_library_mgmt domain''s own artifacts (WF/IN/CC/CT/EV/AC/RB/STRUCTURE),
     resolving governance and platform capability references against the imported compiled governance
-    surface. Emits only ai_governance artifacts. Self-describing: declares its own source layer and
+    surface. Emits only book_library_mgmt artifacts. Self-describing: declares its own source layer and
     namespace rule additively.
 
     '
 layer_definitions:
-  AI_GOVERNANCE:
+  BOOK_LIBRARY_MGMT:
     domain_subpath: registry
-    registry_module: ai_governance.registry
-    implementation_namespace: ai_governance.implementation.capability_transforms.atoms
+    registry_module: book_library_mgmt.registry
+    implementation_namespace: book_library_mgmt.implementation.capability_transforms.atoms
     layer_category: domain
 identity_rules:
-- match: ai_governance.registry
-  namespace: ai_governance
+- match: book_library_mgmt.registry
+  namespace: book_library_mgmt
 artifact_discovery:
   search_layers:
-  - AI_GOVERNANCE
+  - BOOK_LIBRARY_MGMT
   import_surface:
     domain: platform
   artifact_types:
@@ -94,30 +94,30 @@ output_configuration:
     layer: GOVERNANCE
     subpath: compiled/visualization
   layer_outputs:
-    AI_GOVERNANCE:
-      layer: AI_GOVERNANCE
+    BOOK_LIBRARY_MGMT:
+      layer: BOOK_LIBRARY_MGMT
       subpath: compiled/canonical
   bootstrap_search_roots:
   - layer: GOVERNANCE
     subpath: structure/structures
 build_phases:
 - phase: discover
-  description: Discover ai_governance artifacts via STRUCTURE
+  description: Discover book_library_mgmt artifacts via STRUCTURE
 - phase: parse
   description: Parse artifacts into canonical machine form
 - phase: normalize
-  description: Resolve references (ai_governance + imported governance surface)
+  description: Resolve references (book_library_mgmt + imported governance surface)
 - phase: validate
   description: Validate artifacts using compiler schema rules
 - phase: assert
   description: Evaluate cross-artifact invariants
 - phase: materialize
-  description: Emit deterministic compiled artifacts (ai_governance scope only)
+  description: Emit deterministic compiled artifacts (book_library_mgmt scope only)
   target: compiled/artifacts/
 ```
 
 ## Version History
 
 - **V0**: First AI governance business-domain build manifest. Self-describing; compiles
-  `ai_governance::` against the imported compiled governance surface; emits only `ai_governance`
+  `book_library_mgmt::` against the imported compiled governance surface; emits only `book_library_mgmt`
   artifacts. Governance surface unchanged.
