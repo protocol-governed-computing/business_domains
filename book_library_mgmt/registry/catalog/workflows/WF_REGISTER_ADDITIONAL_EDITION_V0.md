@@ -88,6 +88,7 @@ core:
         identity_key: $.results.CC_CLAIM_BOOK_IDENTITY_V0.identity_key
         edition_schema: $.payload.edition_schema
         edition_fields:
+          identity_key: $.results.CC_CLAIM_BOOK_IDENTITY_V0.identity_key
           title: $.payload.title
           author: $.payload.author
           publication_year: $.payload.publication_year

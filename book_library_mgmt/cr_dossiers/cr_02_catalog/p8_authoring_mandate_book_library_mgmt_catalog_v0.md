@@ -18,12 +18,13 @@ would mandate authoring an artifact that is already there. They are recorded in 
 |------|------|------|-------------------------------|-----------|------------|
 | 1 | 1 | book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0 | NEW | catalog | — |
 | 1 | 2 | book_library_mgmt::CT_PURE_GROUP_RECORDS_V0 | NEW | catalog | — |
-| 1 | 3 | book_library_mgmt::EV_WORK_REGISTERED_V0 | NEW | catalog | — |
-| 2 | 4 | book_library_mgmt::CC_CLAIM_WORK_IDENTITY_V0 | NEW | catalog | book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0 |
-| 2 | 5 | book_library_mgmt::CC_RESOLVE_WORK_V0 | NEW | catalog | book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0 |
-| 2 | 6 | book_library_mgmt::CC_REGISTER_ADDITIONAL_EDITION_V0 | NEW | catalog | — |
-| 3 | 7 | book_library_mgmt::IN_REGISTER_ADDITIONAL_EDITION_V0 | NEW | catalog | — |
-| 4 | 8 | book_library_mgmt::WF_REGISTER_ADDITIONAL_EDITION_V0 | NEW | catalog | book_library_mgmt::IN_REGISTER_ADDITIONAL_EDITION_V0, book_library_mgmt::CC_RESOLVE_WORK_V0, book_library_mgmt::CC_REGISTER_ADDITIONAL_EDITION_V0 |
+| 1 | 3 | book_library_mgmt::CT_PURE_SELECT_RECORDS_V0 | NEW | catalog | — |
+| 1 | 4 | book_library_mgmt::EV_WORK_REGISTERED_V0 | NEW | catalog | — |
+| 2 | 5 | book_library_mgmt::CC_CLAIM_WORK_IDENTITY_V0 | NEW | catalog | book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0 |
+| 2 | 6 | book_library_mgmt::CC_RESOLVE_WORK_V0 | NEW | catalog | book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0 |
+| 2 | 7 | book_library_mgmt::CC_REGISTER_ADDITIONAL_EDITION_V0 | NEW | catalog | — |
+| 3 | 8 | book_library_mgmt::IN_REGISTER_ADDITIONAL_EDITION_V0 | NEW | catalog | — |
+| 4 | 9 | book_library_mgmt::WF_REGISTER_ADDITIONAL_EDITION_V0 | NEW | catalog | book_library_mgmt::IN_REGISTER_ADDITIONAL_EDITION_V0, book_library_mgmt::CC_RESOLVE_WORK_V0, book_library_mgmt::CC_REGISTER_ADDITIONAL_EDITION_V0 |
 
 Four waves: the transforms and the business moment first, since nothing they need is authored here;
 then the contracts that compose them; then the entry point; then the workflow that routes between
@@ -51,7 +52,7 @@ a work by it, and the workflow that cannot be built until that contract exists.
 <!-- register:mandate_artifact_summary -->
 | Action (REPLACE, EXTEND, NEW) | Count | Description |
 |-------------------------------|-------|-------------|
-| NEW | 8 | 2 CT, 1 EV, 3 CC, 1 IN, 1 WF — every identity Stage 7 assigned |
+| NEW | 9 | 3 CT, 1 EV, 3 CC, 1 IN, 1 WF — every identity Stage 7 assigned |
 | EXTEND | 7 | STRUCTURE_CATALOG_STORAGE_V0, RB_CATALOG_BINDINGS_V0, WF_REGISTER_BOOK_V0, CC_REGISTER_BOOK_V0, CC_VALIDATE_BOOK_SUBMISSION_V0, CC_SEARCH_CATALOG_V0 and CC_ASSEMBLE_BOOK_DETAILS_V0 — amended in place, never authored, because each identity already exists in the composition |
 
 ---
@@ -63,6 +64,7 @@ a work by it, and the workflow that cannot be built until that contract exists.
 |------|-----------------|
 | book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0 | catalog |
 | book_library_mgmt::CT_PURE_GROUP_RECORDS_V0 | catalog |
+| book_library_mgmt::CT_PURE_SELECT_RECORDS_V0 | catalog |
 | book_library_mgmt::EV_WORK_REGISTERED_V0 | catalog |
 | book_library_mgmt::CC_CLAIM_WORK_IDENTITY_V0 | catalog |
 | book_library_mgmt::CC_RESOLVE_WORK_V0 | catalog |
@@ -86,6 +88,7 @@ a work by it, and the workflow that cannot be built until that contract exists.
 | Code | Purpose | Inputs | Outputs |
 |------|---------|--------|---------|
 | book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0 | Form the single key the registry claims for a work from its title and author, so that two registrations describing the same work resolve to one work | title:string, author:string | work_key:string |
+| book_library_mgmt::CT_PURE_SELECT_RECORDS_V0 | Select the records matching stated criteria and return none when none match, so an edition the library holds no copies of can still be described | source:array, filter:object | extracted:array |
 | book_library_mgmt::CT_PURE_GROUP_RECORDS_V0 | Group records by the value of a named attribute, so a search can answer once per work rather than once per matching edition | source:array, attribute:string | grouped:array |
 
 ---

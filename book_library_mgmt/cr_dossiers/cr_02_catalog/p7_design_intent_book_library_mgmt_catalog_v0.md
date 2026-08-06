@@ -65,6 +65,7 @@ them again would create a second artifact under the same name.
 | Capability | Family (AC, IN, WF, RB, CC, CT, EV, VOCAB, STRUCTURE) | Code | Summary | Owner Subdomain | Status | Source Finding |
 |------------|------------------------------------------------|------|---------|-----------------|--------|----------------|
 | Form the identifying key of a work from its title and author | CT | book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0 | Forms the single key claimed for a work from its title and author | catalog | NEW | S5 provisional_codes CT_PURE_FORM_WORK_IDENTITY_KEY_V0 |
+| Select records matching criteria, answering none when none match | CT | book_library_mgmt::CT_PURE_SELECT_RECORDS_V0 | Selects the records matching stated criteria and returns none when none match | catalog | NEW | S5 provisional_codes CT_PURE_SELECT_RECORDS_V0 |
 | Group selected records by an attribute they share | CT | book_library_mgmt::CT_PURE_GROUP_RECORDS_V0 | Groups records by the value of a named attribute, returning one group per distinct value | catalog | NEW | S5 provisional_codes CT_PURE_GROUP_RECORDS_V0 |
 | Claim a work's identity so that two registrations of one work do not produce two works | CC | book_library_mgmt::CC_CLAIM_WORK_IDENTITY_V0 | Forms the work key, claims it, and writes the work record when the claim is new | catalog | NEW | S5 provisional_codes CC_CLAIM_WORK_IDENTITY_V0 |
 | Resolve the work an edition belongs to | CC | book_library_mgmt::CC_RESOLVE_WORK_V0 | Forms the work key, resolves it against the registry, and reads the work record it names | catalog | NEW | S5 provisional_codes CC_RESOLVE_WORK_V0 |
@@ -139,9 +140,10 @@ them again would create a second artifact under the same name.
 | book_library_mgmt::CC_SEARCH_CATALOG_V0 | 2 | select_matching_books | capability_transforms::CT_PURE_FILTER_RECORDS_V0 | CT | FILTER_RECORDS | — | records, search_criteria | matching_books | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: source=records, filter=search_criteria; out: extracted=matching_books |
 | book_library_mgmt::CC_SEARCH_CATALOG_V0 | 3 | group_editions_by_work | book_library_mgmt::CT_PURE_GROUP_RECORDS_V0 | CT | GROUP_RECORDS | — | matching_books, group_by | matching_works | SUCCESS -> exit; VIOLATION -> exit | — | SUCCESS | in: source=matching_books, attribute=group_by; out: grouped=matching_works |
 | book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | 1 | read_book_record | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | READ | BOOKS | key | value | SUCCESS -> continue; NOT_FOUND -> exit; VIOLATION -> exit; BACKEND_ERROR -> exit | — | NOT_FOUND | — |
-| book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | 2 | read_work_record | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | READ | WORKS | key | value | SUCCESS -> continue; NOT_FOUND -> exit; VIOLATION -> exit; BACKEND_ERROR -> exit | — | NOT_FOUND | — |
-| book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | 3 | select_copy_records | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | SELECT | PHYSICAL_COPIES | — | records | SUCCESS -> continue; BACKEND_ERROR -> exit | — | SUCCESS | — |
-| book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | 4 | select_copies_of_book | capability_transforms::CT_PURE_FILTER_RECORDS_V0 | CT | FILTER_RECORDS | — | records, copy_criteria | copies_held | SUCCESS -> exit; VIOLATION -> exit | — | SUCCESS | in: source=records, filter=copy_criteria; out: extracted=copies_held |
+| book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | 2 | form_work_key | book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0 | CT | FORM_WORK_IDENTITY_KEY | — | title, author | work_key | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: title=title, author=author; out: work_key=work_key |
+| book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | 3 | read_work_record | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | READ | WORKS | key | value | SUCCESS -> continue; NOT_FOUND -> continue; VIOLATION -> exit; BACKEND_ERROR -> exit | — | NOT_FOUND | — |
+| book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | 4 | select_copy_records | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | SELECT | PHYSICAL_COPIES | — | records | SUCCESS -> continue; BACKEND_ERROR -> exit | — | SUCCESS | — |
+| book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | 5 | select_copies_of_book | book_library_mgmt::CT_PURE_SELECT_RECORDS_V0 | CT | SELECT_RECORDS | — | records, copy_criteria | copies_held | SUCCESS -> exit; VIOLATION -> exit | — | SUCCESS | in: source=records, filter=copy_criteria; out: extracted=copies_held |
 | book_library_mgmt::CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0 | 1 | read_book_record | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | READ | BOOKS | key | book_record | SUCCESS -> continue; NOT_FOUND -> exit; VIOLATION -> exit; BACKEND_ERROR -> exit | — | NOT_FOUND | — |
 | book_library_mgmt::CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0 | 2 | form_updated_identity_key | book_library_mgmt::CT_PURE_FORM_BOOK_IDENTITY_KEY_V0 | CT | FORM_BOOK_IDENTITY_KEY | — | updated_fields | updated_identity_key | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: title=title, author=author, publication_year=publication_year; out: identity_key=updated_identity_key |
 | book_library_mgmt::CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0 | 3 | compare_identity | capability_transforms::CT_PURE_COMPARE_EQUAL_V0 | CT | COMPARE_EQUAL | — | identity_key, updated_identity_key | identity_unchanged | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: left=identity_key, right=updated_identity_key; out: is_equal=identity_unchanged |
@@ -197,7 +199,10 @@ them again would create a second artifact under the same name.
 | book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | read_book_record | INPUT | key | inputs.identity_key | S7 cc_composition read_book_record |
 | book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | read_book_record | OUTPUT | value | capability_result.value | S7 cc_composition read_book_record |
 | book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | read_book_record | OUTPUT | result_status | result_status | S7 cc_composition read_book_record |
-| book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | read_work_record | INPUT | key | results.read_book_record.value.work_key | S7 cc_composition read_work_record |
+| book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | form_work_key | INPUT | title | results.read_book_record.value.title | S7 cc_composition form_work_key |
+| book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | form_work_key | INPUT | author | results.read_book_record.value.author | S7 cc_composition form_work_key |
+| book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | form_work_key | OUTPUT | work_key | capability_result.work_key | S7 cc_composition form_work_key |
+| book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | read_work_record | INPUT | key | results.form_work_key.work_key | S7 cc_composition read_work_record |
 | book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | read_work_record | OUTPUT | work_record | capability_result.value | S7 cc_composition read_work_record |
 | book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | select_copy_records | OUTPUT | records | capability_result.records | S7 cc_composition select_copy_records |
 | book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | select_copies_of_book | INPUT | source | results.select_copy_records.records | S7 cc_composition select_copies_of_book |
@@ -224,7 +229,7 @@ them again would create a second artifact under the same name.
 | book_library_mgmt::WF_REGISTER_ADDITIONAL_EDITION_V0 | book_library_mgmt::CC_CLAIM_BOOK_IDENTITY_V0 | INPUT | publication_year | payload.publication_year | S7 execution_topology CC_CLAIM_BOOK_IDENTITY_V0 |
 | book_library_mgmt::WF_REGISTER_ADDITIONAL_EDITION_V0 | book_library_mgmt::CC_REGISTER_ADDITIONAL_EDITION_V0 | INPUT | identity_key | results.CC_CLAIM_BOOK_IDENTITY_V0.identity_key | S7 execution_topology CC_REGISTER_ADDITIONAL_EDITION_V0 |
 | book_library_mgmt::WF_REGISTER_ADDITIONAL_EDITION_V0 | book_library_mgmt::CC_REGISTER_ADDITIONAL_EDITION_V0 | INPUT | edition_schema | payload.edition_schema | S7 execution_topology CC_REGISTER_ADDITIONAL_EDITION_V0 |
-| book_library_mgmt::WF_REGISTER_ADDITIONAL_EDITION_V0 | book_library_mgmt::CC_REGISTER_ADDITIONAL_EDITION_V0 | INPUT | edition_fields | {'title': '$.payload.title', 'author': '$.payload.author', 'publication_year': '$.payload.publication_year', 'subject': '$.payload.subject', 'state': 'REGISTERED', 'work_key': '$.results.CC_RESOLVE_WORK_V0.work_key'} | S7 execution_topology CC_REGISTER_ADDITIONAL_EDITION_V0 |
+| book_library_mgmt::WF_REGISTER_ADDITIONAL_EDITION_V0 | book_library_mgmt::CC_REGISTER_ADDITIONAL_EDITION_V0 | INPUT | edition_fields | {'identity_key': '$.results.CC_CLAIM_BOOK_IDENTITY_V0.identity_key', 'title': '$.payload.title', 'author': '$.payload.author', 'publication_year': '$.payload.publication_year', 'subject': '$.payload.subject', 'state': 'REGISTERED', 'work_key': '$.results.CC_RESOLVE_WORK_V0.work_key'} | S7 execution_topology CC_REGISTER_ADDITIONAL_EDITION_V0 |
 | book_library_mgmt::WF_REGISTER_ADDITIONAL_EDITION_V0 | book_library_mgmt::CC_APPEND_CATALOG_OPERATION_V0 | INPUT | staff_id | payload.staff_id | S7 execution_topology CC_APPEND_CATALOG_OPERATION_V0 |
 | book_library_mgmt::WF_REGISTER_ADDITIONAL_EDITION_V0 | book_library_mgmt::CC_APPEND_CATALOG_OPERATION_V0 | INPUT | operation | REGISTER_ADDITIONAL_EDITION | S7 execution_topology CC_APPEND_CATALOG_OPERATION_V0 |
 | book_library_mgmt::WF_REGISTER_ADDITIONAL_EDITION_V0 | book_library_mgmt::CC_APPEND_CATALOG_OPERATION_V0 | INPUT | record | {'operation': 'REGISTER_ADDITIONAL_EDITION', 'staff_id': '$.payload.staff_id', 'subject': '$.results.CC_CLAIM_BOOK_IDENTITY_V0.identity_key'} | S7 execution_topology CC_APPEND_CATALOG_OPERATION_V0 |
@@ -308,6 +313,9 @@ them again would create a second artifact under the same name.
 | book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0 | INPUT | title | string | YES |  | The work's title, compared without regard to letter case or repeated spacing |
 | book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0 | INPUT | author | string | YES |  | The work's author, compared the same way |
 | book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0 | OUTPUT | work_key | string | YES |  | The single key claimed for the work |
+| book_library_mgmt::CT_PURE_SELECT_RECORDS_V0 | INPUT | source | array | YES |  | The records to select from |
+| book_library_mgmt::CT_PURE_SELECT_RECORDS_V0 | INPUT | filter | object | YES |  | The criteria a record must match on every key |
+| book_library_mgmt::CT_PURE_SELECT_RECORDS_V0 | OUTPUT | extracted | array | YES |  | The records that matched, possibly none |
 | book_library_mgmt::CT_PURE_GROUP_RECORDS_V0 | INPUT | source | array | YES |  | The records to group |
 | book_library_mgmt::CT_PURE_GROUP_RECORDS_V0 | INPUT | attribute | string | YES |  | The attribute whose value decides which group a record belongs to |
 | book_library_mgmt::CT_PURE_GROUP_RECORDS_V0 | OUTPUT | grouped | array | YES |  | One group per distinct value, each carrying the records that share it |
@@ -356,6 +364,7 @@ them again would create a second artifact under the same name.
 | CT Code | Module | Callable | Operation | Kind (atom, molecule) | Purity (ct_pure, ct_impure) | Source Finding |
 |---------|--------|----------|-----------|-----------------------|-----------------------------|----------------|
 | book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0 | book_library_mgmt.implementation.capability_transforms.atoms.ct_pure_form_work_identity_key_v0 | execute | PURE_FORM_WORK_IDENTITY_KEY | atom | ct_pure | S7 new_artifacts CT_PURE_FORM_WORK_IDENTITY_KEY_V0 |
+| book_library_mgmt::CT_PURE_SELECT_RECORDS_V0 | book_library_mgmt.implementation.capability_transforms.atoms.ct_pure_select_records_v0 | execute | PURE_SELECT_RECORDS | atom | ct_pure | S7 new_artifacts CT_PURE_SELECT_RECORDS_V0 |
 | book_library_mgmt::CT_PURE_GROUP_RECORDS_V0 | book_library_mgmt.implementation.capability_transforms.atoms.ct_pure_group_records_v0 | execute | PURE_GROUP_RECORDS | atom | ct_pure | S7 new_artifacts CT_PURE_GROUP_RECORDS_V0 |
 
 ---

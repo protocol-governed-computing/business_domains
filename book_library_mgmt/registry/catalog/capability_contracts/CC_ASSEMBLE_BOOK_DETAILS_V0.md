@@ -71,12 +71,25 @@ core:
       NOT_FOUND: exit
       VIOLATION: exit
       BACKEND_ERROR: exit
+  - step: form_work_key
+    transform: book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0
+    inputs:
+      title: $.results.read_book_record.value.title
+      author: $.results.read_book_record.value.author
+    outputs:
+      work_key: $.capability_result.work_key
+    result_surface:
+    - SUCCESS
+    - VIOLATION
+    on_result:
+      SUCCESS: continue
+      VIOLATION: exit
   - step: read_work_record
     side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
     op: READ
     store: WORKS
     inputs:
-      key: $.results.read_book_record.value.work_key
+      key: $.results.form_work_key.work_key
     outputs:
       work_record: $.capability_result.value
     result_surface:
@@ -86,7 +99,7 @@ core:
     - BACKEND_ERROR
     on_result:
       SUCCESS: continue
-      NOT_FOUND: exit
+      NOT_FOUND: continue
       VIOLATION: exit
       BACKEND_ERROR: exit
   - step: select_copy_records
@@ -104,7 +117,7 @@ core:
       SUCCESS: continue
       BACKEND_ERROR: exit
   - step: select_copies_of_book
-    transform: capability_transforms::CT_PURE_FILTER_RECORDS_V0
+    transform: book_library_mgmt::CT_PURE_SELECT_RECORDS_V0
     inputs:
       source: $.results.select_copy_records.records
       filter: $.inputs.copy_criteria

@@ -136,6 +136,7 @@ which staff are authorized.
 | CC_SEARCH_CATALOG_V0 | CC | Extended: groups the matching editions under the work they belong to and answers one result per work | S4 gap_register GAP-10 |
 | CC_ASSEMBLE_BOOK_DETAILS_V0 | CC | Extended: carries a summary of the work the edition belongs to alongside the edition and its copies | S4 gap_register GAP-11 |
 | CT_PURE_FORM_WORK_IDENTITY_KEY_V0 | CT | Forms the single key claimed for a work from its title and author | S4 gap_register GAP-01 |
+| CT_PURE_SELECT_RECORDS_V0 | CT | Selects the records matching stated criteria and returns none when none match, so an edition the library holds no copies of can still be described | S4 gap_register GAP-11 |
 | CT_PURE_GROUP_RECORDS_V0 | CT | Groups selected records by an attribute they share, so a search can answer once per work | S4 gap_register GAP-04 |
 | EV_WORK_REGISTERED_V0 | EV | The moment a work enters the catalog | S4 gap_register GAP-13 |
 | STRUCTURE_CATALOG_STORAGE_V0 | STRUCTURE | Extended: declares the work record store and the work identity registry alongside the stores the catalog already owns | S4 gap_register GAP-05 |
