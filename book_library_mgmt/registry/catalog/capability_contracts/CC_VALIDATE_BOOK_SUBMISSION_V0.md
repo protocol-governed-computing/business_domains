@@ -13,7 +13,7 @@
 
 ## 1. Intent
 
-Validate a book submission is complete
+Confirms a registration carries what a work and an edition require, before any identity is claimed
 
 ---
 
@@ -25,8 +25,15 @@ artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 core:
-  summary: Validate a book submission is complete
+  summary: Confirms a registration carries what a work and an edition require, before any identity is
+    claimed
   inputs:
+    work_fields:
+      type: object
+      required: true
+    work_schema:
+      type: object
+      required: true
     book_fields:
       type: object
       required: true
@@ -51,6 +58,19 @@ core:
     inputs:
       record: $.inputs.book_fields
       schema: $.inputs.book_schema
+    outputs:
+      violations: $.capability_result.violations
+    result_surface:
+    - SUCCESS
+    - VIOLATION
+    on_result:
+      SUCCESS: continue
+      VIOLATION: exit
+  - step: validate_work_fields
+    transform: capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0
+    inputs:
+      record: $.inputs.work_fields
+      schema: $.inputs.work_schema
     outputs:
       violations: $.capability_result.violations
     result_surface:

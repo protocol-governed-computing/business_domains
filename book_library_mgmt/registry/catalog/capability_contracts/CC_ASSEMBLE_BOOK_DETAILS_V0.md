@@ -13,7 +13,7 @@
 
 ## 1. Intent
 
-Assemble a book's record with the copies recorded against it
+Assembles an edition, the physical copies of it, and the record of the work it belongs to
 
 ---
 
@@ -25,7 +25,7 @@ artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 core:
-  summary: Assemble a book's record with the copies recorded against it
+  summary: Assembles an edition, the physical copies of it, and the record of the work it belongs to
   inputs:
     identity_key:
       type: string
@@ -34,6 +34,9 @@ core:
       type: object
       required: true
   outputs:
+    work_record:
+      type: object
+      required: true
     book_record:
       type: object
       required: true
@@ -55,8 +58,27 @@ core:
     inputs:
       key: $.inputs.identity_key
     outputs:
-      book_record: $.capability_result.value
+      value: $.capability_result.value
       result_status: $.result_status
+      book_record: $.capability_result.value
+    result_surface:
+    - SUCCESS
+    - NOT_FOUND
+    - VIOLATION
+    - BACKEND_ERROR
+    on_result:
+      SUCCESS: continue
+      NOT_FOUND: exit
+      VIOLATION: exit
+      BACKEND_ERROR: exit
+  - step: read_work_record
+    side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
+    op: READ
+    store: WORKS
+    inputs:
+      key: $.results.read_book_record.value.work_key
+    outputs:
+      work_record: $.capability_result.value
     result_surface:
     - SUCCESS
     - NOT_FOUND

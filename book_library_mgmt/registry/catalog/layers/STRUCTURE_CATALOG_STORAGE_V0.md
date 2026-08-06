@@ -13,7 +13,7 @@
 
 ## 1. Intent
 
-Declares the five stores the catalog owns and the paths they occupy
+Declares the stores the catalog owns and the paths they occupy
 
 ---
 
@@ -25,11 +25,15 @@ artifact_kind: STRUCTURE
 version: v0
 governed_by: fb.structure::CONSTITUTION_STRUCTURE_V0
 core:
-  summary: Declares the five stores the catalog owns and the paths they occupy
+  summary: Declares the stores the catalog owns and the paths they occupy
   layer: DOMAINS
   domain: book_library_mgmt
   subdomain: catalog
   entity_stores:
+    WORKS:
+      path: book_library_mgmt/catalog/works.json
+    WORK_IDENTITY_REGISTRY:
+      path: book_library_mgmt/catalog/work_identity_registry.jsonl
     BOOKS:
       path: book_library_mgmt/catalog/books.json
     PHYSICAL_COPIES:

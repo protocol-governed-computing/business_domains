@@ -13,7 +13,7 @@
 
 ## 1. Intent
 
-Binds every catalog workflow to the mechanisms and stores it uses
+Binds the catalog's workflows to the stores and mechanisms they use
 
 ---
 
@@ -25,7 +25,7 @@ artifact_kind: RUNTIME_BINDING
 version: v0
 governed_by: fb.runtime_binding::CONSTITUTION_RUNTIME_BINDING_V0
 core:
-  summary: Binds every catalog workflow to the mechanisms and stores it uses
+  summary: Binds the catalog's workflows to the stores and mechanisms they use
   storage_structure: book_library_mgmt::STRUCTURE_CATALOG_STORAGE_V0
   bindings:
     capability_side_effects::CS_MUTABLE_JSON_V0:

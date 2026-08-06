@@ -13,7 +13,7 @@
 
 ## 1. Intent
 
-Select the registered books matching a subject or title, excluding retired ones
+Selects the registered editions matching a subject or title and groups them under their work
 
 ---
 
@@ -25,20 +25,23 @@ artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 core:
-  summary: Select the registered books matching a subject or title, excluding retired ones
+  summary: Selects the registered editions matching a subject or title and groups them under their work
   inputs:
     search_criteria:
       type: object
       required: true
   outputs:
+    matching_works:
+      type: array
+      required: true
     matching_books:
       type: array
       required: true
   result_status_contract:
     allowed:
     - BACKEND_ERROR
-    - SUCCESS
     - VIOLATION
+    - SUCCESS
     on_input_failure: VIOLATION
   pipeline:
   - step: select_book_records
@@ -62,6 +65,19 @@ core:
       filter: $.inputs.search_criteria
     outputs:
       matching_books: $.capability_result.extracted
+    result_surface:
+    - SUCCESS
+    - VIOLATION
+    on_result:
+      SUCCESS: continue
+      VIOLATION: exit
+  - step: group_editions_by_work
+    transform: book_library_mgmt::CT_PURE_GROUP_RECORDS_V0
+    inputs:
+      source: $.results.select_matching_books.matching_books
+      attribute: work_key
+    outputs:
+      matching_works: $.capability_result.grouped
     result_surface:
     - SUCCESS
     - VIOLATION

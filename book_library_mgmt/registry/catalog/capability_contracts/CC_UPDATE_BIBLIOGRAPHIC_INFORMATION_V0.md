@@ -13,7 +13,7 @@
 
 ## 1. Intent
 
-Replace a book's descriptive content in place
+Changes a registered edition's descriptive content and refuses a change that would duplicate another edition
 
 ---
 
@@ -25,7 +25,8 @@ artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 core:
-  summary: Replace a book's descriptive content in place
+  summary: Changes a registered edition's descriptive content and refuses a change that would duplicate
+    another edition
   inputs:
     identity_key:
       type: string
@@ -118,6 +119,7 @@ core:
         publication_year: $.inputs.updated_fields.publication_year
         subject: $.inputs.updated_fields.subject
         state: $.inputs.updated_fields.state
+        work_key: $.results.read_book_record.book_record.work_key
     outputs:
       updated_record: $.capability_result.record
     result_surface:

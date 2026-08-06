@@ -69,6 +69,14 @@ a work by it, and the workflow that cannot be built until that contract exists.
 | book_library_mgmt::CC_REGISTER_ADDITIONAL_EDITION_V0 | catalog |
 | book_library_mgmt::IN_REGISTER_ADDITIONAL_EDITION_V0 | catalog |
 | book_library_mgmt::WF_REGISTER_ADDITIONAL_EDITION_V0 | catalog |
+| book_library_mgmt::STRUCTURE_CATALOG_STORAGE_V0 | catalog |
+| book_library_mgmt::RB_CATALOG_BINDINGS_V0 | catalog |
+| book_library_mgmt::WF_REGISTER_BOOK_V0 | catalog |
+| book_library_mgmt::CC_REGISTER_BOOK_V0 | catalog |
+| book_library_mgmt::CC_VALIDATE_BOOK_SUBMISSION_V0 | catalog |
+| book_library_mgmt::CC_SEARCH_CATALOG_V0 | catalog |
+| book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0 | catalog |
+| book_library_mgmt::CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0 | catalog |
 
 ---
 
