@@ -37,7 +37,7 @@ core:
     CATALOG_OPERATIONS:
       path: book_library_mgmt/catalog/catalog_operations.jsonl
     BOOK_IDENTITY_REGISTRY:
-      path: book_library_mgmt/catalog/book_identity_registry.json
+      path: book_library_mgmt/catalog/book_identity_registry.jsonl
     COPY_BARCODE_REGISTRY:
-      path: book_library_mgmt/catalog/copy_barcode_registry.json
+      path: book_library_mgmt/catalog/copy_barcode_registry.jsonl
 ```

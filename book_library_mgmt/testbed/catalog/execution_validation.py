@@ -11,7 +11,13 @@ for duplicating its barcode — so the order is part of the evidence and the run
 That is why it starts from an empty data root every time.
 
 Run:  python business_domains/book_library_mgmt/testbed/catalog/execution_validation.py [snapshot]
+      ... --data-root <path>     keep the stores instead of discarding them
 Exit: 0 if every criterion holds, 1 otherwise.
+
+Without `--data-root` the run works in a temp directory and removes it, because the evidence is the
+criteria and nothing else. With it, the stores are left where they were written so the catalog can be
+read after the fact — the same run, persisted. The path must be empty or absent: this run is not
+idempotent, and starting it over state from a previous run proves nothing about either.
 """
 
 from __future__ import annotations
@@ -90,12 +96,33 @@ class Run:
 
 
 def main() -> int:
-    snapshot = Path(sys.argv[1]) if len(sys.argv) > 1 else WORKSPACE / "snapshot"
+    args = sys.argv[1:]
+    keep: Path | None = None
+    if "--data-root" in args:
+        i = args.index("--data-root")
+        if i + 1 >= len(args):
+            print("--data-root needs a path")
+            return 1
+        keep = Path(args[i + 1]).expanduser()
+        del args[i:i + 2]
+
+    snapshot = Path(args[0]) if args else WORKSPACE / "snapshot"
     if not (snapshot / "manifest.json").is_file():
         print(f"no assembled snapshot at {snapshot}")
         return 1
 
-    data_root = Path(tempfile.mkdtemp(prefix="pgc_catalog_validation_"))
+    if keep is None:
+        data_root = Path(tempfile.mkdtemp(prefix="pgc_catalog_validation_"))
+    else:
+        # Refused rather than emptied: the caller named this directory, and deleting what is in it
+        # is not this script's decision to make.
+        if keep.exists() and any(keep.iterdir()):
+            print(f"{keep} is not empty — this run accumulates state and must start from an empty "
+                  f"root.\nRemove it, or name a path that does not exist yet.")
+            return 1
+        keep.mkdir(parents=True, exist_ok=True)
+        data_root = keep
+
     run = Run(snapshot, data_root)
     results: list[tuple[str, bool, str]] = []
 
@@ -269,7 +296,8 @@ def main() -> int:
               f"{len(trail)} trail entr(ies)")
 
     finally:
-        shutil.rmtree(data_root, ignore_errors=True)
+        if keep is None:
+            shutil.rmtree(data_root, ignore_errors=True)
 
     width = max(len(c) for c, _, _ in results)
     print(f"execution validation — {len(results)} criteria, snapshot {snapshot}\n")
@@ -277,7 +305,29 @@ def main() -> int:
         print(f"  {'PASS' if held else 'FAIL'}  {criterion:<{width}}   {detail}")
     passed = sum(1 for _, held, _ in results if held)
     print(f"\n  {passed}/{len(results)} criteria hold")
+
+    if keep is not None:
+        print(f"\n  stores kept at {data_root / STORE}")
+        for path in sorted((data_root / STORE).glob("*")):
+            print(f"    {path.name:<28} {_describe(path)}")
     return 0 if passed == len(results) else 1
+
+
+def _describe(path: Path) -> str:
+    """How many records a store holds, whichever shape it was written in.
+
+    `CS_MUTABLE_JSON_V0` writes one JSON object keyed by store key; `CS_REGISTRY_V0` and
+    `CS_APPENDONLY_JSONL_V0` write JSON Lines. The extensions say so, but nothing enforces the
+    correspondence — a design may name a JSONL store `.json` and no rule refuses it, which this
+    catalog did until it was caught. Parse, and fall back to counting lines: the content decides.
+    """
+    text = path.read_text()
+    try:
+        loaded = json.loads(text)
+    except json.JSONDecodeError:
+        lines = [l for l in text.splitlines() if l.strip()]
+        return f"{len(lines)} entr{'y' if len(lines) == 1 else 'ies'} (json lines)"
+    return f"{len(loaded)} record(s)"
 
 
 if __name__ == "__main__":
