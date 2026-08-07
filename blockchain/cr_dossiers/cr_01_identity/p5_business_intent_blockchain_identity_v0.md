@@ -127,8 +127,8 @@ anything an actor's conduct might later change.
 | CC_APPEND_ACTOR_OCCURRENCE_V0 | CC | Appends one occurrence to the trail, carrying the time it happened | S4 gap_register GAP-06 |
 | WF_REGISTER_ACTOR_V0 | WF | The governed sequence that admits a person as an unverified actor | S5 actions Register |
 | WF_RECORD_VERIFICATION_DECISION_V0 | WF | The governed sequence that records an authority's decision against a registered actor | S5 actions Decide |
-| IN_REGISTER_ACTOR_V0 | IN | A request to admit a person as an actor | S4 gap_register GAP-09 |
-| IN_RECORD_VERIFICATION_DECISION_V0 | IN | A request to record a decision, carrying the authority, the outcome and the grounds | S4 gap_register GAP-10 |
+| IN_ACTOR_REGISTERED_V0 | IN | A request to admit a person as an actor | S4 gap_register GAP-09 |
+| IN_ACTOR_VERIFIED_V0 | IN | A request to record a decision, carrying the authority, the outcome and the grounds | S4 gap_register GAP-10 |
 
 ---
 

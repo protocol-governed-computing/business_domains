@@ -1,8 +1,9 @@
 {
-  "snapshot_id": "d536d5d7a2624c19f647d97dd09dfd10efbe2eaf2d8a539f3e0834b5b9102795",
-  "artifact_count": 345,
+  "snapshot_id": "a375a389d11663fca6edfacbc0503dcbd172494fc9bf572f587cff966d760e0b",
+  "artifact_count": 362,
   "domains": [
     "ai_governance",
+    "blockchain",
     "book_library_mgmt",
     "inspection",
     "platform",

@@ -1,0 +1,76 @@
+# CC_RESOLVE_ACTOR_V0
+
+## Header (Mandatory)
+
+- **Artifact Code:** CC_RESOLVE_ACTOR_V0
+- **Artifact Kind:** capability_contract
+- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
+- **Version:** V0
+- **Status:** draft
+- **Supersedes:** NONE
+
+---
+
+## 1. Intent
+
+Answers which actor a contact address denotes, and reports when none does
+
+---
+
+## Machine
+
+```yaml
+fqdn: blockchain::CC_RESOLVE_ACTOR_V0
+artifact_kind: CAPABILITY_CONTRACT
+version: v0
+governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+core:
+  summary: Answers which actor a contact address denotes, and reports when none does
+  inputs:
+    contact_address:
+      type: string
+      required: true
+  outputs:
+    actor_record:
+      type: object
+      required: true
+  result_status_contract:
+    allowed:
+    - NOT_FOUND
+    - VIOLATION
+    - SUCCESS
+    on_input_failure: VIOLATION
+  pipeline:
+  - step: resolve_address
+    side_effect: capability_side_effects::CS_REGISTRY_V0
+    op: RESOLVE
+    store: CONTACT_ADDRESS_REGISTRY
+    inputs:
+      key_or_address: $.inputs.contact_address
+    outputs:
+      target_ref: $.results.resolved_actor_ref
+    result_surface:
+    - SUCCESS
+    - NOT_FOUND
+    - VIOLATION
+    on_result:
+      SUCCESS: continue
+      NOT_FOUND: exit
+      VIOLATION: exit
+  - step: read_actor
+    side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
+    op: READ
+    store: ACTORS
+    inputs:
+      key: $.results.resolved_actor_ref
+    outputs:
+      record: $.results.actor_record
+    result_surface:
+    - SUCCESS
+    - NOT_FOUND
+    - VIOLATION
+    on_result:
+      SUCCESS: continue
+      NOT_FOUND: exit
+      VIOLATION: exit
+```

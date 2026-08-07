@@ -27,10 +27,10 @@ the design's own dependencies.
 | 3 | 9 | blockchain::CC_RESOLVE_ACTOR_V0 | NEW | identity | blockchain::STRUCTURE_IDENTITY_STORAGE_V0 |
 | 3 | 10 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | NEW | identity | blockchain::STRUCTURE_IDENTITY_STORAGE_V0 |
 | 3 | 11 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | NEW | identity | blockchain::STRUCTURE_IDENTITY_STORAGE_V0 |
-| 4 | 12 | blockchain::IN_REGISTER_ACTOR_V0 | NEW | identity | blockchain::CC_VALIDATE_REGISTRATION_V0 |
-| 4 | 13 | blockchain::IN_RECORD_VERIFICATION_DECISION_V0 | NEW | identity | blockchain::CC_RESOLVE_ACTOR_V0 |
-| 5 | 14 | blockchain::WF_REGISTER_ACTOR_V0 | NEW | identity | blockchain::IN_REGISTER_ACTOR_V0 |
-| 5 | 15 | blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | NEW | identity | blockchain::IN_RECORD_VERIFICATION_DECISION_V0 |
+| 4 | 12 | blockchain::IN_ACTOR_REGISTERED_V0 | NEW | identity | blockchain::CC_VALIDATE_REGISTRATION_V0 |
+| 4 | 13 | blockchain::IN_ACTOR_VERIFIED_V0 | NEW | identity | blockchain::CC_RESOLVE_ACTOR_V0 |
+| 5 | 14 | blockchain::WF_REGISTER_ACTOR_V0 | NEW | identity | blockchain::IN_ACTOR_REGISTERED_V0 |
+| 5 | 15 | blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | NEW | identity | blockchain::IN_ACTOR_VERIFIED_V0 |
 | 6 | 16 | blockchain::RB_IDENTITY_BINDINGS_V0 | NEW | identity | blockchain::WF_REGISTER_ACTOR_V0 |
 
 ---
@@ -43,7 +43,7 @@ the design's own dependencies.
 | 1 | blockchain::STRUCTURE_IDENTITY_STORAGE_V0 |
 | 2 | blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 |
 | 3 | blockchain::CC_REGISTER_ACTOR_V0 |
-| 4 | blockchain::IN_REGISTER_ACTOR_V0 |
+| 4 | blockchain::IN_ACTOR_REGISTERED_V0 |
 | 5 | blockchain::WF_REGISTER_ACTOR_V0 |
 | 6 | blockchain::RB_IDENTITY_BINDINGS_V0 |
 
@@ -74,8 +74,8 @@ the design's own dependencies.
 | blockchain::CC_RESOLVE_ACTOR_V0 | identity |
 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | identity |
 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | identity |
-| blockchain::IN_REGISTER_ACTOR_V0 | identity |
-| blockchain::IN_RECORD_VERIFICATION_DECISION_V0 | identity |
+| blockchain::IN_ACTOR_REGISTERED_V0 | identity |
+| blockchain::IN_ACTOR_VERIFIED_V0 | identity |
 | blockchain::WF_REGISTER_ACTOR_V0 | identity |
 | blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | identity |
 | blockchain::RB_IDENTITY_BINDINGS_V0 | identity |
@@ -87,8 +87,8 @@ the design's own dependencies.
 <!-- register:new_capabilities optional -->
 | Code | Purpose | Inputs | Outputs |
 |------|---------|--------|---------|
-| blockchain::CC_VALIDATE_REGISTRATION_V0 | Confirm a registration carries a name and a contact address of the form asked for, so that only details the business cannot read are refused and judgement is left to the decision | actor_record:object, registration_rules:array | validation_status:string |
-| blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 | Claim the contact address atomically so that two registrations of one person resolve to one actor rather than producing two | actor_record:object, address_field:string | claimed_address:string |
+| blockchain::CC_VALIDATE_REGISTRATION_V0 | Confirm a registration carries a name and a contact address of the form asked for, so that only details the business cannot read are refused and judgement is left to the decision | actor_record:object, registration_schema:object | violations:array |
+| blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 | Claim the contact address atomically so that two registrations of one person resolve to one actor rather than producing two | actor_record:object, address_path:string, address_type:string | result:string, address:string |
 | blockchain::CC_REGISTER_ACTOR_V0 | Write the actor unverified once its address is claimed, so that a refused registration leaves nothing behind | actor_fields:object, contact_address:string | result_status:string |
 | blockchain::CC_RESOLVE_ACTOR_V0 | Answer which actor a contact address denotes and report when none does, so a decision against an unregistered person is refused | contact_address:string | actor_record:object |
 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | Refuse every declared refusal and move the actor to its decided state, so an actor is decided about once and never by itself | current_state:string, states_admitting_a_decision:array, decision:string, admitted_outcomes:array, verifying_authority:string, contact_address:string, decided_actor_fields:object | result_status:string |
@@ -101,8 +101,8 @@ the design's own dependencies.
 <!-- register:new_intents optional -->
 | Code | Purpose | Workflow | Inputs |
 |------|---------|----------|--------|
-| blockchain::IN_REGISTER_ACTOR_V0 | Admit a request from a person to be recorded as an actor of the system | blockchain::WF_REGISTER_ACTOR_V0 | actor_record:object, registration_rules:array |
-| blockchain::IN_RECORD_VERIFICATION_DECISION_V0 | Admit a request from an authority to record a decision against a registered actor | blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | contact_address:string, verifying_authority:string, decision:string, grounds:string |
+| blockchain::IN_ACTOR_REGISTERED_V0 | Admit a request from a person to be recorded as an actor of the system | blockchain::WF_REGISTER_ACTOR_V0 | actor_record:object, registration_schema:object |
+| blockchain::IN_ACTOR_VERIFIED_V0 | Admit a request from an authority to record a decision against a registered actor | blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | contact_address:string, verifying_authority:string, decision:string, grounds:string |
 
 ---
 

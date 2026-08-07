@@ -1,0 +1,27 @@
+{
+  "contact_address": "ada@example.test",
+  "verifying_authority": "authority-01",
+  "decision": "MAYBE",
+  "grounds": "",
+  "states_admitting_a_decision": [
+    "UNVERIFIED"
+  ],
+  "admitted_outcomes": [
+    "ACCEPTED",
+    "REJECTED"
+  ],
+  "decided_actor_fields": {
+    "contact_address": "ada@example.test",
+    "state": "MAYBE",
+    "verifying_authority": "authority-01",
+    "grounds": ""
+  },
+  "stream_id": "ACTOR_OCCURRENCES",
+  "occurrence_fields": {
+    "occurrence": "ACTOR_MAYBE",
+    "contact_address": "ada@example.test",
+    "verifying_authority": "authority-01",
+    "grounds": "",
+    "occurred_at": "2026-08-07T11:30:00Z"
+  }
+}
