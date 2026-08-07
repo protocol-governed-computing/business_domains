@@ -8,5 +8,17 @@
     "platform",
     "transformation",
     "workload"
-  ]
+  ],
+  "approved_registers": {
+    "p2": {
+      "belief_verification": "bp",
+      "pps_baseline_fqdns": "bp"
+    },
+    "p3": {
+      "authoring_decisions": "bp"
+    },
+    "p4": {
+      "dependency_graph": "bp"
+    }
+  }
 }
