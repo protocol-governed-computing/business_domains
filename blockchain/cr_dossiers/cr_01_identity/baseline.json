@@ -19,6 +19,19 @@
     },
     "p4": {
       "dependency_graph": "bp"
+    },
+    "p5": {
+      "cross_subdomain_refs": "bp"
+    },
+    "p6": {
+      "ownership": "bp",
+      "pps_artifacts_requiring_action": "bp"
+    },
+    "p7": {
+      "cc_composition": "bp",
+      "existing_inventory": "bp",
+      "new_artifacts": "bp",
+      "step_bindings": "bp"
     }
   }
 }
