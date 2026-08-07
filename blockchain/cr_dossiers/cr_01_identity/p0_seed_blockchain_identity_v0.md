@@ -45,11 +45,12 @@ actor is and whether they are trusted; it does not say what a trusted actor may 
 | Verification Decision | The act by which an authority accepts or rejects a registered actor. |
 | Accepted | The outcome of a verification decision in which the authority trusts the actor. |
 | Rejected | The outcome of a verification decision in which the authority does not trust the actor. Trusted with nothing. |
-| Authority | An actor within the business empowered to make a verification decision about another actor. |
+| Authority | A party within the business empowered to make a verification decision about an actor, identified outside the identity function and never registered through it. |
 | Contact Address | The address a person registers with, which is what identifies them as an actor. |
 | Grounds | The reason an authority states for a verification decision. |
 | Occurrence | A recorded moment in an actor's history, written when it happens and never rewritten. |
-| Preference | A convenience recorded at registration — preferred currency or preferred language — bearing on neither identity nor the verification decision. |
+| Preference | A convenience recorded at registration — preferred currency or preferred language — bearing on neither identity nor the verification decision. Absent, it is recorded as the default. |
+| Default Preference | BACHI for currency and English for language; what an actor is recorded as preferring when it states nothing. |
 
 ## 3. Requested Outcomes
 
@@ -71,13 +72,18 @@ actor is and whether they are trusted; it does not say what a trusted actor may 
 | An unverified actor is not a lesser actor but a different thing; the business would rather say it has not decided than imply a decision it has not made. | HIGH |
 | A person registers themselves; the details are their own claim about who they are. | HIGH |
 | Registration may be refused only for details the business cannot read, such as a missing name or a missing contact address. | HIGH |
+| A detail is unreadable when it is absent or is not of the form the business asked for; everything else is a matter of belief. | HIGH |
+| Whether a person controls the address they registered with, and whether the name is theirs, are matters of belief and never of registration. | HIGH |
 | An actor is identified by the contact address they register with. | HIGH |
 | Two registrations carrying the same contact address are the same person. | HIGH |
 | A repeated registration does not create a second actor and does not fail. | HIGH |
 | A repeated registration is recorded as a distinct occurrence against the same actor. | HIGH |
 | A repeated registration does not reset a decision already made. | HIGH |
+| A second registration may carry details differing from the first, and the details the actor was admitted with prevail. | HIGH |
+| The differing details of a second registration are recorded as part of the occurrence and change the actor in no respect. | HIGH |
 | A verification decision is made by an authority within the business, acting as a distinct kind of actor from the person decided about. | HIGH |
 | A person may never verify themselves. | HIGH |
+| An authority is identified outside the identity function and is not an actor this function holds or resolves. | HIGH |
 | A verification decision is either acceptance or rejection; there is no third outcome and no deferral. | HIGH |
 | An authority that is not ready to decide has not decided, and the actor stays unverified. | HIGH |
 | A verification decision may only be made against a registration that exists. | HIGH |
@@ -90,6 +96,8 @@ actor is and whether they are trusted; it does not say what a trusted actor may 
 | A record whose times do not advance is regarded by the business as no record at all. | HIGH |
 | The record is added to and never rewritten; a correction is a further occurrence, not an edit. | HIGH |
 | Two preferences are collected at registration — preferred currency and preferred language — each having a default. | HIGH |
+| The default preferred currency is BACHI and the default preferred language is English. | HIGH |
+| A person who states no preference is recorded as preferring the defaults, rather than as having stated nothing. | HIGH |
 | Preferences bear on neither identity nor the verification decision. | HIGH |
 | Two registrations differing only in preference are the same person. | HIGH |
 
@@ -171,7 +179,7 @@ actor is and whether they are trusted; it does not say what a trusted actor may 
 |-----------------|---------------------|
 | Actor | The identity function of the blockchain project. |
 | The details an actor registers with | The person themselves. |
-| Verification Decision | An authority within the business, through the identity function. |
+| Verification Decision | An authority within the business, through the identity function. The authority itself is owned outside it. |
 | The record of occurrences against an actor | The identity function of the blockchain project. |
 
 ## 12. Out of Scope
@@ -207,10 +215,7 @@ actor is and whether they are trusted; it does not say what a trusted actor may 
 <!-- register:clarification_requests business_language optional -->
 | Question | Why Needed | Blocking (YES, NO) | Owner (HUMAN, SNAPSHOT, GOVERNANCE) |
 |----------|------------|----------|-------|
-| What does the business regard as a contact address it cannot read, as distinct from one it does not believe? | Registration may be refused only for details the business cannot read, and the boundary between unreadable and untrusted is where the two-step admission could quietly collapse into one. | NO | HUMAN |
-| Which currency and which language are the defaults when a person states no preference? | The business author states both preferences have a default without naming either. | NO | HUMAN |
-| Is the second registration of a person permitted to carry details differing from the first, and if so which prevail? | Two registrations differing only in preference are the same person; whether they may differ in name is unstated. | NO | HUMAN |
-| Must an authority be a registered actor of this system, or may it be identified outside it? | The deciding authority is recorded on every decision, and whether that record names something identity itself governs bears on what identity must hold. | NO | HUMAN |
+| NONE IDENTIFIED |
 
 ## 15. Acceptance Criteria
 
@@ -257,7 +262,8 @@ actor is and whether they are trusted; it does not say what a trusted actor may 
 |-----------|--------------|-----------------|
 | Register a person | No name is supplied. | Registration may be refused for details the business cannot read. |
 | Register a person | No contact address is supplied. | An actor is identified by the contact address they register with, so without one there is no actor. |
-| Register a person | On the business's judgement of the person. | Refusing on judgement here would be making the verification decision early, under a different name and by the wrong party. |
+| Register a person | The contact address supplied is not of the form the business asked for. | A detail is unreadable when it is absent or not of the form asked for. |
+| Register a person | On the business's judgement of the person, including whether they control the address or the name is theirs. | Those are matters of belief, which is the verification decision's business; refusing on them here would be making that decision early and by the wrong party. |
 | Record a verification decision | The actor it names never registered. | The decision is a decision on a registration; without one it is not an incomplete decision but a meaningless one. |
 | Record a verification decision | The actor has already been decided about. | An actor is decided about once. |
 | Record a verification decision | The authority making it is the actor being decided about. | A person may never verify themselves. |
@@ -273,7 +279,7 @@ actor is and whether they are trusted; it does not say what a trusted actor may 
 |-----------------|-------------|-------|
 | Re-application by a rejected actor | A follow-on governed change for re-application | This change states what a rejection means. |
 | Revocation of an accepted actor | A follow-on governed change for revocation | The business chooses to take it up. |
-| Which persons may be an authority | A follow-on governed change for authority over verifiers | The business chooses to take it up. |
+| Which persons may be an authority, and the resolution of an authority named on a decision | A follow-on governed change for authority over verifiers | The business chooses to take it up. Identity records the name and does not resolve it. |
 | The material an authority examined when deciding | A follow-on governed change for identity evidence | The business settles its retention and privacy consequences. |
 | Correcting an actor's own details after registration | A follow-on governed change for correction | This change defines a verification decision. |
 | What a trusted actor may do | The wallet, transaction and consensus functions | Those functions are taken up. |

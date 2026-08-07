@@ -107,6 +107,13 @@ assumed by the design process.
 - **May registration be refused at the moment it is made?** Only for details the business cannot
   read — a missing name, a missing contact address. Refusing on judgement at this point would be
   making the verification decision early, under a different name and by the wrong party.
+- **What counts as a detail the business cannot read, as against one it does not believe?** A detail
+  is unreadable when it is absent or is not of the form the business asked for — no name at all, no
+  contact address at all, or something offered as a contact address that is not shaped like one.
+  Everything else is a matter of belief: whether the person controls that address, whether the name
+  is theirs, whether they are who they say. Belief is the verification decision's business and never
+  registration's. The test is deliberately mechanical, because any test requiring judgement would be
+  the verification decision made early by the wrong party.
 - **Who registers a person — the person themselves, or the business?** The person themselves. The
   details are their claim about who they are, which is exactly why the business does not treat them
   as established.
@@ -124,6 +131,12 @@ assumed by the design process.
   silently dropped it would be an audit trail that could not be trusted about anything else.
 - **Does a repeated registration reset a decision already made?** No. A decision, once recorded,
   stands until a governed change withdraws it, and no act of the person themselves may disturb it.
+- **May the second registration carry details differing from the first, and if so which prevail?**
+  It may, and the first prevails. The actor keeps the name and preferences it was admitted with; the
+  differing details are recorded as part of the occurrence and change nothing. The business would
+  rather hold what it admitted and keep a record of what was later claimed than let an actor be
+  quietly rewritten by anyone able to name its address. Correcting details is deliberately a separate
+  change, deferred in §2.
 
 ### The verification decision
 
@@ -149,6 +162,12 @@ assumed by the design process.
   statement.
 - **Is the deciding authority recorded?** Yes, on every decision, acceptance and rejection alike. A
   decision whose author is unknown is not evidence.
+- **Must an authority be a registered actor of this system, or may it be identified outside it?**
+  Identified outside it. An authority is part of the business, not a participant that registered and
+  was verified, and requiring it to have been admitted through the same door would make the first
+  decision impossible to make. Identity records which authority decided; it does not hold authorities
+  and does not resolve one. Which persons may be an authority is deferred in §2, and this is why: a
+  name recorded and not resolved is exactly what that later change will have to take up.
 
 ### The record
 
@@ -168,6 +187,10 @@ assumed by the design process.
   collected at registration: the currency the person prefers to be quoted in, and the language they
   prefer to be addressed in. Both are conveniences, both have a default, and neither bears on
   identity or on the verification decision.
+- **What are the defaults?** BACHI for currency and English for language. A person who states no
+  preference is recorded as preferring those, rather than as having stated nothing — the business
+  wants every actor to carry an answer, so that nothing downstream has to decide what an absent
+  preference means.
 - **Do preferences distinguish one actor from another?** No. Two registrations differing only in
   preference are the same person.
 

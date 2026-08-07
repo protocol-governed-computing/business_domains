@@ -33,11 +33,12 @@ does not.
 | Verification Decision | The act by which an authority accepts or rejects a registered actor. | CR seed §2 Business Vocabulary #6 |
 | Accepted | The outcome of a verification decision in which the authority trusts the actor. | CR seed §2 Business Vocabulary #7 |
 | Rejected | The outcome of a verification decision in which the authority does not trust the actor. Trusted with nothing. | CR seed §2 Business Vocabulary #8 |
-| Authority | An actor within the business empowered to make a verification decision about another actor. | CR seed §2 Business Vocabulary #9 |
+| Authority | A party within the business empowered to make a verification decision about an actor, identified outside the identity function and never registered through it. | CR seed §2 Business Vocabulary #9 |
 | Contact Address | The address a person registers with, which is what identifies them as an actor. | CR seed §2 Business Vocabulary #10 |
 | Grounds | The reason an authority states for a verification decision. | CR seed §2 Business Vocabulary #11 |
 | Occurrence | A recorded moment in an actor's history, written when it happens and never rewritten. | CR seed §2 Business Vocabulary #12 |
-| Preference | A convenience recorded at registration — preferred currency or preferred language — bearing on neither identity nor the verification decision. | CR seed §2 Business Vocabulary #13 |
+| Preference | A convenience recorded at registration — preferred currency or preferred language — bearing on neither identity nor the verification decision. Absent, it is recorded as the default. | CR seed §2 Business Vocabulary #13 |
+| Default Preference | BACHI for currency and English for language; what an actor is recorded as preferring when it states nothing. | CR seed §2 Business Vocabulary #14 |
 
 ---
 
@@ -63,27 +64,34 @@ does not.
 | An unverified actor is not a lesser actor but a different thing; the business would rather say it has not decided than imply a decision it has not made. | HIGH | CR seed §4 Known Facts — Business Truths #3 |
 | A person registers themselves; the details are their own claim about who they are. | HIGH | CR seed §4 Known Facts — Business Truths #4 |
 | Registration may be refused only for details the business cannot read, such as a missing name or a missing contact address. | HIGH | CR seed §4 Known Facts — Business Truths #5 |
-| An actor is identified by the contact address they register with. | HIGH | CR seed §4 Known Facts — Business Truths #6 |
-| Two registrations carrying the same contact address are the same person. | HIGH | CR seed §4 Known Facts — Business Truths #7 |
-| A repeated registration does not create a second actor and does not fail. | HIGH | CR seed §4 Known Facts — Business Truths #8 |
-| A repeated registration is recorded as a distinct occurrence against the same actor. | HIGH | CR seed §4 Known Facts — Business Truths #9 |
-| A repeated registration does not reset a decision already made. | HIGH | CR seed §4 Known Facts — Business Truths #10 |
-| A verification decision is made by an authority within the business, acting as a distinct kind of actor from the person decided about. | HIGH | CR seed §4 Known Facts — Business Truths #11 |
-| A person may never verify themselves. | HIGH | CR seed §4 Known Facts — Business Truths #12 |
-| A verification decision is either acceptance or rejection; there is no third outcome and no deferral. | HIGH | CR seed §4 Known Facts — Business Truths #13 |
-| An authority that is not ready to decide has not decided, and the actor stays unverified. | HIGH | CR seed §4 Known Facts — Business Truths #14 |
-| A verification decision may only be made against a registration that exists. | HIGH | CR seed §4 Known Facts — Business Truths #15 |
-| A rejection is its own occurrence, distinct in kind from an acceptance. | HIGH | CR seed §4 Known Facts — Business Truths #16 |
-| A rejected actor is trusted with nothing and is recorded among the actors the business has accepted in no sense whatever. | HIGH | CR seed §4 Known Facts — Business Truths #17 |
-| An actor is decided about once. | HIGH | CR seed §4 Known Facts — Business Truths #18 |
-| Grounds are required for a rejection and optional for an acceptance. | HIGH | CR seed §4 Known Facts — Business Truths #19 |
-| The deciding authority is recorded on every decision, acceptance and rejection alike. | HIGH | CR seed §4 Known Facts — Business Truths #20 |
-| Every recorded occurrence carries the time it actually happened, determined at the moment it occurs. | HIGH | CR seed §4 Known Facts — Business Truths #21 |
-| A record whose times do not advance is regarded by the business as no record at all. | HIGH | CR seed §4 Known Facts — Business Truths #22 |
-| The record is added to and never rewritten; a correction is a further occurrence, not an edit. | HIGH | CR seed §4 Known Facts — Business Truths #23 |
-| Two preferences are collected at registration — preferred currency and preferred language — each having a default. | HIGH | CR seed §4 Known Facts — Business Truths #24 |
-| Preferences bear on neither identity nor the verification decision. | HIGH | CR seed §4 Known Facts — Business Truths #25 |
-| Two registrations differing only in preference are the same person. | HIGH | CR seed §4 Known Facts — Business Truths #26 |
+| A detail is unreadable when it is absent or is not of the form the business asked for; everything else is a matter of belief. | HIGH | CR seed §4 Known Facts — Business Truths #6 |
+| Whether a person controls the address they registered with, and whether the name is theirs, are matters of belief and never of registration. | HIGH | CR seed §4 Known Facts — Business Truths #7 |
+| An actor is identified by the contact address they register with. | HIGH | CR seed §4 Known Facts — Business Truths #8 |
+| Two registrations carrying the same contact address are the same person. | HIGH | CR seed §4 Known Facts — Business Truths #9 |
+| A repeated registration does not create a second actor and does not fail. | HIGH | CR seed §4 Known Facts — Business Truths #10 |
+| A repeated registration is recorded as a distinct occurrence against the same actor. | HIGH | CR seed §4 Known Facts — Business Truths #11 |
+| A repeated registration does not reset a decision already made. | HIGH | CR seed §4 Known Facts — Business Truths #12 |
+| A second registration may carry details differing from the first, and the details the actor was admitted with prevail. | HIGH | CR seed §4 Known Facts — Business Truths #13 |
+| The differing details of a second registration are recorded as part of the occurrence and change the actor in no respect. | HIGH | CR seed §4 Known Facts — Business Truths #14 |
+| A verification decision is made by an authority within the business, acting as a distinct kind of actor from the person decided about. | HIGH | CR seed §4 Known Facts — Business Truths #15 |
+| A person may never verify themselves. | HIGH | CR seed §4 Known Facts — Business Truths #16 |
+| An authority is identified outside the identity function and is not an actor this function holds or resolves. | HIGH | CR seed §4 Known Facts — Business Truths #17 |
+| A verification decision is either acceptance or rejection; there is no third outcome and no deferral. | HIGH | CR seed §4 Known Facts — Business Truths #18 |
+| An authority that is not ready to decide has not decided, and the actor stays unverified. | HIGH | CR seed §4 Known Facts — Business Truths #19 |
+| A verification decision may only be made against a registration that exists. | HIGH | CR seed §4 Known Facts — Business Truths #20 |
+| A rejection is its own occurrence, distinct in kind from an acceptance. | HIGH | CR seed §4 Known Facts — Business Truths #21 |
+| A rejected actor is trusted with nothing and is recorded among the actors the business has accepted in no sense whatever. | HIGH | CR seed §4 Known Facts — Business Truths #22 |
+| An actor is decided about once. | HIGH | CR seed §4 Known Facts — Business Truths #23 |
+| Grounds are required for a rejection and optional for an acceptance. | HIGH | CR seed §4 Known Facts — Business Truths #24 |
+| The deciding authority is recorded on every decision, acceptance and rejection alike. | HIGH | CR seed §4 Known Facts — Business Truths #25 |
+| Every recorded occurrence carries the time it actually happened, determined at the moment it occurs. | HIGH | CR seed §4 Known Facts — Business Truths #26 |
+| A record whose times do not advance is regarded by the business as no record at all. | HIGH | CR seed §4 Known Facts — Business Truths #27 |
+| The record is added to and never rewritten; a correction is a further occurrence, not an edit. | HIGH | CR seed §4 Known Facts — Business Truths #28 |
+| Two preferences are collected at registration — preferred currency and preferred language — each having a default. | HIGH | CR seed §4 Known Facts — Business Truths #29 |
+| The default preferred currency is BACHI and the default preferred language is English. | HIGH | CR seed §4 Known Facts — Business Truths #30 |
+| A person who states no preference is recorded as preferring the defaults, rather than as having stated nothing. | HIGH | CR seed §4 Known Facts — Business Truths #31 |
+| Preferences bear on neither identity nor the verification decision. | HIGH | CR seed §4 Known Facts — Business Truths #32 |
+| Two registrations differing only in preference are the same person. | HIGH | CR seed §4 Known Facts — Business Truths #33 |
 
 ---
 
@@ -175,7 +183,7 @@ does not.
 |---------------|-------------------|--------------|
 | Actor | The identity function of the blockchain project. | CR seed §11 Authority Boundaries #1 |
 | The details an actor registers with | The person themselves. | CR seed §11 Authority Boundaries #2 |
-| Verification Decision | An authority within the business, through the identity function. | CR seed §11 Authority Boundaries #3 |
+| Verification Decision | An authority within the business, through the identity function. The authority itself is owned outside it. | CR seed §11 Authority Boundaries #3 |
 | The record of occurrences against an actor | The identity function of the blockchain project. | CR seed §11 Authority Boundaries #4 |
 
 ---
@@ -217,10 +225,7 @@ does not.
 <!-- register:clarification_requests business_language optional -->
 | Question | Why Needed | Blocking (YES, NO) | Owner (HUMAN, SNAPSHOT, GOVERNANCE) | Source Finding |
 |--------|----------|------------------|-----------------------------------|--------------|
-| What does the business regard as a contact address it cannot read, as distinct from one it does not believe? | Registration may be refused only for details the business cannot read, and the boundary between unreadable and untrusted is where the two-step admission could quietly collapse into one. | NO | HUMAN | CR seed §14 Clarification Requests #1 |
-| Which currency and which language are the defaults when a person states no preference? | The business author states both preferences have a default without naming either. | NO | HUMAN | CR seed §14 Clarification Requests #2 |
-| Is the second registration of a person permitted to carry details differing from the first, and if so which prevail? | Two registrations differing only in preference are the same person; whether they may differ in name is unstated. | NO | HUMAN | CR seed §14 Clarification Requests #3 |
-| Must an authority be a registered actor of this system, or may it be identified outside it? | The deciding authority is recorded on every decision, and whether that record names something identity itself governs bears on what identity must hold. | NO | HUMAN | CR seed §14 Clarification Requests #4 |
+| NONE IDENTIFIED |
 
 ---
 
@@ -275,14 +280,15 @@ does not.
 |---------|------------|---------------|--------------|
 | Register a person | No name is supplied. | Registration may be refused for details the business cannot read. | CR seed §18 Operation Refusals #1 |
 | Register a person | No contact address is supplied. | An actor is identified by the contact address they register with, so without one there is no actor. | CR seed §18 Operation Refusals #2 |
-| Register a person | On the business's judgement of the person. | Refusing on judgement here would be making the verification decision early, under a different name and by the wrong party. | CR seed §18 Operation Refusals #3 |
-| Record a verification decision | The actor it names never registered. | The decision is a decision on a registration; without one it is not an incomplete decision but a meaningless one. | CR seed §18 Operation Refusals #4 |
-| Record a verification decision | The actor has already been decided about. | An actor is decided about once. | CR seed §18 Operation Refusals #5 |
-| Record a verification decision | The authority making it is the actor being decided about. | A person may never verify themselves. | CR seed §18 Operation Refusals #6 |
-| Record a verification decision | The outcome is neither acceptance nor rejection. | There is no third outcome and no deferral. | CR seed §18 Operation Refusals #7 |
-| Record a verification decision | The deciding authority is not named. | A decision whose author is unknown is not evidence. | CR seed §18 Operation Refusals #8 |
-| Record a rejection | No grounds are stated. | The grounds are the substance of a rejection. | CR seed §18 Operation Refusals #9 |
-| Alter or remove a recorded occurrence | Always. | The record is added to and never rewritten; a correction is a further occurrence. | CR seed §18 Operation Refusals #10 |
+| Register a person | The contact address supplied is not of the form the business asked for. | A detail is unreadable when it is absent or not of the form asked for. | CR seed §18 Operation Refusals #3 |
+| Register a person | On the business's judgement of the person, including whether they control the address or the name is theirs. | Those are matters of belief, which is the verification decision's business; refusing on them here would be making that decision early and by the wrong party. | CR seed §18 Operation Refusals #4 |
+| Record a verification decision | The actor it names never registered. | The decision is a decision on a registration; without one it is not an incomplete decision but a meaningless one. | CR seed §18 Operation Refusals #5 |
+| Record a verification decision | The actor has already been decided about. | An actor is decided about once. | CR seed §18 Operation Refusals #6 |
+| Record a verification decision | The authority making it is the actor being decided about. | A person may never verify themselves. | CR seed §18 Operation Refusals #7 |
+| Record a verification decision | The outcome is neither acceptance nor rejection. | There is no third outcome and no deferral. | CR seed §18 Operation Refusals #8 |
+| Record a verification decision | The deciding authority is not named. | A decision whose author is unknown is not evidence. | CR seed §18 Operation Refusals #9 |
+| Record a rejection | No grounds are stated. | The grounds are the substance of a rejection. | CR seed §18 Operation Refusals #10 |
+| Alter or remove a recorded occurrence | Always. | The record is added to and never rewritten; a correction is a further occurrence. | CR seed §18 Operation Refusals #11 |
 
 ---
 
@@ -293,7 +299,7 @@ does not.
 |---------------|-----------|-----|--------------|
 | Re-application by a rejected actor | A follow-on governed change for re-application | This change states what a rejection means. | CR seed §19 Authority Deferrals #1 |
 | Revocation of an accepted actor | A follow-on governed change for revocation | The business chooses to take it up. | CR seed §19 Authority Deferrals #2 |
-| Which persons may be an authority | A follow-on governed change for authority over verifiers | The business chooses to take it up. | CR seed §19 Authority Deferrals #3 |
+| Which persons may be an authority, and the resolution of an authority named on a decision | A follow-on governed change for authority over verifiers | The business chooses to take it up. Identity records the name and does not resolve it. | CR seed §19 Authority Deferrals #3 |
 | The material an authority examined when deciding | A follow-on governed change for identity evidence | The business settles its retention and privacy consequences. | CR seed §19 Authority Deferrals #4 |
 | Correcting an actor's own details after registration | A follow-on governed change for correction | This change defines a verification decision. | CR seed §19 Authority Deferrals #5 |
 | What a trusted actor may do | The wallet, transaction and consensus functions | Those functions are taken up. | CR seed §19 Authority Deferrals #6 |
