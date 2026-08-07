@@ -159,6 +159,26 @@ that determines a time, and the design declares the field rather than inventing 
 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | append_occurrence | INPUT | stream_id | inputs.stream_id | S7 cc_composition append_occurrence |
 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | append_occurrence | INPUT | actor_id | inputs.contact_address | S7 cc_composition append_occurrence |
 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | append_occurrence | OUTPUT | sequence_number | results.sequence_number | S7 cc_composition append_occurrence |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_VALIDATE_REGISTRATION_V0 | INPUT | actor_record | payload.actor_record | S7 execution_topology CC_VALIDATE_REGISTRATION_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_VALIDATE_REGISTRATION_V0 | INPUT | registration_rules | payload.registration_rules | S7 execution_topology CC_VALIDATE_REGISTRATION_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 | INPUT | actor_record | payload.actor_record | S7 execution_topology CC_CLAIM_CONTACT_ADDRESS_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 | INPUT | address_field | payload.address_field | S7 execution_topology CC_CLAIM_CONTACT_ADDRESS_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_REGISTER_ACTOR_V0 | INPUT | actor_fields | payload.actor_record | S7 execution_topology CC_REGISTER_ACTOR_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_REGISTER_ACTOR_V0 | INPUT | contact_address | results.CC_CLAIM_CONTACT_ADDRESS_V0.claimed_address | S7 execution_topology CC_REGISTER_ACTOR_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | occurrence_fields | payload.occurrence_fields | S7 execution_topology CC_APPEND_ACTOR_OCCURRENCE_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | stream_id | payload.stream_id | S7 execution_topology CC_APPEND_ACTOR_OCCURRENCE_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | contact_address | results.CC_CLAIM_CONTACT_ADDRESS_V0.claimed_address | S7 execution_topology CC_APPEND_ACTOR_OCCURRENCE_V0 |
+| blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | blockchain::CC_RESOLVE_ACTOR_V0 | INPUT | contact_address | payload.contact_address | S7 execution_topology CC_RESOLVE_ACTOR_V0 |
+| blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | current_state | results.CC_RESOLVE_ACTOR_V0.actor_record | S7 execution_topology CC_RECORD_VERIFICATION_DECISION_V0 |
+| blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | states_admitting_a_decision | payload.states_admitting_a_decision | S7 execution_topology CC_RECORD_VERIFICATION_DECISION_V0 |
+| blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | decision | payload.decision | S7 execution_topology CC_RECORD_VERIFICATION_DECISION_V0 |
+| blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | admitted_outcomes | payload.admitted_outcomes | S7 execution_topology CC_RECORD_VERIFICATION_DECISION_V0 |
+| blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | verifying_authority | payload.verifying_authority | S7 execution_topology CC_RECORD_VERIFICATION_DECISION_V0 |
+| blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | contact_address | payload.contact_address | S7 execution_topology CC_RECORD_VERIFICATION_DECISION_V0 |
+| blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | decided_actor_fields | payload.decided_actor_fields | S7 execution_topology CC_RECORD_VERIFICATION_DECISION_V0 |
+| blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | occurrence_fields | payload.occurrence_fields | S7 execution_topology CC_APPEND_ACTOR_OCCURRENCE_V0 |
+| blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | stream_id | payload.stream_id | S7 execution_topology CC_APPEND_ACTOR_OCCURRENCE_V0 |
+| blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | contact_address | payload.contact_address | S7 execution_topology CC_APPEND_ACTOR_OCCURRENCE_V0 |
 
 ---
 
@@ -187,6 +207,29 @@ that determines a time, and the design declares the field rather than inventing 
 | blockchain::EV_ACTOR_REJECTED_V0 | ATTRIBUTE | verifying_authority | string | YES |  | The authority that rejected them |
 | blockchain::EV_ACTOR_REJECTED_V0 | ATTRIBUTE | grounds | string | YES |  | The reason stated, which a rejection must carry |
 | blockchain::EV_ACTOR_REJECTED_V0 | ATTRIBUTE | occurred_at | string | YES |  | The time the rejection happened, determined at the moment it occurred |
+| blockchain::CC_VALIDATE_REGISTRATION_V0 | INPUT | actor_record | object | YES |  | The details the person supplied, as the operation receives them |
+| blockchain::CC_VALIDATE_REGISTRATION_V0 | INPUT | registration_rules | array | YES |  | The rules the details are read against for absence and form |
+| blockchain::CC_VALIDATE_REGISTRATION_V0 | OUTPUT | validation_status | string | YES |  | Whether the registration is readable |
+| blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 | INPUT | actor_record | object | YES |  | The registration carrying the address to claim |
+| blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 | INPUT | address_field | string | YES |  | Which field of the registration holds the contact address |
+| blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 | OUTPUT | claimed_address | string | YES |  | The address as claimed, or the one already held |
+| blockchain::CC_REGISTER_ACTOR_V0 | INPUT | actor_fields | object | YES |  | The fields the actor record is assembled from |
+| blockchain::CC_REGISTER_ACTOR_V0 | INPUT | contact_address | string | YES |  | The claimed address the actor is written under |
+| blockchain::CC_REGISTER_ACTOR_V0 | OUTPUT | result_status | string | YES |  | Whether the actor was written |
+| blockchain::CC_RESOLVE_ACTOR_V0 | INPUT | contact_address | string | YES |  | The address naming the actor to resolve |
+| blockchain::CC_RESOLVE_ACTOR_V0 | OUTPUT | actor_record | object | YES |  | The actor and its current state, or absent when none is held |
+| blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | current_state | string | YES |  | The actor's state as read before the decision |
+| blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | states_admitting_a_decision | array | YES |  | The states from which a decision may be made |
+| blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | decision | string | YES |  | The outcome the authority states |
+| blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | admitted_outcomes | array | YES |  | The two outcomes a decision may carry |
+| blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | verifying_authority | string | YES |  | The authority making the decision, recorded and never resolved |
+| blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | contact_address | string | YES |  | The actor decided about |
+| blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | decided_actor_fields | object | YES |  | The fields the decided actor record is assembled from |
+| blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | OUTPUT | result_status | string | YES |  | Whether the decision was recorded |
+| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | occurrence_fields | object | YES |  | The fields the occurrence record is assembled from, including occurred_at |
+| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | stream_id | string | YES |  | The trail the occurrence is appended to |
+| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | contact_address | string | YES |  | The actor the occurrence is recorded against |
+| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | OUTPUT | sequence_number | integer | YES |  | The position the occurrence was written at, which the store assigns |
 
 ---
 
@@ -241,7 +284,14 @@ that determines a time, and the design declares the field rather than inventing 
 
 ---
 
-## 14. Artifact Summary
+## 14. Transport Bindings
+
+<!-- register:transport_bindings optional -->
+| Artifact | Direction (INGRESS, EGRESS) | Operation | Handler Kind (WF_INVOCATION, SNAPSHOT_READ) | Handler Target | Field | Bound To | Source Finding |
+|----------|----------------------------|-----------|---------------------------------------------|----------------|-------|----------|----------------|
+| NONE IDENTIFIED |
+
+## 15. Artifact Summary
 
 <!-- register:artifact_summary -->
 | Action (REPLACE, EXTEND, NEW) | Subdomain | Count | Artifacts |

@@ -1,5 +1,5 @@
 {
-  "snapshot_id": "a3320ad5c10ff9564b02e15eaf0ef7c7f70b61ea36e301d3ddfe835348c9b6f8",
+  "snapshot_id": "d536d5d7a2624c19f647d97dd09dfd10efbe2eaf2d8a539f3e0834b5b9102795",
   "artifact_count": 345,
   "domains": [
     "ai_governance",
@@ -32,6 +32,9 @@
       "existing_inventory": "bp",
       "new_artifacts": "bp",
       "step_bindings": "bp"
+    },
+    "p8": {
+      "build_order": "bp"
     }
   }
 }
