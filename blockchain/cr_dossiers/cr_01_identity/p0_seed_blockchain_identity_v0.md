@@ -1,0 +1,288 @@
+# Change Seed — blockchain / identity
+
+**Stage:** 0 — Change Seed
+**CR:** cr_01_identity
+**Status:** DRAFT
+**Feeds:** Stage 1 — Change Request
+
+Reorganized faithfully from `p0_business_problem_statement.md`, including the clarifications its
+author answered. Human input only — nothing here was added, decided or designed by the pipeline.
+
+---
+
+## 0. Subdomain Purpose
+
+<!-- register:subdomain_purpose business_language -->
+
+The Identity subdomain governs who an actor is and whether the business trusts them. It exists
+because every other blockchain function names an actor: a wallet belongs to someone, a transaction is
+submitted by someone, a validator is someone the chain has agreed to trust, and none of those can be
+said accurately until the business can say who an actor is and whether it has accepted them. The
+business needs to let people join before it knows anything about them, and to decide afterwards
+whether to trust them. Those are two decisions made by two different parties at two different times,
+and treating them as one is what this subdomain exists to prevent. A person supplies their own
+details and is admitted immediately but unverified — known to the system, not yet trusted by it.
+Separately an authority within the business reviews them and records a decision. Identity says who an
+actor is and whether they are trusted; it does not say what a trusted actor may then do.
+
+## 1. CR Type
+
+<!-- register:cr_type business_language -->
+| Classification (NEW_SUBDOMAIN, EXTEND_SUBDOMAIN, MODIFY, DEPRECATE) | Rationale |
+|----------------|-----------|
+| NEW_SUBDOMAIN | The change establishes the identity function of the blockchain project. Nothing in this domain exists yet, so the change introduces a function rather than extending one. Identity is the first of the project's functions because every other one names an actor. |
+
+## 2. Business Vocabulary
+
+<!-- register:business_vocabulary business_language -->
+| Term | Definition |
+|------|------------|
+| blockchain | The project being established, across seven functions of which identity is the first. |
+| Identity | The function governing who an actor is and whether the business trusts them. |
+| Actor | A person known to the system, whether or not the business has accepted them. |
+| Registration | The act by which a person supplies their own details and is admitted to the system unverified. |
+| Unverified | The state of an actor the business has recorded and not yet accepted. Trusted with nothing. |
+| Verification Decision | The act by which an authority accepts or rejects a registered actor. |
+| Accepted | The outcome of a verification decision in which the authority trusts the actor. |
+| Rejected | The outcome of a verification decision in which the authority does not trust the actor. Trusted with nothing. |
+| Authority | An actor within the business empowered to make a verification decision about another actor. |
+| Contact Address | The address a person registers with, which is what identifies them as an actor. |
+| Grounds | The reason an authority states for a verification decision. |
+| Occurrence | A recorded moment in an actor's history, written when it happens and never rewritten. |
+| Preference | A convenience recorded at registration — preferred currency or preferred language — bearing on neither identity nor the verification decision. |
+
+## 3. Requested Outcomes
+
+<!-- register:requested_outcomes business_language -->
+| Outcome |
+|---------|
+| A person can register themselves, supplying their own identifying details, and is admitted in an unverified state. |
+| An authority can record a verification decision against a registered person, accepting or rejecting them. |
+| The business can show, for any actor, who registered and when, every time they registered, whether a decision was made, by which authority, what it was, when, and the grounds stated for it. |
+| An unverified or rejected actor is trusted with nothing and can be read as trusted with nothing. |
+
+## 4. Known Facts — Business Truths
+
+<!-- register:known_facts business_language -->
+| Fact | Certainty (HIGH, MEDIUM, LOW) |
+|------|-----------|
+| An unverified actor is a claim the business has recorded and not yet accepted. | HIGH |
+| An unverified actor may hold no wallet and submit no transaction. | HIGH |
+| An unverified actor is not a lesser actor but a different thing; the business would rather say it has not decided than imply a decision it has not made. | HIGH |
+| A person registers themselves; the details are their own claim about who they are. | HIGH |
+| Registration may be refused only for details the business cannot read, such as a missing name or a missing contact address. | HIGH |
+| An actor is identified by the contact address they register with. | HIGH |
+| Two registrations carrying the same contact address are the same person. | HIGH |
+| A repeated registration does not create a second actor and does not fail. | HIGH |
+| A repeated registration is recorded as a distinct occurrence against the same actor. | HIGH |
+| A repeated registration does not reset a decision already made. | HIGH |
+| A verification decision is made by an authority within the business, acting as a distinct kind of actor from the person decided about. | HIGH |
+| A person may never verify themselves. | HIGH |
+| A verification decision is either acceptance or rejection; there is no third outcome and no deferral. | HIGH |
+| An authority that is not ready to decide has not decided, and the actor stays unverified. | HIGH |
+| A verification decision may only be made against a registration that exists. | HIGH |
+| A rejection is its own occurrence, distinct in kind from an acceptance. | HIGH |
+| A rejected actor is trusted with nothing and is recorded among the actors the business has accepted in no sense whatever. | HIGH |
+| An actor is decided about once. | HIGH |
+| Grounds are required for a rejection and optional for an acceptance. | HIGH |
+| The deciding authority is recorded on every decision, acceptance and rejection alike. | HIGH |
+| Every recorded occurrence carries the time it actually happened, determined at the moment it occurs. | HIGH |
+| A record whose times do not advance is regarded by the business as no record at all. | HIGH |
+| The record is added to and never rewritten; a correction is a further occurrence, not an edit. | HIGH |
+| Two preferences are collected at registration — preferred currency and preferred language — each having a default. | HIGH |
+| Preferences bear on neither identity nor the verification decision. | HIGH |
+| Two registrations differing only in preference are the same person. | HIGH |
+
+## 5. Existing-System Beliefs — Requiring Verification
+
+*Not facts. Each is a discovery target the agent must verify against the snapshot at P2.*
+
+<!-- register:system_beliefs business_language -->
+| Belief | Why It Matters | Verification Goal |
+|--------|----------------|-------------------|
+| The business author believes nothing in the blockchain domain exists yet, so identity is established rather than extended. | If any blockchain function is already governed, this change is an extension and its classification is wrong. | Establish whether the composition holds any artifact belonging to the blockchain domain. |
+| The business author believes the platform already offers a way to record occurrences that is added to and never rewritten. | The record being append-only is a business requirement; if the platform provides no such facility this change must ask for one rather than assume it. | Establish whether the composition offers an append-only recording capability identity can use. |
+| The business author believes the platform already offers a way to hold a registry of business objects that can be looked up by their identifier. | Resolving an actor from a contact address, and refusing a decision about an actor that does not exist, both depend on it. | Establish whether the composition offers a registry capability identity can use. |
+| The business author believes the platform already offers a way to generate an identifier for a newly admitted business object. | An actor is admitted before it has any identifier of its own beyond the details it supplied. | Establish whether the composition offers an identifier generation capability identity can use. |
+| The business author believes the platform already distinguishes a kind of actor empowered to act on the business's behalf from an ordinary participant. | A person may never verify themselves, which requires the two kinds to be distinguishable. | Establish whether the composition declares a system or authority actor distinct from an end-user actor. |
+
+## 6. Assumptions
+
+<!-- register:assumptions business_language optional -->
+| Assumption | Basis |
+|------------|-------|
+| A contact address supplied at registration is one the person controls. | The business admits the person unverified precisely because their claims are not yet established; the address is treated as identifying without being treated as proven. |
+| A person will register before an authority has occasion to decide about them. | The business author states a decision may only be made against a registration that exists, and describes no path by which an authority would encounter a person otherwise. |
+| The set of authorities is small enough that recording which one decided is meaningful without governing who may be one. | The business author defers authority over verifiers to a later change while still requiring the deciding authority to be recorded. |
+
+## 7. Constraints
+
+<!-- register:constraints business_language optional -->
+| Constraint | Source |
+|------------|--------|
+| Registration and the verification decision are separate acts, made by different parties at different times. | The business author's statement that treating them as one is what this change exists to prevent. |
+| An unverified or rejected actor may hold no wallet and submit no transaction. | The business author's statement of what an unverified actor is permitted to be. |
+| A recorded occurrence may never be altered or removed. | The business author's statement that the record is added to and never rewritten. |
+| The time of an occurrence is determined at the moment it occurs. | The business author's statement that a record whose times do not advance is no record at all. |
+| Identity governs who an actor is and whether they are trusted, and nothing about what a trusted actor may do. | The business author's statement of what identity does not decide. |
+
+## 8. Business Invariants
+
+<!-- register:business_invariants business_language -->
+| Invariant |
+|-----------|
+| An actor is identified by exactly one contact address. |
+| Two actors never share a contact address. |
+| An actor is either unverified, accepted or rejected, and never more than one of those at a time. |
+| An actor that has not been decided about is unverified. |
+| A verification decision exists only against a registration that exists. |
+| A verification decision names the authority that made it. |
+| A rejection states grounds. |
+| An actor is never accepted and rejected both. |
+| A person never makes the verification decision about themselves. |
+| Neither an unverified nor a rejected actor is trusted with anything. |
+| Every recorded occurrence carries the time it occurred. |
+| No recorded occurrence is altered or removed once written. |
+
+## 9. Lifecycle States
+
+<!-- register:lifecycle_states business_language -->
+| Object | State | Meaning |
+|--------|-------|---------|
+| Actor | Unverified | The business has recorded the person's claim about themselves and has not yet accepted it. The actor is trusted with nothing. |
+| Actor | Accepted | An authority has reviewed the actor and trusts them. |
+| Actor | Rejected | An authority has reviewed the actor and does not trust them. The actor is trusted with nothing. |
+| Verification Decision | Recorded | An authority has stated an outcome against a registered actor, and the business holds it as evidence. |
+
+## 10. Business Events
+
+<!-- register:business_events business_language -->
+| Event | When It Occurs | Significance |
+|-------|----------------|--------------|
+| Actor Registered Unverified | A person supplies their identifying details and is admitted. | The business now knows of the person and trusts them with nothing. It is the occurrence a verification decision is made against. |
+| Actor Registered Again | A person already known registers a second time. | The actor is unchanged, but that the person registered twice is a fact about them the business keeps. |
+| Actor Accepted | An authority records a decision to trust a registered actor. | The actor becomes trusted. It is the moment from which the other blockchain functions may name them. |
+| Actor Rejected | An authority records a decision not to trust a registered actor. | The actor remains trusted with nothing, and the business can afterwards ask who has been rejected and receive an answer. |
+
+## 11. Authority Boundaries
+
+<!-- register:authority_boundaries business_language -->
+| Business Object | Authoritative Owner |
+|-----------------|---------------------|
+| Actor | The identity function of the blockchain project. |
+| The details an actor registers with | The person themselves. |
+| Verification Decision | An authority within the business, through the identity function. |
+| The record of occurrences against an actor | The identity function of the blockchain project. |
+
+## 12. Out of Scope
+
+<!-- register:out_of_scope business_language -->
+| Item | Reason |
+|------|--------|
+| What a trusted actor may then do | Identity says who an actor is and whether they are trusted, not what trust permits. |
+| Permissions and roles beyond the distinction between an ordinary participant and an authority | Named by the business author as outside this change. |
+| An actor's standing changing through their conduct | Named by the business author as outside this change. |
+| Re-application after rejection | Rests on what a rejection is taken to mean, which this change is the first to state. |
+| Revocation of a verified actor | A governed change of its own, including what happens to what the actor did while trusted. |
+| Which persons may be an authority, and how that permission is granted or removed | This change records which authority decided; it does not govern who may be one. |
+| The material an authority examined when deciding | A separate need with its own retention and privacy consequences. |
+| Correcting an actor's own details after registration | Not answerable until a decision is defined. |
+| Wallets, transactions, mempool, blocks, chain and consensus | Later functions of the project, excluded except where they depend on identity behaviour. |
+
+## 13. Governance Scope
+
+<!-- register:governance_scope business_language -->
+| Scope Item | Relationship (CREATED, EXTENDED, MODIFIED, DEPRECATED, ADJACENT) |
+|------------|--------------|
+| Identity | CREATED |
+| Wallet | ADJACENT |
+| Transaction | ADJACENT |
+| Mempool | ADJACENT |
+| Block | ADJACENT |
+| Chain | ADJACENT |
+| Consensus | ADJACENT |
+
+## 14. Clarification Requests
+
+<!-- register:clarification_requests business_language optional -->
+| Question | Why Needed | Blocking (YES, NO) | Owner (HUMAN, SNAPSHOT, GOVERNANCE) |
+|----------|------------|----------|-------|
+| What does the business regard as a contact address it cannot read, as distinct from one it does not believe? | Registration may be refused only for details the business cannot read, and the boundary between unreadable and untrusted is where the two-step admission could quietly collapse into one. | NO | HUMAN |
+| Which currency and which language are the defaults when a person states no preference? | The business author states both preferences have a default without naming either. | NO | HUMAN |
+| Is the second registration of a person permitted to carry details differing from the first, and if so which prevail? | Two registrations differing only in preference are the same person; whether they may differ in name is unstated. | NO | HUMAN |
+| Must an authority be a registered actor of this system, or may it be identified outside it? | The deciding authority is recorded on every decision, and whether that record names something identity itself governs bears on what identity must hold. | NO | HUMAN |
+
+## 15. Acceptance Criteria
+
+<!-- register:acceptance_criteria business_language -->
+| Criterion |
+|-----------|
+| A person who supplies a name and a contact address is admitted, and is afterwards unverified. |
+| A person who supplies no contact address is refused, and no actor exists afterwards. |
+| A person who registers twice is one actor afterwards, and the business can show two registrations against them. |
+| A verification decision against a person who never registered is refused. |
+| An accepted actor can be shown as accepted, with the deciding authority and the time recorded. |
+| A rejected actor can be shown as rejected, with the deciding authority, the grounds and the time recorded, and cannot be read as accepted by any means. |
+| The business can list the actors that have been rejected. |
+| A rejection stating no grounds is refused. |
+| Two occurrences recorded at different moments carry different times. |
+| No sequence of operations changes or removes an occurrence already recorded. |
+| A decision made against an actor already decided about is refused. |
+| An actor that is unverified or rejected holds no wallet and has submitted no transaction. |
+
+## 16. Identity and Sameness
+
+<!-- register:identity_and_sameness business_language optional -->
+| Business Object | Identified By | Two Are The Same When |
+|-----------------|---------------|-----------------------|
+| Actor | The contact address they register with. | Their contact addresses match, whatever else differs. |
+| Verification Decision | The actor it was made against. | They were made against the same actor, which is why there is only ever one. |
+| Occurrence | The actor it was recorded against and the moment it happened. | Never — two occurrences at different moments are different occurrences even when they say the same thing. |
+
+## 17. Lifecycle Transitions
+
+<!-- register:lifecycle_transitions business_language optional -->
+| Object | From State | To State | Triggered By | Cascade |
+|--------|------------|----------|--------------|---------|
+| Actor | — | Unverified | A person supplies their identifying details and is admitted. | None — admission grants nothing and obliges no authority to decide. |
+| Actor | Unverified | Unverified | The same person registers a second time. | None — the state is unchanged and any decision already made stands. A second occurrence is recorded. |
+| Actor | Unverified | Accepted | An authority records a decision to trust the actor. | None within identity. The actor becoming nameable by the other blockchain functions is a consequence those functions own, not one identity performs. |
+| Actor | Unverified | Rejected | An authority records a decision not to trust the actor. | None — nothing is removed, nothing is notified, and the actor remains recorded. |
+| Verification Decision | — | Recorded | An authority states an outcome against a registered actor. | None beyond the actor's state changing with it. |
+
+## 18. Operation Refusals
+
+<!-- register:operation_refusals business_language optional -->
+| Operation | Refused When | Business Reason |
+|-----------|--------------|-----------------|
+| Register a person | No name is supplied. | Registration may be refused for details the business cannot read. |
+| Register a person | No contact address is supplied. | An actor is identified by the contact address they register with, so without one there is no actor. |
+| Register a person | On the business's judgement of the person. | Refusing on judgement here would be making the verification decision early, under a different name and by the wrong party. |
+| Record a verification decision | The actor it names never registered. | The decision is a decision on a registration; without one it is not an incomplete decision but a meaningless one. |
+| Record a verification decision | The actor has already been decided about. | An actor is decided about once. |
+| Record a verification decision | The authority making it is the actor being decided about. | A person may never verify themselves. |
+| Record a verification decision | The outcome is neither acceptance nor rejection. | There is no third outcome and no deferral. |
+| Record a verification decision | The deciding authority is not named. | A decision whose author is unknown is not evidence. |
+| Record a rejection | No grounds are stated. | The grounds are the substance of a rejection. |
+| Alter or remove a recorded occurrence | Always. | The record is added to and never rewritten; a correction is a further occurrence. |
+
+## 19. Authority Deferrals
+
+<!-- register:authority_deferrals business_language optional -->
+| Business Object | Deferred To | Until |
+|-----------------|-------------|-------|
+| Re-application by a rejected actor | A follow-on governed change for re-application | This change states what a rejection means. |
+| Revocation of an accepted actor | A follow-on governed change for revocation | The business chooses to take it up. |
+| Which persons may be an authority | A follow-on governed change for authority over verifiers | The business chooses to take it up. |
+| The material an authority examined when deciding | A follow-on governed change for identity evidence | The business settles its retention and privacy consequences. |
+| Correcting an actor's own details after registration | A follow-on governed change for correction | This change defines a verification decision. |
+| What a trusted actor may do | The wallet, transaction and consensus functions | Those functions are taken up. |
+
+---
+
+## gov_projection — Governed Handoff to Stage 1
+
+| Direction | Fields |
+|-----------|--------|
+| **Consumes** ← human | business problem statement |
+| **Emits** → Stage 1 | subdomain_purpose · cr_type · business_vocabulary · requested_outcomes · known_facts · system_beliefs · assumptions · constraints · business_invariants · lifecycle_states · business_events · authority_boundaries · out_of_scope · governance_scope · clarification_requests · acceptance_criteria · identity_and_sameness · lifecycle_transitions · operation_refusals · authority_deferrals |
