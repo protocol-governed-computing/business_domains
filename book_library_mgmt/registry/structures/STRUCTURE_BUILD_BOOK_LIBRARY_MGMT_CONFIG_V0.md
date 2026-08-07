@@ -1,35 +1,19 @@
 # STRUCTURE_BUILD_BOOK_LIBRARY_MGMT_CONFIG_V0
 
-**Artifact Type**: STRUCTURE
-**Version**: V0
-**Governed By**: fb.structure::CONSTITUTION_STRUCTURE_V0
+## Header (Mandatory)
+
+- **Artifact Code:** STRUCTURE_BUILD_BOOK_LIBRARY_MGMT_CONFIG_V0
+- **Artifact Kind:** structure
+- **Governed By:** CONSTITUTION_STRUCTURE_V0
+- **Version:** V0
+- **Status:** draft
+- **Supersedes:** NONE
 
 ---
 
-## Purpose
+## 1. Intent
 
-Self-describing build manifest for the **AI governance business domain** (`book_library_mgmt::`) — an
-independently-authored domain compiled **against** the already-compiled governance surface, then
-composed into the assembled universe.
-
-This artifact lives in the domain's own repo (`business_domains`), so the governance surface is
-never edited to admit the domain — its identity and hash are unchanged. The compiler merges this
-manifest's `layer_definitions` and `identity_rules` **additively**, for this build only, on top of
-the immutable `STRUCTURE_DISCOVERY_V0` / `STRUCTURE_IDENTITY_V0`.
-
-## Subdomains
-
-The domain is one namespace (`book_library_mgmt`) partitioned into two subdomains, each carried by the
-`subdomain:` declaration on its workflows and resolved by recursive discovery under `registry/`:
-
-| Subdomain | Concern |
-|---|---|
-| `agent_governance` | Constitutional mediation of agent-proposed actions against license-tier authority |
-| `ai_licensing` | License provisioning, cap enforcement, and reclamation of dormant licenses |
-
-Neither subdomain references the other's artifacts. `agent_governance` consumes the license fact
-feed read-only through its own STRUCTURE declaration, so either subdomain can be removed by
-deleting its folder — no other artifact is touched.
+Build-time STRUCTURE manifest (book_library_mgmt business-domain scope)
 
 ---
 
@@ -43,13 +27,11 @@ governed_by: fb.structure::CONSTITUTION_STRUCTURE_V0
 structure_scope: book_library_mgmt
 reuse_visibility: business
 core:
-  summary: Build-time STRUCTURE manifest (book library management business-domain scope)
-  description: 'Compiles the book_library_mgmt domain''s own artifacts (WF/IN/CC/CT/EV/AC/RB/STRUCTURE),
-    resolving governance and platform capability references against the imported compiled governance
-    surface. Emits only book_library_mgmt artifacts. Self-describing: declares its own source layer and
-    namespace rule additively.
-
-    '
+  summary: Build-time STRUCTURE manifest (book_library_mgmt business-domain scope)
+  description: 'Compiles the book_library_mgmt domain''s own artifacts, resolving governance and platform
+    capability references against the imported compiled governance surface. Emits only book_library_mgmt
+    artifacts. Self-describing: declares its own source layer and namespace rule additively. Subdomains:
+    catalog.'
 layer_definitions:
   BOOK_LIBRARY_MGMT:
     domain_subpath: registry
@@ -65,15 +47,17 @@ artifact_discovery:
   import_surface:
     domain: platform
   artifact_types:
-  - WF
+  - AC
   - IN
+  - WF
   - CC
   - CT
-  - EV
-  - AC
   - RB
-  - STRUCTURE
+  - EV
   - VOCAB
+  - STRUCTURE
+  - TI
+  - TE
 output_configuration:
   artifacts:
     layer: PROTOCOL_BUILD_ROOT
@@ -115,9 +99,3 @@ build_phases:
   description: Emit deterministic compiled artifacts (book_library_mgmt scope only)
   target: compiled/artifacts/
 ```
-
-## Version History
-
-- **V0**: First AI governance business-domain build manifest. Self-describing; compiles
-  `book_library_mgmt::` against the imported compiled governance surface; emits only `book_library_mgmt`
-  artifacts. Governance surface unchanged.
