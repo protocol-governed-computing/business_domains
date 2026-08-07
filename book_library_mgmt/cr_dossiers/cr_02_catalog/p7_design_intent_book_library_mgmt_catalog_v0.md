@@ -344,7 +344,7 @@ them again would create a second artifact under the same name.
 | book_library_mgmt::EV_WORK_REGISTERED_V0 | ATTRIBUTE | author | string | YES |  | The work's author |
 | book_library_mgmt::CC_VALIDATE_BOOK_SUBMISSION_V0 | INPUT | book_fields | object | YES |  | The book's bibliographic information |
 | book_library_mgmt::CC_VALIDATE_BOOK_SUBMISSION_V0 | INPUT | book_schema | object | YES |  | The fields a book record must carry, as the rules its structure is validated against |
-| book_library_mgmt::CC_VALIDATE_BOOK_SUBMISSION_V0 | INPUT | barcode | string | YES |  | The barcode the library assigned to the copy |
+| book_library_mgmt::CC_VALIDATE_BOOK_SUBMISSION_V0 | INPUT | barcode | string | NO |  | The barcode the library assigned to the copy, when the registration carries one — an additional edition of an existing work does not |
 | book_library_mgmt::CC_REGISTER_BOOK_V0 | INPUT | identity_key | string | YES |  | The key formed from a book's title, author and publication year |
 | book_library_mgmt::CC_REGISTER_BOOK_V0 | INPUT | book_schema | object | YES |  | The fields a book record must carry, as the rules its structure is validated against |
 | book_library_mgmt::CC_SEARCH_CATALOG_V0 | INPUT | search_criteria | object | YES |  | What staff are searching by, and the states to include |

@@ -42,7 +42,6 @@ core:
       required: true
     barcode:
       type: string
-      required: true
   outputs:
     valid:
       type: boolean
