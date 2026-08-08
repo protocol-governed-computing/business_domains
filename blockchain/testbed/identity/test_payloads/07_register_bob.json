@@ -3,7 +3,8 @@
     "name": "Bob Kahn",
     "contact_address": "bob@example.test",
     "currency_preference": "BACHI",
-    "language": "en"
+    "language": "en",
+    "state": "UNVERIFIED"
   },
   "registration_schema": {
     "name": {

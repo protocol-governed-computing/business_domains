@@ -49,7 +49,7 @@ core:
       record: $.inputs.actor_record
       schema: $.inputs.registration_schema
     outputs:
-      violations: $.results.violations
+      violations: $.capability_result.violations
     result_surface:
     - SUCCESS
     - VIOLATION

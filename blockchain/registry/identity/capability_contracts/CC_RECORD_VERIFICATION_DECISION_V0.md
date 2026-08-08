@@ -65,7 +65,7 @@ core:
       value: $.inputs.current_state
       allowed_set: $.inputs.states_admitting_a_decision
     outputs:
-      is_member: $.results.state_admits_decision
+      is_member: $.capability_result.is_member
     result_surface:
     - SUCCESS
     - VIOLATION
@@ -78,7 +78,7 @@ core:
       value: $.inputs.decision
       allowed_set: $.inputs.admitted_outcomes
     outputs:
-      is_member: $.results.outcome_admitted
+      is_member: $.capability_result.is_member
     result_surface:
     - SUCCESS
     - VIOLATION
@@ -91,7 +91,7 @@ core:
       left: $.inputs.verifying_authority
       right: $.inputs.contact_address
     outputs:
-      is_equal: $.results.authority_is_the_subject
+      is_equal: $.capability_result.is_equal
     result_surface:
     - SUCCESS
     - VIOLATION
@@ -103,7 +103,7 @@ core:
     inputs:
       fields: $.inputs.decided_actor_fields
     outputs:
-      record: $.results.decided_actor_record
+      record: $.capability_result.record
     result_surface:
     - SUCCESS
     - VIOLATION
@@ -116,9 +116,9 @@ core:
     store: ACTORS
     inputs:
       key: $.inputs.contact_address
-      value: $.results.decided_actor_record
+      value: $.results.assemble_decided_actor.record
     outputs:
-      result_status: $.results.write_status
+      result_status: $.result_status
     result_surface:
     - SUCCESS
     - VIOLATION

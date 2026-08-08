@@ -52,7 +52,7 @@ core:
     inputs:
       fields: $.inputs.occurrence_fields
     outputs:
-      record: $.results.occurrence_record
+      record: $.capability_result.record
     result_surface:
     - SUCCESS
     - VIOLATION
@@ -64,11 +64,11 @@ core:
     op: APPEND
     store: ACTOR_OCCURRENCES
     inputs:
-      record: $.results.occurrence_record
+      record: $.results.assemble_occurrence.record
       stream_id: $.inputs.stream_id
       actor_id: $.inputs.contact_address
     outputs:
-      sequence_number: $.results.sequence_number
+      sequence_number: $.capability_result.sequence_number
     result_surface:
     - SUCCESS
     - VIOLATION

@@ -49,7 +49,7 @@ core:
     inputs:
       fields: $.inputs.actor_fields
     outputs:
-      record: $.results.actor_record
+      record: $.capability_result.record
     result_surface:
     - SUCCESS
     - VIOLATION
@@ -62,9 +62,9 @@ core:
     store: ACTORS
     inputs:
       key: $.inputs.contact_address
-      value: $.results.actor_record
+      value: $.results.assemble_actor.record
     outputs:
-      result_status: $.results.write_status
+      result_status: $.result_status
     result_surface:
     - SUCCESS
     - VIOLATION

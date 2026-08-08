@@ -58,7 +58,7 @@ core:
       path: $.inputs.address_path
       type: $.inputs.address_type
     outputs:
-      result: $.results.result
+      result: $.capability_result.result
     result_surface:
     - SUCCESS
     - VIOLATION
@@ -70,9 +70,12 @@ core:
     op: REGISTER
     store: CONTACT_ADDRESS_REGISTRY
     inputs:
-      key: $.results.result
+      key: $.results.extract_address.result
+      target_cs: CS_MUTABLE_JSON_V0
+      target_ref: ACTORS
     outputs:
-      address: $.results.address
+      address: $.capability_result.address
+      result_status: $.result_status
     result_surface:
     - SUCCESS
     - ALREADY_EXISTS

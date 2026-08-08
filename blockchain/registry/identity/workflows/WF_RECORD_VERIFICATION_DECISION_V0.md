@@ -51,7 +51,7 @@ core:
       type: CC
       code: CC_RECORD_VERIFICATION_DECISION_V0
       inputs:
-        current_state: $.results.CC_RESOLVE_ACTOR_V0.actor_record
+        current_state: $.results.CC_RESOLVE_ACTOR_V0.value.state
         states_admitting_a_decision: $.payload.states_admitting_a_decision
         decision: $.payload.decision
         admitted_outcomes: $.payload.admitted_outcomes

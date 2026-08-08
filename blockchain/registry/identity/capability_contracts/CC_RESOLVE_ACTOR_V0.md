@@ -31,7 +31,7 @@ core:
       type: string
       required: true
   outputs:
-    actor_record:
+    value:
       type: object
       required: true
   result_status_contract:
@@ -48,7 +48,7 @@ core:
     inputs:
       key_or_address: $.inputs.contact_address
     outputs:
-      target_ref: $.results.resolved_actor_ref
+      target_ref: $.capability_result.target_ref
     result_surface:
     - SUCCESS
     - NOT_FOUND
@@ -62,9 +62,9 @@ core:
     op: READ
     store: ACTORS
     inputs:
-      key: $.results.resolved_actor_ref
+      key: $.inputs.contact_address
     outputs:
-      record: $.results.actor_record
+      value: $.capability_result.value
     result_surface:
     - SUCCESS
     - NOT_FOUND
