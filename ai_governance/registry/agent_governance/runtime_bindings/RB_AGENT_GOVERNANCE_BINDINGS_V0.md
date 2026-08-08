@@ -78,6 +78,9 @@ core:
 
     capability_side_effects::CS_APPENDONLY_JSONL_V0:
       policy: {}
+    capability_side_effects::CS_CLOCK_V0:
+      policy:
+        precision: seconds
 
 extensions:
   notes:
