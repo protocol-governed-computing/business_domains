@@ -37,4 +37,7 @@ core:
     capability_side_effects::CS_APPENDONLY_JSONL_V0:
       policy:
         structure: blockchain::STRUCTURE_IDENTITY_STORAGE_V0
+    capability_side_effects::CS_CLOCK_V0:
+      policy:
+        precision: seconds
 ```

@@ -21,7 +21,6 @@
     "occurrence": "ACTOR_REJECTED",
     "contact_address": "ada@example.test",
     "verifying_authority": "authority-02",
-    "grounds": "second decision",
-    "occurred_at": "2026-08-07T11:10:00Z"
+    "grounds": "second decision"
   }
 }

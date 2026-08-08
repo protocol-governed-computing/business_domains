@@ -21,7 +21,6 @@
     "occurrence": "ACTOR_MAYBE",
     "contact_address": "ada@example.test",
     "verifying_authority": "authority-01",
-    "grounds": "",
-    "occurred_at": "2026-08-07T11:30:00Z"
+    "grounds": ""
   }
 }

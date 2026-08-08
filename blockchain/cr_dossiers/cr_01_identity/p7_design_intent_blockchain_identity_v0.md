@@ -21,7 +21,7 @@ that determines a time, and the design declares the field rather than inventing 
 | An actor's state is held as a value | The refusal that an actor is decided about once needs the state at the moment of deciding | ACTORS is typed CS_MUTABLE_JSON_V0 and read by blockchain::CC_RESOLVE_ACTOR_V0 before any decision is recorded | S4 design_decisions #2 |
 | The contact address is the identifier | Two registrations carrying the same address are the same person | CONTACT_ADDRESS_REGISTRY is typed CS_REGISTRY_V0 and keyed on the address as supplied; no identifier is generated | S4 design_decisions #3 |
 | Acceptance and rejection are two occurrences | A rejected actor must never be readable as accepted | blockchain::EV_ACTOR_ACCEPTED_V0 and blockchain::EV_ACTOR_REJECTED_V0 are separate artifacts; no artifact carries an outcome field | S4 design_decisions #4 |
-| The time capability is a substrate gap | Every occurrence carries the time it actually happened, determined as it occurs | The occurrence record declares an occurred_at field and no step of this design supplies it. The step that would is not composed, because the capability that determines a time does not exist and no identity artifact may invent one | S4 design_decisions #5 |
+| The time capability is a substrate gap | Every occurrence carries the time it actually happened, determined as it occurs | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 reads capability_side_effects::CS_CLOCK_V0 before it assembles the record, so occurred_at is determined where the occurrence is recorded and no caller may assert it | S4 design_decisions #5 |
 | The authority is recorded and never resolved | An authority is identified outside this function | The decision carries verifying_authority as a value; no store holds authorities and no step resolves one | S4 design_decisions #6 |
 
 ---
@@ -38,6 +38,7 @@ that determines a time, and the design declares the field rather than inventing 
 | capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0 | REUSE | Reads a value against a declared admitted set | Reads the decision outcome and the state a decision is admitted from | S6 pps_artifacts_requiring_action capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0 |
 | capability_transforms::CT_PURE_COMPARE_EQUAL_V0 | REUSE | Compares two supplied values | Compares the authority named against the actor decided about | S6 pps_artifacts_requiring_action capability_transforms::CT_PURE_COMPARE_EQUAL_V0 |
 | capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 | REUSE | Assembles a record from supplied fields | Assembles the actor record and each occurrence record | S6 pps_artifacts_requiring_action capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 |
+| capability_side_effects::CS_CLOCK_V0 | REUSE | Answers the current instant | Determines the time an occurrence happened, which no transform can | S4 dependency_graph the substrate capability supplying the current time |
 | capability_transforms::CT_PURE_EXTRACT_V0 | REUSE | Extracts a named value from a supplied structure | Extracts the address and the decision fields | S6 pps_artifacts_requiring_action capability_transforms::CT_PURE_EXTRACT_V0 |
 
 ---
@@ -71,8 +72,8 @@ that determines a time, and the design declares the field rather than inventing 
 <!-- register:rb_declarations -->
 | RB Code | Binds WF | CS Bindings | Storage Structure | Source Finding |
 |---------|----------|-------------|-------------------|----------------|
-| blockchain::RB_IDENTITY_BINDINGS_V0 | blockchain::WF_REGISTER_ACTOR_V0 | capability_side_effects::CS_MUTABLE_JSON_V0, capability_side_effects::CS_REGISTRY_V0, capability_side_effects::CS_APPENDONLY_JSONL_V0 | blockchain::STRUCTURE_IDENTITY_STORAGE_V0 | S6 storage_governance An atomic claim on each contact address |
-| blockchain::RB_IDENTITY_BINDINGS_V0 | blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | capability_side_effects::CS_MUTABLE_JSON_V0, capability_side_effects::CS_APPENDONLY_JSONL_V0 | blockchain::STRUCTURE_IDENTITY_STORAGE_V0 | S6 storage_governance A durable record of every person the business knows, carrying whether it has accepted them |
+| blockchain::RB_IDENTITY_BINDINGS_V0 | blockchain::WF_REGISTER_ACTOR_V0 | capability_side_effects::CS_MUTABLE_JSON_V0, capability_side_effects::CS_REGISTRY_V0, capability_side_effects::CS_APPENDONLY_JSONL_V0, capability_side_effects::CS_CLOCK_V0 | blockchain::STRUCTURE_IDENTITY_STORAGE_V0 | S6 storage_governance An atomic claim on each contact address |
+| blockchain::RB_IDENTITY_BINDINGS_V0 | blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | capability_side_effects::CS_MUTABLE_JSON_V0, capability_side_effects::CS_APPENDONLY_JSONL_V0, capability_side_effects::CS_CLOCK_V0 | blockchain::STRUCTURE_IDENTITY_STORAGE_V0 | S6 storage_governance A durable record of every person the business knows, carrying whether it has accepted them |
 
 ---
 
@@ -114,8 +115,9 @@ that determines a time, and the design declares the field rather than inventing 
 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | 3 | refuse_self_verification | capability_transforms::CT_PURE_COMPARE_EQUAL_V0 | CT | COMPARE_EQUAL | — | left, right | is_equal | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: left=left, right=right; out: is_equal=is_equal |
 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | 4 | assemble_decided_actor | capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 | CT | ASSEMBLE_RECORD | — | fields | record | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: fields=fields; out: record=record |
 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | 5 | write_decided_actor | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | WRITE | ACTORS | key, value | result_status | SUCCESS -> continue; VIOLATION -> exit; BACKEND_ERROR -> exit | — | SUCCESS | — |
-| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | 1 | assemble_occurrence | capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 | CT | ASSEMBLE_RECORD | — | fields | record | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: fields=fields; out: record=record |
-| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | 2 | append_occurrence | capability_side_effects::CS_APPENDONLY_JSONL_V0 | CS | APPEND | ACTOR_OCCURRENCES | record, stream_id, actor_id | sequence_number | SUCCESS -> continue; VIOLATION -> exit; BACKEND_ERROR -> exit | — | SUCCESS | — |
+| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | 1 | read_now | capability_side_effects::CS_CLOCK_V0 | CS | NOW | — | — | timestamp | SUCCESS -> continue; BACKEND_ERROR -> exit | — | SUCCESS | — |
+| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | 2 | assemble_occurrence | capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 | CT | ASSEMBLE_RECORD | — | fields | record | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: fields=fields; out: record=record |
+| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | 3 | append_occurrence | capability_side_effects::CS_APPENDONLY_JSONL_V0 | CS | APPEND | ACTOR_OCCURRENCES | record, stream_id, actor_id | sequence_number | SUCCESS -> continue; VIOLATION -> exit; BACKEND_ERROR -> exit | — | SUCCESS | — |
 
 ---
 
@@ -159,7 +161,8 @@ that determines a time, and the design declares the field rather than inventing 
 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | write_decided_actor | INPUT | key | inputs.contact_address | S7 cc_composition write_decided_actor |
 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | write_decided_actor | INPUT | value | results.assemble_decided_actor.record | S7 cc_composition write_decided_actor |
 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | write_decided_actor | OUTPUT | result_status | result_status | S7 cc_composition write_decided_actor |
-| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | assemble_occurrence | INPUT | fields | inputs.occurrence_fields | S7 cc_composition assemble_occurrence |
+| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | read_now | OUTPUT | timestamp | capability_result.timestamp | S7 cc_composition read_now |
+| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | assemble_occurrence | INPUT | fields | {'occurrence': '$.inputs.occurrence_fields.occurrence', 'contact_address': '$.inputs.contact_address', 'verifying_authority': '$.inputs.occurrence_fields.verifying_authority', 'grounds': '$.inputs.occurrence_fields.grounds', 'occurred_at': '$.results.read_now.timestamp'} | S7 cc_composition assemble_occurrence |
 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | assemble_occurrence | OUTPUT | record | capability_result.record | S7 cc_composition assemble_occurrence |
 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | append_occurrence | INPUT | record | results.assemble_occurrence.record | S7 cc_composition append_occurrence |
 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | append_occurrence | INPUT | stream_id | inputs.stream_id | S7 cc_composition append_occurrence |
@@ -268,6 +271,7 @@ that determines a time, and the design declares the field rather than inventing 
 | blockchain::RB_IDENTITY_BINDINGS_V0 | capability_side_effects::CS_MUTABLE_JSON_V0 | structure | blockchain::STRUCTURE_IDENTITY_STORAGE_V0 | S6 storage_governance A durable record of every person the business knows, carrying whether it has accepted them |
 | blockchain::RB_IDENTITY_BINDINGS_V0 | capability_side_effects::CS_REGISTRY_V0 | structure | blockchain::STRUCTURE_IDENTITY_STORAGE_V0 | S6 storage_governance An atomic claim on each contact address |
 | blockchain::RB_IDENTITY_BINDINGS_V0 | capability_side_effects::CS_APPENDONLY_JSONL_V0 | structure | blockchain::STRUCTURE_IDENTITY_STORAGE_V0 | S6 storage_governance An unamendable trail of every occurrence recorded against an actor |
+| blockchain::RB_IDENTITY_BINDINGS_V0 | capability_side_effects::CS_CLOCK_V0 | precision | seconds | S4 design_decisions #5 | S6 storage_governance An unamendable trail of every occurrence recorded against an actor |
 
 ---
 
@@ -279,7 +283,7 @@ that determines a time, and the design declares the field rather than inventing 
 | blockchain::AC_PARTICIPANT_V0 | type | ENDUSER | S5 provisional_codes AC_PARTICIPANT_V0 |
 | blockchain::EV_ACTOR_REJECTED_V0 | grounds_required | YES | S6 boundary_rules ACCEPTANCE_AND_REJECTION_ARE_DISTINCT |
 | blockchain::EV_ACTOR_ACCEPTED_V0 | grounds_required | NO | S6 boundary_rules ACCEPTANCE_AND_REJECTION_ARE_DISTINCT |
-| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | occurred_at_source | UNDETERMINED — no substrate capability supplies a time | S6 boundary_rules NO_TIME_IS_INVENTED |
+| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | occurred_at_source | capability_side_effects::CS_CLOCK_V0 | S6 boundary_rules NO_TIME_IS_INVENTED |
 
 ---
 

@@ -92,7 +92,7 @@ the design's own dependencies.
 | blockchain::CC_REGISTER_ACTOR_V0 | Write the actor unverified once its address is claimed, so that a refused registration leaves nothing behind | actor_fields:object, contact_address:string | result_status:string |
 | blockchain::CC_RESOLVE_ACTOR_V0 | Answer which actor a contact address denotes and report when none does, so a decision against an unregistered person is refused | contact_address:string | actor_record:object |
 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | Refuse every declared refusal and move the actor to its decided state, so an actor is decided about once and never by itself | current_state:string, states_admitting_a_decision:array, decision:string, admitted_outcomes:array, verifying_authority:string, contact_address:string, decided_actor_fields:object | result_status:string |
-| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | Append one occurrence to the trail so the business can afterwards show who registered, who decided, what was decided and when | occurrence_fields:object, stream_id:string, contact_address:string | sequence_number:integer |
+| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | Read the time now and append one occurrence carrying it, so the business can afterwards show who registered, who decided, what was decided and when it happened | occurrence_fields:object, stream_id:string, contact_address:string | timestamp:string, sequence_number:integer |
 
 ---
 
@@ -111,7 +111,7 @@ the design's own dependencies.
 <!-- register:cross_subdomain_notes optional -->
 | Code | Note |
 |------|------|
-| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | The occurrence record declares occurred_at and no step of this design supplies it. The capability that determines a time is owned by the substrate and does not exist, so construction will report the field undetermined. This artifact cannot be completed until a substrate change request offers one. |
+| blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | The occurrence carries occurred_at, read from capability_side_effects::CS_CLOCK_V0 at the moment the occurrence is recorded. No caller supplies it. |
 | blockchain::WF_REGISTER_ACTOR_V0 | Reached in process. No transport ingress is scheduled, so the operation is not reachable over HTTP; a follow-on change request adds the boundary without altering this workflow. |
 | blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | Reached in process, on the same terms. |
 

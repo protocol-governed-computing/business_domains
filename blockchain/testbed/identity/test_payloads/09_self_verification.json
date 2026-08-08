@@ -21,7 +21,6 @@
     "occurrence": "ACTOR_ACCEPTED",
     "contact_address": "bob@example.test",
     "verifying_authority": "bob@example.test",
-    "grounds": "",
-    "occurred_at": "2026-08-07T11:25:00Z"
+    "grounds": ""
   }
 }

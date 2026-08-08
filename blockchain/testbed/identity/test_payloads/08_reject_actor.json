@@ -21,7 +21,6 @@
     "occurrence": "ACTOR_REJECTED",
     "contact_address": "bob@example.test",
     "verifying_authority": "authority-01",
-    "grounds": "identity not established",
-    "occurred_at": "2026-08-07T11:20:00Z"
+    "grounds": "identity not established"
   }
 }

@@ -42,15 +42,32 @@ core:
       required: true
   result_status_contract:
     allowed:
+    - BACKEND_ERROR
     - VIOLATION
     - SUCCESS
-    - BACKEND_ERROR
     on_input_failure: VIOLATION
   pipeline:
+  - step: read_now
+    side_effect: capability_side_effects::CS_CLOCK_V0
+    op: NOW
+    inputs: {}
+    outputs:
+      timestamp: $.capability_result.timestamp
+    result_surface:
+    - SUCCESS
+    - BACKEND_ERROR
+    on_result:
+      SUCCESS: continue
+      BACKEND_ERROR: exit
   - step: assemble_occurrence
     transform: capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0
     inputs:
-      fields: $.inputs.occurrence_fields
+      fields:
+        occurrence: $.inputs.occurrence_fields.occurrence
+        contact_address: $.inputs.contact_address
+        verifying_authority: $.inputs.occurrence_fields.verifying_authority
+        grounds: $.inputs.occurrence_fields.grounds
+        occurred_at: $.results.read_now.timestamp
     outputs:
       record: $.capability_result.record
     result_surface:

@@ -17,7 +17,6 @@
   "stream_id": "ACTOR_OCCURRENCES",
   "occurrence_fields": {
     "occurrence": "ACTOR_REGISTERED_UNVERIFIED",
-    "contact_address": "x",
-    "occurred_at": "2026-08-07T10:00:00Z"
+    "contact_address": "x"
   }
 }
