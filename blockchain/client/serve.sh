@@ -26,7 +26,14 @@ export PGC_INSPECTOR_ROOT="$UMBRELLA/snapshot_inspector"
 export PGC_IMPL_ROOTS="$UMBRELLA/software_governance:$DOMAINS"    # capability_*.* + blockchain.*
 export PGC_HTTP_BINDINGS="$CLIENT/bindings/http.json"
 export PGC_SNAPSHOT_ROOT="${PGC_SNAPSHOT_ROOT:-$UMBRELLA/snapshot}"
-export PGC_DATA_ROOT="${PGC_DATA_ROOT:-$UMBRELLA/data/blockchain_client}"
+# The data root is an INSTANCE, not a user interface. The same root the CLI runs against, so a
+# person registered from the web is the same person a decision recorded from the CLI is about —
+# two ways in to one business, which is the whole claim the boundary makes. A root per client would
+# be two disjoint worlds that happen to share a snapshot.
+#
+# Writes are atomic per file (temp + fsync + replace) but are not locked across read-modify-write:
+# one instance driven by one person is safe, concurrent writers can lose an update.
+export PGC_DATA_ROOT="${PGC_DATA_ROOT:-$UMBRELLA/data/blockchain}"
 # Static mounts (all READ-ONLY, config-driven). Three roots:
 #   /          the web client (splash + identity's two screens)
 #   /traces    live per-run evidence from the instance data root (transient)

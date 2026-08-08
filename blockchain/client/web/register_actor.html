@@ -52,11 +52,43 @@
         </form>
 
         <div id="result" class="result-panel"></div>
+
+        <details class="explainer">
+            <summary>Examine the compiled workflow (DAG projection)</summary>
+            <div class="explainer-body">
+                <p>
+                    Below is the <strong>compiled</strong> execution graph of
+                    <code>WF_REGISTER_ACTOR_V0</code>, served live from the sealed snapshot. This form
+                    never names it: it names the operation <code>blockchain.register_actor</code>, and
+                    the boundary declaration binds that public name to this workflow. Re-point the
+                    binding and this picture changes while the form does not.
+                </p>
+                <p>
+                    Read the path the runtime traverses — admit the request, read the registration for
+                    absence and form, claim the contact address, write the actor, append the
+                    occurrence. A second registration of the same address routes around the write and
+                    still appends, which is why registering twice leaves one actor and two occurrences.
+                </p>
+                <img class="wf-projection"
+                     src="/snapshot/behavior_logic/blockchain/WF_REGISTER_ACTOR_V0/WF_REGISTER_ACTOR_V0.projection.png"
+                     alt="Compiled DAG projection of WF_REGISTER_ACTOR_V0"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <p class="wf-missing">
+                    Compiled projection unavailable — the snapshot may have been cleaned or rebuilt.
+                    Rebuild the snapshot to regenerate it.
+                </p>
+                <p style="font-size:12px;margin-top:6px;">
+                    <a href="/snapshot/behavior_logic/blockchain/WF_REGISTER_ACTOR_V0/WF_REGISTER_ACTOR_V0.projection.png"
+                       target="_blank" rel="noopener">Open full size &rarr;</a>
+                </p>
+            </div>
+        </details>
     </div>
 
     <footer class="app-footer">
-        Preferred currency and language are recorded at their defaults. The page does not ask, and
-        every actor still carries an answer.
+        operation <code>blockchain.register_actor</code> &rarr; TI &rarr; WF &rarr; TE — PGC Transport
+        Standard V0. Preferred currency and language are recorded at their defaults; the page does not
+        ask, and every actor still carries an answer.
     </footer>
 
     <script src="js/blockchain_bridge.js"></script>

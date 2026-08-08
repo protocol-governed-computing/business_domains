@@ -72,11 +72,47 @@
         </form>
 
         <div id="result" class="result-panel"></div>
+
+        <details class="explainer">
+            <summary>Examine the compiled workflow (DAG projection)</summary>
+            <div class="explainer-body">
+                <p>
+                    Below is the <strong>compiled</strong> execution graph of
+                    <code>WF_RECORD_VERIFICATION_DECISION_V0</code>, served live from the sealed
+                    snapshot. <strong>Both acts on this page reach it.</strong>
+                    <code>blockchain.accept_actor</code> and <code>blockchain.reject_actor</code> are
+                    two public names over one workflow — each boundary declaration holds its own
+                    constants, the decision and the occurrence it records. That one workflow serves
+                    two names is invisible to you, and is what lets the business's public names follow
+                    what it records rather than what it executes.
+                </p>
+                <p>
+                    Read the path: resolve the actor the address names, refuse if none exists, refuse
+                    if that actor has already been decided about, move the state, append the
+                    occurrence. Every refusal reaches one ending — which is why the answer tells you
+                    that the business refused, and not yet which refusal it was.
+                </p>
+                <img class="wf-projection"
+                     src="/snapshot/behavior_logic/blockchain/WF_RECORD_VERIFICATION_DECISION_V0/WF_RECORD_VERIFICATION_DECISION_V0.projection.png"
+                     alt="Compiled DAG projection of WF_RECORD_VERIFICATION_DECISION_V0"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <p class="wf-missing">
+                    Compiled projection unavailable — the snapshot may have been cleaned or rebuilt.
+                    Rebuild the snapshot to regenerate it.
+                </p>
+                <p style="font-size:12px;margin-top:6px;">
+                    <a href="/snapshot/behavior_logic/blockchain/WF_RECORD_VERIFICATION_DECISION_V0/WF_RECORD_VERIFICATION_DECISION_V0.projection.png"
+                       target="_blank" rel="noopener">Open full size &rarr;</a>
+                </p>
+            </div>
+        </details>
     </div>
 
     <footer class="app-footer">
-        A person is decided about once. A second decision is refused by the business, which is not
-        the same as being turned away at the door — the answer tells you which.
+        operations <code>blockchain.accept_actor</code> and <code>blockchain.reject_actor</code>
+        &rarr; TI &rarr; WF &rarr; TE — PGC Transport Standard V0. A person is decided about once; a
+        second decision is refused by the business, which is not the same as being turned away at the
+        door.
     </footer>
 
     <script src="js/blockchain_bridge.js"></script>

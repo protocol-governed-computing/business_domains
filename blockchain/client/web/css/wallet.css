@@ -375,3 +375,22 @@ body {
     line-height: 1.45;
     opacity: .65;
 }
+
+/* ── Compiled workflow projection ───────────────────────────────────────────
+   The DAG the runtime actually traverses, served live from the sealed snapshot
+   under the read-only /snapshot mount. Live means never stale: if the snapshot
+   is rebuilt the picture changes with it, and if it is cleaned the image fails
+   soft rather than showing something that was true once. */
+.explainer { border: 1px solid #e2e8f0; border-radius: 6px; padding: 0; margin: 28px 0 0; background: #f8fafc; }
+.explainer summary {
+    font-size: 14px; font-weight: bold; color: #0b1e3c; padding: 14px 18px; cursor: pointer;
+    letter-spacing: .3px; list-style: none; display: flex; align-items: center; gap: 8px;
+}
+.explainer summary::-webkit-details-marker { display: none; }
+.explainer summary::before { content: "\25B6"; font-size: 10px; color: #d4af37; transition: transform .2s; }
+.explainer[open] summary::before { transform: rotate(90deg); }
+.explainer-body { padding: 0 18px 16px; display: flex; flex-direction: column; gap: 10px; }
+.explainer-body p { font-size: 14px; color: #475569; line-height: 1.6; }
+.explainer-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; }
+.wf-projection { max-width: 100%; border: 1px solid #e2e8f0; border-radius: 6px; margin-top: 4px; background: #fff; }
+.wf-missing { display: none; color: #991b1b; font-size: 13px; }
