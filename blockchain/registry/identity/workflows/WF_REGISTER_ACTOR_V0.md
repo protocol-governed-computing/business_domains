@@ -79,8 +79,6 @@ core:
         VIOLATION: EXIT_REJECTED
     EXIT_REJECTED:
       type: EXIT
-      outcome: VIOLATION
     EXIT_SUCCESS:
       type: EXIT
-      outcome: VIOLATION
 ```

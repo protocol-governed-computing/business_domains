@@ -115,8 +115,6 @@ core:
         BACKEND_ERROR: EXIT_REJECTED
     EXIT_COMPLETED:
       type: EXIT
-      outcome: SUCCESS
     EXIT_REJECTED:
       type: EXIT
-      outcome: VIOLATION
 ```
