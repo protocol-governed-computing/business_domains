@@ -112,11 +112,11 @@ core:
       VIOLATION: exit
   - step: write_decided_actor
     side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
-    op: WRITE
+    op: UPDATE
     store: ACTORS
     inputs:
       key: $.inputs.contact_address
-      value: $.results.assemble_decided_actor.record
+      updates: $.results.assemble_decided_actor.record
     outputs:
       result_status: $.result_status
     result_surface:
