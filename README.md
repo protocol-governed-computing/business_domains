@@ -1,273 +1,136 @@
-# pgs_ai_governance
+# business_domains
 
-**Governance workflows for AI-assisted systems, expressed as executable protocol.**
+**Real business work, declared as governed protocol.**
 
-This repository demonstrates how AI-assisted actions — code generation, deployment, provisioning — can be validated, constrained, and auditable using Protocol-Governed Systems (PGS).
+Registering a participant, cataloguing a book, licensing an AI agent — work that would be worth
+doing whether or not this platform existed. Each domain here is a directory of declarations: a
+workflow graph, the contracts its nodes name, the intents that admit a request, the events it
+announces, the store it writes to. No domain implements admission, routing, persistence, auditing
+or refusal. It declares them, and the platform enforces what it declared.
 
-It does not wrap or restrict AI tools directly.  
-It defines what actions are allowed, under what conditions, and with what consequences.
-
-Behavior is declared in protocol, executed by runtime, implemented in capabilities, and observed via traces and state.
-
-> **New to PGS?** This is one of the repositories in the Protocol-Governed Systems ecosystem.
-> For orientation, architecture overview, and end-to-end execution, start at [pgs_workspace](https://github.com/bachipeachy/pgs_workspace).
-
----
-
-## The problem this addresses
-
-AI systems introduce two competing forces:
-
-```
-Speed    → rapid generation, iteration, and modification
-Control  → correctness, safety, and policy compliance
-```
-
-Most systems trade one for the other — either slow the AI down with approval gates, or trust it and audit after the fact.
-
-This domain demonstrates a different approach:  
-**governance encoded into execution, not applied after the fact.**
+> **New here?** Start with [`ARCHITECTURE.md`](ARCHITECTURE.md) — what this repository is, what it
+> owns, and a hands-on walkthrough. For the whole picture, see the
+> [organization profile](https://github.com/protocol-governed-computing).
 
 ---
 
-## Workflows
+## The domains
+
+| Domain | Subdomains | What it does |
+|---|---|---|
+| **`blockchain`** | `identity` | Register a participant, then accept or reject them — keeping a durable record of what they registered with. Reachable over HTTP and the command line, with a web client. |
+| **`book_library_mgmt`** | `catalog` | Register works, editions and physical copies; retire and reinstate them; update bibliographic information; search. Ten workflows — the largest surface here. |
+| **`ai_governance`** | `agent_governance`, `ai_licensing` | Admit or deny an AI agent's action; provision, deny and reclaim licences. Two subdomains sharing one namespace. |
+
+A **domain is a namespace**; a **subdomain is a division within it**. `ai_governance` is the case
+that makes the distinction concrete — two subdomains, one compiled domain, neither a fork of the
+other.
+
+Maturity differs, and it is stated rather than implied: `blockchain::identity` is functionally
+complete, with three declared rules deliberately deferred to the first function that will consume
+its state; `book_library_mgmt` declares events no exit yet announces; `ai_governance` carries no
+change dossier and is the least exercised.
+
+## Where this sits
 
 ```
-ai_governance::WF_GOVERN_AGENT_ACTION_V0
-ai_governance::WF_PROVISION_AI_LICENSING_V0
-ai_governance::WF_AUTO_RECLAIM_V0
-ai_governance::WF_DENY_PROVISION_V0
+software_governance          conformance_workloads       business_domains
+what is GOVERNED             what PROVES the guarantee   what is DONE  ← here
+       └──────────────────────────┼──────────────────────────┘
+                                  │
+                          compiler → assembler
+                                  │
+                         ┌────────▼────────┐
+                         │ sealed snapshot │
+                         └────┬───────┬────┘
+                              ▼       ▼
+                         runtime   inspector
 ```
 
-These workflows:
-- validate incoming actions through admission rules (IN_)
-- apply policy decisions at named decision points (CC_)
-- record all outcomes as immutable events (CS_)
+A domain is compiled **against** an already-compiled governance surface. Governance is never edited
+to admit a domain — compiling one leaves the platform's identity unchanged. A domain declares its
+own sources in its own build manifest, so adding one is a sibling directory and nothing upstream is
+touched.
 
-They execute through the same generic runtime used by all PGS domains.
+## Run one
 
----
-
-## Execution model
-
-Every workflow execution follows this path:
-
-```
-IN_ → WF_ → CC_ → (CT_ / CS_) → Trace
+```bash
+./blockchain/client/serve.sh          # http://localhost:8000
 ```
 
-| Concern | What it does |
-|---------|-------------|
-| `IN_` Intent | Admission gate — validates payload before anything runs |
-| `WF_` Workflow | Execution graph — declares which CCs run and in what order |
-| `CC_` Capability Contract | Named DAG node — declares inputs, outputs, and routing outcomes |
-| `CT_` Capability Transform | Pure computation — deterministic, no side effects |
-| `CS_` Capability Side Effect | Controlled state change — registry write, event append, grant, revoke |
-| `RB_` Runtime Binding | Maps declared capabilities to implementations at build time |
-| Trace | Append-only execution record — ground truth of what happened |
+Register a name and contact address, then verify that address — accepting or rejecting it. The same
+path without the browser:
 
-The runtime traverses this graph exactly as declared. It has no domain knowledge. All governance behavior lives in the compiled snapshot.
-
----
-
-## Build lifecycle
-
-```
-compile → build → run
+```bash
+curl -s -X POST http://localhost:8000/blockchain -H 'Content-Type: application/json' \
+  -d '{"operation":"blockchain.register_actor",
+       "params":{"name":"Ada","contact_address":"ada@example.com"}}'
 ```
 
-| Phase | What happens | Where |
-|-------|-------------|-------|
-| **compile** | Source artifacts validated against invariants | `pgs_governance` / `pgs_compiler` |
-| **build** | Validated artifacts materialized into a closed snapshot | `pgs_compiler` → `pgs_workspace/protocol_snapshot/` |
-| **run** | Runtime reads snapshot and executes | `pgs_workspace` (pgs_runtime CLI) |
-
-The snapshot is sealed at build time. No behavior enters at execution time that was not in the snapshot.
-
----
-
-## What is being governed
-
-This domain models actions such as:
-- provisioning AI capabilities or access
-- approving or denying agent requests
-- enforcing usage constraints
-- reclaiming or revoking access
-
-These are expressed as workflows with explicit outcomes — not conditional logic hidden in code.
-
----
-
-## How governance works here
-
-**1. Governance is part of execution**
-
-Policies are not checked after an action completes. They are encoded as:
-
-```
-IN_  → admission rules (what is allowed to enter)
-CC_  → decision points (where routing is determined)
-CS_  → enforceable effects (grant, deny, revoke, record)
+```json
+{ "outcome": "SUCCESS", "result_class": "SUCCESS",
+  "result": { "contact_address": "ada@example.com",
+              "occurrence": "ACTOR_REGISTERED_UNVERIFIED", "sequence_number": 1 },
+  "evidence": [ "trace:traces/blockchain/WF_REGISTER_ACTOR_V0/…" ] }
 ```
 
-If an admission rule is violated, the workflow does not proceed. No exception handling. No fallback. The graph has no edge for that path.
+Accepting an unknown address returns a governed `NOT_FOUND` without writing anything; registering
+twice succeeds twice and advances the sequence, because registration is idempotent **by
+declaration**. Every response points at the trace for that exact run.
 
-**2. All decisions are explicit**
+To run a workflow directly against the sealed snapshot, without any web surface:
 
-Every decision point returns a named outcome:
-```
-APPROVED
-DENIED
-VIOLATION
-```
-
-These outcomes determine the execution path. There is no implicit policy evaluation, no hidden fallback behavior, no silent acceptance.
-
-**3. Speed is preserved**
-
-AI systems can operate at full speed because governance is precompiled. Decisions are deterministic. No runtime policy interpretation is required.
-
-This avoids the typical pattern:
-```
-fast generation → slow validation → delayed execution
+```bash
+cd ../protocol_runtime
+./run.sh run --wf blockchain::WF_REGISTER_ACTOR_V0 \
+             --payload ../business_domains/blockchain/testbed/identity/test_payloads/01_register_actor.json \
+             --data-root /tmp/pgc_instance
 ```
 
-Instead:
-```
-validated execution → immediate outcome
-```
-
-**4. Full auditability**
-
-Every decision produces:
-- a trace (complete execution path)
-- an event (append-only record — the permanent history)
-- a state change (if and only if the action was allowed)
-
-No instrumentation required. Governance is observable by design.
-
----
-
-## Applying this to AI-assisted coding
-
-This domain suggests a pattern for governing AI coding assistants.
-
-Instead of:
-- letting AI tools directly modify systems
-- adding ad-hoc validation layers around tool calls
-- relying on manual review after generation
-
-You define intent → governed workflow → controlled outcome:
-
-| Action | Governed as |
-|--------|-------------|
-| "generate and apply a code change" | `WF_VALIDATE_CODE_CHANGE_V0` with scope assertions |
-| "deploy this patch" | `WF_APPROVE_DEPLOYMENT_V0` with policy satisfaction check |
-| "provision new AI capability" | `WF_PROVISION_AI_LICENSING_V0` with licensing constraints |
-
-AI tools retain their full generative speed. Governance does not slow generation; it constrains execution. Governance is the execution substrate, not a gate in front of it.
-
----
-
-## Extending governance capabilities
-
-You extend this domain by adding protocol artifacts — no runtime changes required.
-
-**New intents (admission rules):**
-```
-IN_SUBMIT_CODE_CHANGE_V0
-IN_REQUEST_DEPLOYMENT_V0
-IN_REQUEST_ELEVATED_ACCESS_V0
-```
-
-**New workflows:**
-```
-WF_VALIDATE_CODE_CHANGE_V0
-WF_APPROVE_DEPLOYMENT_V0
-WF_ENFORCE_SCOPE_CONSTRAINT_V0
-```
-
-**New assertions (compiled constraints):**
-```
-ASSERT_CODE_CHANGE_WITHIN_SCOPE_V0
-ASSERT_DEPLOYMENT_POLICY_COMPLIANT_V0
-ASSERT_AGENT_CAPABILITY_LICENSED_V0
-```
-
-**New side-effects:**
-```
-CS_GRANT_ACCESS_V0
-CS_REVOKE_ACCESS_V0
-CS_RECORD_DECISION_V0
-CS_APPEND_AUDIT_LOG_V0
-```
-
----
-
-## What this is not
-
-This repository does not:
-- replace or sandbox AI tools
-- guarantee correctness of generated code
-- solve AI safety at a foundational level
-
-It provides:  
-a structured way to control when and how AI-initiated actions are allowed to take effect.
-
----
-
-## Repo structure
+## Layout
 
 ```
-pgs_ai_governance/
-└── pgs_ai_governance/
-    └── testbed/
-        ├── agent_governance/  ← payloads for agent action workflows
-        ├── ai_licensing/      ← payloads for licensing workflows
-        └── static/            ← browser UI client
+blockchain/
+  registry/identity/     workflows · intents · contracts · events · actors ·
+                         storage structure · runtime bindings · transport contracts
+  client/                web client, HTTP binding table, composition launcher
+  cr_dossiers/           the governed record of each change, with its baseline pin
+  testbed/               payloads, including ones that must be refused
+
+book_library_mgmt/       same shape; subdomain `catalog`; plus implementation/ transforms
+ai_governance/           same shape; two subdomains in one namespace
 ```
 
----
+## A change to a domain is itself governed
 
-## Where this fits in the system
+Each domain carries **change dossiers** — the record of a change from the business problem as stated
+(P0) through to the authoring mandate (P8), each phase admissible before the next may be authored.
+Every dossier pins the baseline it was approved against, and that pin stays historical: a completed
+change is never re-pinned forward.
 
-| Repo | Role |
-|------|------|
-| `pgs_governance` + `pgs_compiler` | Define and compile governance artifacts |
-| `pgs_runtime` | Executes governance workflows |
-| `pgs_capabilities` | Implements CT/CS effects |
-| `pgs_blockchain` | Example: a full system domain using PGS |
-| **`pgs_ai_governance` ← here** | **Governance domain** |
-| `pgs_change_mgmt` | Governed SDLC — Change Request to Authoring Mandate (new in v0.5.0) |
-| `pgs_workspace` | Entry point — run and observe |
+A change need not author anything. One dossier here produces a **two-line diff** — a defect
+correction, fully evidenced, every phase admissible. A lifecycle that can only describe creation
+cannot describe maintenance.
 
----
+## What this repository is not
 
-## Research context
+- **Not the platform.** The governance surface is `software_governance`; the runtime that executes
+  these domains is `protocol_runtime`, and it contains no knowledge of any domain here.
+- **Not a set of examples.** Conformance workloads (`conformance_workloads`) exist to prove a
+  guarantee; these exist because the work is worth doing. That both compile by the identical path,
+  with no privilege on either side, is the claim.
+- **Not a place for platform mechanisms.** When a domain needs something neutral the substrate
+  lacks, the substrate gains it — a domain that compensates with a private rule produces a promise
+  stated nowhere and copied everywhere.
 
-> *"Extensibility by declaration, not refactor."*
+## Rules
 
-Applied to governance.
-
-This domain shows how policies can be compiled, decisions can be deterministic, and outcomes can be fully auditable — without embedding control logic across application code.
-
-The implication: as AI-assisted systems scale in speed and scope, governance scales with them — because it is compiled into the execution substrate, not layered on top of it.
-
----
-
-## Core idea
-
-Actions are not prevented or allowed by convention.  
-They are routed through governed execution paths.
-
----
-
-## Final note
-
-If governance requires inserting conditional logic into application code, the model has been bypassed.  
-Define a new workflow. Compile it. The system governs it.
----
+- A domain declares; it does not implement admission, routing, persistence or auditing.
+- No import of the compiler, the assembler, the runtime, or another domain. Implementations are
+  leaves; cross-domain reference happens through compiled identity.
+- Capability transforms are pure and deterministic. Every effect is a declared capability.
+- All references are by fully-qualified identity, resolved at compile time. No short names.
 
 ## License
 
-Apache-2.0. See LICENSE and NOTICE for details.
+Apache-2.0. See [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE).
