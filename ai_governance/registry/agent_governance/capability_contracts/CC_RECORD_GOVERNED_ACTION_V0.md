@@ -112,6 +112,17 @@ core:
     on_input_failure: VIOLATION
 
   pipeline:
+    - step: read_now
+      side_effect: capability_side_effects::CS_CLOCK_V0
+      op: NOW
+      inputs: {}
+      outputs:
+        timestamp: $.capability_result.timestamp
+      result_surface: [SUCCESS, BACKEND_ERROR]
+      on_result:
+        SUCCESS: continue
+        BACKEND_ERROR: exit
+
     - step: generate_action_id
       transform: capability_transforms::CT_PURE_GENERATE_ID_V0
       inputs:
@@ -162,7 +173,7 @@ core:
           license_tier: $.inputs.license_tier
           parameters: $.inputs.parameters
           decision: "AUTHORIZED"
-          timestamp: "{{timestamp}}"
+          timestamp: $.results.read_now.timestamp
       outputs:
         result_status: $.capability_result.result_status
         action_id: $.results.generate_action_id.action_id

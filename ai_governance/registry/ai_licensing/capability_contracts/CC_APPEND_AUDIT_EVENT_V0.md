@@ -107,6 +107,17 @@ core:
     on_input_failure: VIOLATION
 
   pipeline:
+    - step: read_now
+      side_effect: capability_side_effects::CS_CLOCK_V0
+      op: NOW
+      inputs: {}
+      outputs:
+        timestamp: $.capability_result.timestamp
+      result_surface: [SUCCESS, BACKEND_ERROR]
+      on_result:
+        SUCCESS: continue
+        BACKEND_ERROR: exit
+
     - step: append_audit_event
       side_effect: capability_side_effects::CS_APPENDONLY_JSONL_V0
       op: APPEND
@@ -119,7 +130,7 @@ core:
           reason_code: $.inputs.reason_code
           license_id: $.inputs.license_id
           payload: $.inputs.data
-          timestamp: "{{timestamp}}"
+          timestamp: $.results.read_now.timestamp
       outputs:
         result_status: $.result_status
       result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]

@@ -179,7 +179,7 @@ them again would create a second artifact under the same name.
 | book_library_mgmt::CC_RESOLVE_WORK_V0 | resolve_work_claim | OUTPUT | target_ref | capability_result.target_ref | S7 cc_composition resolve_work_claim |
 | book_library_mgmt::CC_RESOLVE_WORK_V0 | resolve_work_claim | OUTPUT | result_status | result_status | S7 cc_composition resolve_work_claim |
 | book_library_mgmt::CC_RESOLVE_WORK_V0 | read_work_record | INPUT | key | results.form_work_key.work_key | S7 cc_composition read_work_record |
-| book_library_mgmt::CC_RESOLVE_WORK_V0 | read_work_record | OUTPUT | value | capability_result.value | S7 cc_composition read_work_record |
+| book_library_mgmt::CC_RESOLVE_WORK_V0 | read_work_record | OUTPUT | work_record | capability_result.value | S7 cc_composition read_work_record |
 | book_library_mgmt::CC_RESOLVE_WORK_V0 | read_work_record | OUTPUT | result_status | result_status | S7 cc_composition read_work_record |
 | book_library_mgmt::CC_REGISTER_ADDITIONAL_EDITION_V0 | validate_edition_fields | INPUT | record | inputs.edition_fields | S7 cc_composition validate_edition_fields |
 | book_library_mgmt::CC_REGISTER_ADDITIONAL_EDITION_V0 | validate_edition_fields | INPUT | schema | inputs.edition_schema | S7 cc_composition validate_edition_fields |
@@ -344,7 +344,7 @@ them again would create a second artifact under the same name.
 | book_library_mgmt::EV_WORK_REGISTERED_V0 | ATTRIBUTE | author | string | YES |  | The work's author |
 | book_library_mgmt::CC_VALIDATE_BOOK_SUBMISSION_V0 | INPUT | book_fields | object | YES |  | The book's bibliographic information |
 | book_library_mgmt::CC_VALIDATE_BOOK_SUBMISSION_V0 | INPUT | book_schema | object | YES |  | The fields a book record must carry, as the rules its structure is validated against |
-| book_library_mgmt::CC_VALIDATE_BOOK_SUBMISSION_V0 | INPUT | barcode | string | YES |  | The barcode the library assigned to the copy |
+| book_library_mgmt::CC_VALIDATE_BOOK_SUBMISSION_V0 | INPUT | barcode | string | NO |  | The barcode the library assigned to the copy, when the registration carries one — an additional edition of an existing work does not |
 | book_library_mgmt::CC_REGISTER_BOOK_V0 | INPUT | identity_key | string | YES |  | The key formed from a book's title, author and publication year |
 | book_library_mgmt::CC_REGISTER_BOOK_V0 | INPUT | book_schema | object | YES |  | The fields a book record must carry, as the rules its structure is validated against |
 | book_library_mgmt::CC_SEARCH_CATALOG_V0 | INPUT | search_criteria | object | YES |  | What staff are searching by, and the states to include |
@@ -413,7 +413,14 @@ them again would create a second artifact under the same name.
 
 ---
 
-## 14. Artifact Summary
+## 14. Transport Bindings
+
+<!-- register:transport_bindings optional -->
+| Artifact | Direction (INGRESS, EGRESS) | Operation | Handler Kind (WF_INVOCATION, SNAPSHOT_READ) | Handler Target | Field | Bound To | Source Finding |
+|----------|----------------------------|-----------|---------------------------------------------|----------------|-------|----------|----------------|
+| NONE IDENTIFIED |
+
+## 15. Artifact Summary
 
 <!-- register:artifact_summary -->
 | Action (REPLACE, EXTEND, NEW) | Subdomain | Count | Artifacts |

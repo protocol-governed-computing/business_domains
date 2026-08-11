@@ -86,7 +86,7 @@ core:
     inputs:
       key: $.results.form_work_key.work_key
     outputs:
-      value: $.capability_result.value
+      work_record: $.capability_result.value
       result_status: $.result_status
     result_surface:
     - SUCCESS
