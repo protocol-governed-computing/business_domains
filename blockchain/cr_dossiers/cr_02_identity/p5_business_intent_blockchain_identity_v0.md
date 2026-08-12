@@ -31,16 +31,6 @@ govern what a trusted actor may then do, which persons may be an authority, or w
 
 ---
 
-
-### Purpose of every subdomain this change touches
-
-<!-- register:subdomain_purposes business_language=purpose -->
-| Subdomain | Purpose | Source Finding |
-|-----------|---------|----------------|
-| identity | Governs who a person is and whether the business trusts them — the record of each person, their state, and the trail of moments in their history. | S1 cr_type #1 |
-
----
-
 ## 2. Scope Boundary
 
 <!-- register:scope_boundary business_language=capability,notes -->
@@ -123,14 +113,14 @@ govern what a trusted actor may then do, which persons may be an authority, or w
 ## 7. Provisional Codes
 
 <!-- register:provisional_codes business_language=summary -->
-| Subdomain | Provisional Code | Family (AC, IN, WF, CC, CT, EV, RB, VOCAB, STRUCTURE, TI, TE) | Summary | Source Finding |
-|-----------|------------------|-------------------------|---------|----------------|
-| identity | TI_REGISTER_ACTOR_V0 | TI | Offers registering an actor under the business's public name for it, states what a caller may send, and holds what the act requires and a caller must not | S4 gap_register GAP-01 |
-| identity | TE_REGISTER_ACTOR_V0 | TE | States which kind of answer each ending of registering an actor takes, and what of the result the caller is told | S4 gap_register GAP-04 |
-| identity | TI_ACCEPT_ACTOR_V0 | TI | Offers accepting a registered actor under the business's public name for it, states what a caller may send, and holds what the act requires and a caller must not | S4 gap_register GAP-02 |
-| identity | TE_ACCEPT_ACTOR_V0 | TE | States which kind of answer each ending of accepting an actor takes, including the actor that does not exist, and what of the result the caller is told | S4 gap_register GAP-05 |
-| identity | TI_REJECT_ACTOR_V0 | TI | Offers rejecting a registered actor under the business's public name for it, states what a caller may send, and holds what the act requires and a caller must not | S4 gap_register GAP-02 |
-| identity | TE_REJECT_ACTOR_V0 | TE | States which kind of answer each ending of rejecting an actor takes, including the actor that does not exist, and what of the result the caller is told | S4 gap_register GAP-05 |
+| Provisional Code | Family (AC, IN, WF, CC, CT, EV, RB, VOCAB, STRUCTURE, TI, TE) | Summary | Source Finding |
+|------------------|-------------------------|---------|----------------|
+| TI_REGISTER_ACTOR_V0 | TI | Offers registering an actor under the business's public name for it, states what a caller may send, and holds what the act requires and a caller must not | S4 gap_register GAP-01 |
+| TE_REGISTER_ACTOR_V0 | TE | States which kind of answer each ending of registering an actor takes, and what of the result the caller is told | S4 gap_register GAP-04 |
+| TI_ACCEPT_ACTOR_V0 | TI | Offers accepting a registered actor under the business's public name for it, states what a caller may send, and holds what the act requires and a caller must not | S4 gap_register GAP-02 |
+| TE_ACCEPT_ACTOR_V0 | TE | States which kind of answer each ending of accepting an actor takes, including the actor that does not exist, and what of the result the caller is told | S4 gap_register GAP-05 |
+| TI_REJECT_ACTOR_V0 | TI | Offers rejecting a registered actor under the business's public name for it, states what a caller may send, and holds what the act requires and a caller must not | S4 gap_register GAP-02 |
+| TE_REJECT_ACTOR_V0 | TE | States which kind of answer each ending of rejecting an actor takes, including the actor that does not exist, and what of the result the caller is told | S4 gap_register GAP-05 |
 
 ---
 

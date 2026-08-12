@@ -31,16 +31,6 @@ or who a caller is.
 
 ---
 
-
-### Purpose of every subdomain this change touches
-
-<!-- register:subdomain_purposes business_language=purpose -->
-| Subdomain | Purpose | Source Finding |
-|-----------|---------|----------------|
-| identity | Governs who a person is and whether the business trusts them — the record of each person, their state, and the trail of moments in their history. A decision may change only their state, the deciding authority, and the grounds stated. | S1 cr_type #1 |
-
----
-
 ## 2. Scope Boundary
 
 <!-- register:scope_boundary business_language=capability,notes -->
@@ -102,9 +92,8 @@ or who a caller is.
 ## 7. Provisional Codes
 
 <!-- register:provisional_codes business_language=summary -->
-| Subdomain | Provisional Code | Family (AC, IN, WF, CC, CT, EV, RB, VOCAB, STRUCTURE, TI, TE) | Summary | Source Finding |
-|-----------|------------------|-------------------------|---------|----------------|
-| NONE IDENTIFIED |
+| Provisional Code | Family (AC, IN, WF, CC, CT, EV, RB, VOCAB, STRUCTURE, TI, TE) | Summary | Source Finding |
+|------------------|-------------------------|---------|----------------|
 
 ---
 

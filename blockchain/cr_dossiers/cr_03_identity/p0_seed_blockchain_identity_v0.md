@@ -31,9 +31,9 @@ then do, which persons may be an authority, or who a caller is.
 ## 1. CR Type
 
 <!-- register:cr_type business_language -->
-| Subdomain | Classification (NEW_SUBDOMAIN, EXTEND_SUBDOMAIN, MODIFY, DEPRECATE) | Rationale |
-|-----------|----------------|-----------|
-| identity | MODIFY | The identity function exists and works. Recording a decision destroys details it was never entitled to touch, against a rule the business set when the function was established. This changes how a decision is written so that it adds to what the business holds rather than replacing it. Nothing is added to what identity offers and nothing is withdrawn. |
+| Classification (NEW_SUBDOMAIN, EXTEND_SUBDOMAIN, MODIFY, DEPRECATE) | Rationale |
+|----------------|-----------|
+| MODIFY | The identity function exists and works. Recording a decision destroys details it was never entitled to touch, against a rule the business set when the function was established. This changes how a decision is written so that it adds to what the business holds rather than replacing it. Nothing is added to what identity offers and nothing is withdrawn. |
 
 ## 2. Business Vocabulary
 

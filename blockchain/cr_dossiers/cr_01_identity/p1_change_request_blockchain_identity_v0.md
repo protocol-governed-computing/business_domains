@@ -14,9 +14,9 @@ does not.
 ## 1. CR Type
 
 <!-- register:cr_type business_language -->
-| Subdomain | Classification (NEW_SUBDOMAIN, EXTEND_SUBDOMAIN, MODIFY, DEPRECATE) | Rationale | Source Finding |
-|-----------|-------------------------------------------------------------------|---------|--------------|
-| identity | NEW_SUBDOMAIN | The change establishes the identity function of the blockchain project. Nothing in this domain exists yet, so the change introduces a function rather than extending one. Identity is the first of the project's functions because every other one names an actor. | CR seed §1 CR Type #1 |
+| Classification (NEW_SUBDOMAIN, EXTEND_SUBDOMAIN, MODIFY, DEPRECATE) | Rationale | Source Finding |
+|-------------------------------------------------------------------|---------|--------------|
+| NEW_SUBDOMAIN | The change establishes the identity function of the blockchain project. Nothing in this domain exists yet, so the change introduces a function rather than extending one. Identity is the first of the project's functions because every other one names an actor. | CR seed §1 CR Type #1 |
 
 ---
 

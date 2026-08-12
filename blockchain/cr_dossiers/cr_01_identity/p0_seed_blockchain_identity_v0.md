@@ -28,9 +28,9 @@ actor is and whether they are trusted; it does not say what a trusted actor may 
 ## 1. CR Type
 
 <!-- register:cr_type business_language -->
-| Subdomain | Classification (NEW_SUBDOMAIN, EXTEND_SUBDOMAIN, MODIFY, DEPRECATE) | Rationale |
-|-----------|----------------|-----------|
-| identity | NEW_SUBDOMAIN | The change establishes the identity function of the blockchain project. Nothing in this domain exists yet, so the change introduces a function rather than extending one. Identity is the first of the project's functions because every other one names an actor. |
+| Classification (NEW_SUBDOMAIN, EXTEND_SUBDOMAIN, MODIFY, DEPRECATE) | Rationale |
+|----------------|-----------|
+| NEW_SUBDOMAIN | The change establishes the identity function of the blockchain project. Nothing in this domain exists yet, so the change introduces a function rather than extending one. Identity is the first of the project's functions because every other one names an actor. |
 
 ## 2. Business Vocabulary
 

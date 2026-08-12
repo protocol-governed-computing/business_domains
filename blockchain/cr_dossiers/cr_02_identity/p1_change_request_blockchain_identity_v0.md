@@ -14,9 +14,9 @@ does not.
 ## 1. CR Type
 
 <!-- register:cr_type business_language -->
-| Subdomain | Classification (NEW_SUBDOMAIN, EXTEND_SUBDOMAIN, MODIFY, DEPRECATE) | Rationale | Source Finding |
-|-----------|-------------------------------------------------------------------|---------|--------------|
-| identity | EXTEND_SUBDOMAIN | The identity function already exists and works. The change gives its two existing acts a way in from outside, and states what the business offers and what it turns away. No identity behaviour is introduced and no earlier decision is revisited. | CR seed §1 CR Type #1 |
+| Classification (NEW_SUBDOMAIN, EXTEND_SUBDOMAIN, MODIFY, DEPRECATE) | Rationale | Source Finding |
+|-------------------------------------------------------------------|---------|--------------|
+| EXTEND_SUBDOMAIN | The identity function already exists and works. The change gives its two existing acts a way in from outside, and states what the business offers and what it turns away. No identity behaviour is introduced and no earlier decision is revisited. | CR seed §1 CR Type #1 |
 
 ---
 
