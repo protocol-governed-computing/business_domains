@@ -28,9 +28,9 @@ existing record is redefined and no existing operation is withdrawn.
 ## 1. CR Type
 
 <!-- register:cr_type business_language -->
-| Classification (NEW_SUBDOMAIN, EXTEND_SUBDOMAIN, MODIFY, DEPRECATE) | Rationale |
-|----------------|-----------|
-| EXTEND_SUBDOMAIN | The change extends the existing catalog function of the existing book_library_mgmt project. It introduces no new library function, adds the Work above the records the previous change established, and withdraws no capability staff have today. |
+| Subdomain | Classification (NEW_SUBDOMAIN, EXTEND_SUBDOMAIN, MODIFY, DEPRECATE) | Rationale |
+|-----------|----------------|-----------|
+| catalog | EXTEND_SUBDOMAIN | The change extends the existing catalog function of the existing book_library_mgmt project. It introduces no new library function, adds the Work above the records the previous change established, and withdraws no capability staff have today. |
 
 ## 2. Business Vocabulary
 

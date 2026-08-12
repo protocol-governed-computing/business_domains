@@ -26,6 +26,13 @@ ordered, who the library's patrons are, or which staff are authorized.
 |--------|----------------------------------|------------|
 | CR seed §0 Subdomain Purpose | REFINED | States the authority the subdomain establishes — a book exists in the collection because the catalog says so — the lifecycle it manages from registration through retirement and back, and the four functions it explicitly does not govern. The seed states what the catalog is for and why it exists; none of these four additions contradicts it. |
 
+### Purpose of every subdomain this change touches
+
+<!-- register:subdomain_purposes business_language=purpose -->
+| Subdomain | Purpose | Source Finding |
+|-----------|---------|----------------|
+| catalog | Governs the library's authoritative description of what it holds — one record per book it catalogs and one per physical copy it owns — and the lifecycle of both from registration through retirement and back. | S1 cr_type #1 |
+
 ---
 
 ## 2. Scope Boundary
@@ -120,50 +127,50 @@ is why both record stores hold state as data rather than by which store a record
 ## 7. Provisional Artifact Codes
 
 <!-- register:provisional_codes business_language=summary -->
-| Provisional Code | Family (AC, IN, WF, CC, CT, EV, RB, STRUCTURE) | Summary | Source Finding |
-|------------------|-------------------------|---------|----------------|
-| AC_LIBRARY_STAFF_V0 | AC | The authorized staff member who performs a catalog operation | S4 actors Authorized staff member |
-| IN_REGISTER_BOOK_V0 | IN | A request to register a book together with its first physical copy | S5 actions Register |
-| IN_REGISTER_PHYSICAL_COPY_V0 | IN | A request to register a further copy against a registered book | S5 actions Register |
-| IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0 | IN | A request to change a registered book's description | S5 actions Update |
-| IN_RETIRE_BOOK_RECORD_V0 | IN | A request to retire a book record judged obsolete | S5 actions Retire |
-| IN_RETIRE_PHYSICAL_COPY_V0 | IN | A request to retire a lost or damaged copy | S5 actions Retire |
-| IN_REINSTATE_BOOK_RECORD_V0 | IN | A request to return a retired book record to the registered state | S5 actions Reinstate |
-| IN_REINSTATE_PHYSICAL_COPY_V0 | IN | A request to return a retired copy to the registered state | S5 actions Reinstate |
-| IN_SEARCH_CATALOG_V0 | IN | A request to locate material by subject or by title | S5 actions Search |
-| IN_RETRIEVE_BOOK_DETAILS_V0 | IN | A request for a book's complete details with the copies held | S5 actions Retrieve |
-| WF_REGISTER_BOOK_V0 | WF | Registering a book and its first copy, end to end | S4 capability_graph Register a book together with its first physical copy |
-| WF_REGISTER_PHYSICAL_COPY_V0 | WF | Registering a further copy against a registered book | S4 capability_graph Register a further physical copy against a registered book |
-| WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0 | WF | Changing a book's description without making it a duplicate | S4 capability_graph Update a book's bibliographic information |
-| WF_RETIRE_BOOK_RECORD_V0 | WF | Retiring a book record, leaving its copies untouched | S4 capability_graph Retire a book record |
-| WF_RETIRE_PHYSICAL_COPY_V0 | WF | Retiring a copy, leaving the book record untouched | S4 capability_graph Retire a physical copy |
-| WF_REINSTATE_BOOK_RECORD_V0 | WF | Returning a retired book record to the registered state | S4 capability_graph Return a retired book record to the registered state |
-| WF_REINSTATE_PHYSICAL_COPY_V0 | WF | Returning a retired copy to the registered state | S4 capability_graph Return a retired physical copy to the registered state |
-| WF_SEARCH_CATALOG_V0 | WF | Searching by subject or title, excluding retired books, and recording that it happened | S4 capability_graph Search the catalog by subject or title, excluding retired books |
-| WF_RETRIEVE_BOOK_DETAILS_V0 | WF | Assembling a book with the copies the library holds of it | S4 capability_graph Retrieve a book's complete details with the copies the library holds |
-| CC_CONFIRM_STAFF_AUTHORIZED_V0 | CC | Confirm the staff member may perform catalog operations | S4 capability_graph Confirm the staff member performing an operation is authorized |
-| CC_CLAIM_BOOK_IDENTITY_V0 | CC | Claim a book's identity so a second registration of the same book is refused | S4 capability_graph Enforce that one book exists per title, author and publication year |
-| CC_CLAIM_COPY_BARCODE_V0 | CC | Claim a copy's barcode so a second copy carrying it is refused | S4 capability_graph Enforce that one physical copy exists per barcode |
-| CC_REGISTER_BOOK_V0 | CC | Record a book's bibliographic information as the catalog's authoritative description of it | S4 capability_graph Register a book together with its first physical copy |
-| CC_REGISTER_PHYSICAL_COPY_V0 | CC | Record a copy against exactly one book | S4 capability_graph Register a further physical copy against a registered book |
-| CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0 | CC | Replace a book's descriptive content, refusing a change that duplicates another book | S4 capability_graph Update a book's bibliographic information |
-| CC_RETIRE_BOOK_RECORD_V0 | CC | Mark a book record retired so it is no longer offered as current | S4 capability_graph Retire a book record |
-| CC_RETIRE_PHYSICAL_COPY_V0 | CC | Mark a copy retired so the library no longer holds it | S4 capability_graph Retire a physical copy |
-| CC_REINSTATE_BOOK_RECORD_V0 | CC | Mark a retired book record registered again | S4 capability_graph Return a retired book record to the registered state |
-| CC_REINSTATE_PHYSICAL_COPY_V0 | CC | Mark a retired copy registered again | S4 capability_graph Return a retired physical copy to the registered state |
-| CC_SEARCH_CATALOG_V0 | CC | Select the registered books matching a subject or title, excluding retired ones | S4 capability_graph Search the catalog by subject or title, excluding retired books |
-| CC_ASSEMBLE_BOOK_DETAILS_V0 | CC | Assemble a book's record with the copies recorded against it | S4 capability_graph Retrieve a book's complete details with the copies the library holds |
-| CC_APPEND_CATALOG_OPERATION_V0 | CC | Append a durable account of a performed operation to the catalog's own audit trail | S4 capability_graph Record a performed catalog operation in the catalog's audit trail |
-| CT_PURE_FORM_BOOK_IDENTITY_KEY_V0 | CT | Forms the single key claimed for a book from its title, author and publication year | S4 gap_register GAP-06 |
-| CC_VALIDATE_BOOK_SUBMISSION_V0 | CC | Confirms a registration carries what a book record requires, before any identity is claimed | S4 gap_register GAP-06 |
-| CC_RESOLVE_BOOK_IDENTITY_V0 | CC | Resolves a registered book by its identifying key, so an update names the book independently of the attributes it changes | S4 gap_register GAP-08 |
-| EV_BOOK_REGISTERED_V0 | EV | The moment a book enters the catalog | S4 gap_register GAP-16 |
-| EV_PHYSICAL_COPY_REGISTERED_V0 | EV | The moment the library records another copy it owns | S4 gap_register GAP-16 |
-| EV_BIBLIOGRAPHIC_INFORMATION_UPDATED_V0 | EV | The moment a book's authoritative description changes | S4 gap_register GAP-16 |
-| EV_BOOK_RETIRED_V0 | EV | The moment a book record is judged obsolete | S4 gap_register GAP-16 |
-| EV_PHYSICAL_COPY_RETIRED_V0 | EV | The moment the library no longer holds a copy | S4 gap_register GAP-16 |
-| RB_CATALOG_BINDINGS_V0 | RB | Binds the catalog's operations to the stores and mechanisms they use | S4 gap_register GAP-03 |
-| STRUCTURE_CATALOG_STORAGE_V0 | STRUCTURE | Declares the stores the catalog owns and the paths they occupy | S4 gap_register GAP-02 |
+| Subdomain | Provisional Code | Family (AC, IN, WF, CC, CT, EV, RB, VOCAB, STRUCTURE, TI, TE) | Summary | Source Finding |
+|-----------|------------------|-------------------------|---------|----------------|
+| catalog | AC_LIBRARY_STAFF_V0 | AC | The authorized staff member who performs a catalog operation | S4 actors Authorized staff member |
+| catalog | IN_REGISTER_BOOK_V0 | IN | A request to register a book together with its first physical copy | S5 actions Register |
+| catalog | IN_REGISTER_PHYSICAL_COPY_V0 | IN | A request to register a further copy against a registered book | S5 actions Register |
+| catalog | IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0 | IN | A request to change a registered book's description | S5 actions Update |
+| catalog | IN_RETIRE_BOOK_RECORD_V0 | IN | A request to retire a book record judged obsolete | S5 actions Retire |
+| catalog | IN_RETIRE_PHYSICAL_COPY_V0 | IN | A request to retire a lost or damaged copy | S5 actions Retire |
+| catalog | IN_REINSTATE_BOOK_RECORD_V0 | IN | A request to return a retired book record to the registered state | S5 actions Reinstate |
+| catalog | IN_REINSTATE_PHYSICAL_COPY_V0 | IN | A request to return a retired copy to the registered state | S5 actions Reinstate |
+| catalog | IN_SEARCH_CATALOG_V0 | IN | A request to locate material by subject or by title | S5 actions Search |
+| catalog | IN_RETRIEVE_BOOK_DETAILS_V0 | IN | A request for a book's complete details with the copies held | S5 actions Retrieve |
+| catalog | WF_REGISTER_BOOK_V0 | WF | Registering a book and its first copy, end to end | S4 capability_graph Register a book together with its first physical copy |
+| catalog | WF_REGISTER_PHYSICAL_COPY_V0 | WF | Registering a further copy against a registered book | S4 capability_graph Register a further physical copy against a registered book |
+| catalog | WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0 | WF | Changing a book's description without making it a duplicate | S4 capability_graph Update a book's bibliographic information |
+| catalog | WF_RETIRE_BOOK_RECORD_V0 | WF | Retiring a book record, leaving its copies untouched | S4 capability_graph Retire a book record |
+| catalog | WF_RETIRE_PHYSICAL_COPY_V0 | WF | Retiring a copy, leaving the book record untouched | S4 capability_graph Retire a physical copy |
+| catalog | WF_REINSTATE_BOOK_RECORD_V0 | WF | Returning a retired book record to the registered state | S4 capability_graph Return a retired book record to the registered state |
+| catalog | WF_REINSTATE_PHYSICAL_COPY_V0 | WF | Returning a retired copy to the registered state | S4 capability_graph Return a retired physical copy to the registered state |
+| catalog | WF_SEARCH_CATALOG_V0 | WF | Searching by subject or title, excluding retired books, and recording that it happened | S4 capability_graph Search the catalog by subject or title, excluding retired books |
+| catalog | WF_RETRIEVE_BOOK_DETAILS_V0 | WF | Assembling a book with the copies the library holds of it | S4 capability_graph Retrieve a book's complete details with the copies the library holds |
+| catalog | CC_CONFIRM_STAFF_AUTHORIZED_V0 | CC | Confirm the staff member may perform catalog operations | S4 capability_graph Confirm the staff member performing an operation is authorized |
+| catalog | CC_CLAIM_BOOK_IDENTITY_V0 | CC | Claim a book's identity so a second registration of the same book is refused | S4 capability_graph Enforce that one book exists per title, author and publication year |
+| catalog | CC_CLAIM_COPY_BARCODE_V0 | CC | Claim a copy's barcode so a second copy carrying it is refused | S4 capability_graph Enforce that one physical copy exists per barcode |
+| catalog | CC_REGISTER_BOOK_V0 | CC | Record a book's bibliographic information as the catalog's authoritative description of it | S4 capability_graph Register a book together with its first physical copy |
+| catalog | CC_REGISTER_PHYSICAL_COPY_V0 | CC | Record a copy against exactly one book | S4 capability_graph Register a further physical copy against a registered book |
+| catalog | CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0 | CC | Replace a book's descriptive content, refusing a change that duplicates another book | S4 capability_graph Update a book's bibliographic information |
+| catalog | CC_RETIRE_BOOK_RECORD_V0 | CC | Mark a book record retired so it is no longer offered as current | S4 capability_graph Retire a book record |
+| catalog | CC_RETIRE_PHYSICAL_COPY_V0 | CC | Mark a copy retired so the library no longer holds it | S4 capability_graph Retire a physical copy |
+| catalog | CC_REINSTATE_BOOK_RECORD_V0 | CC | Mark a retired book record registered again | S4 capability_graph Return a retired book record to the registered state |
+| catalog | CC_REINSTATE_PHYSICAL_COPY_V0 | CC | Mark a retired copy registered again | S4 capability_graph Return a retired physical copy to the registered state |
+| catalog | CC_SEARCH_CATALOG_V0 | CC | Select the registered books matching a subject or title, excluding retired ones | S4 capability_graph Search the catalog by subject or title, excluding retired books |
+| catalog | CC_ASSEMBLE_BOOK_DETAILS_V0 | CC | Assemble a book's record with the copies recorded against it | S4 capability_graph Retrieve a book's complete details with the copies the library holds |
+| catalog | CC_APPEND_CATALOG_OPERATION_V0 | CC | Append a durable account of a performed operation to the catalog's own audit trail | S4 capability_graph Record a performed catalog operation in the catalog's audit trail |
+| catalog | CT_PURE_FORM_BOOK_IDENTITY_KEY_V0 | CT | Forms the single key claimed for a book from its title, author and publication year | S4 gap_register GAP-06 |
+| catalog | CC_VALIDATE_BOOK_SUBMISSION_V0 | CC | Confirms a registration carries what a book record requires, before any identity is claimed | S4 gap_register GAP-06 |
+| catalog | CC_RESOLVE_BOOK_IDENTITY_V0 | CC | Resolves a registered book by its identifying key, so an update names the book independently of the attributes it changes | S4 gap_register GAP-08 |
+| catalog | EV_BOOK_REGISTERED_V0 | EV | The moment a book enters the catalog | S4 gap_register GAP-16 |
+| catalog | EV_PHYSICAL_COPY_REGISTERED_V0 | EV | The moment the library records another copy it owns | S4 gap_register GAP-16 |
+| catalog | EV_BIBLIOGRAPHIC_INFORMATION_UPDATED_V0 | EV | The moment a book's authoritative description changes | S4 gap_register GAP-16 |
+| catalog | EV_BOOK_RETIRED_V0 | EV | The moment a book record is judged obsolete | S4 gap_register GAP-16 |
+| catalog | EV_PHYSICAL_COPY_RETIRED_V0 | EV | The moment the library no longer holds a copy | S4 gap_register GAP-16 |
+| catalog | RB_CATALOG_BINDINGS_V0 | RB | Binds the catalog's operations to the stores and mechanisms they use | S4 gap_register GAP-03 |
+| catalog | STRUCTURE_CATALOG_STORAGE_V0 | STRUCTURE | Declares the stores the catalog owns and the paths they occupy | S4 gap_register GAP-02 |
 ---
 
 ## 8. Cross-Subdomain References
