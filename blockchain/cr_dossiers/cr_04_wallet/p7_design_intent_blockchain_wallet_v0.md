@@ -96,33 +96,33 @@ HOW it is realised. Binding identities are assigned here.
 <!-- register:execution_topology -->
 | Workflow | Node | Node Type (IN, CC, EXIT, EXIT_SUCCESS) | Routing | Source Finding |
 |----------|------|----------------------------------------|---------|----------------|
-| blockchain::WF_CREATE_WALLET_V0 | blockchain::IN_WALLET_CREATION_V0 | IN | ACK → CC_RESOLVE_ACTOR_V0; NACK → EXIT_REJECTED | S5 actions #1 |
-| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_RESOLVE_ACTOR_V0 | CC | SUCCESS → CC_DETERMINE_WALLET_IDENTITY_V0; NOT_FOUND → EXIT_REJECTED; VIOLATION → EXIT_REJECTED | S6 cross_subdomain_deps #1 |
-| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 | CC | SUCCESS → CC_CLAIM_WALLET_IDENTITY_V0; VIOLATION → EXIT_REJECTED | S5 provisional_codes #3 |
-| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_CLAIM_WALLET_IDENTITY_V0 | CC | SUCCESS → CC_ESTABLISH_WALLET_ADDRESS_V0; ALREADY_EXISTS → EXIT_REJECTED; VIOLATION → EXIT_REJECTED | S5 provisional_codes #4 |
-| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0 | CC | SUCCESS → CC_CREATE_WALLET_RECORD_V0; VIOLATION → EXIT_REJECTED | S5 provisional_codes #5 |
-| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_CREATE_WALLET_RECORD_V0 | CC | SUCCESS → CC_APPEND_WALLET_OCCURRENCE_V0; VIOLATION → EXIT_REJECTED | S5 provisional_codes #6 |
-| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | CC | SUCCESS → EXIT_SUCCESS; VIOLATION → EXIT_REJECTED | S5 provisional_codes #7 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::IN_WALLET_CREATION_V0 | IN | ACK -> blockchain::CC_RESOLVE_ACTOR_V0; NACK -> EXIT_REJECTED | S5 actions #1 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_RESOLVE_ACTOR_V0 | CC | SUCCESS -> blockchain::CC_DETERMINE_WALLET_IDENTITY_V0; NOT_FOUND -> EXIT_REJECTED; VIOLATION -> EXIT_REJECTED | S6 cross_subdomain_deps #1 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 | CC | SUCCESS -> blockchain::CC_CLAIM_WALLET_IDENTITY_V0; VIOLATION -> EXIT_REJECTED | S5 provisional_codes #3 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_CLAIM_WALLET_IDENTITY_V0 | CC | SUCCESS -> blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0; ALREADY_EXISTS -> EXIT_REJECTED; VIOLATION -> EXIT_REJECTED | S5 provisional_codes #4 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0 | CC | SUCCESS -> blockchain::CC_CREATE_WALLET_RECORD_V0; VIOLATION -> EXIT_REJECTED | S5 provisional_codes #5 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_CREATE_WALLET_RECORD_V0 | CC | SUCCESS -> blockchain::CC_APPEND_WALLET_OCCURRENCE_V0; VIOLATION -> EXIT_REJECTED | S5 provisional_codes #6 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | CC | SUCCESS -> EXIT_SUCCESS; VIOLATION -> EXIT_REJECTED | S5 provisional_codes #7 |
 | blockchain::WF_CREATE_WALLET_V0 | EXIT_SUCCESS | EXIT | emit blockchain::EV_WALLET_CREATED_V0 | S5 provisional_codes #9 |
 | blockchain::WF_CREATE_WALLET_V0 | EXIT_REJECTED | EXIT | — | S5 invariants #4 |
-| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::IN_ACTOR_ACCEPTANCE_V0 | IN | ACK → CC_RESOLVE_ACTOR_V0; NACK → EXIT_REJECTED | S5 provisional_codes #13 |
-| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_RESOLVE_ACTOR_V0 | CC | SUCCESS → CC_RECORD_VERIFICATION_DECISION_V0; NOT_FOUND → EXIT_REJECTED; VIOLATION → EXIT_REJECTED | S6 pps_artifacts_requiring_action #4 |
-| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | CC | SUCCESS → CC_APPEND_ACTOR_OCCURRENCE_V0; VIOLATION → EXIT_REJECTED | S6 pps_artifacts_requiring_action #2 |
-| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | CC | SUCCESS → EXIT_SUCCESS; VIOLATION → EXIT_REJECTED | S3 dependency_discoveries #8 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::IN_ACTOR_ACCEPTANCE_V0 | IN | ACK -> blockchain::CC_RESOLVE_ACTOR_V0; NACK -> EXIT_REJECTED | S5 provisional_codes #13 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_RESOLVE_ACTOR_V0 | CC | SUCCESS -> blockchain::CC_RECORD_VERIFICATION_DECISION_V0; NOT_FOUND -> EXIT_REJECTED; VIOLATION -> EXIT_REJECTED | S6 pps_artifacts_requiring_action #4 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | CC | SUCCESS -> blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0; VIOLATION -> EXIT_REJECTED | S6 pps_artifacts_requiring_action #2 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | CC | SUCCESS -> EXIT_SUCCESS; VIOLATION -> EXIT_REJECTED | S3 dependency_discoveries #8 |
 | blockchain::WF_ACCEPT_ACTOR_V0 | EXIT_SUCCESS | EXIT | emit blockchain::EV_ACTOR_ACCEPTED_V0 | S4 gap_register GAP-4 |
 | blockchain::WF_ACCEPT_ACTOR_V0 | EXIT_REJECTED | EXIT | — | S5 invariants #4 |
-| blockchain::WF_REJECT_ACTOR_V0 | blockchain::IN_ACTOR_REJECTION_V0 | IN | ACK → CC_REQUIRE_REJECTION_GROUNDS_V0; NACK → EXIT_REJECTED | S5 provisional_codes #14 |
-| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | CC | SUCCESS → CC_RESOLVE_ACTOR_V0; VIOLATION → EXIT_REJECTED | S4 gap_register GAP-5 |
-| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_RESOLVE_ACTOR_V0 | CC | SUCCESS → CC_RECORD_VERIFICATION_DECISION_V0; NOT_FOUND → EXIT_REJECTED; VIOLATION → EXIT_REJECTED | S6 pps_artifacts_requiring_action #4 |
-| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | CC | SUCCESS → CC_APPEND_ACTOR_OCCURRENCE_V0; VIOLATION → EXIT_REJECTED | S6 pps_artifacts_requiring_action #2 |
-| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | CC | SUCCESS → EXIT_SUCCESS; VIOLATION → EXIT_REJECTED | S3 dependency_discoveries #8 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::IN_ACTOR_REJECTION_V0 | IN | ACK -> blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0; NACK -> EXIT_REJECTED | S5 provisional_codes #14 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | CC | SUCCESS -> blockchain::CC_RESOLVE_ACTOR_V0; VIOLATION -> EXIT_REJECTED | S4 gap_register GAP-5 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_RESOLVE_ACTOR_V0 | CC | SUCCESS -> blockchain::CC_RECORD_VERIFICATION_DECISION_V0; NOT_FOUND -> EXIT_REJECTED; VIOLATION -> EXIT_REJECTED | S6 pps_artifacts_requiring_action #4 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | CC | SUCCESS -> blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0; VIOLATION -> EXIT_REJECTED | S6 pps_artifacts_requiring_action #2 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | CC | SUCCESS -> EXIT_SUCCESS; VIOLATION -> EXIT_REJECTED | S3 dependency_discoveries #8 |
 | blockchain::WF_REJECT_ACTOR_V0 | EXIT_SUCCESS | EXIT | emit blockchain::EV_ACTOR_REJECTED_V0 | S4 gap_register GAP-4 |
 | blockchain::WF_REJECT_ACTOR_V0 | EXIT_REJECTED | EXIT | — | S5 invariants #4 |
-| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::IN_ACTOR_REGISTERED_V0 | IN | ACK → CC_VALIDATE_REGISTRATION_V0; NACK → EXIT_REJECTED | S6 pps_artifacts_requiring_action #3 |
-| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_VALIDATE_REGISTRATION_V0 | CC | SUCCESS → CC_CLAIM_CONTACT_ADDRESS_V0; VIOLATION → EXIT_REJECTED | S6 pps_artifacts_requiring_action #3 |
-| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 | CC | SUCCESS → CC_REGISTER_ACTOR_V0; ALREADY_EXISTS → CC_APPEND_ACTOR_OCCURRENCE_V0; VIOLATION → EXIT_REJECTED | S6 pps_artifacts_requiring_action #3 |
-| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_REGISTER_ACTOR_V0 | CC | SUCCESS → CC_APPEND_ACTOR_OCCURRENCE_V0; VIOLATION → EXIT_REJECTED | S6 pps_artifacts_requiring_action #3 |
-| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | CC | SUCCESS → EXIT_SUCCESS; VIOLATION → EXIT_REJECTED | S6 pps_artifacts_requiring_action #3 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::IN_ACTOR_REGISTERED_V0 | IN | ACK -> blockchain::CC_VALIDATE_REGISTRATION_V0; NACK -> EXIT_REJECTED | S6 pps_artifacts_requiring_action #3 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_VALIDATE_REGISTRATION_V0 | CC | SUCCESS -> blockchain::CC_CLAIM_CONTACT_ADDRESS_V0; VIOLATION -> EXIT_REJECTED | S6 pps_artifacts_requiring_action #3 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 | CC | SUCCESS -> blockchain::CC_REGISTER_ACTOR_V0; ALREADY_EXISTS -> blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0; VIOLATION -> EXIT_REJECTED | S6 pps_artifacts_requiring_action #3 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_REGISTER_ACTOR_V0 | CC | SUCCESS -> blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0; VIOLATION -> EXIT_REJECTED | S6 pps_artifacts_requiring_action #3 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | CC | SUCCESS -> EXIT_SUCCESS; VIOLATION -> EXIT_REJECTED | S6 pps_artifacts_requiring_action #3 |
 | blockchain::WF_REGISTER_ACTOR_V0 | EXIT_SUCCESS | EXIT | emit blockchain::EV_ACTOR_REGISTERED_UNVERIFIED_V0 | S4 gap_register GAP-4 |
 | blockchain::WF_REGISTER_ACTOR_V0 | EXIT_REJECTED | EXIT | — | S6 pps_artifacts_requiring_action #3 |
 
@@ -175,6 +175,26 @@ HOW it is realised. Binding identities are assigned here.
 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | require_grounds_stated | INPUT | parameters | inputs.grounds | S7 cc_composition require_grounds_stated |
 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | require_grounds_stated | INPUT | rules | inputs.grounds_rules | S7 cc_composition require_grounds_stated |
 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | require_grounds_stated | OUTPUT | valid | capability_result.valid | S7 cc_composition require_grounds_stated |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 | INPUT | holder | results.CC_RESOLVE_ACTOR_V0.value.contact_address | S7 execution_topology blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 | INPUT | wallet_id_prefix | payload.wallet_id_prefix | S7 execution_topology blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_CLAIM_WALLET_IDENTITY_V0 | INPUT | wallet_id | results.CC_DETERMINE_WALLET_IDENTITY_V0.id | S7 execution_topology blockchain::CC_CLAIM_WALLET_IDENTITY_V0 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0 | INPUT | key_material | payload.key_material | S7 execution_topology blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_CREATE_WALLET_RECORD_V0 | INPUT | wallet_id | results.CC_DETERMINE_WALLET_IDENTITY_V0.id | S7 execution_topology blockchain::CC_CREATE_WALLET_RECORD_V0 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_CREATE_WALLET_RECORD_V0 | INPUT | wallet_fields | payload.wallet_fields | S7 execution_topology blockchain::CC_CREATE_WALLET_RECORD_V0 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | INPUT | stream_id | results.CC_DETERMINE_WALLET_IDENTITY_V0.id | S7 execution_topology blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | INPUT | occurrence_fields | payload.occurrence_fields | S7 execution_topology blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | INPUT | grounds | payload.grounds | S7 execution_topology blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | INPUT | grounds_rules | payload.grounds_rules | S7 execution_topology blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_VALIDATE_REGISTRATION_V0 | INPUT | actor_record | payload.actor_record | S7 existing_inventory WF_REGISTER_ACTOR_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_VALIDATE_REGISTRATION_V0 | INPUT | registration_schema | payload.registration_schema | S7 existing_inventory WF_REGISTER_ACTOR_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 | INPUT | actor_record | payload.actor_record | S7 existing_inventory WF_REGISTER_ACTOR_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 | INPUT | address_path | payload.address_path | S7 existing_inventory WF_REGISTER_ACTOR_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 | INPUT | address_type | payload.address_type | S7 existing_inventory WF_REGISTER_ACTOR_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_REGISTER_ACTOR_V0 | INPUT | actor_fields | payload.actor_record | S7 existing_inventory WF_REGISTER_ACTOR_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_REGISTER_ACTOR_V0 | INPUT | contact_address | results.CC_CLAIM_CONTACT_ADDRESS_V0.result | S7 existing_inventory WF_REGISTER_ACTOR_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | occurrence_fields | payload.occurrence_fields | S7 existing_inventory WF_REGISTER_ACTOR_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | stream_id | payload.stream_id | S7 existing_inventory WF_REGISTER_ACTOR_V0 |
+| blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | contact_address | results.CC_CLAIM_CONTACT_ADDRESS_V0.result | S7 existing_inventory WF_REGISTER_ACTOR_V0 |
 
 ---
 
@@ -196,6 +216,22 @@ HOW it is realised. Binding identities are assigned here.
 | blockchain::EV_WALLET_CREATED_V0 | ATTRIBUTE | wallet_id | string | YES | | The wallet created. |
 | blockchain::EV_WALLET_CREATED_V0 | ATTRIBUTE | holder | string | YES | | The person it belongs to. |
 | blockchain::EV_WALLET_CREATED_V0 | ATTRIBUTE | occurred_at | string | YES | | When it was created. |
+| blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 | INPUT | holder | string | YES |  | The person the wallet belongs to. |
+| blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 | INPUT | wallet_id_prefix | string | YES |  | The prefix a wallet identity carries. |
+| blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 | OUTPUT | id | string | YES |  | The identity derived for the wallet. |
+| blockchain::CC_CLAIM_WALLET_IDENTITY_V0 | INPUT | wallet_id | string | YES |  | The identity being claimed. |
+| blockchain::CC_CLAIM_WALLET_IDENTITY_V0 | OUTPUT | result_status | string | YES |  | Whether the claim succeeded, or the identity was already held. |
+| blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0 | INPUT | key_material | string | YES |  | The key material supplied with the request. |
+| blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0 | OUTPUT | address | string | YES |  | The address others may pay to. |
+| blockchain::CC_CREATE_WALLET_RECORD_V0 | INPUT | wallet_id | string | YES |  | The wallet being recorded. |
+| blockchain::CC_CREATE_WALLET_RECORD_V0 | INPUT | wallet_fields | object | YES |  | What the business holds about the wallet. |
+| blockchain::CC_CREATE_WALLET_RECORD_V0 | OUTPUT | result_status | string | YES |  | Whether the wallet was recorded. |
+| blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | INPUT | stream_id | string | YES |  | The trail the moment is added to. |
+| blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | INPUT | occurrence_fields | object | YES |  | What the moment records. |
+| blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | OUTPUT | result_status | string | YES |  | Whether the moment was recorded. |
+| blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | INPUT | grounds | string | YES |  | Why the person is refused. |
+| blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | INPUT | grounds_rules | object | YES |  | The rule the grounds must satisfy. |
+| blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | OUTPUT | valid | boolean | YES |  | Whether grounds were stated. |
 
 ---
 
@@ -204,7 +240,7 @@ HOW it is realised. Binding identities are assigned here.
 <!-- register:implementation_bindings optional -->
 | CT Code | Module | Callable | Operation | Kind (atom, molecule) | Purity (ct_pure, ct_impure) | Source Finding |
 |---------|--------|----------|-----------|------------------------|------------------------------|----------------|
-| blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0 | blockchain.implementation.capability_transforms.derive_wallet_address | derive_wallet_address_v0 | | atom | ct_pure | S4 design_decisions #3 |
+| blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0 | blockchain.implementation.capability_transforms.derive_wallet_address | derive_wallet_address_v0 | DERIVE_WALLET_ADDRESS | atom | ct_pure | S4 design_decisions #3 |
 
 ---
 
@@ -232,6 +268,11 @@ HOW it is realised. Binding identities are assigned here.
 | blockchain::RB_WALLET_BINDINGS_V0 | capability_side_effects::CS_MUTABLE_JSON_V0 | store | WALLETS | S7 structure_stores #1 |
 | blockchain::RB_WALLET_BINDINGS_V0 | capability_side_effects::CS_APPENDONLY_JSONL_V0 | store | WALLET_OCCURRENCES | S7 structure_stores #2 |
 | blockchain::RB_WALLET_BINDINGS_V0 | capability_side_effects::CS_REGISTRY_V0 | store | WALLET_IDENTITIES | S7 structure_stores #3 |
+| blockchain::RB_WALLET_BINDINGS_V0 | capability_side_effects::CS_CLOCK_V0 | policy | utc | S7 rb_declarations #1 |
+| blockchain::RB_IDENTITY_BINDINGS_V0 | capability_side_effects::CS_MUTABLE_JSON_V0 | structure | blockchain::STRUCTURE_IDENTITY_STORAGE_V0 | S7 existing_inventory RB_IDENTITY_BINDINGS_V0 |
+| blockchain::RB_IDENTITY_BINDINGS_V0 | capability_side_effects::CS_REGISTRY_V0 | structure | blockchain::STRUCTURE_IDENTITY_STORAGE_V0 | S7 existing_inventory RB_IDENTITY_BINDINGS_V0 |
+| blockchain::RB_IDENTITY_BINDINGS_V0 | capability_side_effects::CS_APPENDONLY_JSONL_V0 | structure | blockchain::STRUCTURE_IDENTITY_STORAGE_V0 | S7 existing_inventory RB_IDENTITY_BINDINGS_V0 |
+| blockchain::RB_IDENTITY_BINDINGS_V0 | capability_side_effects::CS_CLOCK_V0 | precision | seconds | S7 existing_inventory RB_IDENTITY_BINDINGS_V0 |
 
 ---
 
@@ -244,6 +285,20 @@ HOW it is realised. Binding identities are assigned here.
 | blockchain::WF_ACCEPT_ACTOR_V0 | emit.EXIT_SUCCESS | blockchain::EV_ACTOR_ACCEPTED_V0 | S4 gap_register GAP-4 |
 | blockchain::WF_REJECT_ACTOR_V0 | emit.EXIT_SUCCESS | blockchain::EV_ACTOR_REJECTED_V0 | S4 gap_register GAP-4 |
 | blockchain::WF_REGISTER_ACTOR_V0 | emit.EXIT_SUCCESS | blockchain::EV_ACTOR_REGISTERED_UNVERIFIED_V0 | S4 gap_register GAP-4 |
+| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | core.subdomain | wallet | S6 pps_artifacts_requiring_action #8 |
+| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.search_layers[0] | BLOCKCHAIN | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
+| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.import_surface.domain | platform | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
+| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[0] | AC | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
+| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[1] | IN | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
+| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[2] | WF | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
+| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[3] | CC | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
+| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[4] | CT | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
+| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[5] | RB | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
+| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[6] | EV | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
+| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[7] | VOCAB | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
+| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[8] | STRUCTURE | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
+| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[9] | TI | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
+| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[10] | TE | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
 
 ---
 
