@@ -14,9 +14,9 @@ does not.
 ## 1. CR Type
 
 <!-- register:cr_type business_language -->
-| Subdomain | Classification (NEW_SUBDOMAIN, EXTEND_SUBDOMAIN, MODIFY, DEPRECATE) | Rationale | Source Finding |
-|---------|-------------------------------------------------------------------|---------|--------------|
-| catalog | EXTEND_SUBDOMAIN | The change extends the existing catalog function of the existing book_library_mgmt project. It introduces no new library function, adds the Work above the records the previous change established, and withdraws no capability staff have today. | CR seed §1 CR Type #1 |
+| Classification (NEW_SUBDOMAIN, EXTEND_SUBDOMAIN, MODIFY, DEPRECATE) | Rationale | Source Finding |
+|-------------------------------------------------------------------|---------|--------------|
+| EXTEND_SUBDOMAIN | The change extends the existing catalog function of the existing book_library_mgmt project. It introduces no new library function, adds the Work above the records the previous change established, and withdraws no capability staff have today. | CR seed §1 CR Type #1 |
 
 ---
 
