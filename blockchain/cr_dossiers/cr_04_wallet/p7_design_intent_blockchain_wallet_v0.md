@@ -285,20 +285,6 @@ HOW it is realised. Binding identities are assigned here.
 | blockchain::WF_ACCEPT_ACTOR_V0 | emit.EXIT_SUCCESS | blockchain::EV_ACTOR_ACCEPTED_V0 | S4 gap_register GAP-4 |
 | blockchain::WF_REJECT_ACTOR_V0 | emit.EXIT_SUCCESS | blockchain::EV_ACTOR_REJECTED_V0 | S4 gap_register GAP-4 |
 | blockchain::WF_REGISTER_ACTOR_V0 | emit.EXIT_SUCCESS | blockchain::EV_ACTOR_REGISTERED_UNVERIFIED_V0 | S4 gap_register GAP-4 |
-| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | core.subdomain | wallet | S6 pps_artifacts_requiring_action #8 |
-| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.search_layers[0] | BLOCKCHAIN | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
-| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.import_surface.domain | platform | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
-| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[0] | AC | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
-| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[1] | IN | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
-| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[2] | WF | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
-| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[3] | CC | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
-| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[4] | CT | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
-| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[5] | RB | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
-| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[6] | EV | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
-| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[7] | VOCAB | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
-| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[8] | STRUCTURE | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
-| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[9] | TI | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
-| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | artifact_discovery.artifact_types[10] | TE | S7 existing_inventory STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
 
 ---
 
@@ -334,11 +320,13 @@ HOW it is realised. Binding identities are assigned here.
 
 ## 16. Generation Provenance
 
-*Every artifact this design schedules is authored, including the three it amends: construction
-renders each from the registers above and it is its own source of truth. Nothing here is reached
-by invoking a generator.*
+*One artifact this design amends is derived rather than designed. The build manifest states which
+layers the compiler searches, how the namespace is matched and where projections are written —
+every field of it computed from the domain, its subdomains and its families, none of it decided
+here. It is reached by invoking the generator that already derives it, so this design states the
+path to it and not its contents. Everything else is authored and is its own source of truth.*
 
 <!-- register:generation_provenance optional -->
 | Artifact | Generator | Generator Sources | Source Finding |
 |----------|-----------|-------------------|----------------|
-| NONE IDENTIFIED |
+| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | transformation.build.render:build_manifest | S8 build_order, S8 field_declarations, transformation/design/families.py | S6 pps_artifacts_requiring_action #8 |
