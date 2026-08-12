@@ -41,6 +41,8 @@ core:
     CC_RESOLVE_ACTOR_V0:
       type: CC
       code: CC_RESOLVE_ACTOR_V0
+      inputs:
+        contact_address: $.payload.contact_address
       next:
         SUCCESS: CC_RECORD_VERIFICATION_DECISION_V0
         NOT_FOUND: EXIT_REJECTED
@@ -48,12 +50,24 @@ core:
     CC_RECORD_VERIFICATION_DECISION_V0:
       type: CC
       code: CC_RECORD_VERIFICATION_DECISION_V0
+      inputs:
+        current_state: $.results.CC_RESOLVE_ACTOR_V0.value.state
+        states_admitting_a_decision: $.payload.states_admitting_a_decision
+        decision: $.payload.decision
+        admitted_outcomes: $.payload.admitted_outcomes
+        verifying_authority: $.payload.verifying_authority
+        contact_address: $.payload.contact_address
+        decided_actor_fields: $.payload.decided_actor_fields
       next:
         SUCCESS: CC_APPEND_ACTOR_OCCURRENCE_V0
         VIOLATION: EXIT_REJECTED
     CC_APPEND_ACTOR_OCCURRENCE_V0:
       type: CC
       code: CC_APPEND_ACTOR_OCCURRENCE_V0
+      inputs:
+        occurrence_fields: $.payload.occurrence_fields
+        stream_id: $.payload.stream_id
+        contact_address: $.payload.contact_address
       next:
         SUCCESS: EXIT_SUCCESS
         VIOLATION: EXIT_REJECTED

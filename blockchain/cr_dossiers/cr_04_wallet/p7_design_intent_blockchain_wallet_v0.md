@@ -30,6 +30,9 @@ HOW it is realised. Binding identities are assigned here.
 | FQDN | Action (REPLACE, REUSE, EXTEND, REVIEW) | Summary | Reason | Source Finding |
 |------|------------------------------------------|---------|--------|----------------|
 | blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | REPLACE | | Superseded by two workflows, one per outcome, each announcing its own moment and the rejection requiring grounds throughout. | S6 pps_artifacts_requiring_action #1 |
+| blockchain::IN_ACTOR_VERIFIED_V0 | REPLACE | | Superseded by an acceptance intent and a rejection intent. One intent dispatches one workflow, so a decision split in two leaves this one nothing to dispatch. | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | EXTEND | Admits a request to accept a registered actor, declaring the contact address, authority and optional grounds a caller sends and holding the decision, admitted states and outcomes, and the acceptance occurrence label | Its handler routes to the workflow this change stands down, and must reach the acceptance path instead. | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | EXTEND | Admits a request to reject a registered actor, declaring the contact address, authority and required grounds a caller sends and holding the decision, admitted states and outcomes, and the rejection occurrence label | Its handler routes to the workflow this change stands down, and must reach the rejection path and supply the grounds it checks. | S6 pps_artifacts_requiring_action #1 |
 | blockchain::WF_REGISTER_ACTOR_V0 | EXTEND | The governed sequence that admits a person as an unverified actor, and announces that it did | Its terminal node announces nothing. Everything else about it is unchanged. | S6 pps_artifacts_requiring_action #3 |
 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | REUSE | | Records the decision unchanged. The grounds check is a separate contract ahead of it, so this one is not amended. | S6 pps_artifacts_requiring_action #2 |
 | blockchain::CC_RESOLVE_ACTOR_V0 | REUSE | | Resolves a person and carries their state; wallet reads it and identity's workflows keep it. | S5 cross_subdomain_refs #1 |
@@ -172,7 +175,7 @@ HOW it is realised. Binding identities are assigned here.
 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | append_occurrence | INPUT | stream_id | inputs.stream_id | S7 cc_composition append_occurrence |
 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | append_occurrence | INPUT | record | results.assemble_occurrence.record | S7 cc_composition append_occurrence |
 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | append_occurrence | OUTPUT | result_status | capability_result.result_status | S7 cc_composition append_occurrence |
-| blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | require_grounds_stated | INPUT | parameters | inputs.grounds | S7 cc_composition require_grounds_stated |
+| blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | require_grounds_stated | INPUT | parameters | inputs.grounds_parameters | S7 cc_composition require_grounds_stated |
 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | require_grounds_stated | INPUT | rules | inputs.grounds_rules | S7 cc_composition require_grounds_stated |
 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | require_grounds_stated | OUTPUT | valid | capability_result.valid | S7 cc_composition require_grounds_stated |
 | blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 | INPUT | holder | results.CC_RESOLVE_ACTOR_V0.value.contact_address | S7 execution_topology blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 |
@@ -183,8 +186,30 @@ HOW it is realised. Binding identities are assigned here.
 | blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_CREATE_WALLET_RECORD_V0 | INPUT | wallet_fields | payload.wallet_fields | S7 execution_topology blockchain::CC_CREATE_WALLET_RECORD_V0 |
 | blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | INPUT | stream_id | results.CC_DETERMINE_WALLET_IDENTITY_V0.id | S7 execution_topology blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 |
 | blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | INPUT | occurrence_fields | payload.occurrence_fields | S7 execution_topology blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 |
-| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | INPUT | grounds | payload.grounds | S7 execution_topology blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | INPUT | grounds_parameters | payload.grounds_parameters | S7 execution_topology blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 |
 | blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | INPUT | grounds_rules | payload.grounds_rules | S7 execution_topology blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_RESOLVE_ACTOR_V0 | INPUT | contact_address | payload.contact_address | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | current_state | results.CC_RESOLVE_ACTOR_V0.value.state | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | states_admitting_a_decision | payload.states_admitting_a_decision | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | decision | payload.decision | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | admitted_outcomes | payload.admitted_outcomes | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | verifying_authority | payload.verifying_authority | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | contact_address | payload.contact_address | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | decided_actor_fields | payload.decided_actor_fields | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | occurrence_fields | payload.occurrence_fields | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | stream_id | payload.stream_id | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | contact_address | payload.contact_address | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_RESOLVE_ACTOR_V0 | INPUT | contact_address | payload.contact_address | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | current_state | results.CC_RESOLVE_ACTOR_V0.value.state | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | states_admitting_a_decision | payload.states_admitting_a_decision | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | decision | payload.decision | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | admitted_outcomes | payload.admitted_outcomes | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | verifying_authority | payload.verifying_authority | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | contact_address | payload.contact_address | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | decided_actor_fields | payload.decided_actor_fields | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | occurrence_fields | payload.occurrence_fields | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | stream_id | payload.stream_id | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | INPUT | contact_address | payload.contact_address | S6 pps_artifacts_requiring_action #1 |
 | blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_VALIDATE_REGISTRATION_V0 | INPUT | actor_record | payload.actor_record | S7 existing_inventory WF_REGISTER_ACTOR_V0 |
 | blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_VALIDATE_REGISTRATION_V0 | INPUT | registration_schema | payload.registration_schema | S7 existing_inventory WF_REGISTER_ACTOR_V0 |
 | blockchain::WF_REGISTER_ACTOR_V0 | blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 | INPUT | actor_record | payload.actor_record | S7 existing_inventory WF_REGISTER_ACTOR_V0 |
@@ -204,6 +229,12 @@ HOW it is realised. Binding identities are assigned here.
 | Artifact | Direction (INPUT, OUTPUT, ATTRIBUTE) | Field | Type | Required (YES, NO) | Default | Meaning |
 |----------|--------------------------------------|-------|------|--------------------|---------|---------|
 | blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0 | INPUT | key_material | string | YES | | The public key material supplied with the request. Never generated here. |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INPUT | contact_address | string | YES |  | The person the decision is about. |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INPUT | verifying_authority | string | YES |  | Who is making the decision. |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INPUT | grounds | string | NO |  | Why, where the decider chooses to say. |
+| blockchain::TI_REJECT_ACTOR_V0 | INPUT | contact_address | string | YES |  | The person the decision is about. |
+| blockchain::TI_REJECT_ACTOR_V0 | INPUT | verifying_authority | string | YES |  | Who is making the decision. |
+| blockchain::TI_REJECT_ACTOR_V0 | INPUT | grounds | string | YES |  | Why the person is refused. A rejection stating none is refused. |
 | blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0 | OUTPUT | address | string | YES | | The address others may pay to. The same material always yields the same address. |
 | blockchain::IN_WALLET_CREATION_V0 | INPUT | contact_address | string | YES | | The person the wallet is for. |
 | blockchain::IN_WALLET_CREATION_V0 | INPUT | key_material | string | YES | | The key material the address is worked out from. |
@@ -229,8 +260,8 @@ HOW it is realised. Binding identities are assigned here.
 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | INPUT | stream_id | string | YES |  | The trail the moment is added to. |
 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | INPUT | occurrence_fields | object | YES |  | What the moment records. |
 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | OUTPUT | result_status | string | YES |  | Whether the moment was recorded. |
-| blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | INPUT | grounds | string | YES |  | Why the person is refused. |
-| blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | INPUT | grounds_rules | object | YES |  | The rule the grounds must satisfy. |
+| blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | INPUT | grounds_parameters | object | YES |  | The grounds, as the parameter map the rule evaluator reads. |
+| blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | INPUT | grounds_rules | array | YES |  | The rules the grounds must satisfy: stated at all, and not empty. |
 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | OUTPUT | valid | boolean | YES |  | Whether grounds were stated. |
 
 ---
@@ -287,6 +318,8 @@ HOW it is realised. Binding identities are assigned here.
 | blockchain::WF_REGISTER_ACTOR_V0 | emit.EXIT_SUCCESS | blockchain::EV_ACTOR_REGISTERED_UNVERIFIED_V0 | S4 gap_register GAP-4 |
 | blockchain::WF_ACCEPT_ACTOR_V0 | supersedes | blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | S6 pps_artifacts_requiring_action #1 |
 | blockchain::WF_REJECT_ACTOR_V0 | supersedes | blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | S6 pps_artifacts_requiring_action #1 |
+| blockchain::IN_ACTOR_ACCEPTANCE_V0 | supersedes | blockchain::IN_ACTOR_VERIFIED_V0 | S6 pps_artifacts_requiring_action #1 |
+| blockchain::IN_ACTOR_REJECTION_V0 | supersedes | blockchain::IN_ACTOR_VERIFIED_V0 | S6 pps_artifacts_requiring_action #1 |
 
 ---
 
@@ -295,7 +328,38 @@ HOW it is realised. Binding identities are assigned here.
 <!-- register:transport_bindings optional -->
 | Artifact | Direction (INGRESS, EGRESS) | Operation | Handler Kind (WF_INVOCATION, SNAPSHOT_READ) | Handler Target | Field | Bound To | Source Finding |
 |----------|------------------------------|-----------|----------------------------------------------|----------------|-------|----------|----------------|
-| NONE IDENTIFIED |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INGRESS | blockchain.accept_actor | WF_INVOCATION | blockchain::WF_ACCEPT_ACTOR_V0 | contact_address | ${input.contact_address} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INGRESS | blockchain.accept_actor | WF_INVOCATION | blockchain::WF_ACCEPT_ACTOR_V0 | verifying_authority | ${input.verifying_authority} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INGRESS | blockchain.accept_actor | WF_INVOCATION | blockchain::WF_ACCEPT_ACTOR_V0 | decision | ACCEPTED | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INGRESS | blockchain.accept_actor | WF_INVOCATION | blockchain::WF_ACCEPT_ACTOR_V0 | grounds | ${input.grounds} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INGRESS | blockchain.accept_actor | WF_INVOCATION | blockchain::WF_ACCEPT_ACTOR_V0 | states_admitting_a_decision | [UNVERIFIED] | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INGRESS | blockchain.accept_actor | WF_INVOCATION | blockchain::WF_ACCEPT_ACTOR_V0 | admitted_outcomes | [ACCEPTED, REJECTED] | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INGRESS | blockchain.accept_actor | WF_INVOCATION | blockchain::WF_ACCEPT_ACTOR_V0 | decided_actor_fields.contact_address | ${input.contact_address} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INGRESS | blockchain.accept_actor | WF_INVOCATION | blockchain::WF_ACCEPT_ACTOR_V0 | decided_actor_fields.state | ACCEPTED | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INGRESS | blockchain.accept_actor | WF_INVOCATION | blockchain::WF_ACCEPT_ACTOR_V0 | decided_actor_fields.verifying_authority | ${input.verifying_authority} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INGRESS | blockchain.accept_actor | WF_INVOCATION | blockchain::WF_ACCEPT_ACTOR_V0 | decided_actor_fields.grounds | ${input.grounds} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INGRESS | blockchain.accept_actor | WF_INVOCATION | blockchain::WF_ACCEPT_ACTOR_V0 | stream_id | ACTOR_OCCURRENCES | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INGRESS | blockchain.accept_actor | WF_INVOCATION | blockchain::WF_ACCEPT_ACTOR_V0 | occurrence_fields.occurrence | ACTOR_ACCEPTED | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INGRESS | blockchain.accept_actor | WF_INVOCATION | blockchain::WF_ACCEPT_ACTOR_V0 | occurrence_fields.contact_address | ${input.contact_address} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INGRESS | blockchain.accept_actor | WF_INVOCATION | blockchain::WF_ACCEPT_ACTOR_V0 | occurrence_fields.verifying_authority | ${input.verifying_authority} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | INGRESS | blockchain.accept_actor | WF_INVOCATION | blockchain::WF_ACCEPT_ACTOR_V0 | occurrence_fields.grounds | ${input.grounds} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | INGRESS | blockchain.reject_actor | WF_INVOCATION | blockchain::WF_REJECT_ACTOR_V0 | contact_address | ${input.contact_address} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | INGRESS | blockchain.reject_actor | WF_INVOCATION | blockchain::WF_REJECT_ACTOR_V0 | verifying_authority | ${input.verifying_authority} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | INGRESS | blockchain.reject_actor | WF_INVOCATION | blockchain::WF_REJECT_ACTOR_V0 | decision | REJECTED | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | INGRESS | blockchain.reject_actor | WF_INVOCATION | blockchain::WF_REJECT_ACTOR_V0 | grounds | ${input.grounds} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | INGRESS | blockchain.reject_actor | WF_INVOCATION | blockchain::WF_REJECT_ACTOR_V0 | states_admitting_a_decision | [UNVERIFIED] | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | INGRESS | blockchain.reject_actor | WF_INVOCATION | blockchain::WF_REJECT_ACTOR_V0 | admitted_outcomes | [ACCEPTED, REJECTED] | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | INGRESS | blockchain.reject_actor | WF_INVOCATION | blockchain::WF_REJECT_ACTOR_V0 | decided_actor_fields.contact_address | ${input.contact_address} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | INGRESS | blockchain.reject_actor | WF_INVOCATION | blockchain::WF_REJECT_ACTOR_V0 | decided_actor_fields.state | REJECTED | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | INGRESS | blockchain.reject_actor | WF_INVOCATION | blockchain::WF_REJECT_ACTOR_V0 | decided_actor_fields.verifying_authority | ${input.verifying_authority} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | INGRESS | blockchain.reject_actor | WF_INVOCATION | blockchain::WF_REJECT_ACTOR_V0 | decided_actor_fields.grounds | ${input.grounds} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | INGRESS | blockchain.reject_actor | WF_INVOCATION | blockchain::WF_REJECT_ACTOR_V0 | stream_id | ACTOR_OCCURRENCES | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | INGRESS | blockchain.reject_actor | WF_INVOCATION | blockchain::WF_REJECT_ACTOR_V0 | occurrence_fields.occurrence | ACTOR_REJECTED | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | INGRESS | blockchain.reject_actor | WF_INVOCATION | blockchain::WF_REJECT_ACTOR_V0 | occurrence_fields.contact_address | ${input.contact_address} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | INGRESS | blockchain.reject_actor | WF_INVOCATION | blockchain::WF_REJECT_ACTOR_V0 | occurrence_fields.verifying_authority | ${input.verifying_authority} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | INGRESS | blockchain.reject_actor | WF_INVOCATION | blockchain::WF_REJECT_ACTOR_V0 | occurrence_fields.grounds | ${input.grounds} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | INGRESS | blockchain.reject_actor | WF_INVOCATION | blockchain::WF_REJECT_ACTOR_V0 | grounds_parameters.grounds | ${input.grounds} | S6 pps_artifacts_requiring_action #1 |
+| blockchain::TI_REJECT_ACTOR_V0 | INGRESS | blockchain.reject_actor | WF_INVOCATION | blockchain::WF_REJECT_ACTOR_V0 | grounds_rules | [{field: grounds, op: not_null}, {field: grounds, op: neq, value: ''}] | S6 pps_artifacts_requiring_action #1 |
 
 ## 13. STRUCTURE Stores
 
@@ -315,8 +379,8 @@ HOW it is realised. Binding identities are assigned here.
 |-------------------------------|-----------|-------|-----------|
 | NEW | wallet | 12 | blockchain::IN_WALLET_CREATION_V0, blockchain::WF_CREATE_WALLET_V0, blockchain::CC_DETERMINE_WALLET_IDENTITY_V0, blockchain::CC_CLAIM_WALLET_IDENTITY_V0, blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0, blockchain::CC_CREATE_WALLET_RECORD_V0, blockchain::CC_APPEND_WALLET_OCCURRENCE_V0, blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0, blockchain::EV_WALLET_CREATED_V0, blockchain::RB_WALLET_BINDINGS_V0, blockchain::STRUCTURE_WALLET_STORAGE_V0, blockchain::VOCAB_WALLET_CLASSIFICATION_V0 |
 | NEW | identity | 5 | blockchain::IN_ACTOR_ACCEPTANCE_V0, blockchain::IN_ACTOR_REJECTION_V0, blockchain::WF_ACCEPT_ACTOR_V0, blockchain::WF_REJECT_ACTOR_V0, blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 |
-| EXTEND | identity | 3 | blockchain::WF_REGISTER_ACTOR_V0, blockchain::RB_IDENTITY_BINDINGS_V0, blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
-| REPLACE | identity | 1 | blockchain::WF_RECORD_VERIFICATION_DECISION_V0 |
+| EXTEND | identity | 5 | blockchain::WF_REGISTER_ACTOR_V0, blockchain::RB_IDENTITY_BINDINGS_V0, blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0, blockchain::TI_ACCEPT_ACTOR_V0, blockchain::TI_REJECT_ACTOR_V0 |
+| REPLACE | identity | 2 | blockchain::WF_RECORD_VERIFICATION_DECISION_V0, blockchain::IN_ACTOR_VERIFIED_V0 |
 
 ---
 

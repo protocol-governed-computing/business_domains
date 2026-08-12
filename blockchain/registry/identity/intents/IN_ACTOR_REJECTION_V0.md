@@ -7,7 +7,7 @@
 - **Governed By:** CONSTITUTION_INTENT_V0
 - **Version:** V0
 - **Status:** draft
-- **Supersedes:** NONE
+- **Supersedes:** IN_ACTOR_VERIFIED_V0
 
 ---
 

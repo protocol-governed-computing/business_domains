@@ -27,11 +27,11 @@ governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 core:
   summary: Refuses a rejection stating no grounds, before anything is recorded
   inputs:
-    grounds:
-      type: string
+    grounds_parameters:
+      type: object
       required: true
     grounds_rules:
-      type: object
+      type: array
       required: true
   outputs:
     valid:
@@ -46,7 +46,7 @@ core:
   - step: require_grounds_stated
     transform: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
     inputs:
-      parameters: $.inputs.grounds
+      parameters: $.inputs.grounds_parameters
       rules: $.inputs.grounds_rules
     outputs:
       valid: $.capability_result.valid

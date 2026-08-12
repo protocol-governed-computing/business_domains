@@ -6,7 +6,8 @@
 - **Artifact Kind:** intent
 - **Governed By:** CONSTITUTION_INTENT_V0
 - **Version:** V0
-- **Status:** draft
+- **Status:** superseded
+- **Superseded By:** IN_ACTOR_ACCEPTANCE_V0, IN_ACTOR_REJECTION_V0
 - **Supersedes:** NONE
 
 ---
