@@ -74,7 +74,7 @@ people written by a function that is not about people.
 <!-- register:pps_artifacts_requiring_action optional -->
 | FQDN | Current Status | Action (REPLACE, REVIEW, REUSE, EXTEND) | Source Finding |
 |------|----------------|----------------------------------|----------------|
-| blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | Records a decision, announces nothing, and does not require grounds on a rejection. | EXTEND | S4 gap_register GAP-4 |
+| blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | Records a decision, announces nothing, and does not require grounds on a rejection. | REPLACE | S4 gap_register GAP-4 |
 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | Records the decision. Does not read the grounds stated. | EXTEND | S4 gap_register GAP-5 |
 | blockchain::WF_REGISTER_ACTOR_V0 | Admits a person unverified, and announces nothing. | EXTEND | S4 gap_register GAP-4 |
 | blockchain::EV_ACTOR_ACCEPTED_V0 | Declared. Referred to by nothing. | REUSE | S4 dependency_graph #1 |

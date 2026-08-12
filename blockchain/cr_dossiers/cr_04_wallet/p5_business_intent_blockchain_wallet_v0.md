@@ -126,6 +126,11 @@ that, or how value moves once a wallet holds it.
 | wallet | RB_WALLET_BINDINGS_V0 | RB | Reaches the places a wallet, its trail and its claimed identities are held. | S4 gap_register GAP-3 |
 | wallet | STRUCTURE_WALLET_STORAGE_V0 | STRUCTURE | Declares where a wallet, its trail and its claimed identities are held. | S4 gap_register GAP-3 |
 | wallet | VOCAB_WALLET_CLASSIFICATION_V0 | VOCAB | The set of classifications a wallet may carry, of which only the default is used at present. | S4 constraint_register #10 |
+| identity | IN_ACTOR_ACCEPTANCE_V0 | IN | Admits a request to accept a person, and refuses one that names nobody. | S3 authoring_decisions #9 |
+| identity | IN_ACTOR_REJECTION_V0 | IN | Admits a request to reject a person, and refuses one that states no grounds. | S3 authoring_decisions #9 |
+| identity | WF_ACCEPT_ACTOR_V0 | WF | The order in which an acceptance is recorded and announced. | S3 authoring_decisions #8 |
+| identity | WF_REJECT_ACTOR_V0 | WF | The order in which a rejection is recorded and announced, with its grounds required throughout. | S3 authoring_decisions #8 |
+| identity | CC_REQUIRE_REJECTION_GROUNDS_V0 | CC | Refuses a rejection that states no grounds, before anything is recorded. | S3 authoring_decisions #9 |
 
 ---
 
