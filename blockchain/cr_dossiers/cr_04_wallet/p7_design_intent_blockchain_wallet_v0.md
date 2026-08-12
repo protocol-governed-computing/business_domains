@@ -329,3 +329,16 @@ HOW it is realised. Binding identities are assigned here.
 | NEW | identity | 5 | blockchain::IN_ACTOR_ACCEPTANCE_V0, blockchain::IN_ACTOR_REJECTION_V0, blockchain::WF_ACCEPT_ACTOR_V0, blockchain::WF_REJECT_ACTOR_V0, blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 |
 | EXTEND | identity | 3 | blockchain::WF_REGISTER_ACTOR_V0, blockchain::RB_IDENTITY_BINDINGS_V0, blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 |
 | REPLACE | identity | 1 | blockchain::WF_RECORD_VERIFICATION_DECISION_V0 |
+
+---
+
+## 16. Generation Provenance
+
+*Every artifact this design schedules is authored, including the three it amends: construction
+renders each from the registers above and it is its own source of truth. Nothing here is reached
+by invoking a generator.*
+
+<!-- register:generation_provenance optional -->
+| Artifact | Generator | Generator Sources | Source Finding |
+|----------|-----------|-------------------|----------------|
+| NONE IDENTIFIED |
