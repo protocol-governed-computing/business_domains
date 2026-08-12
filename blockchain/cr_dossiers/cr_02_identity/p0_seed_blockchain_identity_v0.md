@@ -27,9 +27,9 @@ act a simple web page. It adds no identity behaviour and revisits no decision al
 ## 1. CR Type
 
 <!-- register:cr_type business_language -->
-| Classification (NEW_SUBDOMAIN, EXTEND_SUBDOMAIN, MODIFY, DEPRECATE) | Rationale |
-|----------------|-----------|
-| EXTEND_SUBDOMAIN | The identity function already exists and works. The change gives its two existing acts a way in from outside, and states what the business offers and what it turns away. No identity behaviour is introduced and no earlier decision is revisited. |
+| Subdomain | Classification (NEW_SUBDOMAIN, EXTEND_SUBDOMAIN, MODIFY, DEPRECATE) | Rationale |
+|-----------|----------------|-----------|
+| identity | EXTEND_SUBDOMAIN | The identity function already exists and works. The change gives its two existing acts a way in from outside, and states what the business offers and what it turns away. No identity behaviour is introduced and no earlier decision is revisited. |
 
 ## 2. Business Vocabulary
 

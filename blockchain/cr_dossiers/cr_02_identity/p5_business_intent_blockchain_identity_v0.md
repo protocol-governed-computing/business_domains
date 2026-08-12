@@ -31,6 +31,16 @@ govern what a trusted actor may then do, which persons may be an authority, or w
 
 ---
 
+
+### Purpose of every subdomain this change touches
+
+<!-- register:subdomain_purposes business_language=purpose -->
+| Subdomain | Purpose | Source Finding |
+|-----------|---------|----------------|
+| identity | Governs who a person is and whether the business trusts them — the record of each person, their state, and the trail of moments in their history. | S1 cr_type #1 |
+
+---
+
 ## 2. Scope Boundary
 
 <!-- register:scope_boundary business_language=capability,notes -->
