@@ -79,6 +79,9 @@ nothing.
 | blockchain::WF_ACCEPT_ACTOR_V0 | identity |
 | blockchain::WF_REJECT_ACTOR_V0 | identity |
 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | identity |
+| blockchain::WF_REGISTER_ACTOR_V0 | identity |
+| blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | identity |
+| blockchain::RB_IDENTITY_BINDINGS_V0 | identity |
 
 ---
 

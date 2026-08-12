@@ -249,14 +249,14 @@ HOW it is realised. Binding identities are assigned here.
 <!-- register:vocabulary_extensions optional -->
 | Vocabulary Code | Extends | Value | Meaning | Source Finding |
 |-----------------|---------|-------|---------|----------------|
-| blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | | DEFAULT | The only classification this change creates. | S5 known_facts #15 |
-| blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | | PRIVATE | Named and unused until a business need arises. | S5 known_facts #15 |
-| blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | | BUSINESS | Named and unused. | S5 known_facts #15 |
-| blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | | SAVINGS | Named and unused. | S5 known_facts #15 |
-| blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | | INVESTMENT | Named and unused. | S5 known_facts #15 |
-| blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | | MINT | Named and unused. | S5 known_facts #15 |
-| blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | | BURN | Named and unused. | S5 known_facts #15 |
-| blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | | POOL | Named and unused. | S5 known_facts #15 |
+| blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | NONE | DEFAULT | The only classification this change creates. | S5 known_facts #15 |
+| blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | NONE | PRIVATE | Named and unused until a business need arises. | S5 known_facts #15 |
+| blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | NONE | BUSINESS | Named and unused. | S5 known_facts #15 |
+| blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | NONE | SAVINGS | Named and unused. | S5 known_facts #15 |
+| blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | NONE | INVESTMENT | Named and unused. | S5 known_facts #15 |
+| blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | NONE | MINT | Named and unused. | S5 known_facts #15 |
+| blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | NONE | BURN | Named and unused. | S5 known_facts #15 |
+| blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | NONE | POOL | Named and unused. | S5 known_facts #15 |
 
 ---
 
