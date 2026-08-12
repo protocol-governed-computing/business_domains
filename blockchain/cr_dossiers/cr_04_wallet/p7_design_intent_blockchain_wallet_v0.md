@@ -138,10 +138,10 @@ HOW it is realised. Binding identities are assigned here.
 | blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 | 1 | derive_wallet_identity | capability_transforms::CT_PURE_GENERATE_ID_V0 | CT | GENERATE_ID | — | data, prefix | id | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: data=data, prefix=prefix; out: id=id |
 | blockchain::CC_CLAIM_WALLET_IDENTITY_V0 | 1 | claim_wallet_identity | capability_side_effects::CS_REGISTRY_V0 | CS | REGISTER | WALLET_IDENTITIES | key | result_status | SUCCESS -> continue; ALREADY_EXISTS -> exit; VIOLATION -> exit | — | SUCCESS | in: key=key; out: result_status=result_status |
 | blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0 | 1 | derive_wallet_address | blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0 | CT | DERIVE_WALLET_ADDRESS | — | key_material | address | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: key_material=key_material; out: address=address |
-| blockchain::CC_CREATE_WALLET_RECORD_V0 | 1 | read_created_at | capability_side_effects::CS_CLOCK_V0 | CS | READ | — | | now | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | out: now=now |
+| blockchain::CC_CREATE_WALLET_RECORD_V0 | 1 | read_created_at | capability_side_effects::CS_CLOCK_V0 | CS | NOW | — | | timestamp | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | |
 | blockchain::CC_CREATE_WALLET_RECORD_V0 | 2 | assemble_wallet | capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 | CT | ASSEMBLE_RECORD | — | fields | record | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: fields=fields; out: record=record |
 | blockchain::CC_CREATE_WALLET_RECORD_V0 | 3 | write_wallet | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | WRITE | WALLETS | key, value | result_status | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: key=key, value=value; out: result_status=result_status |
-| blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | 1 | read_occurred_at | capability_side_effects::CS_CLOCK_V0 | CS | READ | — | | now | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | out: now=now |
+| blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | 1 | read_occurred_at | capability_side_effects::CS_CLOCK_V0 | CS | NOW | — | | timestamp | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | |
 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | 2 | assemble_occurrence | capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 | CT | ASSEMBLE_RECORD | — | fields | record | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: fields=fields; out: record=record |
 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | 3 | append_occurrence | capability_side_effects::CS_APPENDONLY_JSONL_V0 | CS | APPEND | WALLET_OCCURRENCES | stream_id, record | result_status | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: stream_id=stream_id, record=record; out: result_status=result_status |
 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | 1 | require_grounds_stated | capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0 | CT | VALIDATE_PARAMETER_RULES | — | parameters, rules | valid | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: parameters=parameters, rules=rules; out: valid=valid |
@@ -160,13 +160,13 @@ HOW it is realised. Binding identities are assigned here.
 | blockchain::CC_CLAIM_WALLET_IDENTITY_V0 | claim_wallet_identity | OUTPUT | result_status | capability_result.result_status | S7 cc_composition claim_wallet_identity |
 | blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0 | derive_wallet_address | INPUT | key_material | inputs.key_material | S7 cc_composition derive_wallet_address |
 | blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0 | derive_wallet_address | OUTPUT | address | capability_result.address | S7 cc_composition derive_wallet_address |
-| blockchain::CC_CREATE_WALLET_RECORD_V0 | read_created_at | OUTPUT | now | capability_result.now | S7 cc_composition read_created_at |
+| blockchain::CC_CREATE_WALLET_RECORD_V0 | read_created_at | OUTPUT | timestamp | capability_result.timestamp | S7 cc_composition read_created_at |
 | blockchain::CC_CREATE_WALLET_RECORD_V0 | assemble_wallet | INPUT | fields | inputs.wallet_fields | S7 cc_composition assemble_wallet |
 | blockchain::CC_CREATE_WALLET_RECORD_V0 | assemble_wallet | OUTPUT | record | capability_result.record | S7 cc_composition assemble_wallet |
 | blockchain::CC_CREATE_WALLET_RECORD_V0 | write_wallet | INPUT | key | inputs.wallet_id | S7 cc_composition write_wallet |
 | blockchain::CC_CREATE_WALLET_RECORD_V0 | write_wallet | INPUT | value | results.assemble_wallet.record | S7 cc_composition write_wallet |
 | blockchain::CC_CREATE_WALLET_RECORD_V0 | write_wallet | OUTPUT | result_status | capability_result.result_status | S7 cc_composition write_wallet |
-| blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | read_occurred_at | OUTPUT | now | capability_result.now | S7 cc_composition read_occurred_at |
+| blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | read_occurred_at | OUTPUT | timestamp | capability_result.timestamp | S7 cc_composition read_occurred_at |
 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | assemble_occurrence | INPUT | fields | inputs.occurrence_fields | S7 cc_composition assemble_occurrence |
 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | assemble_occurrence | OUTPUT | record | capability_result.record | S7 cc_composition assemble_occurrence |
 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | append_occurrence | INPUT | stream_id | inputs.stream_id | S7 cc_composition append_occurrence |
@@ -285,6 +285,8 @@ HOW it is realised. Binding identities are assigned here.
 | blockchain::WF_ACCEPT_ACTOR_V0 | emit.EXIT_SUCCESS | blockchain::EV_ACTOR_ACCEPTED_V0 | S4 gap_register GAP-4 |
 | blockchain::WF_REJECT_ACTOR_V0 | emit.EXIT_SUCCESS | blockchain::EV_ACTOR_REJECTED_V0 | S4 gap_register GAP-4 |
 | blockchain::WF_REGISTER_ACTOR_V0 | emit.EXIT_SUCCESS | blockchain::EV_ACTOR_REGISTERED_UNVERIFIED_V0 | S4 gap_register GAP-4 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | supersedes | blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | S6 pps_artifacts_requiring_action #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | supersedes | blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | S6 pps_artifacts_requiring_action #1 |
 
 ---
 

@@ -6,7 +6,8 @@
 - **Artifact Kind:** workflow
 - **Governed By:** CONSTITUTION_WORKFLOW_V0
 - **Version:** V0
-- **Status:** draft
+- **Status:** superseded
+- **Superseded By:** WF_ACCEPT_ACTOR_V0, WF_REJECT_ACTOR_V0
 - **Supersedes:** NONE
 
 ---

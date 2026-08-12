@@ -1,0 +1,55 @@
+# CC_ESTABLISH_WALLET_ADDRESS_V0
+
+## Header (Mandatory)
+
+- **Artifact Code:** CC_ESTABLISH_WALLET_ADDRESS_V0
+- **Artifact Kind:** capability_contract
+- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
+- **Version:** V0
+- **Status:** draft
+- **Supersedes:** NONE
+
+---
+
+## 1. Intent
+
+Establishes the address from key material supplied with the request
+
+---
+
+## Machine
+
+```yaml
+fqdn: blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0
+artifact_kind: CAPABILITY_CONTRACT
+version: v0
+governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+core:
+  summary: Establishes the address from key material supplied with the request
+  inputs:
+    key_material:
+      type: string
+      required: true
+  outputs:
+    address:
+      type: string
+      required: true
+  result_status_contract:
+    allowed:
+    - SUCCESS
+    - VIOLATION
+    on_input_failure: VIOLATION
+  pipeline:
+  - step: derive_wallet_address
+    transform: blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0
+    inputs:
+      key_material: $.inputs.key_material
+    outputs:
+      address: $.capability_result.address
+    result_surface:
+    - SUCCESS
+    - VIOLATION
+    on_result:
+      SUCCESS: continue
+      VIOLATION: exit
+```

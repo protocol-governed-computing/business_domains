@@ -1,8 +1,8 @@
-# RB_IDENTITY_BINDINGS_V0
+# RB_WALLET_BINDINGS_V0
 
 ## Header (Mandatory)
 
-- **Artifact Code:** RB_IDENTITY_BINDINGS_V0
+- **Artifact Code:** RB_WALLET_BINDINGS_V0
 - **Artifact Kind:** runtime_binding
 - **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0
 - **Version:** V0
@@ -13,31 +13,31 @@
 
 ## 1. Intent
 
-The bindings identity's workflows resolve their capabilities and stores through
+Binds the wallet workflow to the capabilities and stores it uses
 
 ---
 
 ## Machine
 
 ```yaml
-fqdn: blockchain::RB_IDENTITY_BINDINGS_V0
+fqdn: blockchain::RB_WALLET_BINDINGS_V0
 artifact_kind: RUNTIME_BINDING
 version: v0
 governed_by: fb.runtime_binding::CONSTITUTION_RUNTIME_BINDING_V0
 core:
-  summary: The bindings identity's workflows resolve their capabilities and stores through
-  storage_structure: blockchain::STRUCTURE_IDENTITY_STORAGE_V0
+  summary: Binds the wallet workflow to the capabilities and stores it uses
+  storage_structure: blockchain::STRUCTURE_WALLET_STORAGE_V0
   bindings:
     capability_side_effects::CS_MUTABLE_JSON_V0:
       policy:
-        structure: blockchain::STRUCTURE_IDENTITY_STORAGE_V0
+        store: WALLETS
     capability_side_effects::CS_APPENDONLY_JSONL_V0:
       policy:
-        structure: blockchain::STRUCTURE_IDENTITY_STORAGE_V0
+        store: WALLET_OCCURRENCES
     capability_side_effects::CS_REGISTRY_V0:
       policy:
-        structure: blockchain::STRUCTURE_IDENTITY_STORAGE_V0
+        store: WALLET_IDENTITIES
     capability_side_effects::CS_CLOCK_V0:
       policy:
-        precision: seconds
+        policy: utc
 ```
