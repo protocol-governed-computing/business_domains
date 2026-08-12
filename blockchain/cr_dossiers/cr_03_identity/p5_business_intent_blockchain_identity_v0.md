@@ -102,8 +102,9 @@ or who a caller is.
 ## 7. Provisional Codes
 
 <!-- register:provisional_codes business_language=summary -->
-| Provisional Code | Family (AC, IN, WF, CC, CT, EV, RB, VOCAB, STRUCTURE, TI, TE) | Summary | Source Finding |
-|------------------|-------------------------|---------|----------------|
+| Subdomain | Provisional Code | Family (AC, IN, WF, CC, CT, EV, RB, VOCAB, STRUCTURE, TI, TE) | Summary | Source Finding |
+|-----------|------------------|-------------------------|---------|----------------|
+| NONE IDENTIFIED |
 
 ---
 

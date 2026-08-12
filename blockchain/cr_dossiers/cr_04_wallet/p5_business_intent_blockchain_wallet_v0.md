@@ -112,20 +112,20 @@ that, or how value moves once a wallet holds it.
 ## 7. Provisional Artifact Codes
 
 <!-- register:provisional_codes optional business_language=summary -->
-| Provisional Code | Family (AC, IN, WF, CC, CT, EV, RB, VOCAB, STRUCTURE, TI, TE) | Summary | Source Finding |
-|------------------|-------------------------|---------|----------------|
-| IN_WALLET_CREATION_V0 | IN | Admits a request to give an accepted person a wallet, and refuses one that names nobody. | S4 capability_graph #1 |
-| WF_CREATE_WALLET_V0 | WF | The order in which giving an accepted person a wallet is carried out. | S4 capability_graph #1 |
-| CC_DETERMINE_WALLET_IDENTITY_V0 | CC | Works out the wallet's identity from the person who holds it. | S4 capability_graph #8 |
-| CC_CLAIM_WALLET_IDENTITY_V0 | CC | Claims that identity, and refuses when the person already holds a wallet. | S4 capability_graph #9 |
-| CC_ESTABLISH_WALLET_ADDRESS_V0 | CC | Establishes the address others may pay to, from key material supplied. | S4 capability_graph #2 |
-| CC_CREATE_WALLET_RECORD_V0 | CC | Records the wallet with a balance of zero, its denomination and its classification. | S4 capability_graph #6 |
-| CC_APPEND_WALLET_OCCURRENCE_V0 | CC | Records that the wallet was created, for whom, and when. | S4 capability_graph #7 |
-| CT_PURE_DERIVE_WALLET_ADDRESS_V0 | CT | Works out an address from supplied key material. The same material always yields the same address. | S4 design_decisions #2 |
-| EV_WALLET_CREATED_V0 | EV | The moment a person came to hold value. | S4 events #1 |
-| RB_WALLET_BINDINGS_V0 | RB | Reaches the places a wallet, its trail and its claimed identities are held. | S4 gap_register GAP-3 |
-| STRUCTURE_WALLET_STORAGE_V0 | STRUCTURE | Declares where a wallet, its trail and its claimed identities are held. | S4 gap_register GAP-3 |
-| VOCAB_WALLET_CLASSIFICATION_V0 | VOCAB | The set of classifications a wallet may carry, of which only the default is used at present. | S4 constraint_register #10 |
+| Subdomain | Provisional Code | Family (AC, IN, WF, CC, CT, EV, RB, VOCAB, STRUCTURE, TI, TE) | Summary | Source Finding |
+|-----------|------------------|-------------------------|---------|----------------|
+| wallet | IN_WALLET_CREATION_V0 | IN | Admits a request to give an accepted person a wallet, and refuses one that names nobody. | S4 capability_graph #1 |
+| wallet | WF_CREATE_WALLET_V0 | WF | The order in which giving an accepted person a wallet is carried out. | S4 capability_graph #1 |
+| wallet | CC_DETERMINE_WALLET_IDENTITY_V0 | CC | Works out the wallet's identity from the person who holds it. | S4 capability_graph #8 |
+| wallet | CC_CLAIM_WALLET_IDENTITY_V0 | CC | Claims that identity, and refuses when the person already holds a wallet. | S4 capability_graph #9 |
+| wallet | CC_ESTABLISH_WALLET_ADDRESS_V0 | CC | Establishes the address others may pay to, from key material supplied. | S4 capability_graph #2 |
+| wallet | CC_CREATE_WALLET_RECORD_V0 | CC | Records the wallet with a balance of zero, its denomination and its classification. | S4 capability_graph #6 |
+| wallet | CC_APPEND_WALLET_OCCURRENCE_V0 | CC | Records that the wallet was created, for whom, and when. | S4 capability_graph #7 |
+| wallet | CT_PURE_DERIVE_WALLET_ADDRESS_V0 | CT | Works out an address from supplied key material. The same material always yields the same address. | S4 design_decisions #2 |
+| wallet | EV_WALLET_CREATED_V0 | EV | The moment a person came to hold value. | S4 events #1 |
+| wallet | RB_WALLET_BINDINGS_V0 | RB | Reaches the places a wallet, its trail and its claimed identities are held. | S4 gap_register GAP-3 |
+| wallet | STRUCTURE_WALLET_STORAGE_V0 | STRUCTURE | Declares where a wallet, its trail and its claimed identities are held. | S4 gap_register GAP-3 |
+| wallet | VOCAB_WALLET_CLASSIFICATION_V0 | VOCAB | The set of classifications a wallet may carry, of which only the default is used at present. | S4 constraint_register #10 |
 
 ---
 

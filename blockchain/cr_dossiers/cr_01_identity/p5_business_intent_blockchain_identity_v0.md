@@ -121,24 +121,24 @@ anything an actor's conduct might later change.
 ## 7. Provisional Artifact Codes
 
 <!-- register:provisional_codes business_language=summary -->
-| Provisional Code | Family (AC, IN, WF, CC, CT, EV, RB, STRUCTURE) | Summary | Source Finding |
-|------------------|-------------------------|---------|----------------|
-| AC_PARTICIPANT_V0 | AC | The ordinary participant who registers themselves and is decided about | S4 gap_register GAP-02 |
-| STRUCTURE_IDENTITY_STORAGE_V0 | STRUCTURE | Declares the three stores identity owns and what each holds | S4 gap_register GAP-03 |
-| RB_IDENTITY_BINDINGS_V0 | RB | Binds identity's workflows to the stores they use | S4 gap_register GAP-04 |
-| EV_ACTOR_REGISTERED_UNVERIFIED_V0 | EV | The moment a person is admitted and trusted with nothing | S4 gap_register GAP-05 |
-| EV_ACTOR_ACCEPTED_V0 | EV | The moment an authority records a decision to trust an actor | S4 gap_register GAP-05 |
-| EV_ACTOR_REJECTED_V0 | EV | The moment an authority records a decision not to trust an actor, distinct in kind from an acceptance | S4 gap_register GAP-05 |
-| CC_CLAIM_CONTACT_ADDRESS_V0 | CC | Claims a contact address so that two registrations of one person do not produce two actors | S4 gap_register GAP-07 |
-| CC_RESOLVE_ACTOR_V0 | CC | Answers which actor a contact address denotes, and reports when none does | S4 gap_register GAP-08 |
-| CC_VALIDATE_REGISTRATION_V0 | CC | Confirms a registration carries a name and an address, and that the address is of the form asked for | S4 gap_register GAP-07 |
-| CC_REGISTER_ACTOR_V0 | CC | Claims the address, writes the actor unverified, and records the occurrence | S4 gap_register GAP-07 |
-| CC_RECORD_VERIFICATION_DECISION_V0 | CC | Resolves the actor, refuses every declared refusal, moves the state and records the occurrence | S4 gap_register GAP-08 |
-| CC_APPEND_ACTOR_OCCURRENCE_V0 | CC | Appends one occurrence to the trail, carrying the time it happened | S4 gap_register GAP-06 |
-| WF_REGISTER_ACTOR_V0 | WF | The governed sequence that admits a person as an unverified actor | S5 actions Register |
-| WF_RECORD_VERIFICATION_DECISION_V0 | WF | The governed sequence that records an authority's decision against a registered actor | S5 actions Decide |
-| IN_ACTOR_REGISTERED_V0 | IN | A request to admit a person as an actor | S4 gap_register GAP-09 |
-| IN_ACTOR_VERIFIED_V0 | IN | A request to record a decision, carrying the authority, the outcome and the grounds | S4 gap_register GAP-10 |
+| Subdomain | Provisional Code | Family (AC, IN, WF, CC, CT, EV, RB, STRUCTURE) | Summary | Source Finding |
+|-----------|------------------|-------------------------|---------|----------------|
+| identity | AC_PARTICIPANT_V0 | AC | The ordinary participant who registers themselves and is decided about | S4 gap_register GAP-02 |
+| identity | STRUCTURE_IDENTITY_STORAGE_V0 | STRUCTURE | Declares the three stores identity owns and what each holds | S4 gap_register GAP-03 |
+| identity | RB_IDENTITY_BINDINGS_V0 | RB | Binds identity's workflows to the stores they use | S4 gap_register GAP-04 |
+| identity | EV_ACTOR_REGISTERED_UNVERIFIED_V0 | EV | The moment a person is admitted and trusted with nothing | S4 gap_register GAP-05 |
+| identity | EV_ACTOR_ACCEPTED_V0 | EV | The moment an authority records a decision to trust an actor | S4 gap_register GAP-05 |
+| identity | EV_ACTOR_REJECTED_V0 | EV | The moment an authority records a decision not to trust an actor, distinct in kind from an acceptance | S4 gap_register GAP-05 |
+| identity | CC_CLAIM_CONTACT_ADDRESS_V0 | CC | Claims a contact address so that two registrations of one person do not produce two actors | S4 gap_register GAP-07 |
+| identity | CC_RESOLVE_ACTOR_V0 | CC | Answers which actor a contact address denotes, and reports when none does | S4 gap_register GAP-08 |
+| identity | CC_VALIDATE_REGISTRATION_V0 | CC | Confirms a registration carries a name and an address, and that the address is of the form asked for | S4 gap_register GAP-07 |
+| identity | CC_REGISTER_ACTOR_V0 | CC | Claims the address, writes the actor unverified, and records the occurrence | S4 gap_register GAP-07 |
+| identity | CC_RECORD_VERIFICATION_DECISION_V0 | CC | Resolves the actor, refuses every declared refusal, moves the state and records the occurrence | S4 gap_register GAP-08 |
+| identity | CC_APPEND_ACTOR_OCCURRENCE_V0 | CC | Appends one occurrence to the trail, carrying the time it happened | S4 gap_register GAP-06 |
+| identity | WF_REGISTER_ACTOR_V0 | WF | The governed sequence that admits a person as an unverified actor | S5 actions Register |
+| identity | WF_RECORD_VERIFICATION_DECISION_V0 | WF | The governed sequence that records an authority's decision against a registered actor | S5 actions Decide |
+| identity | IN_ACTOR_REGISTERED_V0 | IN | A request to admit a person as an actor | S4 gap_register GAP-09 |
+| identity | IN_ACTOR_VERIFIED_V0 | IN | A request to record a decision, carrying the authority, the outcome and the grounds | S4 gap_register GAP-10 |
 
 ---
 
