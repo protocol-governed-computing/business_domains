@@ -437,3 +437,12 @@ path to it and not its contents. Everything else is authored and is its own sour
 | Artifact | Generator | Generator Sources | Source Finding |
 |----------|-----------|-------------------|----------------|
 | blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | transformation.build.render:build_manifest | S8 build_order, S8 field_declarations, transformation/design/families.py | S6 pps_artifacts_requiring_action #8 |
+
+---
+
+## 17. Declared Reach
+
+<!-- register:declared_reach optional -->
+| Act | Consults | Source Finding |
+|-----|----------|----------------|
+| NONE IDENTIFIED |
