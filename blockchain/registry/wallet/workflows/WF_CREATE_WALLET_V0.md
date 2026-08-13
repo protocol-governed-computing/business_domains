@@ -41,6 +41,8 @@ core:
     CC_RESOLVE_ACTOR_V0:
       type: CC
       code: CC_RESOLVE_ACTOR_V0
+      inputs:
+        contact_address: $.payload.contact_address
       next:
         SUCCESS: CC_DETERMINE_WALLET_IDENTITY_V0
         NOT_FOUND: EXIT_REJECTED

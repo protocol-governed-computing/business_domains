@@ -39,6 +39,6 @@ machine:
   ct_purity: ct_pure
   operation: DERIVE_WALLET_ADDRESS
   implementation:
-    module: blockchain.implementation.capability_transforms.derive_wallet_address
-    callable: derive_wallet_address_v0
+    module: blockchain.implementation.capability_transforms.atoms.ct_pure_derive_wallet_address_v0
+    callable: execute
 ```

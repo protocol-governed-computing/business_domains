@@ -188,6 +188,7 @@ HOW it is realised. Binding identities are assigned here.
 | blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | INPUT | occurrence_fields | payload.occurrence_fields | S7 execution_topology blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 |
 | blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | INPUT | grounds_parameters | payload.grounds_parameters | S7 execution_topology blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 |
 | blockchain::WF_REJECT_ACTOR_V0 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | INPUT | grounds_rules | payload.grounds_rules | S7 execution_topology blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_RESOLVE_ACTOR_V0 | INPUT | contact_address | payload.contact_address | S3 dependency_discoveries #8 |
 | blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_RESOLVE_ACTOR_V0 | INPUT | contact_address | payload.contact_address | S6 pps_artifacts_requiring_action #1 |
 | blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | current_state | results.CC_RESOLVE_ACTOR_V0.value.state | S6 pps_artifacts_requiring_action #1 |
 | blockchain::WF_ACCEPT_ACTOR_V0 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | INPUT | states_admitting_a_decision | payload.states_admitting_a_decision | S6 pps_artifacts_requiring_action #1 |
@@ -271,7 +272,7 @@ HOW it is realised. Binding identities are assigned here.
 <!-- register:implementation_bindings optional -->
 | CT Code | Module | Callable | Operation | Kind (atom, molecule) | Purity (ct_pure, ct_impure) | Source Finding |
 |---------|--------|----------|-----------|------------------------|------------------------------|----------------|
-| blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0 | blockchain.implementation.capability_transforms.derive_wallet_address | derive_wallet_address_v0 | DERIVE_WALLET_ADDRESS | atom | ct_pure | S4 design_decisions #3 |
+| blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0 | blockchain.implementation.capability_transforms.atoms.ct_pure_derive_wallet_address_v0 | execute | DERIVE_WALLET_ADDRESS | atom | ct_pure | S4 design_decisions #3 |
 
 ---
 
