@@ -26,6 +26,7 @@ version: v0
 governed_by: fb.capability_transforms::CONSTITUTION_CAPABILITY_TRANSFORMS_V0
 core:
   summary: Derives an address from supplied key material; the same material always yields the same address
+  refusal: never
   inputs:
     key_material:
       type: string

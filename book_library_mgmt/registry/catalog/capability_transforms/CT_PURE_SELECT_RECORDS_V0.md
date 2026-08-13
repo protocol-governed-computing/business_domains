@@ -26,6 +26,7 @@ version: v0
 governed_by: fb.capability_transforms::CONSTITUTION_CAPABILITY_TRANSFORMS_V0
 core:
   summary: Selects the records matching stated criteria and returns none when none match
+  refusal: never
   inputs:
     source:
       type: array

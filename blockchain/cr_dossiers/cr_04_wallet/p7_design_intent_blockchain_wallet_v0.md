@@ -304,9 +304,9 @@ HOW it is realised. Binding identities are assigned here.
 ## 9. Implementation Bindings
 
 <!-- register:implementation_bindings optional -->
-| CT Code | Module | Callable | Operation | Kind (atom, molecule) | Purity (ct_pure, ct_impure) | Source Finding |
-|---------|--------|----------|-----------|------------------------|------------------------------|----------------|
-| blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0 | blockchain.implementation.capability_transforms.atoms.ct_pure_derive_wallet_address_v0 | execute | DERIVE_WALLET_ADDRESS | atom | ct_pure | S4 design_decisions #3 |
+| CT Code | Module | Callable | Operation | Kind (atom, molecule) | Purity (ct_pure, ct_impure) | Refusal (raises, returns, never) | Source Finding |
+| --------- | -------- | ---------- | ----------- | ------------------------ | ------------------------------ | -------------------------------- | ---------------- |
+| blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0 | blockchain.implementation.capability_transforms.atoms.ct_pure_derive_wallet_address_v0 | execute | DERIVE_WALLET_ADDRESS | atom | ct_pure | never | S4 design_decisions #3 |
 
 ---
 

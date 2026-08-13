@@ -27,6 +27,7 @@ version: v0
 governed_by: fb.capability_transforms::CONSTITUTION_CAPABILITY_TRANSFORMS_V0
 core:
   summary: Evaluate whether license quota remains available under the declared cap
+  refusal: raises
   description: |
     Signals VIOLATION by raising CTExecutionError; the runtime maps any CT exception to
     VIOLATION. A false predicate is never returned as a value — a plain return is SUCCESS
