@@ -55,6 +55,23 @@ HOW it is realised. Binding identities are assigned here.
 | capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0 | REUSE | | Refuses a value outside the set the business admits — the state a decision may be made from, and the outcomes it may carry. | S6 pps_artifacts_requiring_action #2 |
 | capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 | REUSE | | Assembles a record from declared fields. | S7 cc_composition #5 |
 | capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0 | REUSE | | Judges a parameter against declared rules. | S7 cc_composition #10 |
+| blockchain::IN_WALLET_CREATION_V0 | EXTEND | Admits a request naming the person a wallet is for, and refuses one that names nobody | Authored by an earlier pass of this change and already in the business's hands; redeclared whole so the design and the artifact agree. | S5 provisional_codes #1 |
+| blockchain::WF_CREATE_WALLET_V0 | EXTEND | The governed sequence that gives an accepted person a wallet and records that it did | Authored by an earlier pass of this change and already in the business's hands; redeclared whole so the design and the artifact agree. | S5 provisional_codes #2 |
+| blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 | EXTEND | Derives the wallet's identity from the person who holds it | Authored by an earlier pass of this change and already in the business's hands; redeclared whole so the design and the artifact agree. | S5 provisional_codes #3 |
+| blockchain::CC_CLAIM_WALLET_IDENTITY_V0 | EXTEND | Claims the identity, and refuses when the person already holds a wallet | Authored by an earlier pass of this change and already in the business's hands; redeclared whole so the design and the artifact agree. | S5 provisional_codes #4 |
+| blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0 | EXTEND | Establishes the address from key material supplied with the request | Authored by an earlier pass of this change and already in the business's hands; redeclared whole so the design and the artifact agree. | S5 provisional_codes #5 |
+| blockchain::CC_CREATE_WALLET_RECORD_V0 | EXTEND | Records the wallet with a balance of zero, its denomination and its classification | Authored by an earlier pass of this change and already in the business's hands; redeclared whole so the design and the artifact agree. | S5 provisional_codes #6 |
+| blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | EXTEND | Records the moment on the wallet's trail | Authored by an earlier pass of this change and already in the business's hands; redeclared whole so the design and the artifact agree. | S5 provisional_codes #7 |
+| blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0 | EXTEND | Derives an address from supplied key material; the same material always yields the same address | Authored by an earlier pass of this change and already in the business's hands; redeclared whole so the design and the artifact agree. | S5 provisional_codes #8 |
+| blockchain::EV_WALLET_CREATED_V0 | EXTEND | Announces that a wallet was created, for whom, and when | Authored by an earlier pass of this change and already in the business's hands; redeclared whole so the design and the artifact agree. | S5 provisional_codes #9 |
+| blockchain::RB_WALLET_BINDINGS_V0 | EXTEND | Binds the wallet workflow to the capabilities and stores it uses | Authored by an earlier pass of this change and already in the business's hands; redeclared whole so the design and the artifact agree. | S5 provisional_codes #10 |
+| blockchain::STRUCTURE_WALLET_STORAGE_V0 | EXTEND | Declares the three stores wallet owns | Authored by an earlier pass of this change and already in the business's hands; redeclared whole so the design and the artifact agree. | S5 provisional_codes #11 |
+| blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | EXTEND | The fixed set of wallet classifications, of which only the default is used | Authored by an earlier pass of this change and already in the business's hands; redeclared whole so the design and the artifact agree. | S5 provisional_codes #12 |
+| blockchain::IN_ACTOR_ACCEPTANCE_V0 | EXTEND | Admits a request to accept a person, and refuses one that names nobody | Authored by an earlier pass of this change and already in the business's hands; redeclared whole so the design and the artifact agree. | S5 provisional_codes #13 |
+| blockchain::IN_ACTOR_REJECTION_V0 | EXTEND | Admits a request to reject a person, and refuses one that states no grounds | Authored by an earlier pass of this change and already in the business's hands; redeclared whole so the design and the artifact agree. | S5 provisional_codes #14 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | EXTEND | The governed sequence that records an acceptance and announces it | Authored by an earlier pass of this change and already in the business's hands; redeclared whole so the design and the artifact agree. | S5 provisional_codes #15 |
+| blockchain::WF_REJECT_ACTOR_V0 | EXTEND | The governed sequence that records a rejection, with grounds required, and announces it | Authored by an earlier pass of this change and already in the business's hands; redeclared whole so the design and the artifact agree. | S5 provisional_codes #16 |
+| blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | EXTEND | Refuses a rejection stating no grounds, before anything is recorded | Authored by an earlier pass of this change and already in the business's hands; redeclared whole so the design and the artifact agree. | S5 provisional_codes #17 |
 
 ---
 
@@ -63,23 +80,7 @@ HOW it is realised. Binding identities are assigned here.
 <!-- register:new_artifacts optional business_language=capability -->
 | Capability | Family (AC, IN, WF, RB, CC, CT, EV, VOCAB, STRUCTURE, TI, TE) | Code | Summary | Owner Subdomain | Status | Source Finding |
 |------------|------------------------------------------------|------|---------|-----------------|--------|----------------|
-| Admitting a request to give an accepted person a wallet | IN | blockchain::IN_WALLET_CREATION_V0 | Admits a request naming the person a wallet is for, and refuses one that names nobody | wallet | NEW | S5 provisional_codes #1 |
-| Giving an accepted person a wallet | WF | blockchain::WF_CREATE_WALLET_V0 | The governed sequence that gives an accepted person a wallet and records that it did | wallet | NEW | S5 provisional_codes #2 |
-| Determining a wallet's identity | CC | blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 | Derives the wallet's identity from the person who holds it | wallet | NEW | S5 provisional_codes #3 |
-| Claiming a wallet's identity | CC | blockchain::CC_CLAIM_WALLET_IDENTITY_V0 | Claims the identity, and refuses when the person already holds a wallet | wallet | NEW | S5 provisional_codes #4 |
-| Establishing the address others may pay to | CC | blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0 | Establishes the address from key material supplied with the request | wallet | NEW | S5 provisional_codes #5 |
-| Recording the wallet | CC | blockchain::CC_CREATE_WALLET_RECORD_V0 | Records the wallet with a balance of zero, its denomination and its classification | wallet | NEW | S5 provisional_codes #6 |
-| Recording that the wallet was created | CC | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | Records the moment on the wallet's trail | wallet | NEW | S5 provisional_codes #7 |
-| Working out an address from supplied key material | CT | blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0 | Derives an address from supplied key material; the same material always yields the same address | wallet | NEW | S5 provisional_codes #8 |
-| The moment a person came to hold value | EV | blockchain::EV_WALLET_CREATED_V0 | Announces that a wallet was created, for whom, and when | wallet | NEW | S5 provisional_codes #9 |
-| Reaching a wallet's stores | RB | blockchain::RB_WALLET_BINDINGS_V0 | Binds the wallet workflow to the capabilities and stores it uses | wallet | NEW | S5 provisional_codes #10 |
-| Declaring where a wallet is held | STRUCTURE | blockchain::STRUCTURE_WALLET_STORAGE_V0 | Declares the three stores wallet owns | wallet | NEW | S5 provisional_codes #11 |
-| The classifications a wallet may carry | VOCAB | blockchain::VOCAB_WALLET_CLASSIFICATION_V0 | The fixed set of wallet classifications, of which only the default is used | wallet | NEW | S5 provisional_codes #12 |
-| Admitting an acceptance | IN | blockchain::IN_ACTOR_ACCEPTANCE_V0 | Admits a request to accept a person, and refuses one that names nobody | identity | NEW | S5 provisional_codes #13 |
-| Admitting a rejection | IN | blockchain::IN_ACTOR_REJECTION_V0 | Admits a request to reject a person, and refuses one that states no grounds | identity | NEW | S5 provisional_codes #14 |
-| Recording and announcing an acceptance | WF | blockchain::WF_ACCEPT_ACTOR_V0 | The governed sequence that records an acceptance and announces it | identity | NEW | S5 provisional_codes #15 |
-| Recording and announcing a rejection | WF | blockchain::WF_REJECT_ACTOR_V0 | The governed sequence that records a rejection, with grounds required, and announces it | identity | NEW | S5 provisional_codes #16 |
-| Refusing a rejection that states no grounds | CC | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | Refuses a rejection stating no grounds, before anything is recorded | identity | NEW | S5 provisional_codes #17 |
+| Refusing a wallet to a person the business has not accepted | CC | blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0 | Refuses a wallet for a person the business has not accepted, before anything is claimed or recorded | wallet | NEW | S5 provisional_codes #3 |
 
 ---
 
@@ -101,7 +102,8 @@ HOW it is realised. Binding identities are assigned here.
 | Workflow | Node | Node Type (IN, CC, EXIT, EXIT_SUCCESS) | Routing | Source Finding |
 |----------|------|----------------------------------------|---------|----------------|
 | blockchain::WF_CREATE_WALLET_V0 | blockchain::IN_WALLET_CREATION_V0 | IN | ACK -> blockchain::CC_RESOLVE_ACTOR_V0; NACK -> EXIT_REJECTED | S5 actions #1 |
-| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_RESOLVE_ACTOR_V0 | CC | SUCCESS -> blockchain::CC_DETERMINE_WALLET_IDENTITY_V0; NOT_FOUND -> EXIT_REJECTED; VIOLATION -> EXIT_REJECTED | S6 cross_subdomain_deps #1 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_RESOLVE_ACTOR_V0 | CC | SUCCESS -> blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0; NOT_FOUND -> EXIT_REJECTED; VIOLATION -> EXIT_REJECTED | S6 cross_subdomain_deps #1 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0 | CC | SUCCESS -> blockchain::CC_DETERMINE_WALLET_IDENTITY_V0; VIOLATION -> EXIT_REJECTED | S1 operation_refusals #2 |
 | blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 | CC | SUCCESS -> blockchain::CC_CLAIM_WALLET_IDENTITY_V0; VIOLATION -> EXIT_REJECTED | S5 provisional_codes #3 |
 | blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_CLAIM_WALLET_IDENTITY_V0 | CC | SUCCESS -> blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0; ALREADY_EXISTS -> EXIT_REJECTED; VIOLATION -> EXIT_REJECTED | S5 provisional_codes #4 |
 | blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0 | CC | SUCCESS -> blockchain::CC_CREATE_WALLET_RECORD_V0; VIOLATION -> EXIT_REJECTED | S5 provisional_codes #5 |
@@ -139,13 +141,14 @@ HOW it is realised. Binding identities are assigned here.
 <!-- register:cc_composition optional -->
 | CC Code | Step | Step Name | Capability | Kind (CT, CS) | Operation | Store | Consumes | Produces | Routing | Interpreted By | Semantic Status | Interface |
 |---------|------|-----------|------------|---------------|-----------|-------|----------|----------|---------|----------------|-----------------|-----------|
+| blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0 | 1 | require_holder_accepted | capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0 | CT | VALIDATE_SET_MEMBERSHIP | — | value, allowed_set | is_member | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: value=holder_state, allowed_set=states_admitting_a_wallet; out: is_member=is_accepted |
 | blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 | 1 | derive_wallet_identity | capability_transforms::CT_PURE_GENERATE_ID_V0 | CT | GENERATE_ID | — | data, prefix | id | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: data=data, prefix=prefix; out: id=id |
 | blockchain::CC_CLAIM_WALLET_IDENTITY_V0 | 1 | claim_wallet_identity | capability_side_effects::CS_REGISTRY_V0 | CS | REGISTER | WALLET_IDENTITIES | key | result_status | SUCCESS -> continue; ALREADY_EXISTS -> exit; VIOLATION -> exit | — | SUCCESS | in: key=key; out: result_status=result_status |
 | blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0 | 1 | derive_wallet_address | blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0 | CT | DERIVE_WALLET_ADDRESS | — | key_material | address | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: key_material=key_material; out: address=address |
-| blockchain::CC_CREATE_WALLET_RECORD_V0 | 1 | read_created_at | capability_side_effects::CS_CLOCK_V0 | CS | NOW | — | | timestamp | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | |
+| blockchain::CC_CREATE_WALLET_RECORD_V0 | 1 | read_created_at | capability_side_effects::CS_CLOCK_V0 | CS | NOW | — | | timestamp | SUCCESS -> continue; BACKEND_ERROR -> exit | — | SUCCESS | |
 | blockchain::CC_CREATE_WALLET_RECORD_V0 | 2 | assemble_wallet | capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 | CT | ASSEMBLE_RECORD | — | fields | record | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: fields=fields; out: record=record |
 | blockchain::CC_CREATE_WALLET_RECORD_V0 | 3 | write_wallet | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | WRITE | WALLETS | key, value | result_status | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: key=key, value=value; out: result_status=result_status |
-| blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | 1 | read_occurred_at | capability_side_effects::CS_CLOCK_V0 | CS | NOW | — | | timestamp | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | |
+| blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | 1 | read_occurred_at | capability_side_effects::CS_CLOCK_V0 | CS | NOW | — | | timestamp | SUCCESS -> continue; BACKEND_ERROR -> exit | — | SUCCESS | |
 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | 2 | assemble_occurrence | capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 | CT | ASSEMBLE_RECORD | — | fields | record | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: fields=fields; out: record=record |
 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | 3 | append_occurrence | capability_side_effects::CS_APPENDONLY_JSONL_V0 | CS | APPEND | WALLET_OCCURRENCES | stream_id, record | result_status | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: stream_id=stream_id, record=record; out: result_status=result_status |
 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | 1 | read_state_admits_decision | capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0 | CT | VALIDATE_SET_MEMBERSHIP | — | value, allowed_set | is_member | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: value=value, allowed_set=allowed_set; out: is_member=is_member |
@@ -202,6 +205,11 @@ HOW it is realised. Binding identities are assigned here.
 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | require_grounds_stated | INPUT | parameters | inputs.grounds_parameters | S7 cc_composition require_grounds_stated |
 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | require_grounds_stated | INPUT | rules | inputs.grounds_rules | S7 cc_composition require_grounds_stated |
 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | require_grounds_stated | OUTPUT | valid | capability_result.valid | S7 cc_composition require_grounds_stated |
+| blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0 | require_holder_accepted | INPUT | value | inputs.holder_state | S7 cc_composition require_holder_accepted |
+| blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0 | require_holder_accepted | INPUT | allowed_set | inputs.states_admitting_a_wallet | S7 cc_composition require_holder_accepted |
+| blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0 | require_holder_accepted | OUTPUT | is_accepted | capability_result.is_member | S7 cc_composition require_holder_accepted |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0 | INPUT | holder_state | results.CC_RESOLVE_ACTOR_V0.value.state | S7 execution_topology blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0 |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0 | INPUT | states_admitting_a_wallet | ['ACCEPTED'] | S7 execution_topology blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0 |
 | blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 | INPUT | holder | results.CC_RESOLVE_ACTOR_V0.value.contact_address | S7 execution_topology blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 |
 | blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 | INPUT | wallet_id_prefix | payload.wallet_id_prefix | S7 execution_topology blockchain::CC_DETERMINE_WALLET_IDENTITY_V0 |
 | blockchain::WF_CREATE_WALLET_V0 | blockchain::CC_CLAIM_WALLET_IDENTITY_V0 | INPUT | wallet_id | results.CC_DETERMINE_WALLET_IDENTITY_V0.id | S7 execution_topology blockchain::CC_CLAIM_WALLET_IDENTITY_V0 |
@@ -295,6 +303,9 @@ HOW it is realised. Binding identities are assigned here.
 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | INPUT | stream_id | string | YES |  | The trail the moment is added to. |
 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | INPUT | occurrence_fields | object | YES |  | What the moment records. |
 | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | OUTPUT | result_status | string | YES |  | Whether the moment was recorded. |
+| blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0 | INPUT | holder_state | string | YES |  | The state the person is in, read from the record identity holds. |
+| blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0 | INPUT | states_admitting_a_wallet | array | YES |  | The states a wallet may be created from. Acceptance, and nothing else — fixed by the design, never taken from the caller, because a rule the caller supplies is a rule the caller can widen. |
+| blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0 | OUTPUT | is_accepted | boolean | YES |  | Whether the person is one the business has accepted. |
 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | INPUT | grounds_parameters | object | YES |  | The grounds, as the parameter map the rule evaluator reads. |
 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | INPUT | grounds_rules | array | YES |  | The rules the grounds must satisfy: stated at all, and not empty. |
 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | OUTPUT | valid | boolean | YES |  | Whether grounds were stated. |
@@ -418,10 +429,10 @@ HOW it is realised. Binding identities are assigned here.
 <!-- register:artifact_summary -->
 | Action (REPLACE, EXTEND, NEW) | Subdomain | Count | Artifacts |
 |-------------------------------|-----------|-------|-----------|
-| NEW | wallet | 12 | blockchain::IN_WALLET_CREATION_V0, blockchain::WF_CREATE_WALLET_V0, blockchain::CC_DETERMINE_WALLET_IDENTITY_V0, blockchain::CC_CLAIM_WALLET_IDENTITY_V0, blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0, blockchain::CC_CREATE_WALLET_RECORD_V0, blockchain::CC_APPEND_WALLET_OCCURRENCE_V0, blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0, blockchain::EV_WALLET_CREATED_V0, blockchain::RB_WALLET_BINDINGS_V0, blockchain::STRUCTURE_WALLET_STORAGE_V0, blockchain::VOCAB_WALLET_CLASSIFICATION_V0 |
-| NEW | identity | 5 | blockchain::IN_ACTOR_ACCEPTANCE_V0, blockchain::IN_ACTOR_REJECTION_V0, blockchain::WF_ACCEPT_ACTOR_V0, blockchain::WF_REJECT_ACTOR_V0, blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 |
-| EXTEND | identity | 5 | blockchain::WF_REGISTER_ACTOR_V0, blockchain::RB_IDENTITY_BINDINGS_V0, blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0, blockchain::TI_ACCEPT_ACTOR_V0, blockchain::TI_REJECT_ACTOR_V0 |
-| REPLACE | identity | 2 | blockchain::WF_RECORD_VERIFICATION_DECISION_V0, blockchain::IN_ACTOR_VERIFIED_V0 |
+| NEW | wallet | 1 | blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0 |
+| EXTEND | wallet | 13 | blockchain::IN_WALLET_CREATION_V0, blockchain::WF_CREATE_WALLET_V0, blockchain::CC_DETERMINE_WALLET_IDENTITY_V0, blockchain::CC_CLAIM_WALLET_IDENTITY_V0, blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0, blockchain::CC_CREATE_WALLET_RECORD_V0, blockchain::CC_APPEND_WALLET_OCCURRENCE_V0, blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0, blockchain::EV_WALLET_CREATED_V0, blockchain::RB_WALLET_BINDINGS_V0, blockchain::STRUCTURE_WALLET_STORAGE_V0, blockchain::VOCAB_WALLET_CLASSIFICATION_V0, blockchain::AC_PARTICIPANT_V0 |
+| EXTEND | identity | 9 | blockchain::IN_ACTOR_ACCEPTANCE_V0, blockchain::IN_ACTOR_REJECTION_V0, blockchain::WF_ACCEPT_ACTOR_V0, blockchain::WF_REJECT_ACTOR_V0, blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0, blockchain::WF_REGISTER_ACTOR_V0, blockchain::RB_IDENTITY_BINDINGS_V0, blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0, blockchain::TI_ACCEPT_ACTOR_V0 |
+
 
 ---
 
@@ -445,4 +456,4 @@ path to it and not its contents. Everything else is authored and is its own sour
 <!-- register:declared_reach optional -->
 | Act | Consults | Source Finding |
 |-----|----------|----------------|
-| NONE IDENTIFIED |
+| blockchain::WF_CREATE_WALLET_V0 | blockchain::RB_IDENTITY_BINDINGS_V0 | S4 gap_register GAP-9 |

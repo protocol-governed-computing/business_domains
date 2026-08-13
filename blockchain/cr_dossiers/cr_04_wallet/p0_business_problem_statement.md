@@ -17,17 +17,27 @@ Nothing after identity can be built without it. A transaction moves value betwee
 records transactions, and consensus finalises blocks — so the whole of the rest of the project waits
 on this one.
 
+**This statement has been re-authored.** A first pass built the wallet function and it is in the
+business's hands today: a person can be accepted, the moments identity declares are announced, a
+rejection stating no grounds is refused, and a wallet can be created. Two things that were asked for
+in that pass are not in what was built, and both were found by running it rather than by reading it.
+The statement below is the wallet change entire — what was asked for the first time, and what is
+still missing — because a change that describes only the remainder describes an act nobody can read
+whole.
+
 ---
 
 ## 2. Problem Statement
 
-**A person the business has accepted has nowhere to hold anything.**
+**A person the business has accepted has nowhere to hold anything, and where the business has begun
+to give them one, it does not enforce its own rules about who may have it.**
 
-Acceptance is currently the end of the story. The business admits someone, records that it accepted
-them, and stops. The person holds no balance, has no address anyone could pay, and owns nothing the
-business can point to. There is no unit the rest of the project can operate on.
+Acceptance was the end of the story. The business admitted someone, recorded that it accepted them,
+and stopped. The person held no balance, had no address anyone could pay, and owned nothing the
+business could point to. There was no unit the rest of the project could operate on.
 
-This change gives an accepted person a wallet.
+This change gives an accepted person a wallet, and it is not finished until three things are true
+together.
 
 **A wallet follows acceptance.** It is not something a person asks for separately. When an authority
 accepts someone, that person gets a wallet — the business does not want an accepted person waiting
@@ -43,12 +53,28 @@ say why. Today a rejection stating nothing is accepted and recorded, leaving ref
 with no reason attached. This change refuses them, so that the identity a wallet depends on is one
 whose own rules hold.
 
+**The act that creates a wallet reads records identity owns, and must say so.** Whether a person
+exists and has been accepted is a fact identity owns and alone should state, so the act establishes
+it by reusing identity's own capability rather than keeping a second copy of who exists — a second
+copy can disagree with the thing it describes, and the business would then hold two answers about who
+may hold a wallet and could defend neither. Reading another part's records is something the business
+permits and requires to be declared: the act names what it consults alongside what it owns, reads and
+never writes it, and identity's description of its own records stays with identity.
+
+**And an unverified person is currently given a wallet.** The business said plainly that a wallet
+follows acceptance and nothing else. The act reads the person's record, takes their address from it,
+and never looks at whether they were accepted. No authority ever decided about them and they hold
+value anyway. Nothing reported a fault, because nothing checks.
+
 This change shall:
 
 - give each accepted person a wallet, once, when they are accepted;
 - announce the moments identity already declares, so that acceptance can be acted on;
 - refuse a rejection that states no grounds;
-- record the creation of a wallet as a moment on the business's trail.
+- record the creation of a wallet as a moment on the business's trail;
+- have the act declare that it reads the records identity owns, and read them without ever writing
+  them;
+- refuse a wallet to a person the business has not accepted.
 
 ### What the business already decided about a wallet
 

@@ -25,6 +25,8 @@ artifact_kind: WORKFLOW
 version: v0
 governed_by: fb.workflow::CONSTITUTION_WORKFLOW_V0
 runtime_binding: blockchain::RB_WALLET_BINDINGS_V0
+consults:
+- blockchain::RB_IDENTITY_BINDINGS_V0
 subdomain: wallet
 structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
@@ -44,8 +46,18 @@ core:
       inputs:
         contact_address: $.payload.contact_address
       next:
-        SUCCESS: CC_DETERMINE_WALLET_IDENTITY_V0
+        SUCCESS: CC_REQUIRE_ACCEPTED_HOLDER_V0
         NOT_FOUND: EXIT_REJECTED
+        VIOLATION: EXIT_REJECTED
+    CC_REQUIRE_ACCEPTED_HOLDER_V0:
+      type: CC
+      code: CC_REQUIRE_ACCEPTED_HOLDER_V0
+      inputs:
+        holder_state: $.results.CC_RESOLVE_ACTOR_V0.value.state
+        states_admitting_a_wallet:
+        - ACCEPTED
+      next:
+        SUCCESS: CC_DETERMINE_WALLET_IDENTITY_V0
         VIOLATION: EXIT_REJECTED
     CC_DETERMINE_WALLET_IDENTITY_V0:
       type: CC

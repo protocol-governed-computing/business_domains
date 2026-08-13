@@ -28,7 +28,7 @@ that, or how value moves once a wallet holds it.
 <!-- register:cr_type business_language -->
 | Subdomain | Classification (NEW_SUBDOMAIN, EXTEND_SUBDOMAIN, MODIFY, DEPRECATE) | Rationale |
 |-----------|----------------|-----------|
-| wallet | NEW_SUBDOMAIN | Wallet does not exist. An accepted person currently holds nothing, has no address anyone could pay, and owns nothing the business can point to. |
+| wallet | EXTEND_SUBDOMAIN | Wallet was built by a first pass of this change and is in the business's hands. Two things it was asked for are missing: the act does not say it reads the records identity owns, and it gives a wallet to a person nobody accepted. |
 | identity | MODIFY | Identity is modified by this change: it declares an announcement of acceptance that it does not make, and wallet is the first function that needs to hear it. One unenforced rule of identity's is corrected at the same time. |
 
 ## 2. Business Vocabulary
@@ -45,6 +45,9 @@ that, or how value moves once a wallet holds it.
 | Acceptance | The moment an authority records that the business accepts a person. |
 | Grounds | The reason an authority states when rejecting a person. |
 | Trail | The business's record of moments that occurred, added to and never rewritten. |
+| Reach | An act reading records another part of the business owns. |
+| Binding | What connects an act, when it runs, to the descriptions of the records it works against. |
+| Consulted | The records an act reads and never writes. |
 
 ## 3. Requested Outcomes
 
@@ -55,6 +58,8 @@ that, or how value moves once a wallet holds it.
 | The moments identity already declares are announced, so that acceptance can be acted on. |
 | A rejection that states no grounds is refused. |
 | The creation of a wallet is recorded as a moment on the business's trail. |
+| The act that creates a wallet declares that it reads the records identity owns, and never writes them. |
+| A wallet is refused to a person the business has not accepted. |
 
 ## 4. Known Facts — Business Truths
 
@@ -82,6 +87,10 @@ that, or how value moves once a wallet holds it.
 | The business must be able to show that a wallet was created, for whom, when, and with what denomination and classification. Nothing further. | HIGH |
 | Acceptance stands on its own. Failing to give an accepted person a wallet does not un-accept them. | HIGH |
 | A wallet is never created for a person who was rejected, or one still unverified. | HIGH |
+| Whether a person exists and has been accepted is a fact identity owns and alone should state. | HIGH |
+| The wallet keeps no copy of who exists; a second copy of one truth can disagree with the thing it describes. | HIGH |
+| An act may read records another part of the business owns, provided it declares what it consults and never writes them. | HIGH |
+| A reach added to a built artifact by hand works, passes every check, and is a reach no reviewer saw. | HIGH |
 
 ## 5. Existing-System Beliefs — Requiring Verification
 
@@ -96,6 +105,9 @@ that, or how value moves once a wallet holds it.
 | A rejection stating no grounds is currently accepted and recorded rather than refused. | The identity a wallet depends on should be one whose own stated rules hold. | Confirm whether a rejection with no grounds is refused today. |
 | No wallet exists anywhere in the business today. | Determines whether this creates a function or extends one. | Confirm no wallet record, balance or address is held anywhere. |
 | A wallet design was worked out in an earlier system, including which of a wallet's details are the business's own and which were implementation detail. | The business need not re-derive decisions it already made. | Establish which of those decisions the current business still holds to. |
+| The act that creates a wallet reads records identity owns and declares nothing about them. | It is one of the two things missing from what was built. | Establish what the act declares today about the records it reads. |
+| The business permits an act to declare the bindings it consults, and refuses a write through one. | Says the capability exists and this change uses it rather than inventing it. | Confirm what is admitted, and what happens on a write through a consulted record. |
+| A person nobody accepted is given a wallet today. | The other missing thing, and the business's own rule going unenforced. | Establish what the act does with the person's state after it reads it. |
 
 ## 6. Assumptions
 
@@ -129,6 +141,9 @@ that, or how value moves once a wallet holds it.
 | A person holds at most one wallet. |
 | No wallet exists for a person who is not accepted. |
 | A recorded moment is never changed or removed. |
+| The act that creates a wallet declares every binding it consults. |
+| Identity is the only writer of what identity owns. |
+| No wallet exists for a person the business has not accepted. |
 
 ## 9. Lifecycle States
 
@@ -207,6 +222,9 @@ that, or how value moves once a wallet holds it.
 | A rejection stating no grounds is refused, and no person is rejected by it. |
 | The moments identity declares are announced when they occur. |
 | No recorded moment is changed or removed by anything this change introduces. |
+| The act declares the records it reads, and a reviewer reads that in the design rather than in the built act. |
+| Identity's records are unchanged by every wallet act, including the refused ones. |
+| A person the business has not accepted is refused a wallet, and none is recorded for them. |
 
 ## 16. Identity and Sameness
 

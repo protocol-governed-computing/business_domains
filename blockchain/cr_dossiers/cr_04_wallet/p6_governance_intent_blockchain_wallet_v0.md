@@ -45,6 +45,8 @@ people written by a function that is not about people.
 | Making a wallet inactive, or closing it | wallet | DEFERRED | | S4 authoring_scope deferred #2 |
 | Notifying a person that their wallet was created | wallet | DEFERRED | | S4 authoring_scope deferred #3 |
 | Recovering a wallet whose holder has lost access | wallet | DEFERRED | | S4 authoring_scope deferred #5 |
+| Declaring that the wallet act reads the records identity owns | wallet | OWNED | blockchain::WF_CREATE_WALLET_V0 | S4 gap_register GAP-9 |
+| Refusing a wallet to a person the business has not accepted | wallet | OWNED | | S4 gap_register GAP-10 |
 
 ---
 
@@ -66,6 +68,7 @@ people written by a function that is not about people.
 |------------|-----------|-------------------|-------------------------|----------------|
 | Establishing that a person is one the business holds, and carrying the state that says whether they were accepted | wallet → identity | blockchain::CC_RESOLVE_ACTOR_V0 | SATISFIED | S5 cross_subdomain_refs #1 |
 | The moment a person is accepted being announced, so that giving them a wallet has something to follow | wallet → identity | blockchain::EV_ACTOR_ACCEPTED_V0 | GAP | S4 dependency_graph #1 |
+| The records identity's contract reads, consulted and never written | wallet -> identity | blockchain::RB_IDENTITY_BINDINGS_V0 | SATISFIED | S4 dependency_graph #9 |
 
 ---
 
@@ -96,6 +99,8 @@ people written by a function that is not about people.
 | WALLET_READS_A_PERSON_NEVER_WRITES_ONE | Wallet establishes that a person is held and accepted by reading what identity already offers. It does not restate a person's state, and it does not correct one. | S5 cross_subdomain_refs #1 |
 | ACCEPTANCE_STANDS_ALONE | A wallet that cannot be created does not un-accept the person. The two are separate acts and fail separately. | S4 design_decisions #7 |
 | NO_NEW_WAY_TO_TOUCH_THE_WORLD | This change adds no way for the platform to touch the world. Everything it does to anything is one of the ways that already exist. | S4 design_decisions #2 |
+| A_REACH_IS_DECLARED_WHERE_IT_IS_REVIEWED | The act declares every binding it consults, in its own artifact. A reach added to a built artifact by hand works, passes every check, and is a reach no reviewer saw. | S4 design_decisions #9 |
+| A_WALLET_FOLLOWS_ACCEPTANCE_AND_NOTHING_ELSE | No wallet exists for a person the business has not accepted. The refusal is a step that raises, placed before anything is claimed or recorded. | S4 design_decisions #10 |
 
 ---
 
@@ -109,6 +114,8 @@ people written by a function that is not about people.
 | Somewhere to hold a wallet and its trail | wallet | S4 gap_register GAP-3 |
 | Announcing the moment a person is registered, accepted or rejected | identity | S4 gap_register GAP-4 |
 | Refusing a rejection that states no grounds | identity | S4 gap_register GAP-5 |
+| Declaring that the wallet act reads the records identity owns | wallet | S4 gap_register GAP-9 |
+| Refusing a wallet to a person the business has not accepted | wallet | S4 gap_register GAP-10 |
 
 ---
 

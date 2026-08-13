@@ -35,6 +35,9 @@ re-grounded against the pinned snapshot rather than inherited from Stage 2.
 | No wallet exists anywhere in the business today. | S2 belief_verification #5 | CONFIRMED | Vocabulary search returns no match. |
 | A wallet design was worked out in an earlier system, including which of a wallet's details are the business's own and which were implementation detail. | S2 belief_verification #6 | CONFIRMED | Still absent. What the business holds to remains a business truth, not a finding. |
 | Everything a wallet needs in order to be held, identified, timed and trailed already exists. | S2 architectural_observations #4 | CONFIRMED | Re-read; the five capabilities are present and unchanged. |
+| The act that creates a wallet reads records identity owns and declares nothing about them. | S2 belief_verification #7 | CONFIRMED | The reused contract reads `CONTACT_ADDRESS_REGISTRY` and `ACTORS`; the act names only its own binding. |
+| The business permits an act to declare the bindings it consults, and refuses a write through one. | S2 belief_verification #8 | CONFIRMED | The constitution states the model, the invariant holds it, and the composition seals both bindings with each record marked. |
+| A person nobody accepted is given a wallet today. | S2 belief_verification #9 | CONFIRMED | Dispatching the act for an undecided person returns SUCCESS and records a wallet. |
 
 ---
 
@@ -55,6 +58,8 @@ re-grounded against the pinned snapshot rather than inherited from Stage 2.
 | Refusing a rejection that states no grounds | capability | EXISTING | Changes what the recording of a decision checks. |
 | Somewhere to hold a wallet | storage | AUTHOR_NEW | Nothing declares it. |
 | Somewhere to hold a wallet's trail | storage | AUTHOR_NEW | Nothing declares it. |
+| The records identity owns | data | EXISTING | `blockchain::RB_IDENTITY_BINDINGS_V0` covers all three, and is the binding the act declares it consults. |
+| Refusing a value outside the set the business admits | capability | REUSE | `capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0` raises, so a step that names it fails when the person was not accepted. |
 
 ---
 
@@ -87,6 +92,8 @@ re-grounded against the pinned snapshot rather than inherited from Stage 2.
 | Announcing the moment a person is registered, accepted or rejected | EXTEND | The moments are declared already. What is missing is anywhere referring to them, which is a change to how the two identity operations record what they did. | Declaring new moments was rejected: three already exist and a second set would split one meaning in two. | S2 gaps #2 |
 | Refusing a rejection that states no grounds | EXTEND | The rule is the business's own and already stated. What changes is that the recording of a decision now checks it. | Requiring it only where the request is admitted was rejected: that is already so, and it is why the gap went unnoticed. | S2 gaps #3 |
 | Supplying the time a moment occurred | REUSE | The platform supplies the time and identity already uses it. | `capability_side_effects::CS_CLOCK_V0` | S1 known_facts #19 |
+| Declaring that the wallet act reads the records identity owns | EXTEND | The act exists and reads them already; what it lacks is the statement. | Keeping a copy of who exists inside the wallet's records was rejected by the business: a second copy of one truth can disagree with the thing it describes. | S2 gaps #7 |
+| Refusing a wallet to a person the business has not accepted | AUTHOR_NEW | Nothing turns the state the act reads into a decision, so the refusal the business declared has no branch to route to. | Reading the state inside an existing step was rejected: a step that succeeds whatever it finds leaves the refusal unreachable, and the transform that refuses must be able to raise. | S2 gaps #8 |
 
 ---
 

@@ -55,6 +55,8 @@ that, or how value moves once a wallet holds it.
 | Recovering a wallet whose holder has lost access | DEFERRED | The business has not decided what recovery means. | S4 authoring_scope deferred #5 |
 | A second wallet for one person | DEFERRED | Not until a second classification is actually needed. | S4 authoring_scope deferred #6 |
 | Transaction ordering | DEFERRED | No consumer until transaction exists. | S4 authoring_scope deferred #7 |
+| Declaring that the wallet act reads the records identity owns | IN_SCOPE | One statement, and the act stops without it. | S4 authoring_scope #9 |
+| Refusing a wallet to a person the business has not accepted | IN_SCOPE | The business declared this refusal and nothing carries it out. | S4 authoring_scope #10 |
 
 ---
 
@@ -93,6 +95,9 @@ that, or how value moves once a wallet holds it.
 | A recorded moment is never changed or removed. | The trail is the business's record of what happened; a rewritten record proves nothing. | S4 constraint_register #6 |
 | A wallet is written only by wallet, and a person only by identity. | Ownership of a record is what makes it answerable to one function rather than several. | S4 constraint_register #7 |
 | Every wallet carries the default classification and the business's single currency. | The business creates one kind of wallet at present, and denominates every one of them the same way. | S4 constraint_register #10 |
+| The act that creates a wallet declares every binding it consults. | A reach nobody declared is one no reviewer saw, and it stays invisible until the act runs and asks for a record it never said it would read. | S4 constraint_register #1 |
+| Identity is the only writer of what identity owns. | A second writer means two parts of the business decide what is true about a person while neither is answerable for it. | S4 constraint_register #1 |
+| No wallet exists for a person the business has not accepted. | A wallet follows acceptance and nothing else. Value held by a person the business never decided about is value it cannot account for, and the decision to give it was made by nobody. | S4 constraint_register #4 |
 
 ---
 
@@ -106,6 +111,8 @@ that, or how value moves once a wallet holds it.
 | Register a person | Holder | A person supplying their details. | IN_SCOPE | S4 capability_graph #4 |
 | Move value into or out of a wallet | Wallet | Deferred. | DEFERRED | S4 authoring_scope deferred #1 |
 | Make a wallet inactive, or close it | Wallet | Deferred. | DEFERRED | S4 authoring_scope deferred #2 |
+| Declare the bindings the act consults | Reach | The design of the act that creates a wallet. | IN_SCOPE | S4 capability_graph #9 |
+| Refuse a wallet to a person the business has not accepted | Wallet | A wallet being created for a person whose state is not acceptance. | IN_SCOPE | S4 capability_graph #10 |
 
 ---
 
@@ -116,6 +123,7 @@ that, or how value moves once a wallet holds it.
 |-----------|------------------|-------------------------|---------|----------------|
 | wallet | IN_WALLET_CREATION_V0 | IN | Admits a request to give an accepted person a wallet, and refuses one that names nobody. | S4 capability_graph #1 |
 | wallet | WF_CREATE_WALLET_V0 | WF | The order in which giving an accepted person a wallet is carried out. | S4 capability_graph #1 |
+| wallet | CC_REQUIRE_ACCEPTED_HOLDER_V0 | CC | Refuses a wallet for a person the business has not accepted, before anything is claimed or recorded. | S4 capability_graph #1 |
 | wallet | CC_DETERMINE_WALLET_IDENTITY_V0 | CC | Works out the wallet's identity from the person who holds it. | S4 capability_graph #8 |
 | wallet | CC_CLAIM_WALLET_IDENTITY_V0 | CC | Claims that identity, and refuses when the person already holds a wallet. | S4 capability_graph #9 |
 | wallet | CC_ESTABLISH_WALLET_ADDRESS_V0 | CC | Establishes the address others may pay to, from key material supplied. | S4 capability_graph #2 |

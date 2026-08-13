@@ -39,6 +39,7 @@ core:
       required: true
   result_status_contract:
     allowed:
+    - BACKEND_ERROR
     - VIOLATION
     - SUCCESS
     on_input_failure: VIOLATION
@@ -51,10 +52,10 @@ core:
       timestamp: $.capability_result.timestamp
     result_surface:
     - SUCCESS
-    - VIOLATION
+    - BACKEND_ERROR
     on_result:
       SUCCESS: continue
-      VIOLATION: exit
+      BACKEND_ERROR: exit
   - step: assemble_occurrence
     transform: capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0
     inputs:

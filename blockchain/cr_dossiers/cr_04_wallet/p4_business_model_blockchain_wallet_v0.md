@@ -69,6 +69,8 @@ Consolidation of Stages 1–3, not re-litigation. Every row projects from a find
 | Ensuring two wallets never share an identity | S3 authoring_decisions #5 | SATISFIED | | |
 | Establishing that a person is held and accepted | S3 authoring_decisions #7 | SATISFIED | | Identity already resolves a person. |
 | Supplying the time a moment occurred | S3 authoring_decisions #10 | SATISFIED | | |
+| Declaring that the wallet act reads the records identity owns | S3 authoring_decisions #11 | CRITICAL | GAP-9 | One statement, and the act stops without it. |
+| Refusing a wallet to a person the business has not accepted | S3 authoring_decisions #12 | CRITICAL | GAP-10 | The business declared this refusal and nothing carries it out. |
 
 ---
 
@@ -81,6 +83,7 @@ Consolidation of Stages 1–3, not re-litigation. Every row projects from a find
 | wallet | identity | data read | SATISFIED | S3 authoring_decisions #7 — `blockchain::CC_RESOLVE_ACTOR_V0` resolves a person and carries their state. |
 | wallet | platform | capability call | SATISFIED | S3 dependency_discoveries #1–#5 — holding, trailing, claiming, timing, deriving. |
 | identity | platform | capability call | SATISFIED | S3 verification_results #7 — the capabilities identity already uses are present and unchanged. |
+| wallet | identity | data read | SATISFIED | S3 dependency_discoveries #13 — identity's binding covers the records the act reads, and the act declares it consults them. |
 
 ---
 
@@ -112,6 +115,8 @@ Consolidation of Stages 1–3, not re-litigation. Every row projects from a find
 | GAP-3 | S3 dependency_discoveries #11 | Somewhere to hold a wallet and its trail | wallet | NEW |
 | GAP-4 | S3 authoring_decisions #8 | Announcing the moment a person is registered, accepted or rejected | identity | EXTEND |
 | GAP-5 | S3 authoring_decisions #9 | Refusing a rejection that states no grounds | identity | EXTEND |
+| GAP-9 | S3 authoring_decisions #11 | Declaring that the wallet act reads the records identity owns | wallet | EXTEND |
+| GAP-10 | S3 authoring_decisions #12 | Refusing a wallet to a person the business has not accepted | wallet | NEW |
 
 ---
 
@@ -127,6 +132,8 @@ Consolidation of Stages 1–3, not re-litigation. Every row projects from a find
 | 5 | The three declared moments are announced from where the two identity operations record what they did. | S3 authoring_decisions #8 | The moments already exist and are referred to by nothing. | Rules out declaring a second set of moments, which would split one meaning in two. |
 | 6 | Wallet creation is refused for a person who is not held, not accepted, or already holds a wallet. | S1 operation_refusals | The business stated each refusal. | Every refusal is a declared outcome rather than an unhandled path. |
 | 7 | Acceptance stands on its own; a wallet that cannot be created does not un-accept the person. | S1 known_facts #20 | Acceptance is a decision about a person. | Rules out any design binding the two together as one act. |
+| 9 | The act declares identity's binding as a whole, and reads through it only. | S3 authoring_decisions #11 | A binding is what the composition resolves; it covers a subdomain's records entirely and there is no smaller thing to name. What keeps the reach narrow is that everything reached through it is read-only. | Rules out declaring a reach to particular stores, and rules out any wallet step writing to identity's. |
+| 10 | The refusal is a step of its own that raises, placed before anything is claimed or recorded. | S3 authoring_decisions #12 | A step that returns its judgement succeeds whatever it found, so the branch the business declared would be unreachable. Placed after the claim, a refused person would already hold an identity. | Rules out folding the check into an existing step, and fixes where in the order it sits. |
 
 ---
 
@@ -141,6 +148,8 @@ Consolidation of Stages 1–3, not re-litigation. Every row projects from a find
 | Somewhere to hold a wallet and its trail | GAP-3 |
 | Announcing the moment a person is registered, accepted or rejected | GAP-4 |
 | Refusing a rejection that states no grounds | GAP-5 |
+| Declaring that the wallet act reads the records identity owns | GAP-9 |
+| Refusing a wallet to a person the business has not accepted | GAP-10 |
 
 ### Deferred — Future CR
 | Capability | Deferred Reason |
