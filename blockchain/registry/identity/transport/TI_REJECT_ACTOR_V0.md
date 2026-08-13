@@ -58,6 +58,13 @@ handler:
       state: REJECTED
       verifying_authority: ${input.verifying_authority}
       grounds: ${input.grounds}
+    self_check_parameters:
+      verifying_authority: ${input.verifying_authority}
+      contact_address: ${input.contact_address}
+    self_check_rules:
+    - field: verifying_authority
+      op: neq
+      value: ${input.contact_address}
     stream_id: ACTOR_OCCURRENCES
     occurrence_fields:
       occurrence: ACTOR_REJECTED

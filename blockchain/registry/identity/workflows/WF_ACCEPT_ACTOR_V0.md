@@ -7,7 +7,7 @@
 - **Governed By:** CONSTITUTION_WORKFLOW_V0
 - **Version:** V0
 - **Status:** draft
-- **Supersedes:** WF_RECORD_VERIFICATION_DECISION_V0
+- **Supersedes:** blockchain::WF_RECORD_VERIFICATION_DECISION_V0
 
 ---
 
@@ -24,6 +24,7 @@ fqdn: blockchain::WF_ACCEPT_ACTOR_V0
 artifact_kind: WORKFLOW
 version: v0
 governed_by: fb.workflow::CONSTITUTION_WORKFLOW_V0
+supersedes: blockchain::WF_RECORD_VERIFICATION_DECISION_V0
 runtime_binding: blockchain::RB_IDENTITY_BINDINGS_V0
 subdomain: identity
 structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
@@ -51,6 +52,8 @@ core:
       type: CC
       code: CC_RECORD_VERIFICATION_DECISION_V0
       inputs:
+        self_check_parameters: $.payload.self_check_parameters
+        self_check_rules: $.payload.self_check_rules
         current_state: $.results.CC_RESOLVE_ACTOR_V0.value.state
         states_admitting_a_decision: $.payload.states_admitting_a_decision
         decision: $.payload.decision

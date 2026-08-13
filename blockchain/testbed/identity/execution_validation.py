@@ -63,9 +63,23 @@ def registration(name: str, address: str, **overrides) -> dict:
             **overrides}
 
 
+# The rules the rejection path checks its grounds against, before anything is recorded. Stated here
+# because the boundary states them: the caller sends grounds, and what makes grounds sufficient is the
+# business's rule rather than the caller's opinion.
+GROUNDS_RULES = [{"field": "grounds", "op": "not_null"},
+                 {"field": "grounds", "op": "neq", "value": ""}]
+
+
 def decision(address: str, outcome: str, grounds: str = "", authority: str = AUTHORITY) -> dict:
     return {"contact_address": address, "verifying_authority": authority,
             "decision": outcome, "grounds": grounds,
+            "grounds_parameters": {"grounds": grounds},
+            "grounds_rules": GROUNDS_RULES,
+            # A decider is not the person being decided about. Stated at the boundary because the
+            # rule is the business's and the values are the caller's.
+            "self_check_parameters": {"verifying_authority": authority,
+                                      "contact_address": address},
+            "self_check_rules": [{"field": "verifying_authority", "op": "neq", "value": address}],
             "states_admitting_a_decision": ["UNVERIFIED"],
             "admitted_outcomes": ["ACCEPTED", "REJECTED"],
             "decided_actor_fields": {"contact_address": address, "state": outcome,
@@ -73,6 +87,16 @@ def decision(address: str, outcome: str, grounds: str = "", authority: str = AUT
             "stream_id": "ACTOR_OCCURRENCES",
             "occurrence_fields": {"occurrence": f"ACTOR_{outcome}", "contact_address": address,
                                   "verifying_authority": authority, "grounds": grounds}}
+
+
+def deciding_workflow(outcome: str) -> str:
+    """Which act records this outcome.
+
+    One workflow decided both outcomes until the change that split them, so that each announces its
+    own moment and the rejection path can require grounds throughout. The criteria below are the same
+    statements about the business; only the act they are made against has changed.
+    """
+    return "WF_ACCEPT_ACTOR_V0" if outcome == "ACCEPTED" else "WF_REJECT_ACTOR_V0"
 
 
 class Run:
@@ -162,12 +186,12 @@ def main() -> int:
               f"status {r.status}, {len(run.actors())} actor(s), {len(registrations)} registration(s)")
 
         # 4 — a decision needs a registration to be about
-        r = run("WF_RECORD_VERIFICATION_DECISION_V0", decision("ghost@example.test", "ACCEPTED"))
+        r = run(deciding_workflow("ACCEPTED"), decision("ghost@example.test", "ACCEPTED"))
         check("a decision against a person who never registered is refused",
               r.status != "SUCCESS", f"status {r.status}")
 
         # 5 — an acceptance is shown with its authority and the time the composition determined
-        r = run("WF_RECORD_VERIFICATION_DECISION_V0", decision(ADA, "ACCEPTED"))
+        r = run(deciding_workflow("ACCEPTED"), decision(ADA, "ACCEPTED"))
         actor = run.actors().get(ADA, {})
         accepted = run.occurrences(ADA, "ACTOR_ACCEPTED")
         check("an accepted actor is shown as accepted, with the deciding authority and the time",
@@ -178,14 +202,14 @@ def main() -> int:
               f"occurred_at {accepted[0].get('occurred_at') if accepted else None}")
 
         # 6 — decided once, and no second decision may disturb it
-        r = run("WF_RECORD_VERIFICATION_DECISION_V0", decision(ADA, "REJECTED", "second attempt"))
+        r = run(deciding_workflow("REJECTED"), decision(ADA, "REJECTED", "second attempt"))
         check("a decision against an actor already decided about is refused",
               r.status != "SUCCESS" and run.actors().get(ADA, {}).get("state") == "ACCEPTED",
               f"status {r.status}, state {run.actors().get(ADA, {}).get('state')}")
 
         # 7 — a rejection is its own occurrence, and is never readable as an acceptance
         run("WF_REGISTER_ACTOR_V0", registration("Bob Kahn", BOB))
-        r = run("WF_RECORD_VERIFICATION_DECISION_V0",
+        r = run(deciding_workflow("REJECTED"),
                 decision(BOB, "REJECTED", "identity not established"))
         bob = run.actors().get(BOB, {})
         rejected = run.occurrences(BOB, "ACTOR_REJECTED")
@@ -204,17 +228,23 @@ def main() -> int:
 
         # 9 — a rejection is refused when it states nothing
         run("WF_REGISTER_ACTOR_V0", registration("Grace Hopper", "grace@example.test"))
-        r = run("WF_RECORD_VERIFICATION_DECISION_V0", decision("grace@example.test", "REJECTED"))
+        r = run(deciding_workflow("REJECTED"), decision("grace@example.test", "REJECTED"))
         check("a rejection stating no grounds is refused", r.status != "SUCCESS",
               f"status {r.status}")
 
         # 10 — an outcome outside the two the business admits is refused
-        r = run("WF_RECORD_VERIFICATION_DECISION_V0", decision("grace@example.test", "MAYBE"))
+        #
+        # Now refused twice over, and the second is the stronger. There is no act that records an
+        # arbitrary outcome: the deciding workflow was split into an acceptance and a rejection, so a
+        # third outcome has nowhere to be recorded at all. What remains checkable is that the
+        # contract still refuses one if a caller smuggles it through an act that does exist — driven
+        # through the acceptance path so the outcome gate is what answers, not the grounds gate.
+        r = run(deciding_workflow("ACCEPTED"), decision("grace@example.test", "MAYBE"))
         check("an outcome that is neither acceptance nor rejection is refused",
               r.status != "SUCCESS", f"status {r.status}")
 
         # 11 — a person never decides about themselves
-        r = run("WF_RECORD_VERIFICATION_DECISION_V0",
+        r = run(deciding_workflow("ACCEPTED"),
                 decision("grace@example.test", "ACCEPTED", authority="grace@example.test"))
         check("a person may not make the verification decision about themselves",
               r.status != "SUCCESS", f"status {r.status}")

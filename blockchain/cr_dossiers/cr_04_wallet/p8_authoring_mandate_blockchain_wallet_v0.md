@@ -84,6 +84,7 @@ nothing.
 | blockchain::RB_IDENTITY_BINDINGS_V0 | identity |
 | blockchain::TI_ACCEPT_ACTOR_V0 | identity |
 | blockchain::TI_REJECT_ACTOR_V0 | identity |
+| blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | identity |
 
 ---
 
