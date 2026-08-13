@@ -33,7 +33,7 @@ from typing import Any, Dict
 # Keccak-256, not SHA3-256. The two differ in padding and produce different digests for the same
 # input, so `hashlib.sha3_256` is not a substitute — it would yield a plausible-looking address that
 # no other tool would agree with. `pycryptodome` carries the original Keccak and is already declared
-# in `tools/requirements-domains.txt`.
+# in `standards/process/requirements-domains.txt`.
 from Crypto.Hash import keccak
 
 # An uncompressed secp256k1 public key is 64 bytes: a 32-byte X followed by a 32-byte Y. SEC1 writes
