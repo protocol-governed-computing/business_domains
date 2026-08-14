@@ -116,9 +116,13 @@ def main() -> int:
     else:
         # Refused rather than emptied: the caller named this directory, and deleting what is in it
         # is not this script's decision to make.
-        if keep.exists() and any(keep.iterdir()):
-            print(f"{keep} is not empty — this run accumulates state and must start from an empty "
-                  f"root.\nRemove it, or name a path that does not exist yet.")
+        # Only this suite's own stores must be absent. One data root holds every domain, each under
+        # its own name, so refusing a non-empty root would force a root per suite — and a domain's
+        # records would then exist in more than one of them.
+        own = keep / STORE
+        if own.exists() and any(own.iterdir()):
+            print(f"{own} is not empty — this run accumulates state and must start from no stores "
+                  f"of its own.\nRemove that directory, or name a root without one.")
             return 1
         keep.mkdir(parents=True, exist_ok=True)
         data_root = keep

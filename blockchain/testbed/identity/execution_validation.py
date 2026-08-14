@@ -147,9 +147,13 @@ def main() -> int:
     else:
         # Refused rather than emptied: the caller named this directory, and deleting what is in it
         # is not this script's decision to make.
-        if keep.exists() and any(keep.iterdir()):
-            print(f"{keep} is not empty — this run accumulates state and must start from an empty "
-                  f"root.\nRemove it, or name a path that does not exist yet.")
+        # Only this suite's own stores must be absent. One data root holds every domain, each under
+        # its own name, so refusing a non-empty root would force a root per suite — and a domain's
+        # records would then exist in more than one of them.
+        own = keep / STORE
+        if own.exists() and any(own.iterdir()):
+            print(f"{own} is not empty — this run accumulates state and must start from no stores "
+                  f"of its own.\nRemove that directory, or name a root without one.")
             return 1
         keep.mkdir(parents=True, exist_ok=True)
         data_root = keep
@@ -264,8 +268,23 @@ def main() -> int:
         # Two criteria this change cannot exercise, named rather than passed over.
         skip("two occurrences at different moments carry different times",
              "the run completes inside one clock second, so this needs a timed test, not a fast one")
-        skip("an unverified or rejected actor holds no wallet and has submitted no transaction",
-             "wallet and transaction are later functions; there is nothing yet to hold or submit")
+        # 14 — the criterion that waited for a wallet to exist. It does now, and the act refuses a
+        # person nobody accepted, so the half of this claim that concerns wallets is testable here
+        # rather than only in wallet's own suite. Grace is registered and undecided.
+        r = run("WF_CREATE_WALLET_V0", {
+            "contact_address": "grace@example.test",
+            "key_material": "04" + "a" * 128,
+            "wallet_id_prefix": "wal",
+            "wallet_fields": {"holder": "grace@example.test"},
+            "stream_id": "WALLET_OCCURRENCES",
+            "occurrence_fields": {"occurrence": "WALLET_CREATED"}})
+        wallets = run.data_root / "blockchain" / "wallet" / "wallets.json"
+        check("an unverified actor holds no wallet",
+              r.status != "SUCCESS" and not wallets.is_file(),
+              f"status {r.status}, wallet store {'written' if wallets.is_file() else 'absent'}")
+
+        skip("an unverified or rejected actor has submitted no transaction",
+             "transaction is a later function; there is nothing yet to submit")
 
     finally:
         if keep is None:

@@ -48,7 +48,10 @@ NS = "blockchain::"
 IDENTITY_STORE = "blockchain/identity"
 WALLET_STORE = "blockchain/wallet"
 
-ADA, BOB = "ada@example.test", "bob@example.test"
+# People of this suite's own, distinct from identity's, so both suites run into one data root.
+# A domain has one place its records live; a second root would hold a second copy of identity's
+# records, which is the arrangement this change exists to prevent.
+HOLDER, UNDECIDED = "wallet-holder@example.test", "wallet-undecided@example.test"
 AUTHORITY = "authority-01"
 
 SCHEMA = {"name": {"required": True, "type": "string"},
@@ -157,9 +160,13 @@ def main() -> int:
     if keep is None:
         data_root = Path(tempfile.mkdtemp(prefix="pgc_wallet_validation_"))
     else:
-        if keep.exists() and any(keep.iterdir()):
-            print(f"{keep} is not empty — this run accumulates state and must start from an empty "
-                  f"root.\nRemove it, or name a path that does not exist yet.")
+        # Only this suite's own stores must be absent. The root is shared with identity's suite by
+        # design — one domain, one place its records live — so refusing a non-empty root would force
+        # a second root, and identity's records would exist in two of them.
+        wallet_stores = keep / WALLET_STORE
+        if wallet_stores.exists() and any(wallet_stores.iterdir()):
+            print(f"{wallet_stores} is not empty — this run accumulates state and must start from "
+                  f"no wallet stores.\nRemove that directory, or name a root without one.")
             return 1
         keep.mkdir(parents=True, exist_ok=True)
         data_root = keep
@@ -176,21 +183,21 @@ def main() -> int:
     try:
         # The ground the wallet stands on. Not a wallet criterion — identity's, exercised here
         # because a wallet cannot be created for a person who does not exist.
-        run("WF_REGISTER_ACTOR_V0", registration("Ada Lovelace", ADA))
-        run("WF_ACCEPT_ACTOR_V0", acceptance(ADA))
+        run("WF_REGISTER_ACTOR_V0", registration("Wallet Holder", HOLDER))
+        run("WF_ACCEPT_ACTOR_V0", acceptance(HOLDER))
         before = run.identity_fingerprint()
 
         # 1 — the act completes, which it could not do while its reach was undeclared
-        r = run("WF_CREATE_WALLET_V0", creation(ADA))
+        r = run("WF_CREATE_WALLET_V0", creation(HOLDER))
         wallets = run.wallets()
         check("an accepted person is given a wallet, and the act runs to completion",
               r.status == "SUCCESS" and len(wallets) == 1,
               f"status {r.status}, {len(wallets)} wallet(s)")
 
         # 2 — the wallet's own records were written
-        holder_matches = [w for w in wallets.values() if w.get("holder") == ADA]
+        holder_matches = [w for w in wallets.values() if w.get("holder") == HOLDER]
         check("the wallet is recorded against the person it belongs to",
-              len(holder_matches) == 1, f"{len(holder_matches)} wallet(s) held by {ADA}")
+              len(holder_matches) == 1, f"{len(holder_matches)} wallet(s) held by {HOLDER}")
 
         # 3 — the moment is on the wallet's own trail, not identity's
         trail = run.wallet_trail()
@@ -217,17 +224,17 @@ def main() -> int:
         # records, so the fingerprint is re-taken afterwards: what criterion 8 asks is whether a
         # *wallet* act disturbed identity, and comparing across an identity act would answer a
         # different question and answer it wrongly.
-        run("WF_REGISTER_ACTOR_V0", registration("Bob Kahn", BOB))
+        run("WF_REGISTER_ACTOR_V0", registration("Wallet Undecided", UNDECIDED))
         mark = run.identity_fingerprint()
 
         # 6 — the reach reads state, so an unaccepted person is visible as unaccepted
-        r = run("WF_CREATE_WALLET_V0", creation(BOB))
+        r = run("WF_CREATE_WALLET_V0", creation(UNDECIDED))
         check("an unverified person is refused a wallet, and none is recorded for them",
-              not any(w.get("holder") == BOB for w in run.wallets().values()),
+              not any(w.get("holder") == UNDECIDED for w in run.wallets().values()),
               f"status {r.status}, {len(run.wallets())} wallet(s)")
 
         # 7 — one person, one wallet
-        r = run("WF_CREATE_WALLET_V0", creation(ADA))
+        r = run("WF_CREATE_WALLET_V0", creation(HOLDER))
         check("a person the business already gave a wallet is not given a second",
               r.status != "SUCCESS" and len(run.wallets()) == 1,
               f"status {r.status}, {len(run.wallets())} wallet(s)")
