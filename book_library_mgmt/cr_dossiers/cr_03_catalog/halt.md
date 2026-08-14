@@ -2,7 +2,7 @@
 
 **Phases reached:** P0 – P2, every one admissible
 **Status:** HALTED, blocked by a platform capability gap
-**Blocked by:** `transformation/dossiers/multi_emission`
+**Blocked by:** `software_governance/dossiers/multi_emission` — **delivered**; this dossier resumes at P2
 **Do not:** patch this locally, narrow the scope to five moments, or split the registration act.
 
 ---
