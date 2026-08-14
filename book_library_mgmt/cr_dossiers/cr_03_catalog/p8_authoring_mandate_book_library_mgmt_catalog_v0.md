@@ -82,6 +82,9 @@ Mechanical. Stage 7's assignments re-ordered into a build sequence; nothing adde
 **Gate 2 closes here**, and it freezes scope before authoring begins. After it, any departure is an
 Approved Deviation recorded in the authoring manifest — never a silent change.
 
+**Status: CLOSED.** Approved by the business author against the composition `9c2c693d882e…`, the one
+`baseline.json` pins, after Construction Completeness read 100% on all six acts.
+
 What is frozen is six acts and what each announces. The acts are re-rendered whole from the design,
 which is what an EXTEND means, so nothing about them is edited in place and the announcements arrive
 with the rendering. **A moment announced by editing a built artifact is outside this mandate** — and

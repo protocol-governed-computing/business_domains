@@ -1,8 +1,10 @@
 # Halt — cr_03_catalog
 
 **Phases reached:** P0 – P2, every one admissible
-**Status:** HALTED, blocked by a platform capability gap
-**Blocked by:** `software_governance/dossiers/multi_emission` — **delivered**; this dossier resumes at P2
+**Status:** LIFTED — `multi_emission` was delivered, this dossier resumed at P3 and is delivered.
+`delivery.md` is the record. What follows is why it stopped, kept because the reasoning is what the
+resumption was held to.
+**Blocked by:** `software_governance/dossiers/multi_emission` — **delivered**
 **Do not:** patch this locally, narrow the scope to five moments, or split the registration act.
 
 ---

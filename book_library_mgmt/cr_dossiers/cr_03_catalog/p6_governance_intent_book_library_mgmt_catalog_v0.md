@@ -74,6 +74,7 @@ what they did, declared in the acts themselves. No subdomain is created.
 | book_library_mgmt::EV_PHYSICAL_COPY_RETIRED_V0 | Declares the moment a physical copy leaves service. Referenced by nothing. | REUSE | S4 dependency_graph #2 |
 | book_library_mgmt::WF_REINSTATE_BOOK_RECORD_V0 | Returns a book to service. The business declares no moment for it, so it announces nothing and this change leaves it alone. | REVIEW | S4 design_decisions #4 |
 | book_library_mgmt::WF_REINSTATE_PHYSICAL_COPY_V0 | Returns a physical copy to service. The same. | REVIEW | S4 design_decisions #4 |
+| book_library_mgmt::AC_LIBRARY_STAFF_V0 | The actor every catalog act runs as. Unchanged by this change, and carried unchanged by every act it re-renders. | REUSE | S4 actors #2 |
 
 ---
 

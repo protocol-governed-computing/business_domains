@@ -31,6 +31,7 @@ HOW. Binding FQDNs are assigned here; business facts and placement decisions are
 | book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0 | EXTEND | The governed sequence that corrects what the library publishes about a book | Announces the moment it completes, where it announced nothing. Everything else about it is restated unchanged. | S6 pps_artifacts_requiring_action #4 |
 | book_library_mgmt::WF_RETIRE_BOOK_RECORD_V0 | EXTEND | The governed sequence that takes a book out of service | Announces the moment it completes, where it announced nothing. Everything else about it is restated unchanged. | S6 pps_artifacts_requiring_action #5 |
 | book_library_mgmt::WF_RETIRE_PHYSICAL_COPY_V0 | EXTEND | The governed sequence that takes a physical copy out of service | Announces the moment it completes, where it announced nothing. Everything else about it is restated unchanged. | S6 pps_artifacts_requiring_action #6 |
+| book_library_mgmt::AC_LIBRARY_STAFF_V0 | REUSE | The actor whose authorization every catalog operation binds | The actor every catalog act runs as. An EXTEND re-renders an act whole, so the design must state the actor it carries or the re-rendered act would carry none. | S6 pps_artifacts_requiring_action #15 |
 | book_library_mgmt::EV_WORK_REGISTERED_V0 | REUSE | | The moment announced by the act that completes it. | S6 pps_artifacts_requiring_action #7 |
 | book_library_mgmt::EV_BOOK_REGISTERED_V0 | REUSE | | The moment announced by the act that completes it. | S6 pps_artifacts_requiring_action #8 |
 | book_library_mgmt::EV_PHYSICAL_COPY_REGISTERED_V0 | REUSE | | The moment announced by the act that completes it. | S6 pps_artifacts_requiring_action #9 |
@@ -318,6 +319,25 @@ HOW. Binding FQDNs are assigned here; business facts and placement decisions are
 | Act | Consults | Source Finding |
 |-----|----------|----------------|
 | NONE IDENTIFIED |
+
+---
+
+## Gate 1 — Design Approval
+
+**Gate 1 closes here.** Stages 0 through 7 are presented for review as a body — a unified review of
+the complete design, not a per-stage approval. Approval authorizes Stage 8, the Authoring Mandate.
+
+**Status: CLOSED.** Approved by the business author, as a body, against the composition
+`9c2c693d882e…` — the composition `baseline.json` pins and every grounded register was read against.
+What the approval authorizes is the amendment of the six acts §2 marks EXTEND, each re-rendered whole
+from this design, and nothing else.
+
+One row of §2 was added before this closure and is the reason it is worth naming: the design
+inventoried the six acts and the six moments and not the actor those acts run as. Every act carries
+`book_library_mgmt::AC_LIBRARY_STAFF_V0` in the composition, and an EXTEND re-renders an act whole
+from the design — so a design silent about the actor re-renders six acts with none. Construction
+Completeness refused the design at 98.2% and named the missing fact six times. The row states what
+was always true and changes no decision this dossier took.
 
 ---
 
