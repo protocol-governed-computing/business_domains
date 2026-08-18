@@ -13,7 +13,7 @@
 
 ## 1. Intent
 
-The governed sequence that admits a person as an unverified actor
+The governed sequence that admits a person as an unverified actor, and announces that it did
 
 ---
 
@@ -28,7 +28,7 @@ runtime_binding: blockchain::RB_IDENTITY_BINDINGS_V0
 subdomain: identity
 structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
-  summary: The governed sequence that admits a person as an unverified actor
+  summary: The governed sequence that admits a person as an unverified actor, and announces that it did
   actor_context: blockchain::AC_PARTICIPANT_V0
   start_node: IN_ACTOR_REGISTERED_V0
   nodes:
@@ -77,8 +77,9 @@ core:
       next:
         SUCCESS: EXIT_SUCCESS
         VIOLATION: EXIT_REJECTED
-    EXIT_REJECTED:
-      type: EXIT
     EXIT_SUCCESS:
+      type: EXIT
+      emit: blockchain::EV_ACTOR_REGISTERED_UNVERIFIED_V0
+    EXIT_REJECTED:
       type: EXIT
 ```

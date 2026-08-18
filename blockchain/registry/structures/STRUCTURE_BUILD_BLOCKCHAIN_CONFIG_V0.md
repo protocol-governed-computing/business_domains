@@ -30,7 +30,7 @@ core:
   summary: Build-time STRUCTURE manifest (blockchain business-domain scope)
   description: 'Compiles the blockchain domain''s own artifacts, resolving governance and platform capability
     references against the imported compiled governance surface. Emits only blockchain artifacts. Self-describing:
-    declares its own source layer and namespace rule additively. Subdomains: identity.'
+    declares its own source layer and namespace rule additively. Subdomains: identity, wallet.'
 layer_definitions:
   BLOCKCHAIN:
     domain_subpath: registry

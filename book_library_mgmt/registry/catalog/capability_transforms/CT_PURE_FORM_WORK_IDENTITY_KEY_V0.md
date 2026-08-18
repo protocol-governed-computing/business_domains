@@ -26,6 +26,7 @@ version: v0
 governed_by: fb.capability_transforms::CONSTITUTION_CAPABILITY_TRANSFORMS_V0
 core:
   summary: Forms the single key claimed for a work from its title and author
+  refusal: never
   inputs:
     title:
       type: string

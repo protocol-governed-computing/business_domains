@@ -13,7 +13,7 @@
 
 ## 1. Intent
 
-The governed sequence that registers a further edition of an existing work
+The governed sequence that registers a further edition of a work the library already holds
 
 ---
 
@@ -28,7 +28,7 @@ runtime_binding: book_library_mgmt::RB_CATALOG_BINDINGS_V0
 subdomain: catalog
 structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
-  summary: The governed sequence that registers a further edition of an existing work
+  summary: The governed sequence that registers a further edition of a work the library already holds
   actor_context: book_library_mgmt::AC_LIBRARY_STAFF_V0
   start_node: IN_REGISTER_ADDITIONAL_EDITION_V0
   nodes:
@@ -115,6 +115,7 @@ core:
         BACKEND_ERROR: EXIT_REJECTED
     EXIT_COMPLETED:
       type: EXIT
+      emit: book_library_mgmt::EV_BOOK_REGISTERED_V0
     EXIT_REJECTED:
       type: EXIT
 ```

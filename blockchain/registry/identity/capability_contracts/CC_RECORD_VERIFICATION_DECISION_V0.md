@@ -48,6 +48,12 @@ core:
     decided_actor_fields:
       type: object
       required: true
+    self_check_parameters:
+      type: object
+      required: true
+    self_check_rules:
+      type: array
+      required: true
   outputs:
     result_status:
       type: string
@@ -86,12 +92,12 @@ core:
       SUCCESS: continue
       VIOLATION: exit
   - step: refuse_self_verification
-    transform: capability_transforms::CT_PURE_COMPARE_EQUAL_V0
+    transform: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
     inputs:
-      left: $.inputs.verifying_authority
-      right: $.inputs.contact_address
+      parameters: $.inputs.self_check_parameters
+      rules: $.inputs.self_check_rules
     outputs:
-      is_equal: $.capability_result.is_equal
+      valid: $.capability_result.valid
     result_surface:
     - SUCCESS
     - VIOLATION

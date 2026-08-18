@@ -63,9 +63,23 @@ def registration(name: str, address: str, **overrides) -> dict:
             **overrides}
 
 
+# The rules the rejection path checks its grounds against, before anything is recorded. Stated here
+# because the boundary states them: the caller sends grounds, and what makes grounds sufficient is the
+# business's rule rather than the caller's opinion.
+GROUNDS_RULES = [{"field": "grounds", "op": "not_null"},
+                 {"field": "grounds", "op": "neq", "value": ""}]
+
+
 def decision(address: str, outcome: str, grounds: str = "", authority: str = AUTHORITY) -> dict:
     return {"contact_address": address, "verifying_authority": authority,
             "decision": outcome, "grounds": grounds,
+            "grounds_parameters": {"grounds": grounds},
+            "grounds_rules": GROUNDS_RULES,
+            # A decider is not the person being decided about. Stated at the boundary because the
+            # rule is the business's and the values are the caller's.
+            "self_check_parameters": {"verifying_authority": authority,
+                                      "contact_address": address},
+            "self_check_rules": [{"field": "verifying_authority", "op": "neq", "value": address}],
             "states_admitting_a_decision": ["UNVERIFIED"],
             "admitted_outcomes": ["ACCEPTED", "REJECTED"],
             "decided_actor_fields": {"contact_address": address, "state": outcome,
@@ -73,6 +87,16 @@ def decision(address: str, outcome: str, grounds: str = "", authority: str = AUT
             "stream_id": "ACTOR_OCCURRENCES",
             "occurrence_fields": {"occurrence": f"ACTOR_{outcome}", "contact_address": address,
                                   "verifying_authority": authority, "grounds": grounds}}
+
+
+def deciding_workflow(outcome: str) -> str:
+    """Which act records this outcome.
+
+    One workflow decided both outcomes until the change that split them, so that each announces its
+    own moment and the rejection path can require grounds throughout. The criteria below are the same
+    statements about the business; only the act they are made against has changed.
+    """
+    return "WF_ACCEPT_ACTOR_V0" if outcome == "ACCEPTED" else "WF_REJECT_ACTOR_V0"
 
 
 class Run:
@@ -123,9 +147,13 @@ def main() -> int:
     else:
         # Refused rather than emptied: the caller named this directory, and deleting what is in it
         # is not this script's decision to make.
-        if keep.exists() and any(keep.iterdir()):
-            print(f"{keep} is not empty — this run accumulates state and must start from an empty "
-                  f"root.\nRemove it, or name a path that does not exist yet.")
+        # Only this suite's own stores must be absent. One data root holds every domain, each under
+        # its own name, so refusing a non-empty root would force a root per suite — and a domain's
+        # records would then exist in more than one of them.
+        own = keep / STORE
+        if own.exists() and any(own.iterdir()):
+            print(f"{own} is not empty — this run accumulates state and must start from no stores "
+                  f"of its own.\nRemove that directory, or name a root without one.")
             return 1
         keep.mkdir(parents=True, exist_ok=True)
         data_root = keep
@@ -162,12 +190,12 @@ def main() -> int:
               f"status {r.status}, {len(run.actors())} actor(s), {len(registrations)} registration(s)")
 
         # 4 — a decision needs a registration to be about
-        r = run("WF_RECORD_VERIFICATION_DECISION_V0", decision("ghost@example.test", "ACCEPTED"))
+        r = run(deciding_workflow("ACCEPTED"), decision("ghost@example.test", "ACCEPTED"))
         check("a decision against a person who never registered is refused",
               r.status != "SUCCESS", f"status {r.status}")
 
         # 5 — an acceptance is shown with its authority and the time the composition determined
-        r = run("WF_RECORD_VERIFICATION_DECISION_V0", decision(ADA, "ACCEPTED"))
+        r = run(deciding_workflow("ACCEPTED"), decision(ADA, "ACCEPTED"))
         actor = run.actors().get(ADA, {})
         accepted = run.occurrences(ADA, "ACTOR_ACCEPTED")
         check("an accepted actor is shown as accepted, with the deciding authority and the time",
@@ -178,14 +206,14 @@ def main() -> int:
               f"occurred_at {accepted[0].get('occurred_at') if accepted else None}")
 
         # 6 — decided once, and no second decision may disturb it
-        r = run("WF_RECORD_VERIFICATION_DECISION_V0", decision(ADA, "REJECTED", "second attempt"))
+        r = run(deciding_workflow("REJECTED"), decision(ADA, "REJECTED", "second attempt"))
         check("a decision against an actor already decided about is refused",
               r.status != "SUCCESS" and run.actors().get(ADA, {}).get("state") == "ACCEPTED",
               f"status {r.status}, state {run.actors().get(ADA, {}).get('state')}")
 
         # 7 — a rejection is its own occurrence, and is never readable as an acceptance
         run("WF_REGISTER_ACTOR_V0", registration("Bob Kahn", BOB))
-        r = run("WF_RECORD_VERIFICATION_DECISION_V0",
+        r = run(deciding_workflow("REJECTED"),
                 decision(BOB, "REJECTED", "identity not established"))
         bob = run.actors().get(BOB, {})
         rejected = run.occurrences(BOB, "ACTOR_REJECTED")
@@ -204,17 +232,23 @@ def main() -> int:
 
         # 9 — a rejection is refused when it states nothing
         run("WF_REGISTER_ACTOR_V0", registration("Grace Hopper", "grace@example.test"))
-        r = run("WF_RECORD_VERIFICATION_DECISION_V0", decision("grace@example.test", "REJECTED"))
+        r = run(deciding_workflow("REJECTED"), decision("grace@example.test", "REJECTED"))
         check("a rejection stating no grounds is refused", r.status != "SUCCESS",
               f"status {r.status}")
 
         # 10 — an outcome outside the two the business admits is refused
-        r = run("WF_RECORD_VERIFICATION_DECISION_V0", decision("grace@example.test", "MAYBE"))
+        #
+        # Now refused twice over, and the second is the stronger. There is no act that records an
+        # arbitrary outcome: the deciding workflow was split into an acceptance and a rejection, so a
+        # third outcome has nowhere to be recorded at all. What remains checkable is that the
+        # contract still refuses one if a caller smuggles it through an act that does exist — driven
+        # through the acceptance path so the outcome gate is what answers, not the grounds gate.
+        r = run(deciding_workflow("ACCEPTED"), decision("grace@example.test", "MAYBE"))
         check("an outcome that is neither acceptance nor rejection is refused",
               r.status != "SUCCESS", f"status {r.status}")
 
         # 11 — a person never decides about themselves
-        r = run("WF_RECORD_VERIFICATION_DECISION_V0",
+        r = run(deciding_workflow("ACCEPTED"),
                 decision("grace@example.test", "ACCEPTED", authority="grace@example.test"))
         check("a person may not make the verification decision about themselves",
               r.status != "SUCCESS", f"status {r.status}")
@@ -234,8 +268,23 @@ def main() -> int:
         # Two criteria this change cannot exercise, named rather than passed over.
         skip("two occurrences at different moments carry different times",
              "the run completes inside one clock second, so this needs a timed test, not a fast one")
-        skip("an unverified or rejected actor holds no wallet and has submitted no transaction",
-             "wallet and transaction are later functions; there is nothing yet to hold or submit")
+        # 14 — the criterion that waited for a wallet to exist. It does now, and the act refuses a
+        # person nobody accepted, so the half of this claim that concerns wallets is testable here
+        # rather than only in wallet's own suite. Grace is registered and undecided.
+        r = run("WF_CREATE_WALLET_V0", {
+            "contact_address": "grace@example.test",
+            "key_material": "04" + "a" * 128,
+            "wallet_id_prefix": "wal",
+            "wallet_fields": {"holder": "grace@example.test"},
+            "stream_id": "WALLET_OCCURRENCES",
+            "occurrence_fields": {"occurrence": "WALLET_CREATED"}})
+        wallets = run.data_root / "blockchain" / "wallet" / "wallets.json"
+        check("an unverified actor holds no wallet",
+              r.status != "SUCCESS" and not wallets.is_file(),
+              f"status {r.status}, wallet store {'written' if wallets.is_file() else 'absent'}")
+
+        skip("an unverified or rejected actor has submitted no transaction",
+             "transaction is a later function; there is nothing yet to submit")
 
     finally:
         if keep is None:

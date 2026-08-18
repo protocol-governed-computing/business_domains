@@ -13,7 +13,7 @@
 
 ## 1. Intent
 
-Registers a work with its first edition and that edition's first physical copy
+The governed sequence that registers a work, its first edition and that edition's first physical copy
 
 ---
 
@@ -28,7 +28,8 @@ runtime_binding: book_library_mgmt::RB_CATALOG_BINDINGS_V0
 subdomain: catalog
 structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
-  summary: Registers a work with its first edition and that edition's first physical copy
+  summary: The governed sequence that registers a work, its first edition and that edition's first physical
+    copy
   actor_context: book_library_mgmt::AC_LIBRARY_STAFF_V0
   start_node: IN_REGISTER_BOOK_V0
   nodes:
@@ -144,6 +145,10 @@ core:
         BACKEND_ERROR: EXIT_REJECTED
     EXIT_COMPLETED:
       type: EXIT
+      emit:
+      - book_library_mgmt::EV_WORK_REGISTERED_V0
+      - book_library_mgmt::EV_BOOK_REGISTERED_V0
+      - book_library_mgmt::EV_PHYSICAL_COPY_REGISTERED_V0
     EXIT_REJECTED:
       type: EXIT
 ```

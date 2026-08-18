@@ -26,6 +26,7 @@ version: v0
 governed_by: fb.capability_transforms::CONSTITUTION_CAPABILITY_TRANSFORMS_V0
 core:
   summary: Forms the single key the registry claims from the three identifying attributes
+  refusal: never
   inputs:
     title:
       type: string

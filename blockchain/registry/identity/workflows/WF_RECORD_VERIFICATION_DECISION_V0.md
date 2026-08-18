@@ -6,7 +6,8 @@
 - **Artifact Kind:** workflow
 - **Governed By:** CONSTITUTION_WORKFLOW_V0
 - **Version:** V0
-- **Status:** draft
+- **Status:** superseded
+- **Superseded By:** blockchain::WF_ACCEPT_ACTOR_V0, blockchain::WF_REJECT_ACTOR_V0
 - **Supersedes:** NONE
 
 ---
@@ -21,6 +22,9 @@ The governed sequence that records a decision against a registered actor
 
 ```yaml
 fqdn: blockchain::WF_RECORD_VERIFICATION_DECISION_V0
+superseded_by:
+- blockchain::WF_ACCEPT_ACTOR_V0
+- blockchain::WF_REJECT_ACTOR_V0
 artifact_kind: WORKFLOW
 version: v0
 governed_by: fb.workflow::CONSTITUTION_WORKFLOW_V0

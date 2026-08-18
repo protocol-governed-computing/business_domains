@@ -13,7 +13,7 @@
 
 ## 1. Intent
 
-Retiring a book record, leaving its copies untouched
+The governed sequence that takes a book out of service
 
 ---
 
@@ -28,7 +28,7 @@ runtime_binding: book_library_mgmt::RB_CATALOG_BINDINGS_V0
 subdomain: catalog
 structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
-  summary: Retiring a book record, leaving its copies untouched
+  summary: The governed sequence that takes a book out of service
   actor_context: book_library_mgmt::AC_LIBRARY_STAFF_V0
   start_node: IN_RETIRE_BOOK_RECORD_V0
   nodes:
@@ -72,6 +72,7 @@ core:
         BACKEND_ERROR: EXIT_REJECTED
     EXIT_COMPLETED:
       type: EXIT
+      emit: book_library_mgmt::EV_BOOK_RETIRED_V0
     EXIT_REJECTED:
       type: EXIT
 ```

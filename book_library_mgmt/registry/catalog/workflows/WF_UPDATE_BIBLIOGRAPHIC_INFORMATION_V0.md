@@ -13,7 +13,7 @@
 
 ## 1. Intent
 
-Changing a book's description without making it a duplicate
+The governed sequence that corrects what the library publishes about a book
 
 ---
 
@@ -28,7 +28,7 @@ runtime_binding: book_library_mgmt::RB_CATALOG_BINDINGS_V0
 subdomain: catalog
 structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
-  summary: Changing a book's description without making it a duplicate
+  summary: The governed sequence that corrects what the library publishes about a book
   actor_context: book_library_mgmt::AC_LIBRARY_STAFF_V0
   start_node: IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
   nodes:
@@ -84,6 +84,7 @@ core:
         BACKEND_ERROR: EXIT_REJECTED
     EXIT_COMPLETED:
       type: EXIT
+      emit: book_library_mgmt::EV_BIBLIOGRAPHIC_INFORMATION_UPDATED_V0
     EXIT_REJECTED:
       type: EXIT
 ```
