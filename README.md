@@ -18,18 +18,26 @@ or refusal. It declares them, and the platform enforces what it declared.
 
 | Domain | Subdomains | What it does |
 |---|---|---|
-| **`blockchain`** | `identity` | Register a participant, then accept or reject them — keeping a durable record of what they registered with. Reachable over HTTP and the command line, with a web client. |
-| **`book_library_mgmt`** | `catalog` | Register works, editions and physical copies; retire and reinstate them; update bibliographic information; search. Ten workflows — the largest surface here. |
+| **`blockchain`** | `identity`, `wallet` | Register a participant, then accept or reject them — keeping a durable record of what they registered with. An accepted person is then given exactly one wallet, whose creation is recorded as a moment on its own trail. Reachable over HTTP and the command line, with a web client. |
+| **`book_library_mgmt`** | `catalog` | Register works, editions and physical copies; retire and reinstate them; update bibliographic information; search. Ten workflows — the largest surface here — of which six announce the business moments they complete. |
 | **`ai_governance`** | `agent_governance`, `ai_licensing` | Admit or deny an AI agent's action; provision, deny and reclaim licences. Two subdomains sharing one namespace. |
 
 A **domain is a namespace**; a **subdomain is a division within it**. `ai_governance` is the case
 that makes the distinction concrete — two subdomains, one compiled domain, neither a fork of the
 other.
 
-Maturity differs, and it is stated rather than implied: `blockchain::identity` is functionally
-complete, with three declared rules deliberately deferred to the first function that will consume
-its state; `book_library_mgmt` declares events no exit yet announces; `ai_governance` carries no
-change dossier and is the least exercised.
+Maturity differs, and it is stated rather than implied. `blockchain::identity` is functionally
+complete; two of its validated criteria are not exercised, and both wait on a function that does not
+exist yet — a timed test, and the transaction half of the wallet claim. `blockchain::wallet` is
+delivered and validated, and it is the domain that demonstrates **consulting** another subdomain's
+records without writing them. `book_library_mgmt` now announces: six of its ten acts emit the moments
+they complete, from the ending that completes them. `ai_governance` carries no change dossier —
+deliberately — and is the least exercised.
+
+**The wallet is also where a defect and its repair are on the record.** Its validation once read 7/9
+because the suite registered the same people identity's suite registers, so a shared data root left
+the unverified-person criterion testing someone already accepted. The suite now seeds people of its
+own. Both blockchain suites run into one data root, because a domain has one place its records live.
 
 ## Where this sits
 
