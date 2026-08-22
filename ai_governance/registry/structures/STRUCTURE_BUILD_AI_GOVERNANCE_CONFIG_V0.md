@@ -118,8 +118,3 @@ build_phases:
   target: compiled/artifacts/
 ```
 
-## Version History
-
-- **V0**: First AI governance business-domain build manifest. Self-describing; compiles
-  `ai_governance::` against the imported compiled governance surface; emits only `ai_governance`
-  artifacts. Governance surface unchanged.

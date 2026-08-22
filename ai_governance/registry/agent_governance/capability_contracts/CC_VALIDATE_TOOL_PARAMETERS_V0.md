@@ -1,17 +1,5 @@
 # CC_VALIDATE_TOOL_PARAMETERS_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_VALIDATE_TOOL_PARAMETERS_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** CT_PURE_LOOKUP_V0, CT_PURE_VALIDATE_PARAMETER_RULES_V0
-
----
-
 ## 1. Intent
 
 Enforce declared parameter constraints for the authorized tool.

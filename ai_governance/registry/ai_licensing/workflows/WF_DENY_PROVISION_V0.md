@@ -1,17 +1,5 @@
 # WF_DENY_PROVISION_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** WF_DENY_PROVISION_V0
-- **Artifact Kind:** workflow
-- **Governed By:** CONSTITUTION_WORKFLOW_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** IN_DENY_PROVISION_V0, CC_APPEND_AUDIT_EVENT_V0
-
----
-
 ## 1. Intent
 
 Handle provisioning denial by emitting denial event and recording to audit log.

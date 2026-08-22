@@ -1,16 +1,5 @@
 # CC_RESOLVE_ACTOR_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_RESOLVE_ACTOR_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Answers which actor a contact address denotes, and reports when none does

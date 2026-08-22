@@ -1,16 +1,5 @@
 # RB_CATALOG_BINDINGS_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** RB_CATALOG_BINDINGS_V0
-- **Artifact Kind:** runtime_binding
-- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Binds the catalog's workflows to the stores and mechanisms they use

@@ -1,16 +1,5 @@
 # CC_CLAIM_COPY_BARCODE_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_CLAIM_COPY_BARCODE_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Claim a copy's barcode so a second copy carrying it is refused

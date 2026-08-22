@@ -1,16 +1,5 @@
 # CC_CLAIM_WORK_IDENTITY_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_CLAIM_WORK_IDENTITY_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Forms the work key, claims it, and writes the work record when the claim is new

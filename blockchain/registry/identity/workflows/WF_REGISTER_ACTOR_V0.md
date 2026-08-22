@@ -1,16 +1,5 @@
 # WF_REGISTER_ACTOR_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** WF_REGISTER_ACTOR_V0
-- **Artifact Kind:** workflow
-- **Governed By:** CONSTITUTION_WORKFLOW_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 The governed sequence that admits a person as an unverified actor, and announces that it did

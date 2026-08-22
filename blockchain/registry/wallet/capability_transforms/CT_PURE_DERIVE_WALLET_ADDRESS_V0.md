@@ -1,16 +1,5 @@
 # CT_PURE_DERIVE_WALLET_ADDRESS_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CT_PURE_DERIVE_WALLET_ADDRESS_V0
-- **Artifact Kind:** capability_transform
-- **Governed By:** CONSTITUTION_CAPABILITY_TRANSFORMS_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Derives an address from supplied key material; the same material always yields the same address

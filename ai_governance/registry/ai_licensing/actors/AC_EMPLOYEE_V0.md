@@ -1,17 +1,5 @@
 # AC_EMPLOYEE_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** AC_EMPLOYEE_V0
-- **Artifact Kind:** actor
-- **Governed By:** CONSTITUTION_GOVERNANCE_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** NONE
-
----
-
 ## 1. Identity
 
 An employee actor represents a person eligible for AI license provisioning.

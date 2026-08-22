@@ -1,16 +1,5 @@
 # WF_REINSTATE_BOOK_RECORD_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** WF_REINSTATE_BOOK_RECORD_V0
-- **Artifact Kind:** workflow
-- **Governed By:** CONSTITUTION_WORKFLOW_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Returning a retired book record to the registered state

@@ -1,18 +1,6 @@
 # VOCAB_WALLET_CLASSIFICATION_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** VOCAB_WALLET_CLASSIFICATION_V0
-- **Artifact Kind:** vocabulary
-- **Governed By:** CONSTITUTION_VOCABULARY_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
-
 
 
 ---

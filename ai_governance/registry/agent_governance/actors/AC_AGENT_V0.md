@@ -1,17 +1,5 @@
 # AC_AGENT_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** AC_AGENT_V0
-- **Artifact Kind:** actor
-- **Governed By:** CONSTITUTION_GOVERNANCE_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** NONE
-
----
-
 ## 1. Identity
 
 An autonomous agent that proposes actions through the governance protocol.

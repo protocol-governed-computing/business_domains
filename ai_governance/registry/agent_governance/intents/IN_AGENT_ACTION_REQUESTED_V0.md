@@ -1,17 +1,5 @@
 # IN_AGENT_ACTION_REQUESTED_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** IN_AGENT_ACTION_REQUESTED_V0
-- **Artifact Kind:** intent
-- **Governed By:** CONSTITUTION_INTENT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** WF_GOVERN_AGENT_ACTION_V0
-
----
-
 ## 1. Intent
 
 Request governance mediation of an agent-proposed action.

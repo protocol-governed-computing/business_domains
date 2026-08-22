@@ -1,16 +1,5 @@
 # STRUCTURE_IDENTITY_STORAGE_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** STRUCTURE_IDENTITY_STORAGE_V0
-- **Artifact Kind:** structure
-- **Governed By:** CONSTITUTION_STRUCTURE_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Declares the three stores identity owns and the paths they occupy

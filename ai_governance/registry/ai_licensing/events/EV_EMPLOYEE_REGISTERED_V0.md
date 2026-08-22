@@ -1,17 +1,5 @@
 # EV_EMPLOYEE_REGISTERED_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** EV_EMPLOYEE_REGISTERED_V0
-- **Artifact Kind:** event
-- **Governed By:** CONSTITUTION_EVENT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** NONE
-
----
-
 ## 1. Fact
 
 An employee has been registered in the system.

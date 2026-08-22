@@ -1,17 +1,5 @@
 # IN_PROVISION_AI_LICENSE_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** IN_PROVISION_AI_LICENSE_V0
-- **Artifact Kind:** intent
-- **Governed By:** CONSTITUTION_INTENT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** WF_PROVISION_AI_LICENSING_V0
-
----
-
 ## 1. Intent
 
 Request to provision an AI license for an employee.

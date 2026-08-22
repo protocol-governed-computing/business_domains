@@ -1,16 +1,5 @@
 # CC_CLAIM_CONTACT_ADDRESS_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_CLAIM_CONTACT_ADDRESS_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Claims a contact address so that two registrations of one person do not produce two actors

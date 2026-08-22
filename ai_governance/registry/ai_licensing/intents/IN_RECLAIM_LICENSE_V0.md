@@ -1,17 +1,5 @@
 # IN_RECLAIM_LICENSE_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** IN_RECLAIM_LICENSE_V0
-- **Artifact Kind:** intent
-- **Governed By:** CONSTITUTION_INTENT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** WF_AUTO_RECLAIM_V0
-
----
-
 ## 1. Intent
 
 Request to evaluate and potentially reclaim an inactive license.

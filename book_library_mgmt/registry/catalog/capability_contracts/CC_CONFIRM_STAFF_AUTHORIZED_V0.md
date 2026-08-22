@@ -1,16 +1,5 @@
 # CC_CONFIRM_STAFF_AUTHORIZED_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_CONFIRM_STAFF_AUTHORIZED_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Confirm the staff member may perform catalog operations

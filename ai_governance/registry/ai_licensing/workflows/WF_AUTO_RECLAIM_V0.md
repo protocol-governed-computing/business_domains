@@ -1,17 +1,5 @@
 # WF_AUTO_RECLAIM_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** WF_AUTO_RECLAIM_V0
-- **Artifact Kind:** workflow
-- **Governed By:** CONSTITUTION_WORKFLOW_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** IN_RECLAIM_LICENSE_V0, CC_RECLAIM_UNUSED_LICENSE_V0, CC_APPEND_AUDIT_EVENT_V0
-
----
-
 ## 1. Intent
 
 Evaluate license inactivity and autonomously reclaim if threshold exceeded.

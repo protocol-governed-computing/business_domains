@@ -1,16 +1,5 @@
 # WF_RETRIEVE_BOOK_DETAILS_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** WF_RETRIEVE_BOOK_DETAILS_V0
-- **Artifact Kind:** workflow
-- **Governed By:** CONSTITUTION_WORKFLOW_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Assembling a book with the copies the library holds of it

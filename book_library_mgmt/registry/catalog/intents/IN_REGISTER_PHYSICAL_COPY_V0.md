@@ -1,16 +1,5 @@
 # IN_REGISTER_PHYSICAL_COPY_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** IN_REGISTER_PHYSICAL_COPY_V0
-- **Artifact Kind:** intent
-- **Governed By:** CONSTITUTION_INTENT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 A request to register a further copy against a registered book

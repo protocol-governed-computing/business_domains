@@ -1,16 +1,5 @@
 # WF_ACCEPT_ACTOR_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** WF_ACCEPT_ACTOR_V0
-- **Artifact Kind:** workflow
-- **Governed By:** CONSTITUTION_WORKFLOW_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** blockchain::WF_RECORD_VERIFICATION_DECISION_V0
-
----
-
 ## 1. Intent
 
 The governed sequence that records an acceptance and announces it

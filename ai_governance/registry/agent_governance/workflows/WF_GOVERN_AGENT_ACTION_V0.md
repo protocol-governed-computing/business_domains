@@ -1,17 +1,5 @@
 # WF_GOVERN_AGENT_ACTION_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** WF_GOVERN_AGENT_ACTION_V0
-- **Artifact Kind:** workflow
-- **Governed By:** CONSTITUTION_WORKFLOW_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** IN_AGENT_ACTION_REQUESTED_V0, CC_NORMALIZE_AGENT_REQUEST_V0, CC_CHECK_TOOL_DECLARED_V0, CC_RESOLVE_LICENSE_TIER_V0, CC_BIND_LICENSE_TO_TOOL_SURFACE_V0, CC_VALIDATE_TOOL_PARAMETERS_V0, CC_RECORD_GOVERNED_ACTION_V0, CC_RECORD_DENIED_ACTION_V0
-
----
-
 ## 1. Intent
 
 Constitutional mediation of agent-proposed actions with license-tier authority binding.

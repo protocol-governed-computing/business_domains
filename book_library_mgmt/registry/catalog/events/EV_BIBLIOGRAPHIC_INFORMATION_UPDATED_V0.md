@@ -1,16 +1,5 @@
 # EV_BIBLIOGRAPHIC_INFORMATION_UPDATED_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** EV_BIBLIOGRAPHIC_INFORMATION_UPDATED_V0
-- **Artifact Kind:** event
-- **Governed By:** CONSTITUTION_EVENT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 The authoritative description of a book changed

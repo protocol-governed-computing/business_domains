@@ -1,16 +1,5 @@
 # VOCAB_AI_LICENSING_STATES_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** VOCAB_AI_LICENSING_STATES_V0
-- **Artifact Kind:** vocabulary
-- **Governed By:** CONSTITUTION_VOCABULARY_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Authorized extension of the outcome space for the `ai_licensing` subdomain.
@@ -50,7 +39,3 @@ result_status:
   - CAP_REACHED
 ```
 
-## Version History
-
-- **V0**: First authorized vocabulary extension in PGC. Declares `CAP_REACHED` for licence-cap
-  refusal.

@@ -1,16 +1,5 @@
 # WF_REGISTER_BOOK_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** WF_REGISTER_BOOK_V0
-- **Artifact Kind:** workflow
-- **Governed By:** CONSTITUTION_WORKFLOW_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 The governed sequence that registers a work, its first edition and that edition's first physical copy

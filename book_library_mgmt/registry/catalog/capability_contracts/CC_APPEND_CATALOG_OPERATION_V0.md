@@ -1,16 +1,5 @@
 # CC_APPEND_CATALOG_OPERATION_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_APPEND_CATALOG_OPERATION_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Append a durable account of a performed operation to the catalog's own trail

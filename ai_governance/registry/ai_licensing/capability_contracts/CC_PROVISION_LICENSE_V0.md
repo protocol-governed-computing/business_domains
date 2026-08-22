@@ -1,17 +1,5 @@
 # CC_PROVISION_LICENSE_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_PROVISION_LICENSE_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** CS_REGISTRY_V0
-
----
-
 ## 1. Intent
 
 Register a license assignment for an employee.

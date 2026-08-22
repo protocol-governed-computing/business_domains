@@ -1,16 +1,5 @@
 # CC_REGISTER_ADDITIONAL_EDITION_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_REGISTER_ADDITIONAL_EDITION_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Assembles the edition record against a resolved work and writes it

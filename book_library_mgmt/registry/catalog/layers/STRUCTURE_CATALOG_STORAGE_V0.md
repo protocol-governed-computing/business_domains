@@ -1,16 +1,5 @@
 # STRUCTURE_CATALOG_STORAGE_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** STRUCTURE_CATALOG_STORAGE_V0
-- **Artifact Kind:** structure
-- **Governed By:** CONSTITUTION_STRUCTURE_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Declares the stores the catalog owns and the paths they occupy

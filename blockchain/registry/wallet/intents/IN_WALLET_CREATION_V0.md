@@ -1,16 +1,5 @@
 # IN_WALLET_CREATION_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** IN_WALLET_CREATION_V0
-- **Artifact Kind:** intent
-- **Governed By:** CONSTITUTION_INTENT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Admits a request naming the person a wallet is for, and refuses one that names nobody

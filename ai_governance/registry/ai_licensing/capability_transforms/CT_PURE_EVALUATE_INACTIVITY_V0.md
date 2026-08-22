@@ -1,16 +1,5 @@
 # CT_PURE_EVALUATE_INACTIVITY_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CT_PURE_EVALUATE_INACTIVITY_V0
-- **Artifact Kind:** capability_transform
-- **Governed By:** CONSTITUTION_CAPABILITY_TRANSFORMS_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Decide whether a license has been dormant past its reclamation threshold.

@@ -1,16 +1,5 @@
 # CC_RESOLVE_WORK_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_RESOLVE_WORK_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Forms the work key, resolves it against the registry, and reads the work record it names

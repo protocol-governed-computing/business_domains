@@ -1,17 +1,5 @@
 # AC_SYSTEM_GOVERNOR_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** AC_SYSTEM_GOVERNOR_V0
-- **Artifact Kind:** actor
-- **Governed By:** CONSTITUTION_GOVERNANCE_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** NONE
-
----
-
 ## 1. Identity
 
 The governance execution authority that mediates agent-proposed actions.

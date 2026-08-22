@@ -1,17 +1,5 @@
 # CC_RESOLVE_LICENSE_TIER_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_RESOLVE_LICENSE_TIER_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** CS_MUTABLE_JSON_V0, CT_PURE_VALIDATE_SET_MEMBERSHIP_V0
-
----
-
 ## 1. Intent
 
 Read license facts for the requesting user and validate that the license is active.

@@ -1,17 +1,5 @@
 # CC_CHECK_TOOL_DECLARED_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_CHECK_TOOL_DECLARED_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** CT_PURE_VALIDATE_SET_MEMBERSHIP_V0
-
----
-
 ## 1. Intent
 
 Verify that the requested tool exists in the closed tool registry.

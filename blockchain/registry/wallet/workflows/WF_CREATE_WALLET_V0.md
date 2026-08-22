@@ -1,16 +1,5 @@
 # WF_CREATE_WALLET_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** WF_CREATE_WALLET_V0
-- **Artifact Kind:** workflow
-- **Governed By:** CONSTITUTION_WORKFLOW_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 The governed sequence that gives an accepted person a wallet and records that it did

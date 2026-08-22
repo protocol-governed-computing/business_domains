@@ -1,17 +1,5 @@
 # CC_RECLAIM_UNUSED_LICENSE_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_RECLAIM_UNUSED_LICENSE_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** CT_PURE_EVALUATE_INACTIVITY_V0, CS_REGISTRY_V0
-
----
-
 ## 1. Intent
 
 Reclaim a license from an inactive user.

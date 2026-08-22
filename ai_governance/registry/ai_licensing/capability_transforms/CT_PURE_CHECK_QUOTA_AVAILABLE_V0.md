@@ -1,16 +1,5 @@
 # CT_PURE_CHECK_QUOTA_AVAILABLE_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CT_PURE_CHECK_QUOTA_AVAILABLE_V0
-- **Artifact Kind:** capability_transform
-- **Governed By:** CONSTITUTION_CAPABILITY_TRANSFORMS_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Compare assigned license count against the declared cap. Pure comparison — the cap itself is a

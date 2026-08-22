@@ -1,16 +1,5 @@
 # AC_PARTICIPANT_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** AC_PARTICIPANT_V0
-- **Artifact Kind:** actor
-- **Governed By:** CONSTITUTION_GOVERNANCE_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 The ordinary participant who registers themselves and is decided about

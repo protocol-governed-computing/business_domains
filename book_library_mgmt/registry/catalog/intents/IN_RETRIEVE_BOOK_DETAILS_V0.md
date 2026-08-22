@@ -1,16 +1,5 @@
 # IN_RETRIEVE_BOOK_DETAILS_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** IN_RETRIEVE_BOOK_DETAILS_V0
-- **Artifact Kind:** intent
-- **Governed By:** CONSTITUTION_INTENT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 A request for a book's complete details with the copies held

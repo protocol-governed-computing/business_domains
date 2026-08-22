@@ -1,16 +1,5 @@
 # EV_PHYSICAL_COPY_RETIRED_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** EV_PHYSICAL_COPY_RETIRED_V0
-- **Artifact Kind:** event
-- **Governed By:** CONSTITUTION_EVENT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 The library no longer holds that copy

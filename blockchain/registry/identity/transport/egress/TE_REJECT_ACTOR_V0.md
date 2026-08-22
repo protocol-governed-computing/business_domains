@@ -1,16 +1,5 @@
 # TE_REJECT_ACTOR_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** TE_REJECT_ACTOR_V0
-- **Artifact Kind:** transport_egress
-- **Governed By:** CONSTITUTION_TRANSPORT_EGRESS_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Classifies the endings of rejecting an actor, including the actor that does not exist, and projects what was recorded.

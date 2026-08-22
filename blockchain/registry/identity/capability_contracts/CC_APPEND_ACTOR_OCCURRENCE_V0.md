@@ -1,16 +1,5 @@
 # CC_APPEND_ACTOR_OCCURRENCE_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_APPEND_ACTOR_OCCURRENCE_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Appends one occurrence to the trail

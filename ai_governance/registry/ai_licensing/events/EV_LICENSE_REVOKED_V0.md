@@ -1,17 +1,5 @@
 # EV_LICENSE_REVOKED_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** EV_LICENSE_REVOKED_V0
-- **Artifact Kind:** event
-- **Governed By:** CONSTITUTION_EVENT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** NONE
-
----
-
 ## 1. Fact
 
 A license has been revoked and returned to the pool.

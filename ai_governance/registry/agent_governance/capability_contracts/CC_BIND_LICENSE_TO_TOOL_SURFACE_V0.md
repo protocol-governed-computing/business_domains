@@ -1,17 +1,5 @@
 # CC_BIND_LICENSE_TO_TOOL_SURFACE_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_BIND_LICENSE_TO_TOOL_SURFACE_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** CT_PURE_LOOKUP_V0, CT_PURE_VALIDATE_SET_MEMBERSHIP_V0
-
----
-
 ## 1. Intent
 
 Map the user's license tier to an allowed tool set and verify the requested tool is authorized.

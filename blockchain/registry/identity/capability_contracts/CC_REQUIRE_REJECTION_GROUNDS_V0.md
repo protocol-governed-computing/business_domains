@@ -1,16 +1,5 @@
 # CC_REQUIRE_REJECTION_GROUNDS_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_REQUIRE_REJECTION_GROUNDS_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Refuses a rejection stating no grounds, before anything is recorded

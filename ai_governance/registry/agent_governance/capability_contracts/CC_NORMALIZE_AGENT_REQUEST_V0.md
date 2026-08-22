@@ -1,17 +1,5 @@
 # CC_NORMALIZE_AGENT_REQUEST_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_NORMALIZE_AGENT_REQUEST_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** CT_PURE_GENERATE_ID_V0
-
----
-
 ## 1. Intent
 
 Validate request schema and generate a deterministic intent hash.

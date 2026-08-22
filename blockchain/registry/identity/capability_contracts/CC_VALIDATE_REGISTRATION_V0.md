@@ -1,16 +1,5 @@
 # CC_VALIDATE_REGISTRATION_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_VALIDATE_REGISTRATION_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Confirms a registration carries a name and an address of the form asked for

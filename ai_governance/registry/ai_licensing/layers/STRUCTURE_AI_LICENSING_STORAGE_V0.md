@@ -1,16 +1,5 @@
 # STRUCTURE_AI_LICENSING_STORAGE_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** STRUCTURE_AI_LICENSING_STORAGE_V0
-- **Artifact Kind:** structure
-- **Governed By:** CONSTITUTION_STRUCTURE_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Storage topology for the `ai_licensing` subdomain. Declares every entity store the licensing
@@ -80,7 +69,3 @@ core:
       - "Storage paths resolved via STRUCTURE only"
 ```
 
-## Version History
-
-- **V0**: First `ai_licensing` storage topology. Severs the subdomain's dependency on
-  `STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0`, so `ai_licensing` compiles and is removable on its own.

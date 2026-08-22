@@ -1,16 +1,5 @@
 # TE_REGISTER_ACTOR_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** TE_REGISTER_ACTOR_V0
-- **Artifact Kind:** transport_egress
-- **Governed By:** CONSTITUTION_TRANSPORT_EGRESS_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Classifies the endings of registering an actor and projects the contact address, the occurrence, its time and its position.

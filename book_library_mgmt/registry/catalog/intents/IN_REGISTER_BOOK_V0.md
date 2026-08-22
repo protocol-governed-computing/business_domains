@@ -1,16 +1,5 @@
 # IN_REGISTER_BOOK_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** IN_REGISTER_BOOK_V0
-- **Artifact Kind:** intent
-- **Governed By:** CONSTITUTION_INTENT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 A request to register a book together with its first physical copy

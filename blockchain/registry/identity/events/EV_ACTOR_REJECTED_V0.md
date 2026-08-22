@@ -1,16 +1,5 @@
 # EV_ACTOR_REJECTED_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** EV_ACTOR_REJECTED_V0
-- **Artifact Kind:** event
-- **Governed By:** CONSTITUTION_EVENT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 The moment an authority records a decision not to trust an actor

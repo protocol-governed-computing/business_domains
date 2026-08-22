@@ -1,16 +1,5 @@
 # CT_PURE_CHECK_TRAINING_STATUS_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CT_PURE_CHECK_TRAINING_STATUS_V0
-- **Artifact Kind:** capability_transform
-- **Governed By:** CONSTITUTION_CAPABILITY_TRANSFORMS_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Decide whether an employee's training record satisfies the licensing precondition. Pure predicate —

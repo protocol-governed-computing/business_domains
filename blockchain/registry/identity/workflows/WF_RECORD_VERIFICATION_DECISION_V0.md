@@ -1,17 +1,5 @@
 # WF_RECORD_VERIFICATION_DECISION_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** WF_RECORD_VERIFICATION_DECISION_V0
-- **Artifact Kind:** workflow
-- **Governed By:** CONSTITUTION_WORKFLOW_V0
-- **Version:** V0
-- **Status:** superseded
-- **Superseded By:** blockchain::WF_ACCEPT_ACTOR_V0, blockchain::WF_REJECT_ACTOR_V0
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 The governed sequence that records a decision against a registered actor

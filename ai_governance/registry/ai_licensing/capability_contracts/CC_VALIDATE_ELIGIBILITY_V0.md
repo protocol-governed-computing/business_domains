@@ -1,17 +1,5 @@
 # CC_VALIDATE_ELIGIBILITY_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_VALIDATE_ELIGIBILITY_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** CT_PURE_CHECK_TRAINING_STATUS_V0, CT_PURE_CHECK_QUOTA_AVAILABLE_V0
-
----
-
 ## 1. Intent
 
 Validate employee eligibility for AI license provisioning.

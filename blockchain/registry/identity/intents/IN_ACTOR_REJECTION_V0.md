@@ -1,16 +1,5 @@
 # IN_ACTOR_REJECTION_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** IN_ACTOR_REJECTION_V0
-- **Artifact Kind:** intent
-- **Governed By:** CONSTITUTION_INTENT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** blockchain::IN_ACTOR_VERIFIED_V0
-
----
-
 ## 1. Intent
 
 Admits a request to reject a person, and refuses one that states no grounds

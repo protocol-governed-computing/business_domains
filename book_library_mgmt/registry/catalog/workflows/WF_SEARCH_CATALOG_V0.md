@@ -1,16 +1,5 @@
 # WF_SEARCH_CATALOG_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** WF_SEARCH_CATALOG_V0
-- **Artifact Kind:** workflow
-- **Governed By:** CONSTITUTION_WORKFLOW_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Searching by subject or title, excluding retired books
