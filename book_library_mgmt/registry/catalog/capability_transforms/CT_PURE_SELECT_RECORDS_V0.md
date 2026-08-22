@@ -23,7 +23,9 @@ Selects the records matching stated criteria and returns none when none match
 fqdn: book_library_mgmt::CT_PURE_SELECT_RECORDS_V0
 artifact_kind: CAPABILITY_TRANSFORM
 version: v0
-governed_by: fb.capability_transforms::CONSTITUTION_CAPABILITY_TRANSFORMS_V0
+governed_by: capability_transforms::CONSTITUTION_CAPABILITY_TRANSFORMS_V0
+authority: pgc.platform
+concern: catalog
 core:
   summary: Selects the records matching stated criteria and returns none when none match
   refusal: never

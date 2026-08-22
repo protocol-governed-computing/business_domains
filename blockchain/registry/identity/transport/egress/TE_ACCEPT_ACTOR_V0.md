@@ -23,7 +23,9 @@ Classifies the endings of accepting an actor, including the actor that does not 
 fqdn: blockchain::TE_ACCEPT_ACTOR_V0
 artifact_kind: TRANSPORT_EGRESS
 version: v0
-governed_by: fb.transport::CONSTITUTION_TRANSPORT_EGRESS_V0
+governed_by: transport::CONSTITUTION_TRANSPORT_EGRESS_V0
+authority: pgc.platform
+concern: identity
 operation: blockchain.accept_actor
 core:
   summary: Classifies the endings of accepting an actor, including the actor that does not exist, and

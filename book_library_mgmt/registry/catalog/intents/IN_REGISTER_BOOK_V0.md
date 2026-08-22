@@ -23,7 +23,9 @@ A request to register a book together with its first physical copy
 fqdn: book_library_mgmt::IN_REGISTER_BOOK_V0
 artifact_kind: INTENT
 version: v0
-governed_by: fb.intent::CONSTITUTION_INTENT_V0
+governed_by: intent::CONSTITUTION_INTENT_V0
+authority: pgc.platform
+concern: catalog
 core:
   summary: A request to register a book together with its first physical copy
   workflow: WF_REGISTER_BOOK_V0

@@ -69,7 +69,9 @@ License-to-tool binding is the fourth governance gate:
 fqdn: ai_governance::CC_BIND_LICENSE_TO_TOOL_SURFACE_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: agent_governance
 
 core:
   summary: Map license tier to allowed tool set and verify tool authorization

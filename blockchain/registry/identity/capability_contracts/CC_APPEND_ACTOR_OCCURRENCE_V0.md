@@ -23,7 +23,9 @@ Appends one occurrence to the trail
 fqdn: blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: identity
 core:
   summary: Appends one occurrence to the trail
   inputs:

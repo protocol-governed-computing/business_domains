@@ -67,11 +67,13 @@ No admission requirements - test exception to allow provisioning without employe
 fqdn: ai_governance::WF_PROVISION_AI_LICENSING_V0
 artifact_kind: WORKFLOW
 version: v0
-governed_by: fb.workflow::CONSTITUTION_WORKFLOW_V0
+governed_by: workflow::CONSTITUTION_WORKFLOW_V0
+authority: pgc.platform
+concern: ai_licensing
 
 runtime_binding: ai_governance::RB_LICENSE_BINDINGS_V0
 subdomain: ai_licensing
-structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
+structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0
 
 core:
   summary: Process AI license provisioning request

@@ -91,10 +91,12 @@ No admission constraints in v0.
 fqdn: ai_governance::WF_GOVERN_AGENT_ACTION_V0
 artifact_kind: WORKFLOW
 version: v0
-governed_by: fb.workflow::CONSTITUTION_WORKFLOW_V0
+governed_by: workflow::CONSTITUTION_WORKFLOW_V0
+authority: pgc.platform
+concern: agent_governance
 runtime_binding: ai_governance::RB_AGENT_GOVERNANCE_BINDINGS_V0
 subdomain: agent_governance
-structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
+structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0
 
 core:
   summary: Constitutional mediation of agent-proposed actions with license-tier authority binding

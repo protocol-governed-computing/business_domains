@@ -49,7 +49,9 @@ The enterprise runtime executes governed side effects:
 fqdn: ai_governance::AC_ENTERPRISE_RUNTIME_V0
 artifact_kind: ACTOR
 version: v0
-governed_by: fb.governance::CONSTITUTION_GOVERNANCE_V0
+governed_by: governance::CONSTITUTION_GOVERNANCE_V0
+authority: pgc.platform
+concern: agent_governance
 
 core:
   summary: Isolated side-effect executor

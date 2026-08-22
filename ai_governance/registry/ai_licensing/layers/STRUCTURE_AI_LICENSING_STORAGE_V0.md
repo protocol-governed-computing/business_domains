@@ -39,7 +39,9 @@ subdomain references the other's STRUCTURE.
 fqdn: ai_governance::STRUCTURE_AI_LICENSING_STORAGE_V0
 artifact_kind: STRUCTURE
 version: v0
-governed_by: fb.structure::CONSTITUTION_STRUCTURE_V0
+governed_by: structure::CONSTITUTION_STRUCTURE_V0
+authority: pgc.platform
+concern: ai_licensing
 
 core:
   summary: AI licensing subdomain storage topology

@@ -23,7 +23,9 @@ Forms the single key the registry claims from the three identifying attributes
 fqdn: book_library_mgmt::CT_PURE_FORM_BOOK_IDENTITY_KEY_V0
 artifact_kind: CAPABILITY_TRANSFORM
 version: v0
-governed_by: fb.capability_transforms::CONSTITUTION_CAPABILITY_TRANSFORMS_V0
+governed_by: capability_transforms::CONSTITUTION_CAPABILITY_TRANSFORMS_V0
+authority: pgc.platform
+concern: catalog
 core:
   summary: Forms the single key the registry claims from the three identifying attributes
   refusal: never

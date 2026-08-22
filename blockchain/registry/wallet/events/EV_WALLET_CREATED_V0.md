@@ -23,7 +23,9 @@ Announces that a wallet was created, for whom, and when
 fqdn: blockchain::EV_WALLET_CREATED_V0
 artifact_kind: EVENT
 version: v0
-governed_by: fb.event::CONSTITUTION_EVENT_V0
+governed_by: event::CONSTITUTION_EVENT_V0
+authority: pgc.platform
+concern: wallet
 core:
   summary: Announces that a wallet was created, for whom, and when
   description: Announces that a wallet was created, for whom, and when

@@ -23,7 +23,9 @@ Refuses a rejection stating no grounds, before anything is recorded
 fqdn: blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: identity
 core:
   summary: Refuses a rejection stating no grounds, before anything is recorded
   inputs:

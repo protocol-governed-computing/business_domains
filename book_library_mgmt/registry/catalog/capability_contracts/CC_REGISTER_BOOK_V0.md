@@ -23,7 +23,9 @@ Validates, assembles and writes an edition record against the work it belongs to
 fqdn: book_library_mgmt::CC_REGISTER_BOOK_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: catalog
 core:
   summary: Validates, assembles and writes an edition record against the work it belongs to
   inputs:

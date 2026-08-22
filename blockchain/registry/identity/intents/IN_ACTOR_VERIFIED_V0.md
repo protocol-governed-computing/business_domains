@@ -27,7 +27,9 @@ superseded_by:
 - blockchain::IN_ACTOR_REJECTION_V0
 artifact_kind: INTENT
 version: v0
-governed_by: fb.intent::CONSTITUTION_INTENT_V0
+governed_by: intent::CONSTITUTION_INTENT_V0
+authority: pgc.platform
+concern: identity
 core:
   summary: A request to record a decision, carrying the authority, the outcome and the grounds
   workflow: WF_RECORD_VERIFICATION_DECISION_V0

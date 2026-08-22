@@ -23,7 +23,9 @@ Declares the three stores identity owns and the paths they occupy
 fqdn: blockchain::STRUCTURE_IDENTITY_STORAGE_V0
 artifact_kind: STRUCTURE
 version: v0
-governed_by: fb.structure::CONSTITUTION_STRUCTURE_V0
+governed_by: structure::CONSTITUTION_STRUCTURE_V0
+authority: pgc.platform
+concern: identity
 core:
   summary: Declares the three stores identity owns and the paths they occupy
   layer: DOMAINS

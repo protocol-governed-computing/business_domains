@@ -84,8 +84,8 @@ the register records rather than hides.
 | identity | blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | act reached from outside | SATISFIED | S3 dependency_discoveries The act that records a decision |
 | identity | blockchain::CC_VALIDATE_REGISTRATION_V0 | capability call | SATISFIED | S3 dependency_discoveries Reading a record for absence and form |
 | identity | capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0 | capability call | SATISFIED | S3 dependency_discoveries Reading a record for absence and form |
-| identity | fb.transport::CONSTITUTION_TRANSPORT_INGRESS_V0 | governed by | SATISFIED | S3 dependency_discoveries The boundary's ingress and egress kinds |
-| identity | fb.transport::CONSTITUTION_TRANSPORT_EGRESS_V0 | governed by | SATISFIED | S3 dependency_discoveries The boundary's ingress and egress kinds |
+| identity | transport::CONSTITUTION_TRANSPORT_INGRESS_V0 | governed by | SATISFIED | S3 dependency_discoveries The boundary's ingress and egress kinds |
+| identity | transport::CONSTITUTION_TRANSPORT_EGRESS_V0 | governed by | SATISFIED | S3 dependency_discoveries The boundary's ingress and egress kinds |
 | identity | blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | build manifest | SATISFIED | S3 dependency_discoveries A source layer for the boundary declarations |
 | identity | blockchain::AC_PARTICIPANT_V0 | actor declaration | SATISFIED | S3 dependency_discoveries The act that admits a person |
 | identity | workload::TI_COLLATZ_COMPUTE_V0 | worked precedent | SATISFIED | S3 dependency_discoveries The name a caller uses for an act |

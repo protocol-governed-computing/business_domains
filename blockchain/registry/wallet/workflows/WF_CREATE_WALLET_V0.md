@@ -23,12 +23,14 @@ The governed sequence that gives an accepted person a wallet and records that it
 fqdn: blockchain::WF_CREATE_WALLET_V0
 artifact_kind: WORKFLOW
 version: v0
-governed_by: fb.workflow::CONSTITUTION_WORKFLOW_V0
+governed_by: workflow::CONSTITUTION_WORKFLOW_V0
+authority: pgc.platform
+concern: wallet
 runtime_binding: blockchain::RB_WALLET_BINDINGS_V0
 consults:
 - blockchain::RB_IDENTITY_BINDINGS_V0
 subdomain: wallet
-structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
+structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
   summary: The governed sequence that gives an accepted person a wallet and records that it did
   actor_context: blockchain::AC_PARTICIPANT_V0

@@ -23,7 +23,9 @@ Mark a retired copy registered again
 fqdn: book_library_mgmt::CC_REINSTATE_PHYSICAL_COPY_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: catalog
 core:
   summary: Mark a retired copy registered again
   inputs:

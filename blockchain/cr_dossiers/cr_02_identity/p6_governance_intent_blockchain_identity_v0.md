@@ -29,7 +29,7 @@ belongs to a subdomain that is not this one.
 | Admit a person's registration | identity | SATISFIED | blockchain::WF_REGISTER_ACTOR_V0 | S4 capability_graph Admit a person's registration |
 | Record an authority's decision | identity | SATISFIED | blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | S4 capability_graph Record an authority's decision |
 | Read a registration for absent or malformed details | identity | SATISFIED | blockchain::CC_VALIDATE_REGISTRATION_V0 | S4 capability_graph Read a registration for absent or malformed details |
-| Offer both acts through one way in | identity | SATISFIED | fb.transport::CONSTITUTION_TRANSPORT_INGRESS_V0 | S4 capability_graph Offer both acts through one way in |
+| Offer both acts through one way in | identity | SATISFIED | transport::CONSTITUTION_TRANSPORT_INGRESS_V0 | S4 capability_graph Offer both acts through one way in |
 | Announce the moments an actor is registered, accepted and rejected | construction — how artifacts are rendered, not identity | DEFERRED |  | S5 scope_boundary Announce the moments an actor is registered, accepted and rejected |
 | Hold what an act requires with the act that requires it | identity, in a later change | DEFERRED |  | S5 scope_boundary Hold what an act requires with the act that requires it |
 | Establishing who a caller is, and what they are allowed to do | identity, in a later change | DEFERRED |  | S5 scope_boundary Establishing who a caller is, and what they are allowed to do |
@@ -54,8 +54,8 @@ belongs to a subdomain that is not this one.
 <!-- register:cross_subdomain_deps optional -->
 | Dependency | Direction | Existing Artifact | Status (SATISFIED, GAP) | Source Finding |
 |------------|-----------|-------------------|-------------------------|----------------|
-| The governed kind that admits a request from outside | identity -> platform | fb.transport::CONSTITUTION_TRANSPORT_INGRESS_V0 | SATISFIED | S4 dependency_graph fb.transport::CONSTITUTION_TRANSPORT_INGRESS_V0 |
-| The governed kind that states what a caller is told | identity -> platform | fb.transport::CONSTITUTION_TRANSPORT_EGRESS_V0 | SATISFIED | S4 dependency_graph fb.transport::CONSTITUTION_TRANSPORT_EGRESS_V0 |
+| The governed kind that admits a request from outside | identity -> platform | transport::CONSTITUTION_TRANSPORT_INGRESS_V0 | SATISFIED | S4 dependency_graph transport::CONSTITUTION_TRANSPORT_INGRESS_V0 |
+| The governed kind that states what a caller is told | identity -> platform | transport::CONSTITUTION_TRANSPORT_EGRESS_V0 | SATISFIED | S4 dependency_graph transport::CONSTITUTION_TRANSPORT_EGRESS_V0 |
 | Reading a record for absence and for form | identity -> platform | capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0 | SATISFIED | S4 dependency_graph capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0 |
 | The worked precedent for naming an act and holding what a caller does not send | identity -> workload | workload::TI_COLLATZ_COMPUTE_V0 | SATISFIED | S4 dependency_graph workload::TI_COLLATZ_COMPUTE_V0 |
 | The worked precedent for classifying an ending and exposing evidence by reference | identity -> workload | workload::TE_COLLATZ_COMPUTE_V0 | SATISFIED | S4 dependency_graph workload::TE_COLLATZ_COMPUTE_V0 |

@@ -50,7 +50,9 @@ Runtime bindings provide environment-specific execution wiring:
 fqdn: ai_governance::RB_LICENSE_BINDINGS_V0
 artifact_kind: RUNTIME_BINDING
 version: v0
-governed_by: fb.runtime_binding::CONSTITUTION_RUNTIME_BINDING_V0
+governed_by: runtime_binding::CONSTITUTION_RUNTIME_BINDING_V0
+authority: pgc.platform
+concern: ai_licensing
 
 parameters:
   - module_data_root

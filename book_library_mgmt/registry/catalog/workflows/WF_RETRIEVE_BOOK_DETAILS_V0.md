@@ -23,10 +23,12 @@ Assembling a book with the copies the library holds of it
 fqdn: book_library_mgmt::WF_RETRIEVE_BOOK_DETAILS_V0
 artifact_kind: WORKFLOW
 version: v0
-governed_by: fb.workflow::CONSTITUTION_WORKFLOW_V0
+governed_by: workflow::CONSTITUTION_WORKFLOW_V0
+authority: pgc.platform
+concern: catalog
 runtime_binding: book_library_mgmt::RB_CATALOG_BINDINGS_V0
 subdomain: catalog
-structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
+structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
   summary: Assembling a book with the copies the library holds of it
   actor_context: book_library_mgmt::AC_LIBRARY_STAFF_V0

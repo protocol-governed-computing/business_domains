@@ -71,7 +71,9 @@ Eligibility validation is a protocol gate:
 fqdn: ai_governance::CC_VALIDATE_ELIGIBILITY_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: ai_licensing
 
 core:
   summary: Validate employee eligibility for license provisioning

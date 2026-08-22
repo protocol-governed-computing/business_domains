@@ -37,8 +37,8 @@ here is what a caller may name, what they may send, what is held for them, and w
 | blockchain::IN_ACTOR_REGISTERED_V0 | REUSE | The request that starts the act of admitting a person. | Reached unchanged; what a caller sends becomes this act's payload. | S6 ownership Admit a person's registration |
 | blockchain::IN_ACTOR_VERIFIED_V0 | REUSE | The request that starts the act of recording a decision. | Reached unchanged by both decision declarations. | S6 ownership Record an authority's decision |
 | capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0 | REUSE | Reads a supplied record for fields the declaration requires and for the form they must take. | Reused unchanged, reached through the act. Impacted by 31 artifacts. | S6 cross_subdomain_deps Reading a record for absence and for form |
-| fb.transport::CONSTITUTION_TRANSPORT_INGRESS_V0 | REUSE | Governs the kind that admits a request from outside. | Governs the three new ingress declarations; not amended. | S6 cross_subdomain_deps The governed kind that admits a request from outside |
-| fb.transport::CONSTITUTION_TRANSPORT_EGRESS_V0 | REUSE | Governs the kind that states what a caller is told, over a closed set of answer kinds. | Governs the three new egress declarations; not amended, and its closed set is not extended. | S6 cross_subdomain_deps The governed kind that states what a caller is told |
+| transport::CONSTITUTION_TRANSPORT_INGRESS_V0 | REUSE | Governs the kind that admits a request from outside. | Governs the three new ingress declarations; not amended. | S6 cross_subdomain_deps The governed kind that admits a request from outside |
+| transport::CONSTITUTION_TRANSPORT_EGRESS_V0 | REUSE | Governs the kind that states what a caller is told, over a closed set of answer kinds. | Governs the three new egress declarations; not amended, and its closed set is not extended. | S6 cross_subdomain_deps The governed kind that states what a caller is told |
 | workload::TI_COLLATZ_COMPUTE_V0 | REUSE | The worked precedent for a public name, a declared caller input and a template holding what a caller does not send. | Read, not changed. | S6 cross_subdomain_deps The worked precedent for naming an act and holding what a caller does not send |
 | workload::TE_COLLATZ_COMPUTE_V0 | REUSE | The worked precedent for classifying an ending and exposing evidence by reference. | Read, not changed. | S6 cross_subdomain_deps The worked precedent for classifying an ending and exposing evidence by reference |
 
@@ -155,15 +155,15 @@ here is what a caller may name, what they may send, what is held for them, and w
 <!-- register:artifact_properties optional -->
 | Artifact | Property | Value | Source Finding |
 |----------|----------|-------|----------------|
-| blockchain::TI_REGISTER_ACTOR_V0 | governed_by | fb.transport::CONSTITUTION_TRANSPORT_INGRESS_V0 | S6 cross_subdomain_deps The governed kind that admits a request from outside |
-| blockchain::TI_ACCEPT_ACTOR_V0 | governed_by | fb.transport::CONSTITUTION_TRANSPORT_INGRESS_V0 | S6 cross_subdomain_deps The governed kind that admits a request from outside |
-| blockchain::TI_REJECT_ACTOR_V0 | governed_by | fb.transport::CONSTITUTION_TRANSPORT_INGRESS_V0 | S6 cross_subdomain_deps The governed kind that admits a request from outside |
+| blockchain::TI_REGISTER_ACTOR_V0 | governed_by | transport::CONSTITUTION_TRANSPORT_INGRESS_V0 | S6 cross_subdomain_deps The governed kind that admits a request from outside |
+| blockchain::TI_ACCEPT_ACTOR_V0 | governed_by | transport::CONSTITUTION_TRANSPORT_INGRESS_V0 | S6 cross_subdomain_deps The governed kind that admits a request from outside |
+| blockchain::TI_REJECT_ACTOR_V0 | governed_by | transport::CONSTITUTION_TRANSPORT_INGRESS_V0 | S6 cross_subdomain_deps The governed kind that admits a request from outside |
 | blockchain::TI_REGISTER_ACTOR_V0 | context_requirements | none — the boundary requires no context of a caller, and this change establishes nothing about who they are | S6 ownership Establishing who a caller is, and what they are allowed to do |
 | blockchain::TI_ACCEPT_ACTOR_V0 | context_requirements | none — the boundary requires no context of a caller, and this change establishes nothing about who they are | S6 ownership Establishing who a caller is, and what they are allowed to do |
 | blockchain::TI_REJECT_ACTOR_V0 | context_requirements | none — the boundary requires no context of a caller, and this change establishes nothing about who they are | S6 ownership Establishing who a caller is, and what they are allowed to do |
-| blockchain::TE_REGISTER_ACTOR_V0 | governed_by | fb.transport::CONSTITUTION_TRANSPORT_EGRESS_V0 | S6 cross_subdomain_deps The governed kind that states what a caller is told |
-| blockchain::TE_ACCEPT_ACTOR_V0 | governed_by | fb.transport::CONSTITUTION_TRANSPORT_EGRESS_V0 | S6 cross_subdomain_deps The governed kind that states what a caller is told |
-| blockchain::TE_REJECT_ACTOR_V0 | governed_by | fb.transport::CONSTITUTION_TRANSPORT_EGRESS_V0 | S6 cross_subdomain_deps The governed kind that states what a caller is told |
+| blockchain::TE_REGISTER_ACTOR_V0 | governed_by | transport::CONSTITUTION_TRANSPORT_EGRESS_V0 | S6 cross_subdomain_deps The governed kind that states what a caller is told |
+| blockchain::TE_ACCEPT_ACTOR_V0 | governed_by | transport::CONSTITUTION_TRANSPORT_EGRESS_V0 | S6 cross_subdomain_deps The governed kind that states what a caller is told |
+| blockchain::TE_REJECT_ACTOR_V0 | governed_by | transport::CONSTITUTION_TRANSPORT_EGRESS_V0 | S6 cross_subdomain_deps The governed kind that states what a caller is told |
 | blockchain::TE_REGISTER_ACTOR_V0 | result_class.SUCCESS | SUCCESS | S6 boundary_rules THE_ANSWER_KINDS_ARE_NOT_OURS |
 | blockchain::TE_REGISTER_ACTOR_V0 | result_class.VIOLATION | VIOLATION | S6 boundary_rules THE_ANSWER_KINDS_ARE_NOT_OURS |
 | blockchain::TE_REGISTER_ACTOR_V0 | result_class.NOT_FOUND | NOT_FOUND | S6 boundary_rules THE_ANSWER_KINDS_ARE_NOT_OURS |

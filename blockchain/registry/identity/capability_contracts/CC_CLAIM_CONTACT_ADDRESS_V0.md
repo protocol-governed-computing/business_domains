@@ -23,7 +23,9 @@ Claims a contact address so that two registrations of one person do not produce 
 fqdn: blockchain::CC_CLAIM_CONTACT_ADDRESS_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: identity
 core:
   summary: Claims a contact address so that two registrations of one person do not produce two actors
   inputs:

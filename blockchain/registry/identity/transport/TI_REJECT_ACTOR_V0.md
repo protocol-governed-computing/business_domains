@@ -23,7 +23,9 @@ Admits a request to reject a registered actor, declaring the contact address, au
 fqdn: blockchain::TI_REJECT_ACTOR_V0
 artifact_kind: TRANSPORT_INGRESS
 version: v0
-governed_by: fb.transport::CONSTITUTION_TRANSPORT_INGRESS_V0
+governed_by: transport::CONSTITUTION_TRANSPORT_INGRESS_V0
+authority: pgc.platform
+concern: identity
 operation: blockchain.reject_actor
 core:
   summary: Admits a request to reject a registered actor, declaring the contact address, authority and

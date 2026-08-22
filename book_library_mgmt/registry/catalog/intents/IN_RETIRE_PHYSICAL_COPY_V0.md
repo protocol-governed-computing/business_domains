@@ -23,7 +23,9 @@ A request to retire a lost or damaged copy
 fqdn: book_library_mgmt::IN_RETIRE_PHYSICAL_COPY_V0
 artifact_kind: INTENT
 version: v0
-governed_by: fb.intent::CONSTITUTION_INTENT_V0
+governed_by: intent::CONSTITUTION_INTENT_V0
+authority: pgc.platform
+concern: catalog
 core:
   summary: A request to retire a lost or damaged copy
   workflow: WF_RETIRE_PHYSICAL_COPY_V0

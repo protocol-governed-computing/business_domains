@@ -23,7 +23,9 @@ Confirms a registration carries a name and an address of the form asked for
 fqdn: blockchain::CC_VALIDATE_REGISTRATION_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: identity
 core:
   summary: Confirms a registration carries a name and an address of the form asked for
   inputs:

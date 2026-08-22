@@ -23,7 +23,9 @@ Selects the registered editions matching a subject or title and groups them unde
 fqdn: book_library_mgmt::CC_SEARCH_CATALOG_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: catalog
 core:
   summary: Selects the registered editions matching a subject or title and groups them under their work
   inputs:

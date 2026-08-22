@@ -23,7 +23,9 @@ Claim a copy's barcode so a second copy carrying it is refused
 fqdn: book_library_mgmt::CC_CLAIM_COPY_BARCODE_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: catalog
 core:
   summary: Claim a copy's barcode so a second copy carrying it is refused
   inputs:

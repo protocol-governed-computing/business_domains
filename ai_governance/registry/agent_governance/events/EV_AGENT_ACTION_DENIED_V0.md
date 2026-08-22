@@ -54,7 +54,9 @@ Denial events record structural governance rejections:
 fqdn: ai_governance::EV_AGENT_ACTION_DENIED_V0
 artifact_kind: EVENT
 version: v0
-governed_by: fb.event::CONSTITUTION_EVENT_V0
+governed_by: event::CONSTITUTION_EVENT_V0
+authority: pgc.platform
+concern: agent_governance
 
 core:
   summary: Agent action denied by governance

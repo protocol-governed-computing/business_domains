@@ -23,10 +23,12 @@ The governed sequence that registers a work, its first edition and that edition'
 fqdn: book_library_mgmt::WF_REGISTER_BOOK_V0
 artifact_kind: WORKFLOW
 version: v0
-governed_by: fb.workflow::CONSTITUTION_WORKFLOW_V0
+governed_by: workflow::CONSTITUTION_WORKFLOW_V0
+authority: pgc.platform
+concern: catalog
 runtime_binding: book_library_mgmt::RB_CATALOG_BINDINGS_V0
 subdomain: catalog
-structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
+structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
   summary: The governed sequence that registers a work, its first edition and that edition's first physical
     copy

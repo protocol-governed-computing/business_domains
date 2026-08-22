@@ -26,7 +26,7 @@ meaning, so it is declared here rather than mapped onto a platform status that w
 
 ## 2. Extension Contract
 
-This artifact `extends` the reserving declaration `fb.vocabulary::VOCAB_EXECUTION_STATES_V0`, and
+This artifact `extends` the reserving declaration `vocabulary::VOCAB_EXECUTION_STATES_V0`, and
 contributes only to `result_status` — the one category that declaration marks
 `domain_extensible: true`. The compiler folds these entries into the build's **vocabulary
 closure**; they are not visible to any other domain
@@ -40,8 +40,10 @@ closure**; they are not visible to any other domain
 fqdn: ai_governance::VOCAB_AI_LICENSING_STATES_V0
 artifact_kind: VOCABULARY
 version: v0
-governed_by: fb.vocabulary::CONSTITUTION_VOCABULARY_V0
-extends: fb.vocabulary::VOCAB_EXECUTION_STATES_V0
+governed_by: vocabulary::CONSTITUTION_VOCABULARY_V0
+authority: pgc.platform
+concern: ai_licensing
+extends: vocabulary::VOCAB_EXECUTION_STATES_V0
 result_status:
   casing: UPPER_SNAKE
   entries:

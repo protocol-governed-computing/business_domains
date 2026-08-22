@@ -23,7 +23,9 @@ Forms the work key, resolves it against the registry, and reads the work record 
 fqdn: book_library_mgmt::CC_RESOLVE_WORK_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: catalog
 core:
   summary: Forms the work key, resolves it against the registry, and reads the work record it names
   inputs:

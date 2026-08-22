@@ -74,7 +74,9 @@ Autonomous reclamation enforces use-it-or-lose-it:
 fqdn: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: ai_licensing
 
 core:
   summary: Reclaim license from inactive user

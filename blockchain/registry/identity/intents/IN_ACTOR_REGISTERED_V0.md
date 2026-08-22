@@ -23,7 +23,9 @@ A request to admit a person as an actor
 fqdn: blockchain::IN_ACTOR_REGISTERED_V0
 artifact_kind: INTENT
 version: v0
-governed_by: fb.intent::CONSTITUTION_INTENT_V0
+governed_by: intent::CONSTITUTION_INTENT_V0
+authority: pgc.platform
+concern: identity
 core:
   summary: A request to admit a person as an actor
   workflow: WF_REGISTER_ACTOR_V0

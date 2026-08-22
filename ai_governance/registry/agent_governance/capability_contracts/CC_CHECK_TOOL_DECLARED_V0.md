@@ -66,7 +66,9 @@ Tool declaration is the second governance gate:
 fqdn: ai_governance::CC_CHECK_TOOL_DECLARED_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: agent_governance
 
 core:
   summary: Verify requested tool exists in closed tool registry

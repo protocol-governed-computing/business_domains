@@ -23,7 +23,9 @@ The authoritative description of a book changed
 fqdn: book_library_mgmt::EV_BIBLIOGRAPHIC_INFORMATION_UPDATED_V0
 artifact_kind: EVENT
 version: v0
-governed_by: fb.event::CONSTITUTION_EVENT_V0
+governed_by: event::CONSTITUTION_EVENT_V0
+authority: pgc.platform
+concern: catalog
 core:
   summary: The authoritative description of a book changed
   description: The authoritative description of a book changed

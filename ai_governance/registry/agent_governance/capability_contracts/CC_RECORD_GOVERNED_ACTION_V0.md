@@ -76,7 +76,9 @@ Authorization recording completes the governance pipeline:
 fqdn: ai_governance::CC_RECORD_GOVERNED_ACTION_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: agent_governance
 
 core:
   summary: Record authorized governance decision and emit audit trail

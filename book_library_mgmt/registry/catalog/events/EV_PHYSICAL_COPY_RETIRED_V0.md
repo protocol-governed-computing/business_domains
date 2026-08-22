@@ -23,7 +23,9 @@ The library no longer holds that copy
 fqdn: book_library_mgmt::EV_PHYSICAL_COPY_RETIRED_V0
 artifact_kind: EVENT
 version: v0
-governed_by: fb.event::CONSTITUTION_EVENT_V0
+governed_by: event::CONSTITUTION_EVENT_V0
+authority: pgc.platform
+concern: catalog
 core:
   summary: The library no longer holds that copy
   description: The library no longer holds that copy

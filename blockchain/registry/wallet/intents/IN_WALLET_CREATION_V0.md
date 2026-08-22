@@ -23,7 +23,9 @@ Admits a request naming the person a wallet is for, and refuses one that names n
 fqdn: blockchain::IN_WALLET_CREATION_V0
 artifact_kind: INTENT
 version: v0
-governed_by: fb.intent::CONSTITUTION_INTENT_V0
+governed_by: intent::CONSTITUTION_INTENT_V0
+authority: pgc.platform
+concern: wallet
 core:
   summary: Admits a request naming the person a wallet is for, and refuses one that names nobody
   workflow: WF_CREATE_WALLET_V0

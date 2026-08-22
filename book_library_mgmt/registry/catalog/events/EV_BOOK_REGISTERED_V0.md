@@ -23,7 +23,9 @@ A book entered the catalog and acquired its authoritative record
 fqdn: book_library_mgmt::EV_BOOK_REGISTERED_V0
 artifact_kind: EVENT
 version: v0
-governed_by: fb.event::CONSTITUTION_EVENT_V0
+governed_by: event::CONSTITUTION_EVENT_V0
+authority: pgc.platform
+concern: catalog
 core:
   summary: A book entered the catalog and acquired its authoritative record
   description: A book entered the catalog and acquired its authoritative record

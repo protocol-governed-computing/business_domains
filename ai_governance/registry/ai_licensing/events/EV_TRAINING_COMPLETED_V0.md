@@ -50,7 +50,9 @@ Training completion is a protocol gate:
 fqdn: ai_governance::EV_TRAINING_COMPLETED_V0
 artifact_kind: EVENT
 version: v0
-governed_by: fb.event::CONSTITUTION_EVENT_V0
+governed_by: event::CONSTITUTION_EVENT_V0
+authority: pgc.platform
+concern: ai_licensing
 
 core:
   summary: Training Completed

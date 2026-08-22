@@ -50,7 +50,9 @@ Employee actors are subjects of protocol governance:
 fqdn: ai_governance::AC_EMPLOYEE_V0
 artifact_kind: ACTOR
 version: v0
-governed_by: fb.governance::CONSTITUTION_GOVERNANCE_V0
+governed_by: governance::CONSTITUTION_GOVERNANCE_V0
+authority: pgc.platform
+concern: ai_licensing
 
 core:
   summary: Employee Actor

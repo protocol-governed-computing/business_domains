@@ -23,7 +23,9 @@ Writes the actor unverified after its address is claimed
 fqdn: blockchain::CC_REGISTER_ACTOR_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: identity
 core:
   summary: Writes the actor unverified after its address is claimed
   inputs:

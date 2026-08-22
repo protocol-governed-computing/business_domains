@@ -66,7 +66,9 @@ License provisioning intent is a protocol entry point:
 fqdn: ai_governance::IN_PROVISION_AI_LICENSE_V0
 artifact_kind: INTENT
 version: v0
-governed_by: fb.intent::CONSTITUTION_INTENT_V0
+governed_by: intent::CONSTITUTION_INTENT_V0
+authority: pgc.platform
+concern: ai_licensing
 
 core:
   summary: Request AI license provisioning

@@ -65,7 +65,9 @@ Denial handling intent provides first-class terminal outcome:
 fqdn: ai_governance::IN_DENY_PROVISION_V0
 artifact_kind: INTENT
 version: v0
-governed_by: fb.intent::CONSTITUTION_INTENT_V0
+governed_by: intent::CONSTITUTION_INTENT_V0
+authority: pgc.platform
+concern: ai_licensing
 
 core:
   summary: Handle provision denial

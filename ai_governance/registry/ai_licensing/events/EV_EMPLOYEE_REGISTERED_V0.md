@@ -50,7 +50,9 @@ Employee registration is a fact declaration:
 fqdn: ai_governance::EV_EMPLOYEE_REGISTERED_V0
 artifact_kind: EVENT
 version: v0
-governed_by: fb.event::CONSTITUTION_EVENT_V0
+governed_by: event::CONSTITUTION_EVENT_V0
+authority: pgc.platform
+concern: ai_licensing
 
 core:
   summary: Employee Registered

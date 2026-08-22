@@ -23,11 +23,13 @@ The governed sequence that records a rejection, with grounds required, and annou
 fqdn: blockchain::WF_REJECT_ACTOR_V0
 artifact_kind: WORKFLOW
 version: v0
-governed_by: fb.workflow::CONSTITUTION_WORKFLOW_V0
+governed_by: workflow::CONSTITUTION_WORKFLOW_V0
+authority: pgc.platform
+concern: identity
 supersedes: blockchain::WF_RECORD_VERIFICATION_DECISION_V0
 runtime_binding: blockchain::RB_IDENTITY_BINDINGS_V0
 subdomain: identity
-structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
+structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
   summary: The governed sequence that records a rejection, with grounds required, and announces it
   actor_context: blockchain::AC_PARTICIPANT_V0

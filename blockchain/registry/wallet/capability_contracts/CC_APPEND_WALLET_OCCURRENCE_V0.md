@@ -23,7 +23,9 @@ Records the moment on the wallet's trail
 fqdn: blockchain::CC_APPEND_WALLET_OCCURRENCE_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: wallet
 core:
   summary: Records the moment on the wallet's trail
   inputs:

@@ -23,7 +23,9 @@ Refuses every declared refusal and moves the actor to its decided state
 fqdn: blockchain::CC_RECORD_VERIFICATION_DECISION_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: identity
 core:
   summary: Refuses every declared refusal and moves the actor to its decided state
   inputs:

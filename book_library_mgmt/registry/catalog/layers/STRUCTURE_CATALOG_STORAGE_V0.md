@@ -23,7 +23,9 @@ Declares the stores the catalog owns and the paths they occupy
 fqdn: book_library_mgmt::STRUCTURE_CATALOG_STORAGE_V0
 artifact_kind: STRUCTURE
 version: v0
-governed_by: fb.structure::CONSTITUTION_STRUCTURE_V0
+governed_by: structure::CONSTITUTION_STRUCTURE_V0
+authority: pgc.platform
+concern: catalog
 core:
   summary: Declares the stores the catalog owns and the paths they occupy
   layer: DOMAINS
