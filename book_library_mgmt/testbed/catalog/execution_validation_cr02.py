@@ -290,7 +290,12 @@ def main() -> int:
               f"status {r.status}")
 
         # 15 — and updated
-        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0", auth() | {
+        # The successor. Its predecessor required the title, the author and the publication year of
+        # the record being corrected, which no step of the act reads, so a correction that did not
+        # restate what it was leaving alone was turned away. Withdrawing a requirement renders the
+        # boundary whole and says less than it said, so it was superseded rather than amended — and
+        # superseding does not redirect a caller. This is the caller moving.
+        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1", auth() | {
             "identity_key": LEGACY_KEY,
             "updated_fields": {**LEGACY, "subject": ["romance", "classic"],
                                "state": "REGISTERED"}})

@@ -1,17 +1,5 @@
 # EV_AGENT_ACTION_DENIED_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** EV_AGENT_ACTION_DENIED_V0
-- **Artifact Kind:** event
-- **Governed By:** CONSTITUTION_EVENT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** NONE
-
----
-
 ## 1. Fact
 
 An agent-proposed action has been denied by governance.
@@ -54,7 +42,9 @@ Denial events record structural governance rejections:
 fqdn: ai_governance::EV_AGENT_ACTION_DENIED_V0
 artifact_kind: EVENT
 version: v0
-governed_by: fb.event::CONSTITUTION_EVENT_V0
+governed_by: event::CONSTITUTION_EVENT_V0
+authority: pgc.platform
+concern: agent_governance
 
 core:
   summary: Agent action denied by governance

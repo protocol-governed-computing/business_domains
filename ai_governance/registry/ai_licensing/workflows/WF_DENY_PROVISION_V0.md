@@ -1,17 +1,5 @@
 # WF_DENY_PROVISION_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** WF_DENY_PROVISION_V0
-- **Artifact Kind:** workflow
-- **Governed By:** CONSTITUTION_WORKFLOW_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** IN_DENY_PROVISION_V0, CC_APPEND_AUDIT_EVENT_V0
-
----
-
 ## 1. Intent
 
 Handle provisioning denial by emitting denial event and recording to audit log.
@@ -57,11 +45,13 @@ CC_APPEND_AUDIT_EVENT_V0
 fqdn: ai_governance::WF_DENY_PROVISION_V0
 artifact_kind: WORKFLOW
 version: v0
-governed_by: fb.workflow::CONSTITUTION_WORKFLOW_V0
+governed_by: workflow::CONSTITUTION_WORKFLOW_V0
+authority: pgc.platform
+concern: ai_licensing
 
 runtime_binding: ai_governance::RB_LICENSE_BINDINGS_V0
 subdomain: ai_licensing
-structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
+structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0
 
 core:
   summary: Handle provisioning denial

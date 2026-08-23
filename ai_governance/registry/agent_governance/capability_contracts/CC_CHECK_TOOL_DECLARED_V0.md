@@ -1,17 +1,5 @@
 # CC_CHECK_TOOL_DECLARED_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_CHECK_TOOL_DECLARED_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** CT_PURE_VALIDATE_SET_MEMBERSHIP_V0
-
----
-
 ## 1. Intent
 
 Verify that the requested tool exists in the closed tool registry.
@@ -66,7 +54,9 @@ Tool declaration is the second governance gate:
 fqdn: ai_governance::CC_CHECK_TOOL_DECLARED_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: agent_governance
 
 core:
   summary: Verify requested tool exists in closed tool registry

@@ -1,17 +1,5 @@
 # RB_AGENT_GOVERNANCE_BINDINGS_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** RB_AGENT_GOVERNANCE_BINDINGS_V0
-- **Artifact Kind:** runtime_binding
-- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** CS_MUTABLE_JSON_V0, CS_REGISTRY_V0, CS_APPENDONLY_JSONL_V0
-
----
-
 ## 1. Purpose
 
 Bind capability side effects to concrete host implementations for agent governance execution.
@@ -51,7 +39,9 @@ Runtime bindings provide environment-specific execution wiring:
 fqdn: ai_governance::RB_AGENT_GOVERNANCE_BINDINGS_V0
 artifact_kind: RUNTIME_BINDING
 version: v0
-governed_by: fb.runtime_binding::CONSTITUTION_RUNTIME_BINDING_V0
+governed_by: runtime_binding::CONSTITUTION_RUNTIME_BINDING_V0
+authority: pgc.platform
+concern: agent_governance
 
 parameters:
   - module_data_root

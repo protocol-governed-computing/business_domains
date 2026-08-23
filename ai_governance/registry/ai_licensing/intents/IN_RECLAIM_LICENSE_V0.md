@@ -1,17 +1,5 @@
 # IN_RECLAIM_LICENSE_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** IN_RECLAIM_LICENSE_V0
-- **Artifact Kind:** intent
-- **Governed By:** CONSTITUTION_INTENT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** WF_AUTO_RECLAIM_V0
-
----
-
 ## 1. Intent
 
 Request to evaluate and potentially reclaim an inactive license.
@@ -66,7 +54,9 @@ Reclamation intent enables autonomous license management:
 fqdn: ai_governance::IN_RECLAIM_LICENSE_V0
 artifact_kind: INTENT
 version: v0
-governed_by: fb.intent::CONSTITUTION_INTENT_V0
+governed_by: intent::CONSTITUTION_INTENT_V0
+authority: pgc.platform
+concern: ai_licensing
 
 core:
   summary: Request license reclamation evaluation

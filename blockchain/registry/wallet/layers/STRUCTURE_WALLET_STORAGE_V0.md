@@ -1,16 +1,5 @@
 # STRUCTURE_WALLET_STORAGE_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** STRUCTURE_WALLET_STORAGE_V0
-- **Artifact Kind:** structure
-- **Governed By:** CONSTITUTION_STRUCTURE_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Declares the three stores wallet owns
@@ -23,7 +12,9 @@ Declares the three stores wallet owns
 fqdn: blockchain::STRUCTURE_WALLET_STORAGE_V0
 artifact_kind: STRUCTURE
 version: v0
-governed_by: fb.structure::CONSTITUTION_STRUCTURE_V0
+governed_by: structure::CONSTITUTION_STRUCTURE_V0
+authority: pgc.platform
+concern: wallet
 core:
   summary: Declares the three stores wallet owns
   layer: DOMAINS

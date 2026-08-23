@@ -1,16 +1,5 @@
 # IN_ACTOR_REJECTION_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** IN_ACTOR_REJECTION_V0
-- **Artifact Kind:** intent
-- **Governed By:** CONSTITUTION_INTENT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** blockchain::IN_ACTOR_VERIFIED_V0
-
----
-
 ## 1. Intent
 
 Admits a request to reject a person, and refuses one that states no grounds
@@ -23,7 +12,9 @@ Admits a request to reject a person, and refuses one that states no grounds
 fqdn: blockchain::IN_ACTOR_REJECTION_V0
 artifact_kind: INTENT
 version: v0
-governed_by: fb.intent::CONSTITUTION_INTENT_V0
+governed_by: intent::CONSTITUTION_INTENT_V0
+authority: pgc.platform
+concern: identity
 supersedes: blockchain::IN_ACTOR_VERIFIED_V0
 core:
   summary: Admits a request to reject a person, and refuses one that states no grounds

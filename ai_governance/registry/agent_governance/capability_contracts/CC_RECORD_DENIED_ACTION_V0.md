@@ -1,17 +1,5 @@
 # CC_RECORD_DENIED_ACTION_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_RECORD_DENIED_ACTION_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** CT_PURE_GENERATE_ID_V0, CS_APPENDONLY_JSONL_V0
-
----
-
 ## 1. Intent
 
 Record a denied governance decision and emit an audit trail.
@@ -73,7 +61,9 @@ Denial recording is symmetric with authorization:
 fqdn: ai_governance::CC_RECORD_DENIED_ACTION_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: agent_governance
 
 core:
   summary: Record denied governance decision and emit audit trail

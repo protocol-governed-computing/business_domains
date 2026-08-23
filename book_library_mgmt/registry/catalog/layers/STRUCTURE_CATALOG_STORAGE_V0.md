@@ -1,16 +1,5 @@
 # STRUCTURE_CATALOG_STORAGE_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** STRUCTURE_CATALOG_STORAGE_V0
-- **Artifact Kind:** structure
-- **Governed By:** CONSTITUTION_STRUCTURE_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Declares the stores the catalog owns and the paths they occupy
@@ -23,7 +12,9 @@ Declares the stores the catalog owns and the paths they occupy
 fqdn: book_library_mgmt::STRUCTURE_CATALOG_STORAGE_V0
 artifact_kind: STRUCTURE
 version: v0
-governed_by: fb.structure::CONSTITUTION_STRUCTURE_V0
+governed_by: structure::CONSTITUTION_STRUCTURE_V0
+authority: pgc.platform
+concern: catalog
 core:
   summary: Declares the stores the catalog owns and the paths they occupy
   layer: DOMAINS

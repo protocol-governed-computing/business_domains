@@ -1,16 +1,5 @@
 # IN_ACTOR_REGISTERED_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** IN_ACTOR_REGISTERED_V0
-- **Artifact Kind:** intent
-- **Governed By:** CONSTITUTION_INTENT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 A request to admit a person as an actor
@@ -23,7 +12,9 @@ A request to admit a person as an actor
 fqdn: blockchain::IN_ACTOR_REGISTERED_V0
 artifact_kind: INTENT
 version: v0
-governed_by: fb.intent::CONSTITUTION_INTENT_V0
+governed_by: intent::CONSTITUTION_INTENT_V0
+authority: pgc.platform
+concern: identity
 core:
   summary: A request to admit a person as an actor
   workflow: WF_REGISTER_ACTOR_V0

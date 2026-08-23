@@ -1,16 +1,5 @@
 # RB_WALLET_BINDINGS_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** RB_WALLET_BINDINGS_V0
-- **Artifact Kind:** runtime_binding
-- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Binds the wallet workflow to the capabilities and stores it uses
@@ -23,7 +12,9 @@ Binds the wallet workflow to the capabilities and stores it uses
 fqdn: blockchain::RB_WALLET_BINDINGS_V0
 artifact_kind: RUNTIME_BINDING
 version: v0
-governed_by: fb.runtime_binding::CONSTITUTION_RUNTIME_BINDING_V0
+governed_by: runtime_binding::CONSTITUTION_RUNTIME_BINDING_V0
+authority: pgc.platform
+concern: wallet
 core:
   summary: Binds the wallet workflow to the capabilities and stores it uses
   storage_structure: blockchain::STRUCTURE_WALLET_STORAGE_V0

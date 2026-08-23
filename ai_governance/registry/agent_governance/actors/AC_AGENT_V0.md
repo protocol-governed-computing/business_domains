@@ -1,17 +1,5 @@
 # AC_AGENT_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** AC_AGENT_V0
-- **Artifact Kind:** actor
-- **Governed By:** CONSTITUTION_GOVERNANCE_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** NONE
-
----
-
 ## 1. Identity
 
 An autonomous agent that proposes actions through the governance protocol.
@@ -50,7 +38,9 @@ Agent actors are probabilistic intent emitters:
 fqdn: ai_governance::AC_AGENT_V0
 artifact_kind: ACTOR
 version: v0
-governed_by: fb.governance::CONSTITUTION_GOVERNANCE_V0
+governed_by: governance::CONSTITUTION_GOVERNANCE_V0
+authority: pgc.platform
+concern: agent_governance
 
 core:
   summary: Probabilistic intent emitter

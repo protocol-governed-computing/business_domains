@@ -1,31 +1,17 @@
 # IN_REGISTER_ADDITIONAL_EDITION_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** IN_REGISTER_ADDITIONAL_EDITION_V0
-- **Artifact Kind:** intent
-- **Governed By:** CONSTITUTION_INTENT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
-## 1. Intent
-
-A request to register a further edition of a work the catalog already holds
-
----
-
 ## Machine
 
 ```yaml
 fqdn: book_library_mgmt::IN_REGISTER_ADDITIONAL_EDITION_V0
 artifact_kind: INTENT
 version: v0
-governed_by: fb.intent::CONSTITUTION_INTENT_V0
+governed_by: intent::CONSTITUTION_INTENT_V0
+authority: pgc.platform
+concern: catalog
 core:
-  summary: A request to register a further edition of a work the catalog already holds
+  summary: The boundary that admits a request to register a further edition of a work the catalog already
+    holds
   workflow: WF_REGISTER_ADDITIONAL_EDITION_V0
   inputs:
     staff_credentials:
@@ -44,7 +30,7 @@ core:
       type: string
       required: true
     publication_year:
-      type: string
+      type: integer
       required: true
     subject:
       type: array
@@ -67,3 +53,9 @@ core:
     NACK:
       description: Request rejected
 ```
+
+---
+
+## Intent
+
+The boundary that admits a request to register a further edition of a work the catalog already holds

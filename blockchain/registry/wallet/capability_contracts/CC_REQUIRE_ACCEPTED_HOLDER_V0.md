@@ -1,16 +1,5 @@
 # CC_REQUIRE_ACCEPTED_HOLDER_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_REQUIRE_ACCEPTED_HOLDER_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Refuses a wallet for a person the business has not accepted, before anything is claimed or recorded
@@ -23,7 +12,9 @@ Refuses a wallet for a person the business has not accepted, before anything is 
 fqdn: blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: wallet
 core:
   summary: Refuses a wallet for a person the business has not accepted, before anything is claimed or
     recorded

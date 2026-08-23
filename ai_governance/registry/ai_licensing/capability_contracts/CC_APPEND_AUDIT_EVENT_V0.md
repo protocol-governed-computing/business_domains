@@ -1,17 +1,5 @@
 # CC_APPEND_AUDIT_EVENT_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_APPEND_AUDIT_EVENT_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** CS_APPENDONLY_JSONL_V0
-
----
-
 ## 1. Intent
 
 Append a decision event to the immutable audit log.
@@ -72,7 +60,9 @@ Audit logging is a protocol requirement:
 fqdn: ai_governance::CC_APPEND_AUDIT_EVENT_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: ai_licensing
 
 core:
   summary: Append decision event to audit log

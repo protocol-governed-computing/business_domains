@@ -89,8 +89,8 @@ records rather than hides.
 | identity | capability_transforms::CT_PURE_COMPARE_EQUAL_V0 | capability call | SATISFIED | S3 dependency_discoveries capability_transforms::CT_PURE_COMPARE_EQUAL_V0 |
 | identity | capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 | capability call | SATISFIED | S3 dependency_discoveries capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 |
 | identity | capability_transforms::CT_PURE_EXTRACT_V0 | capability call | SATISFIED | S3 dependency_discoveries capability_transforms::CT_PURE_EXTRACT_V0 |
-| identity | fb.actor::CONSTITUTION_ACTOR_IDENTITY_V0 | governance | SATISFIED | S3 dependency_discoveries fb.actor::CONSTITUTION_ACTOR_IDENTITY_V0 |
-| identity | fb.transport::CONSTITUTION_TRANSPORT_INGRESS_V0 | governance | SATISFIED | S3 dependency_discoveries fb.transport::CONSTITUTION_TRANSPORT_INGRESS_V0 |
+| identity | actor::CONSTITUTION_ACTOR_IDENTITY_V0 | governance | SATISFIED | S3 dependency_discoveries actor::CONSTITUTION_ACTOR_IDENTITY_V0 |
+| identity | transport::CONSTITUTION_TRANSPORT_INGRESS_V0 | governance | SATISFIED | S3 dependency_discoveries transport::CONSTITUTION_TRANSPORT_INGRESS_V0 |
 | identity | the substrate capability supplying the current time | capability call | GAP | S3 dependency_discoveries A capability side effect supplying the current time |
 
 ## 4. Constraint Register (constraint_register)

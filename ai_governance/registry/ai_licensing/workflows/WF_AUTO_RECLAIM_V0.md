@@ -1,17 +1,5 @@
 # WF_AUTO_RECLAIM_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** WF_AUTO_RECLAIM_V0
-- **Artifact Kind:** workflow
-- **Governed By:** CONSTITUTION_WORKFLOW_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** IN_RECLAIM_LICENSE_V0, CC_RECLAIM_UNUSED_LICENSE_V0, CC_APPEND_AUDIT_EVENT_V0
-
----
-
 ## 1. Intent
 
 Evaluate license inactivity and autonomously reclaim if threshold exceeded.
@@ -69,11 +57,13 @@ License must be provisioned but not yet revoked.
 fqdn: ai_governance::WF_AUTO_RECLAIM_V0
 artifact_kind: WORKFLOW
 version: v0
-governed_by: fb.workflow::CONSTITUTION_WORKFLOW_V0
+governed_by: workflow::CONSTITUTION_WORKFLOW_V0
+authority: pgc.platform
+concern: ai_licensing
 
 runtime_binding: ai_governance::RB_LICENSE_BINDINGS_V0
 subdomain: ai_licensing
-structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
+structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0
 
 core:
   summary: Autonomous license reclamation

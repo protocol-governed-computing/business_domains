@@ -1,17 +1,5 @@
 # CC_VALIDATE_TOOL_PARAMETERS_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_VALIDATE_TOOL_PARAMETERS_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** CT_PURE_LOOKUP_V0, CT_PURE_VALIDATE_PARAMETER_RULES_V0
-
----
-
 ## 1. Intent
 
 Enforce declared parameter constraints for the authorized tool.
@@ -69,7 +57,9 @@ Parameter validation is the fifth governance gate:
 fqdn: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: agent_governance
 
 core:
   summary: Enforce declared parameter constraints for authorized tool

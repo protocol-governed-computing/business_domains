@@ -2,7 +2,7 @@
 
 **Artifact Type**: STRUCTURE
 **Version**: V0
-**Governed By**: fb.structure::CONSTITUTION_STRUCTURE_V0
+**Governed By**: structure::CONSTITUTION_STRUCTURE_V0
 
 ---
 
@@ -39,7 +39,9 @@ deleting its folder — no other artifact is touched.
 fqdn: ai_governance::STRUCTURE_BUILD_AI_GOVERNANCE_CONFIG_V0
 artifact_kind: STRUCTURE
 version: V0
-governed_by: fb.structure::CONSTITUTION_STRUCTURE_V0
+governed_by: structure::CONSTITUTION_STRUCTURE_V0
+authority: pgc.platform
+concern: ai_governance
 structure_scope: ai_governance
 reuse_visibility: business
 core:
@@ -116,8 +118,3 @@ build_phases:
   target: compiled/artifacts/
 ```
 
-## Version History
-
-- **V0**: First AI governance business-domain build manifest. Self-describing; compiles
-  `ai_governance::` against the imported compiled governance surface; emits only `ai_governance`
-  artifacts. Governance surface unchanged.

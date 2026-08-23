@@ -1,16 +1,5 @@
 # CC_REGISTER_ACTOR_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_REGISTER_ACTOR_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Writes the actor unverified after its address is claimed
@@ -23,7 +12,9 @@ Writes the actor unverified after its address is claimed
 fqdn: blockchain::CC_REGISTER_ACTOR_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: identity
 core:
   summary: Writes the actor unverified after its address is claimed
   inputs:

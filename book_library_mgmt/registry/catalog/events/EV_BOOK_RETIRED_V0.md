@@ -1,16 +1,5 @@
 # EV_BOOK_RETIRED_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** EV_BOOK_RETIRED_V0
-- **Artifact Kind:** event
-- **Governed By:** CONSTITUTION_EVENT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 A book record is no longer to be used
@@ -23,7 +12,9 @@ A book record is no longer to be used
 fqdn: book_library_mgmt::EV_BOOK_RETIRED_V0
 artifact_kind: EVENT
 version: v0
-governed_by: fb.event::CONSTITUTION_EVENT_V0
+governed_by: event::CONSTITUTION_EVENT_V0
+authority: pgc.platform
+concern: catalog
 core:
   summary: A book record is no longer to be used
   description: A book record is no longer to be used

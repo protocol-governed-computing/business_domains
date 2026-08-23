@@ -1,16 +1,5 @@
 # EV_BIBLIOGRAPHIC_INFORMATION_UPDATED_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** EV_BIBLIOGRAPHIC_INFORMATION_UPDATED_V0
-- **Artifact Kind:** event
-- **Governed By:** CONSTITUTION_EVENT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 The authoritative description of a book changed
@@ -23,7 +12,9 @@ The authoritative description of a book changed
 fqdn: book_library_mgmt::EV_BIBLIOGRAPHIC_INFORMATION_UPDATED_V0
 artifact_kind: EVENT
 version: v0
-governed_by: fb.event::CONSTITUTION_EVENT_V0
+governed_by: event::CONSTITUTION_EVENT_V0
+authority: pgc.platform
+concern: catalog
 core:
   summary: The authoritative description of a book changed
   description: The authoritative description of a book changed

@@ -1,17 +1,5 @@
 # EV_LICENSE_CAP_SET_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** EV_LICENSE_CAP_SET_V0
-- **Artifact Kind:** event
-- **Governed By:** CONSTITUTION_EVENT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** NONE
-
----
-
 ## 1. Fact
 
 A license cap has been established for the system.
@@ -50,7 +38,9 @@ License cap is a hard constraint:
 fqdn: ai_governance::EV_LICENSE_CAP_SET_V0
 artifact_kind: EVENT
 version: v0
-governed_by: fb.event::CONSTITUTION_EVENT_V0
+governed_by: event::CONSTITUTION_EVENT_V0
+authority: pgc.platform
+concern: ai_licensing
 
 core:
   summary: License Cap Set

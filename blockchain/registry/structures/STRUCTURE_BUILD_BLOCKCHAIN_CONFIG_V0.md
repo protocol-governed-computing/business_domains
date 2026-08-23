@@ -1,16 +1,5 @@
 # STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0
-- **Artifact Kind:** structure
-- **Governed By:** CONSTITUTION_STRUCTURE_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Build-time STRUCTURE manifest (blockchain business-domain scope)
@@ -23,7 +12,9 @@ Build-time STRUCTURE manifest (blockchain business-domain scope)
 fqdn: blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0
 artifact_kind: STRUCTURE
 version: V0
-governed_by: fb.structure::CONSTITUTION_STRUCTURE_V0
+governed_by: structure::CONSTITUTION_STRUCTURE_V0
+authority: pgc.platform
+concern: blockchain
 structure_scope: blockchain
 reuse_visibility: business
 core:

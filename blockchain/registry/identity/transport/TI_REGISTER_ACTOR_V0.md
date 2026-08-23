@@ -1,16 +1,5 @@
 # TI_REGISTER_ACTOR_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** TI_REGISTER_ACTOR_V0
-- **Artifact Kind:** transport_ingress
-- **Governed By:** CONSTITUTION_TRANSPORT_INGRESS_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Admits a request to register an actor, declaring the name and contact address a caller sends and holding the schema, address path, stream, preferences and occurrence label the act requires.
@@ -23,7 +12,9 @@ Admits a request to register an actor, declaring the name and contact address a 
 fqdn: blockchain::TI_REGISTER_ACTOR_V0
 artifact_kind: TRANSPORT_INGRESS
 version: v0
-governed_by: fb.transport::CONSTITUTION_TRANSPORT_INGRESS_V0
+governed_by: transport::CONSTITUTION_TRANSPORT_INGRESS_V0
+authority: pgc.platform
+concern: identity
 operation: blockchain.register_actor
 core:
   summary: Admits a request to register an actor, declaring the name and contact address a caller sends

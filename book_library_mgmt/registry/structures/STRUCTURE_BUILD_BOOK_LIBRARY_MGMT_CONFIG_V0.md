@@ -1,16 +1,5 @@
 # STRUCTURE_BUILD_BOOK_LIBRARY_MGMT_CONFIG_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** STRUCTURE_BUILD_BOOK_LIBRARY_MGMT_CONFIG_V0
-- **Artifact Kind:** structure
-- **Governed By:** CONSTITUTION_STRUCTURE_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Build-time STRUCTURE manifest (book_library_mgmt business-domain scope)
@@ -23,7 +12,9 @@ Build-time STRUCTURE manifest (book_library_mgmt business-domain scope)
 fqdn: book_library_mgmt::STRUCTURE_BUILD_BOOK_LIBRARY_MGMT_CONFIG_V0
 artifact_kind: STRUCTURE
 version: V0
-governed_by: fb.structure::CONSTITUTION_STRUCTURE_V0
+governed_by: structure::CONSTITUTION_STRUCTURE_V0
+authority: pgc.platform
+concern: book_library_mgmt
 structure_scope: book_library_mgmt
 reuse_visibility: business
 core:

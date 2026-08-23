@@ -1,16 +1,5 @@
 # RB_IDENTITY_BINDINGS_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** RB_IDENTITY_BINDINGS_V0
-- **Artifact Kind:** runtime_binding
-- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 The bindings identity's workflows resolve their capabilities and stores through
@@ -23,7 +12,9 @@ The bindings identity's workflows resolve their capabilities and stores through
 fqdn: blockchain::RB_IDENTITY_BINDINGS_V0
 artifact_kind: RUNTIME_BINDING
 version: v0
-governed_by: fb.runtime_binding::CONSTITUTION_RUNTIME_BINDING_V0
+governed_by: runtime_binding::CONSTITUTION_RUNTIME_BINDING_V0
+authority: pgc.platform
+concern: identity
 core:
   summary: The bindings identity's workflows resolve their capabilities and stores through
   storage_structure: blockchain::STRUCTURE_IDENTITY_STORAGE_V0

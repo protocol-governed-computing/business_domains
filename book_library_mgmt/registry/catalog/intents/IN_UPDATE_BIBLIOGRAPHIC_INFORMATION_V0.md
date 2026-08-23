@@ -1,16 +1,5 @@
 # IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-- **Artifact Kind:** intent
-- **Governed By:** CONSTITUTION_INTENT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 A request to change a registered book's description
@@ -21,9 +10,13 @@ A request to change a registered book's description
 
 ```yaml
 fqdn: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
+superseded_by:
+- book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
 artifact_kind: INTENT
 version: v0
-governed_by: fb.intent::CONSTITUTION_INTENT_V0
+governed_by: intent::CONSTITUTION_INTENT_V0
+authority: pgc.platform
+concern: catalog
 core:
   summary: A request to change a registered book's description
   workflow: WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0

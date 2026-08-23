@@ -1,16 +1,5 @@
 # STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0
-- **Artifact Kind:** structure
-- **Governed By:** CONSTITUTION_STRUCTURE_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Declare storage topology for agent governance domain entities. Maps entity types to storage implementations and paths.
@@ -42,7 +31,9 @@ Storage paths are a governance concern, not a runtime implementation detail. Thi
 fqdn: ai_governance::STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0
 artifact_kind: STRUCTURE
 version: v0
-governed_by: fb.structure::CONSTITUTION_STRUCTURE_V0
+governed_by: structure::CONSTITUTION_STRUCTURE_V0
+authority: pgc.platform
+concern: agent_governance
 
 core:
   summary: Agent governance domain storage topology

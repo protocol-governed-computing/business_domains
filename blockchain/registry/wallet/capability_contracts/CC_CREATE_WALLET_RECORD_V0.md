@@ -1,16 +1,5 @@
 # CC_CREATE_WALLET_RECORD_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CC_CREATE_WALLET_RECORD_V0
-- **Artifact Kind:** capability_contract
-- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Records the wallet with a balance of zero, its denomination and its classification
@@ -23,7 +12,9 @@ Records the wallet with a balance of zero, its denomination and its classificati
 fqdn: blockchain::CC_CREATE_WALLET_RECORD_V0
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
-governed_by: fb.capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: wallet
 core:
   summary: Records the wallet with a balance of zero, its denomination and its classification
   inputs:

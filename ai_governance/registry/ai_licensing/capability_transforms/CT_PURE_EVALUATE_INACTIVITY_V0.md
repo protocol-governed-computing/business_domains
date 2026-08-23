@@ -1,16 +1,5 @@
 # CT_PURE_EVALUATE_INACTIVITY_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** CT_PURE_EVALUATE_INACTIVITY_V0
-- **Artifact Kind:** capability_transform
-- **Governed By:** CONSTITUTION_CAPABILITY_TRANSFORMS_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Decide whether a license has been dormant past its reclamation threshold.
@@ -27,7 +16,9 @@ caller supplies the evaluation instant, so the same inputs always produce the sa
 fqdn: ai_governance::CT_PURE_EVALUATE_INACTIVITY_V0
 artifact_kind: CAPABILITY_TRANSFORM
 version: v0
-governed_by: fb.capability_transforms::CONSTITUTION_CAPABILITY_TRANSFORMS_V0
+governed_by: capability_transforms::CONSTITUTION_CAPABILITY_TRANSFORMS_V0
+authority: pgc.platform
+concern: ai_licensing
 core:
   summary: Evaluate license inactivity against a declared threshold
   refusal: raises

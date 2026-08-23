@@ -1,17 +1,5 @@
 # AC_SYSTEM_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** AC_SYSTEM_V0
-- **Artifact Kind:** actor
-- **Governed By:** CONSTITUTION_GOVERNANCE_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** NONE
-
----
-
 ## 1. Identity
 
 A system actor represents a protocol authority for fact injection and automated operations.
@@ -49,7 +37,9 @@ System actors enable protocol automation:
 fqdn: ai_governance::AC_SYSTEM_V0
 artifact_kind: ACTOR
 version: v0
-governed_by: fb.governance::CONSTITUTION_GOVERNANCE_V0
+governed_by: governance::CONSTITUTION_GOVERNANCE_V0
+authority: pgc.platform
+concern: ai_licensing
 
 core:
   summary: System Authority Actor

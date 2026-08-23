@@ -1,17 +1,5 @@
 # AC_EMPLOYEE_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** AC_EMPLOYEE_V0
-- **Artifact Kind:** actor
-- **Governed By:** CONSTITUTION_GOVERNANCE_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** NONE
-
----
-
 ## 1. Identity
 
 An employee actor represents a person eligible for AI license provisioning.
@@ -50,7 +38,9 @@ Employee actors are subjects of protocol governance:
 fqdn: ai_governance::AC_EMPLOYEE_V0
 artifact_kind: ACTOR
 version: v0
-governed_by: fb.governance::CONSTITUTION_GOVERNANCE_V0
+governed_by: governance::CONSTITUTION_GOVERNANCE_V0
+authority: pgc.platform
+concern: ai_licensing
 
 core:
   summary: Employee Actor

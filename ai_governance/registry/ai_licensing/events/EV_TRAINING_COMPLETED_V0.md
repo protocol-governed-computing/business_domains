@@ -1,17 +1,5 @@
 # EV_TRAINING_COMPLETED_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** EV_TRAINING_COMPLETED_V0
-- **Artifact Kind:** event
-- **Governed By:** CONSTITUTION_EVENT_V0
-- **Version:** v0
-- **Status:** draft
-- **Supersedes:** NONE
-- **Dependencies:** NONE
-
----
-
 ## 1. Fact
 
 An employee has completed required training.
@@ -50,7 +38,9 @@ Training completion is a protocol gate:
 fqdn: ai_governance::EV_TRAINING_COMPLETED_V0
 artifact_kind: EVENT
 version: v0
-governed_by: fb.event::CONSTITUTION_EVENT_V0
+governed_by: event::CONSTITUTION_EVENT_V0
+authority: pgc.platform
+concern: ai_licensing
 
 core:
   summary: Training Completed

@@ -1,16 +1,5 @@
 # WF_SEARCH_CATALOG_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** WF_SEARCH_CATALOG_V0
-- **Artifact Kind:** workflow
-- **Governed By:** CONSTITUTION_WORKFLOW_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** NONE
-
----
-
 ## 1. Intent
 
 Searching by subject or title, excluding retired books
@@ -23,10 +12,12 @@ Searching by subject or title, excluding retired books
 fqdn: book_library_mgmt::WF_SEARCH_CATALOG_V0
 artifact_kind: WORKFLOW
 version: v0
-governed_by: fb.workflow::CONSTITUTION_WORKFLOW_V0
+governed_by: workflow::CONSTITUTION_WORKFLOW_V0
+authority: pgc.platform
+concern: catalog
 runtime_binding: book_library_mgmt::RB_CATALOG_BINDINGS_V0
 subdomain: catalog
-structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
+structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
   summary: Searching by subject or title, excluding retired books
   actor_context: book_library_mgmt::AC_LIBRARY_STAFF_V0

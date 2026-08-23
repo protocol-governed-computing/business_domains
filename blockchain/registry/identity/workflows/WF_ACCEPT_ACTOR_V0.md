@@ -1,16 +1,5 @@
 # WF_ACCEPT_ACTOR_V0
 
-## Header (Mandatory)
-
-- **Artifact Code:** WF_ACCEPT_ACTOR_V0
-- **Artifact Kind:** workflow
-- **Governed By:** CONSTITUTION_WORKFLOW_V0
-- **Version:** V0
-- **Status:** draft
-- **Supersedes:** blockchain::WF_RECORD_VERIFICATION_DECISION_V0
-
----
-
 ## 1. Intent
 
 The governed sequence that records an acceptance and announces it
@@ -23,11 +12,13 @@ The governed sequence that records an acceptance and announces it
 fqdn: blockchain::WF_ACCEPT_ACTOR_V0
 artifact_kind: WORKFLOW
 version: v0
-governed_by: fb.workflow::CONSTITUTION_WORKFLOW_V0
+governed_by: workflow::CONSTITUTION_WORKFLOW_V0
+authority: pgc.platform
+concern: identity
 supersedes: blockchain::WF_RECORD_VERIFICATION_DECISION_V0
 runtime_binding: blockchain::RB_IDENTITY_BINDINGS_V0
 subdomain: identity
-structure: fb.execution::STRUCTURE_RUNTIME_EXECUTION_V0
+structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
   summary: The governed sequence that records an acceptance and announces it
   actor_context: blockchain::AC_PARTICIPANT_V0
