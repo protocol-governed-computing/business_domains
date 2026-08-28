@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Actor — Blockchain</title>
+    <link rel="stylesheet" href="css/wallet.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-inner">
+            <img src="img/pgc_icon.svg" alt="PGC" class="logo">
+            <h1 class="app-title">Blockchain</h1>
+            <img src="img/pgc_logo.svg" alt="PGC" class="logo">
+        </div>
+        <nav class="screen-nav">
+            <a href="index.html">Home</a>
+            <a href="register_actor.html">Register Actor</a>
+            <a href="verify_actor.html" class="active">Verify Actor</a>
+            <a class="unavailable">Create Wallet</a>
+            <a class="unavailable">Submit Transaction</a>
+            <a class="unavailable">Register Validator</a>
+            <a class="unavailable">Propose Block</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2>Record a Verification Decision</h2>
+        <p class="lede">An authority decides about a registered person. Accepting and rejecting are
+           two different acts, not one act with an outcome — which is why the business records them
+           separately and offers them under separate names.</p>
+
+        <!-- Each choice names its own act. The page carries the names; it maps nothing and decides
+             nothing. Grounds are required on a rejection and optional on an acceptance — the
+             platform enforces that, and this page does not know it. -->
+        <form id="verify-form"
+              onsubmit="event.preventDefault(); submitOperation('verify-form');">
+
+            <div class="form-group">
+                <label for="contact_address">Contact Address</label>
+                <input type="text" id="contact_address" data-field="contact_address"
+                       placeholder="them@example.test">
+                <span class="hint">Whoever this address identifies is the person being decided about.</span>
+            </div>
+
+            <div class="form-group">
+                <label for="verifying_authority">Verifying Authority</label>
+                <input type="text" id="verifying_authority" data-field="verifying_authority"
+                       value="authority-01">
+                <span class="hint">Recorded as stated. Nothing checks that you are this authority,
+                      or that this authority may decide.</span>
+            </div>
+
+            <div class="form-group">
+                <label for="decision">Decision</label>
+                <select id="decision" data-operation-select>
+                    <option value="blockchain.accept_actor">Accept</option>
+                    <option value="blockchain.reject_actor">Reject</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="grounds">Grounds</label>
+                <textarea id="grounds" data-field="grounds"
+                          placeholder="Required to reject. Optional to accept."></textarea>
+                <span class="hint">A rejection states its grounds, because the grounds are the
+                      substance of the decision. An acceptance need not — the decision is itself the
+                      statement.</span>
+            </div>
+
+            <button type="submit" class="primary-button">Record Decision</button>
+        </form>
+
+        <div id="result" class="result-panel"></div>
+
+        <details class="explainer">
+            <summary>Examine the compiled workflow (DAG projection)</summary>
+            <div class="explainer-body">
+                <p>
+                    Below is the <strong>compiled</strong> execution graph of
+                    <code>WF_RECORD_VERIFICATION_DECISION_V0</code>, served live from the sealed
+                    snapshot. <strong>Both acts on this page reach it.</strong>
+                    <code>blockchain.accept_actor</code> and <code>blockchain.reject_actor</code> are
+                    two public names over one workflow — each boundary declaration holds its own
+                    constants, the decision and the occurrence it records. That one workflow serves
+                    two names is invisible to you, and is what lets the business's public names follow
+                    what it records rather than what it executes.
+                </p>
+                <p>
+                    Read the path: resolve the actor the address names, refuse if none exists, refuse
+                    if that actor has already been decided about, move the state, append the
+                    occurrence. Every refusal reaches one ending — which is why the answer tells you
+                    that the business refused, and not yet which refusal it was.
+                </p>
+                <img class="wf-projection"
+                     src="/snapshot/behavior_logic/blockchain/WF_RECORD_VERIFICATION_DECISION_V0/WF_RECORD_VERIFICATION_DECISION_V0.projection.png"
+                     alt="Compiled DAG projection of WF_RECORD_VERIFICATION_DECISION_V0"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <p class="wf-missing">
+                    Compiled projection unavailable — the snapshot may have been cleaned or rebuilt.
+                    Rebuild the snapshot to regenerate it.
+                </p>
+                <p style="font-size:12px;margin-top:6px;">
+                    <a href="/snapshot/behavior_logic/blockchain/WF_RECORD_VERIFICATION_DECISION_V0/WF_RECORD_VERIFICATION_DECISION_V0.projection.png"
+                       target="_blank" rel="noopener">Open full size &rarr;</a>
+                </p>
+            </div>
+        </details>
+    </div>
+
+    <footer class="app-footer">
+        operations <code>blockchain.accept_actor</code> and <code>blockchain.reject_actor</code>
+        &rarr; TI &rarr; WF &rarr; TE — PGC Transport Standard V0. A person is decided about once; a
+        second decision is refused by the business, which is not the same as being turned away at the
+        door.
+    </footer>
+
+    <script src="js/blockchain_bridge.js"></script>
+</body>
+</html>
