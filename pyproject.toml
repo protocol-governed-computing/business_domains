@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pgc-domains"
-version = "2.0.0"
+version = "2.0.1"
 description = "PGC business domains — the capability implementations the composed reference snapshot binds at execution"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -27,8 +27,14 @@ classifiers = [
 # transform hashes with keccak from pycryptodome.
 dependencies = [
   "pgc-runtime>=2.0.0",
-  "pycryptodome",
 ]
+
+# Domain cryptography is optional by design and is not required by the core compile path. Exactly
+# one capability transform needs it — `CT_PURE_DERIVE_WALLET_ADDRESS_V0` imports Keccak-256 from
+# pycryptodome, which `hashlib.sha3_256` cannot substitute for. Install the extra to admit the
+# blockchain domain's transforms:  pip install "pgc-domains[blockchain]"
+[project.optional-dependencies]
+blockchain = ["pycryptodome"]
 
 [project.urls]
 Homepage = "https://omnibachi.org/"
