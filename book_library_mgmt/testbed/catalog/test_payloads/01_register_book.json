@@ -1,0 +1,57 @@
+{
+  "staff_credentials": {
+    "staff_id": "s-101",
+    "authorized": true
+  },
+  "authorization_rules": [
+    {
+      "field": "staff_id",
+      "op": "not_null"
+    },
+    {
+      "field": "authorized",
+      "op": "eq",
+      "value": true
+    }
+  ],
+  "staff_id": "s-101",
+  "title": "The Odyssey",
+  "author": "Homer",
+  "publication_year": 1614,
+  "book_schema": {
+    "title": {
+      "required": true,
+      "type": "string"
+    },
+    "author": {
+      "required": true,
+      "type": "string"
+    },
+    "publication_year": {
+      "required": true,
+      "type": "integer"
+    },
+    "subject": {
+      "required": true,
+      "type": "array"
+    }
+  },
+  "book_fields": {
+    "title": "The Odyssey",
+    "author": "Homer",
+    "publication_year": 1614,
+    "subject": [
+      "epic",
+      "poetry"
+    ],
+    "state": "REGISTERED"
+  },
+  "barcode": "BC-0001",
+  "copy_fields": {
+    "barcode": "BC-0001",
+    "state": "REGISTERED",
+    "title": "The Odyssey",
+    "author": "Homer",
+    "publication_year": 1614
+  }
+}
