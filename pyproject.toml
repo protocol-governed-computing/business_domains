@@ -63,5 +63,5 @@ include = [
 ]
 namespaces = true
 
-[tool.setuptools.package-data]
-"*" = ["*.json"]
+# No package-data: the implementations are pure Python. A bare "*" block here matched
+# nothing and would have shipped any data file later placed beside a module.
