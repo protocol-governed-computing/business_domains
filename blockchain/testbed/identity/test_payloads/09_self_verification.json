@@ -1,0 +1,26 @@
+{
+  "contact_address": "bob@example.test",
+  "verifying_authority": "bob@example.test",
+  "decision": "ACCEPTED",
+  "grounds": "",
+  "states_admitting_a_decision": [
+    "UNVERIFIED"
+  ],
+  "admitted_outcomes": [
+    "ACCEPTED",
+    "REJECTED"
+  ],
+  "decided_actor_fields": {
+    "contact_address": "bob@example.test",
+    "state": "ACCEPTED",
+    "verifying_authority": "bob@example.test",
+    "grounds": ""
+  },
+  "stream_id": "ACTOR_OCCURRENCES",
+  "occurrence_fields": {
+    "occurrence": "ACTOR_ACCEPTED",
+    "contact_address": "bob@example.test",
+    "verifying_authority": "bob@example.test",
+    "grounds": ""
+  }
+}

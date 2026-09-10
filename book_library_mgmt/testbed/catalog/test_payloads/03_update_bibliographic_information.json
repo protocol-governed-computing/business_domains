@@ -1,0 +1,33 @@
+{
+  "staff_credentials": {
+    "staff_id": "s-101",
+    "authorized": true
+  },
+  "authorization_rules": [
+    {
+      "field": "staff_id",
+      "op": "not_null"
+    },
+    {
+      "field": "authorized",
+      "op": "eq",
+      "value": true
+    }
+  ],
+  "staff_id": "s-101",
+  "title": "The Odyssey",
+  "author": "Homer",
+  "publication_year": 1614,
+  "identity_key": "the odyssey|homer|1614",
+  "updated_fields": {
+    "title": "The Odyssey",
+    "author": "Homer",
+    "publication_year": 1614,
+    "subject": [
+      "epic",
+      "poetry",
+      "greek"
+    ],
+    "state": "REGISTERED"
+  }
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Actor — Blockchain</title>
+    <link rel="stylesheet" href="css/wallet.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-inner">
+            <img src="img/pgc_icon.svg" alt="PGC" class="logo">
+            <h1 class="app-title">Blockchain</h1>
+            <img src="img/pgc_logo.svg" alt="PGC" class="logo">
+        </div>
+        <nav class="screen-nav">
+            <a href="index.html">Home</a>
+            <a href="register_actor.html" class="active">Register Actor</a>
+            <a href="verify_actor.html">Verify Actor</a>
+            <a class="unavailable">Create Wallet</a>
+            <a class="unavailable">Submit Transaction</a>
+            <a class="unavailable">Register Validator</a>
+            <a class="unavailable">Propose Block</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2>Register Yourself</h2>
+        <p class="lede">You supply your own details and are admitted <strong>unverified</strong> —
+           known to the business, trusted with nothing, until an authority decides about you.</p>
+
+        <!-- The act is named by the business's public word for it, never by the workflow that
+             performs it. No field is marked required here: the platform decides what it can read
+             and says which detail was at fault. -->
+        <form id="register-form" data-operation="blockchain.register_actor"
+              onsubmit="event.preventDefault(); submitOperation('register-form');">
+
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" data-field="name">
+            </div>
+
+            <div class="form-group">
+                <label for="contact_address">Contact Address</label>
+                <input type="text" id="contact_address" data-field="contact_address"
+                       placeholder="you@example.test">
+                <span class="hint">This is what identifies you. Registering twice with the same
+                      address does not create a second person, and does not fail.</span>
+            </div>
+
+            <button type="submit" class="primary-button">Register</button>
+        </form>
+
+        <div id="result" class="result-panel"></div>
+
+        <details class="explainer">
+            <summary>Examine the compiled workflow (DAG projection)</summary>
+            <div class="explainer-body">
+                <p>
+                    Below is the <strong>compiled</strong> execution graph of
+                    <code>WF_REGISTER_ACTOR_V0</code>, served live from the sealed snapshot. This form
+                    never names it: it names the operation <code>blockchain.register_actor</code>, and
+                    the boundary declaration binds that public name to this workflow. Re-point the
+                    binding and this picture changes while the form does not.
+                </p>
+                <p>
+                    Read the path the runtime traverses — admit the request, read the registration for
+                    absence and form, claim the contact address, write the actor, append the
+                    occurrence. A second registration of the same address routes around the write and
+                    still appends, which is why registering twice leaves one actor and two occurrences.
+                </p>
+                <img class="wf-projection"
+                     src="/snapshot/behavior_logic/blockchain/WF_REGISTER_ACTOR_V0/WF_REGISTER_ACTOR_V0.projection.png"
+                     alt="Compiled DAG projection of WF_REGISTER_ACTOR_V0"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <p class="wf-missing">
+                    Compiled projection unavailable — the snapshot may have been cleaned or rebuilt.
+                    Rebuild the snapshot to regenerate it.
+                </p>
+                <p style="font-size:12px;margin-top:6px;">
+                    <a href="/snapshot/behavior_logic/blockchain/WF_REGISTER_ACTOR_V0/WF_REGISTER_ACTOR_V0.projection.png"
+                       target="_blank" rel="noopener">Open full size &rarr;</a>
+                </p>
+            </div>
+        </details>
+    </div>
+
+    <footer class="app-footer">
+        operation <code>blockchain.register_actor</code> &rarr; TI &rarr; WF &rarr; TE — PGC Transport
+        Standard V0. Preferred currency and language are recorded at their defaults; the page does not
+        ask, and every actor still carries an answer.
+    </footer>
+
+    <script src="js/blockchain_bridge.js"></script>
+</body>
+</html>
