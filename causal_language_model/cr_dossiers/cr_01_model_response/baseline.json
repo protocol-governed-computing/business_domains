@@ -17,6 +17,9 @@
     },
     "p3": {
       "authoring_decisions": "bp"
+    },
+    "p4": {
+      "dependency_graph": "bp"
     }
   }
 }
