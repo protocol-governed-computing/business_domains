@@ -20,6 +20,9 @@
     },
     "p4": {
       "dependency_graph": "bp"
+    },
+    "p5": {
+      "cross_subdomain_refs": "bp"
     }
   }
 }
