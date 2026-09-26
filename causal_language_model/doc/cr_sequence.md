@@ -11,9 +11,9 @@ not steer the sequence.
 
 | CR | Function | Adds | Axis |
 |---|---|---|---|
-| 1 | answer | Register a model, place it in service with answer rules, and ask a question through the test model. Rules apply while the model writes. Refusals are recorded. | both, thin |
+| 1 | model_response | Register a model, place it in service with a system prompt and response rules, and submit a user prompt through the test model. Rules apply while the model writes. Refusals are recorded. | both, thin |
 | 2 | registry | The full registry: describe, list, retire, reinstate | flexibility |
-| 3 | disclosure | Review a finished answer before release | behavior |
+| 3 | disclosure | Review a finished model response before release | behavior |
 | 4 | action | A model proposes an action. Only an authorized actor's authority lets it proceed. | behavior |
 | 5 | substitution | Replace the model in service under unchanged behavior declarations. The identity change is evidenced. | flexibility |
 | 6 | reporting | Evidence for an independent auditor | both |
