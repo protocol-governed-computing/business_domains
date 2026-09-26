@@ -14,6 +14,9 @@
     "p2": {
       "belief_verification": "bp",
       "pps_baseline_fqdns": "bp"
+    },
+    "p3": {
+      "authoring_decisions": "bp"
     }
   }
 }
