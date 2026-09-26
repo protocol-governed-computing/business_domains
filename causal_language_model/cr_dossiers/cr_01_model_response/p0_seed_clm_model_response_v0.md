@@ -52,7 +52,7 @@ response needs, and it governs none of the remaining functions.
 | Forbidden Words and Patterns | Words and patterns a model must never write, such as any account number other than the customer's own. |
 | Freedom of Word Choice | How freely a model may choose its words, from always choosing the most likely word to choosing more adventurously. |
 | Longest Response | The longest response a model may write during its time in service. |
-| User Prompt | What a requester submits on behalf of one customer: a question and any supporting material, naming the model and stating the most sensitive kind of information the question and its material contain. |
+| User Prompt | What a requester submits on behalf of one customer: a question and any supporting material, naming the model, stating the most sensitive kind of information the question and its material contain, and carrying the customer's account numbers. |
 | Question | What the requester asks the model on the customer's behalf. |
 | Supporting Material | Material carried with a question for the model to read, such as the customer's recent transactions. |
 | Customer | The customer on whose behalf a user prompt is submitted, and whose own accounts the question is about. |
@@ -106,6 +106,8 @@ response needs, and it governs none of the remaining functions.
 | A rule belongs to the response rules only if it can be applied while the model writes. | HIGH |
 | A rule that can only be judged once a response is finished belongs to a later review of finished responses, which this release does not include. | HIGH |
 | "Another customer's account number" depends on who the customer is; the rule is applied for each user prompt, using the account numbers of the customer the user prompt is for. | HIGH |
+| The user prompt carries the account numbers of the customer it is for, taken from the business's existing records. | HIGH |
+| The customer's account numbers are used to form the rule against another customer's account number, and reach the model only if they are also part of the supporting material. | HIGH |
 | The requester cannot change the response rules or the system prompt; they belong to the model's time in service. | HIGH |
 | When the model is about to write a word a rule forbids, the rule stops that word and the model continues with a permitted one. | HIGH |
 | If the model cannot finish a response without breaking a rule, it gives no response; the user prompt is refused, and the record says which rule stopped it. | HIGH |

@@ -163,3 +163,7 @@ and one set of response rules.
 
 Deciding which staff are authorized model staff is the business's existing business and is not
 decided here.
+
+The user prompt carries the account numbers of the customer it is for, taken from the business's
+existing records. They are used to form the rule against another customer's account number. They
+reach the model only if they are also part of the supporting material.
