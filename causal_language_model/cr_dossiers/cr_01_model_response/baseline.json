@@ -23,6 +23,10 @@
     },
     "p5": {
       "cross_subdomain_refs": "bp"
+    },
+    "p6": {
+      "ownership": "bp",
+      "pps_artifacts_requiring_action": "bp"
     }
   }
 }
