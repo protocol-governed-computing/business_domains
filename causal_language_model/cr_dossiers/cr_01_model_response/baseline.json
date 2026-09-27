@@ -36,6 +36,9 @@
       "new_artifacts": "bp",
       "refusal_governance_discharge": "bp",
       "step_bindings": "bp"
+    },
+    "p8": {
+      "build_order": "bp"
     }
   }
 }
