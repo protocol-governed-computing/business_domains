@@ -60,6 +60,7 @@ include = [
   "ai_governance.implementation*",
   "blockchain.implementation*",
   "book_library_mgmt.implementation*",
+  "causal_language_model.implementation*",
 ]
 namespaces = true
 
