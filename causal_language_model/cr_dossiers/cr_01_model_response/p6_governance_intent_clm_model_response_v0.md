@@ -77,6 +77,8 @@ reused as-is. Two are deferred to the business's existing arrangements.
 | A durable record of every model the business holds | One record per model, carrying its registered-or-in-service state | model_response | S5 business_objects Model record |
 | A claim on each model's identity, held once | Duplicate registration must be refused at the moment of registration | model_response | S5 business_objects Model identity register |
 | A durable record of every time in service | Each period with its ceiling, system prompt and response rules, open until withdrawal | model_response | S5 business_objects Time in service record |
+| A claim on each time in service's identity, held once | A second placement under the same identity must be refused, never overwrite the first | model_response | S5 business_objects Time in service identity register |
+| A claim on each user prompt's identity, held once | One user prompt identity must resolve to exactly one user prompt record | model_response | S5 business_objects User prompt identity register |
 | A record of every user prompt that cannot be amended | What the model read, the rules in force and the outcome, kept whole as evidence | model_response | S5 business_objects User prompt record |
 | A trail of performed operations that cannot be amended | Every operation must be traceable afterwards | model_response | S5 business_objects Operation trail |
 

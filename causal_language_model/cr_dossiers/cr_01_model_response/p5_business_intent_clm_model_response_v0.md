@@ -67,6 +67,8 @@ true, or what happens to a response after it is written.
 | Model record | MUTABLE_STATE | The business holds one record per model, and a model moves into and out of service on the same record | S4 bm_entities Model |
 | Model identity register | IDENTITY_REGISTRY | A second registration of the same model must be refused atomically | S4 design_decisions #8 |
 | Time in service record | MUTABLE_STATE | A time in service is opened at placement and closed at withdrawal, on the same record | S4 bm_entities Time in Service |
+| Time in service identity register | IDENTITY_REGISTRY | A time in service must never be opened twice under one identity, or a later placement would overwrite an earlier one | S4 bm_entities Time in Service |
+| User prompt identity register | IDENTITY_REGISTRY | One user prompt identity must resolve to exactly one user prompt record | S4 bm_entities User Prompt Record |
 | User prompt record | APPEND_ONLY_JOURNAL | Every user prompt is recorded with exactly what the model read and its outcome, and a record that could be amended would not be evidence | S4 bm_entities User Prompt Record |
 | Operation trail | APPEND_ONLY_JOURNAL | Every operation must be traceable afterwards | S4 resources Operation trail |
 
@@ -80,7 +82,9 @@ true, or what happens to a response after it is written.
 | Model record | Description and training fingerprint together | Supplied by model staff at registration; the fingerprint is the provider's claim | Two registrations whose descriptions and fingerprints both match describe the same model, and the second is refused | None | S1 identity_and_sameness #1 |
 | Model identity register | The key formed from the description and fingerprint | Formed at registration | One entry per model; a second claim of the same key is refused | None | S4 design_decisions #8 |
 | Time in service record | The model and the moment it was placed in service | Assigned at placement | At most one open time in service per model | Names exactly one model record | S1 business_invariants #3 |
-| User prompt record | Append position | Assigned when the entry is appended | Each user prompt appends exactly one entry, and no entry is amended or removed | Names one model and one time in service | S4 bm_entities User Prompt Record |
+| Time in service identity register | The time in service's identity | Claimed at placement, before the time in service is opened | One entry per time in service; a second claim of the same identity is refused | Names exactly one time in service record | S1 business_invariants #3 |
+| User prompt identity register | The user prompt's identity | Named by the requester and claimed before anything else is done with the user prompt | One entry per user prompt; a second submission under the same identity is refused | Names exactly one user prompt record | S4 bm_entities User Prompt Record |
+| User prompt record | The user prompt's identity | Claimed at submission | Each claimed user prompt appends at most one entry, and no entry is amended or removed | Names one model and one time in service | S4 bm_entities User Prompt Record |
 | Operation trail | Append position | Assigned when the entry is appended | Each performed operation appends exactly one entry, and no entry is amended or removed | Names the staff member or requester who performed the operation | S4 resources Operation trail |
 
 ---
@@ -142,6 +146,7 @@ true, or what happens to a response after it is written.
 | model_response | WF_SUBMIT_USER_PROMPT_V0 | WF | Admitting a user prompt, writing the response under the rules, releasing or refusing it, and recording it | S4 capability_graph Submit a user prompt and release or refuse the model response |
 | model_response | WF_RETRIEVE_USER_PROMPT_RECORD_V0 | WF | Reading a user prompt record and recording that it was read | S4 capability_graph Retrieve a user prompt record |
 | model_response | CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | CC | Confirm the staff member is model staff | S4 gap_register GAP-12 |
+| model_response | CC_CLAIM_USER_PROMPT_IDENTITY_V0 | CC | Claim a user prompt's identity so a second submission under it is refused | S4 gap_register GAP-15 |
 | model_response | CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0 | CC | Confirm the requester may act for the customer the user prompt is for | S4 gap_register GAP-12 |
 | model_response | CC_CLAIM_MODEL_IDENTITY_V0 | CC | Claim a model's identity so a second registration of the same model is refused | S4 gap_register GAP-13 |
 | model_response | CC_REGISTER_MODEL_V0 | CC | Record a model's description and fingerprint as its record, registered | S4 gap_register GAP-13 |
