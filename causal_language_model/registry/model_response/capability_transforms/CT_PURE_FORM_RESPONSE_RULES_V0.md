@@ -6,7 +6,7 @@
 fqdn: causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0
 artifact_kind: CAPABILITY_TRANSFORM
 version: v0
-governed_by: capability_transforms::CONSTITUTION_CAPABILITY_TRANSFORMS_V0
+governed_by: capability_transforms::CONSTITUTION_DETERMINISTIC_ATOMS_V0
 authority: pgc.platform
 concern: model_response
 core:

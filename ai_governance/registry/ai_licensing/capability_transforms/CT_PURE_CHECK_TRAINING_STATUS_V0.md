@@ -13,7 +13,7 @@ the eligibility *policy* lives in `CC_VALIDATE_ELIGIBILITY_V0`; this transform o
 fqdn: ai_governance::CT_PURE_CHECK_TRAINING_STATUS_V0
 artifact_kind: CAPABILITY_TRANSFORM
 version: v0
-governed_by: capability_transforms::CONSTITUTION_CAPABILITY_TRANSFORMS_V0
+governed_by: capability_transforms::CONSTITUTION_DETERMINISTIC_ATOMS_V0
 authority: pgc.platform
 concern: ai_licensing
 core:

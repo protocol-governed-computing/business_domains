@@ -13,7 +13,7 @@ declared policy input, never read from storage by this transform.
 fqdn: ai_governance::CT_PURE_CHECK_QUOTA_AVAILABLE_V0
 artifact_kind: CAPABILITY_TRANSFORM
 version: v0
-governed_by: capability_transforms::CONSTITUTION_CAPABILITY_TRANSFORMS_V0
+governed_by: capability_transforms::CONSTITUTION_DETERMINISTIC_ATOMS_V0
 authority: pgc.platform
 concern: ai_licensing
 core:

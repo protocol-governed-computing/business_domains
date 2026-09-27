@@ -12,7 +12,7 @@ Groups records by the value of a named attribute, returning one group per distin
 fqdn: book_library_mgmt::CT_PURE_GROUP_RECORDS_V0
 artifact_kind: CAPABILITY_TRANSFORM
 version: v0
-governed_by: capability_transforms::CONSTITUTION_CAPABILITY_TRANSFORMS_V0
+governed_by: capability_transforms::CONSTITUTION_DETERMINISTIC_ATOMS_V0
 authority: pgc.platform
 concern: catalog
 core:

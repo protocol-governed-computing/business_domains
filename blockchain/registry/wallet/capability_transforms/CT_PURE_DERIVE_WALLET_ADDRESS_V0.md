@@ -12,7 +12,7 @@ Derives an address from supplied key material; the same material always yields t
 fqdn: blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0
 artifact_kind: CAPABILITY_TRANSFORM
 version: v0
-governed_by: capability_transforms::CONSTITUTION_CAPABILITY_TRANSFORMS_V0
+governed_by: capability_transforms::CONSTITUTION_DETERMINISTIC_ATOMS_V0
 authority: pgc.platform
 concern: wallet
 core:

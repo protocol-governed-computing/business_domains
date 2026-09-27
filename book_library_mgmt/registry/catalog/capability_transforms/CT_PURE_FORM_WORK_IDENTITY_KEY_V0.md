@@ -12,7 +12,7 @@ Forms the single key claimed for a work from its title and author
 fqdn: book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0
 artifact_kind: CAPABILITY_TRANSFORM
 version: v0
-governed_by: capability_transforms::CONSTITUTION_CAPABILITY_TRANSFORMS_V0
+governed_by: capability_transforms::CONSTITUTION_DETERMINISTIC_ATOMS_V0
 authority: pgc.platform
 concern: catalog
 core:
