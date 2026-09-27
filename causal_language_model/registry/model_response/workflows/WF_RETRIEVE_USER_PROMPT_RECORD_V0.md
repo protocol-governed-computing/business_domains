@@ -33,17 +33,8 @@ core:
           op: eq
           value: model_staff
       next:
-        SUCCESS: CC_RETRIEVE_USER_PROMPT_RECORD_V0
-        VIOLATION: EXIT_REJECTED
-    CC_RETRIEVE_USER_PROMPT_RECORD_V0:
-      type: CC
-      code: CC_RETRIEVE_USER_PROMPT_RECORD_V0
-      inputs:
-        user_prompt_id: $.payload.user_prompt_id
-      next:
         SUCCESS: CC_APPEND_MODEL_OPERATION_V0
         VIOLATION: EXIT_REJECTED
-        BACKEND_ERROR: EXIT_REJECTED
     CC_APPEND_MODEL_OPERATION_V0:
       type: CC
       code: CC_APPEND_MODEL_OPERATION_V0
@@ -54,6 +45,15 @@ core:
           operation: RETRIEVE_USER_PROMPT_RECORD
           staff_id: $.payload.staff_id
           subject: $.payload.user_prompt_id
+      next:
+        SUCCESS: CC_RETRIEVE_USER_PROMPT_RECORD_V0
+        VIOLATION: EXIT_REJECTED
+        BACKEND_ERROR: EXIT_REJECTED
+    CC_RETRIEVE_USER_PROMPT_RECORD_V0:
+      type: CC
+      code: CC_RETRIEVE_USER_PROMPT_RECORD_V0
+      inputs:
+        user_prompt_id: $.payload.user_prompt_id
       next:
         SUCCESS: EXIT_RETRIEVED
         VIOLATION: EXIT_REJECTED
