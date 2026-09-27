@@ -401,7 +401,7 @@ same way.
 | causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | INPUT | seed | payload.seed | S7 execution_topology CC_WRITE_MODEL_RESPONSE_V0 |
 | causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | INPUT | reading | results.CC_CONFIRM_READING_FITS_V0.reading | S7 execution_topology CC_WRITE_MODEL_RESPONSE_V0 |
 | causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | CONFIRM_NO_RULE_STOPPED | INPUT | release_facts | {'stopped_by': '$.results.CC_WRITE_MODEL_RESPONSE_V0.written_response.stopped_by'} | S7 execution_topology CONFIRM_NO_RULE_STOPPED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | CONFIRM_NO_RULE_STOPPED | INPUT | release_rules | [{'field': 'stopped_by', 'op': 'eq', 'value': ''}] | S7 execution_topology CONFIRM_NO_RULE_STOPPED |
+| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | CONFIRM_NO_RULE_STOPPED | INPUT | release_rules | [{'field': 'stopped_by', 'op': 'eq', 'value': 'none'}] | S7 execution_topology CONFIRM_NO_RULE_STOPPED |
 | causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | CONFIRM_FINISHED | INPUT | release_facts | {'finished': '$.results.CC_WRITE_MODEL_RESPONSE_V0.written_response.finished'} | S7 execution_topology CONFIRM_FINISHED |
 | causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | CONFIRM_FINISHED | INPUT | release_rules | [{'field': 'finished', 'op': 'eq', 'value': True}] | S7 execution_topology CONFIRM_FINISHED |
 | causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_RESPONDED | INPUT | user_prompt_id | payload.user_prompt_id | S7 execution_topology RECORD_RESPONDED |
@@ -637,18 +637,18 @@ same way.
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | INPUT | position | integer | YES |  | Which word this is |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | INPUT | text | string | YES |  | The response so far |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | INPUT | finished | boolean | YES |  | Whether the response has finished |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | INPUT | stopped_by | string | YES |  | The rule that left no permitted word, or empty |
+| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | INPUT | stopped_by | string | YES |  | The rule that left no permitted word, or none |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | INPUT | stopped | array | YES |  | The words stopped so far, each with its position and rule |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | OUTPUT | text | string | YES |  | The response so far, with the chosen word |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | OUTPUT | finished | boolean | YES |  | Whether the chosen word ends the response |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | OUTPUT | stopped_by | string | YES |  | The rule that left no permitted word, or empty |
+| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | OUTPUT | stopped_by | string | YES |  | The rule that left no permitted word, or none |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | OUTPUT | stopped | array | YES |  | The words stopped so far, with those stopped this pass |
 | causal_language_model::CT_WRITE_NEXT_WORD_V0 | INPUT | reading | object | YES |  | Exactly what the model reads |
 | causal_language_model::CT_WRITE_NEXT_WORD_V0 | INPUT | rules_in_force | object | YES |  | The response rules in force |
 | causal_language_model::CT_WRITE_NEXT_WORD_V0 | INPUT | position | integer | YES |  | Which word this is |
 | causal_language_model::CT_WRITE_NEXT_WORD_V0 | INPUT | text | string | YES |  | The response so far |
 | causal_language_model::CT_WRITE_NEXT_WORD_V0 | INPUT | finished | boolean | YES |  | Whether the response has finished |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | INPUT | stopped_by | string | YES |  | The rule that left no permitted word, or empty |
+| causal_language_model::CT_WRITE_NEXT_WORD_V0 | INPUT | stopped_by | string | YES |  | The rule that left no permitted word, or none |
 | causal_language_model::CT_WRITE_NEXT_WORD_V0 | INPUT | stopped | array | YES |  | The words stopped so far |
 | causal_language_model::CT_WRITE_NEXT_WORD_V0 | OUTPUT | result | object | YES |  | The response so far, whether it finished, the rule that stopped it and the words stopped |
 | causal_language_model::CT_WRITE_RESPONSE_V0 | INPUT | reading | object | YES |  | Exactly what the model reads |
@@ -688,7 +688,8 @@ spaces and dashes removed are among the rule's exceptions. It then chooses among
 candidates, most likely first and ties in offered order: of the first freedom-plus-one, the one at
 position (seed plus the word's position) modulo their count. The end marker `<end>` finishes the
 response; any other word is appended after one space. When nothing is permitted, the rule that stopped
-the most likely candidate is named and the response is left as it stood.
+the most likely candidate is named and the response is left as it stood. `none` names no rule: the
+response has not been stopped.
 
 <!-- register:implementation_bindings optional -->
 | CT Code | Module | Callable | Operation | Kind (atom, molecule) | Purity (ct_pure, ct_impure) | Refusal (raises, returns, never) | Source Finding |
@@ -744,6 +745,7 @@ declared order.
 | causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | emit.EXIT_RESPONDED | causal_language_model::EV_USER_PROMPT_RESPONDED_V0 | S4 gap_register GAP-20 |
 | causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | emit.EXIT_REFUSED | causal_language_model::EV_USER_PROMPT_REFUSED_V0 | S4 gap_register GAP-20 |
 | causal_language_model::EV_USER_PROMPT_REFUSED_V0 | moment | refusal | S0 business_events User Prompt Refused |
+| causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0 | layer | DOMAINS | S5 provisional_codes STRUCTURE_MODEL_RESPONSE_STORAGE_V0 |
 
 ---
 
@@ -875,7 +877,7 @@ at `EXIT_REFUSED`, which refuses. The check that found the refusal routes there 
 | causal_language_model::CT_WRITE_NEXT_WORD_V0 | chosen | INPUT | stopped | inputs.stopped | S4 design_decisions #2 |
 | causal_language_model::CT_WRITE_RESPONSE_V0 | written | CARRY | text | "" | S4 design_decisions #2 |
 | causal_language_model::CT_WRITE_RESPONSE_V0 | written | CARRY | finished | false | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | written | CARRY | stopped_by | "" | S4 design_decisions #2 |
+| causal_language_model::CT_WRITE_RESPONSE_V0 | written | CARRY | stopped_by | none | S4 design_decisions #2 |
 | causal_language_model::CT_WRITE_RESPONSE_V0 | written | CARRY | stopped | [] | S4 design_decisions #2 |
 | causal_language_model::CT_WRITE_RESPONSE_V0 | written | INPUT | position | iterator | S4 design_decisions #2 |
 | causal_language_model::CT_WRITE_RESPONSE_V0 | written | INPUT | reading | inputs.reading | S4 design_decisions #2 |
@@ -951,47 +953,47 @@ at `EXIT_REFUSED`, which refuses. The check that found the refusal routes there 
 | causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | offers_candidates | INPUT | reading | {system_prompt: 'Answer briefly.', question: 'What is my balance?', supporting_material: 'Account 12345678 balance 40.'} | human decision |
 | causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | offers_candidates | INPUT | text | "" | human decision |
 | causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | offers_candidates | INPUT | finished | false | human decision |
-| causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | offers_candidates | INPUT | stopped_by | "" | human decision |
+| causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | offers_candidates | INPUT | stopped_by | none | human decision |
 | causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | offers_candidates | ASSERT | candidates | {mode: property, type: non_zero} | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | INPUT | candidates | [{word: '87654321', likelihood: 0.6}, {word: Your, likelihood: 0.3}] | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | INPUT | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 0, seed: 7} | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | INPUT | position | 1 | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | INPUT | text | "" | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | INPUT | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | INPUT | stopped_by | "" | human decision |
+| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | INPUT | stopped_by | none | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | INPUT | stopped | [] | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | EXPECTED | text | Your | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | EXPECTED | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | EXPECTED | stopped_by | "" | human decision |
+| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | EXPECTED | stopped_by | none | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | EXPECTED | stopped | [{position: 1, word: '87654321', rule: another_customers_account_number}] | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | INPUT | candidates | [{word: '4321', likelihood: 0.7}, {word: is, likelihood: 0.2}] | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | INPUT | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 0, seed: 7} | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | INPUT | position | 3 | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | INPUT | text | Account 8765 | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | INPUT | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | INPUT | stopped_by | "" | human decision |
+| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | INPUT | stopped_by | none | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | INPUT | stopped | [] | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | EXPECTED | text | Account 8765 is | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | EXPECTED | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | EXPECTED | stopped_by | "" | human decision |
+| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | EXPECTED | stopped_by | none | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | EXPECTED | stopped | [{position: 3, word: '4321', rule: another_customers_account_number}] | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | INPUT | candidates | [{word: '5678', likelihood: 0.8}] | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | INPUT | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 0, seed: 7} | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | INPUT | position | 3 | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | INPUT | text | Account 1234 | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | INPUT | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | INPUT | stopped_by | "" | human decision |
+| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | INPUT | stopped_by | none | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | INPUT | stopped | [] | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | EXPECTED | text | Account 1234 5678 | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | EXPECTED | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | EXPECTED | stopped_by | "" | human decision |
+| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | EXPECTED | stopped_by | none | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | EXPECTED | stopped | [] | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | INPUT | candidates | [{word: '87654321', likelihood: 0.9}] | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | INPUT | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 0, seed: 7} | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | INPUT | position | 1 | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | INPUT | text | "" | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | INPUT | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | INPUT | stopped_by | "" | human decision |
+| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | INPUT | stopped_by | none | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | INPUT | stopped | [] | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | EXPECTED | text | "" | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | EXPECTED | finished | false | human decision |
@@ -1002,32 +1004,32 @@ at `EXIT_REFUSED`, which refuses. The check that found the refusal routes there 
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | INPUT | position | 2 | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | INPUT | text | Your | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | INPUT | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | INPUT | stopped_by | "" | human decision |
+| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | INPUT | stopped_by | none | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | INPUT | stopped | [] | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | EXPECTED | text | Your savings | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | EXPECTED | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | EXPECTED | stopped_by | "" | human decision |
+| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | EXPECTED | stopped_by | none | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | EXPECTED | stopped | [] | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | INPUT | candidates | [{word: <end>, likelihood: 0.9}] | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | INPUT | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 0, seed: 7} | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | INPUT | position | 3 | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | INPUT | text | Your balance | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | INPUT | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | INPUT | stopped_by | "" | human decision |
+| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | INPUT | stopped_by | none | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | INPUT | stopped | [] | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | EXPECTED | text | Your balance | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | EXPECTED | finished | true | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | EXPECTED | stopped_by | "" | human decision |
+| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | EXPECTED | stopped_by | none | human decision |
 | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | EXPECTED | stopped | [] | human decision |
 | causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | INPUT | reading | {system_prompt: 'Answer briefly.', question: 'What is my balance?', supporting_material: 'Account 12345678 balance 40.'} | human decision |
 | causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | INPUT | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 0, seed: 7} | human decision |
 | causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | INPUT | position | 1 | human decision |
 | causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | INPUT | text | "" | human decision |
 | causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | INPUT | finished | false | human decision |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | INPUT | stopped_by | "" | human decision |
+| causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | INPUT | stopped_by | none | human decision |
 | causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | INPUT | stopped | [] | human decision |
 | causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | RECORDED | offered | {candidates: [{word: '87654321', likelihood: 0.6}, {word: Your, likelihood: 0.3}]} | human decision |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | EXPECTED | result | {text: Your, finished: false, stopped_by: '', stopped: [{position: 1, word: '87654321', rule: another_customers_account_number}]} | human decision |
+| causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | EXPECTED | result | {text: Your, finished: false, stopped_by: none, stopped: [{position: 1, word: '87654321', rule: another_customers_account_number}]} | human decision |
 | causal_language_model::CT_WRITE_RESPONSE_V0 | writes_a_finished_response_and_offers_nothing_after | INPUT | reading | {system_prompt: 'Answer briefly.', question: 'What is my balance?', supporting_material: 'Account 12345678 balance 40.'} | human decision |
 | causal_language_model::CT_WRITE_RESPONSE_V0 | writes_a_finished_response_and_offers_nothing_after | INPUT | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 0, seed: 7} | human decision |
 | causal_language_model::CT_WRITE_RESPONSE_V0 | writes_a_finished_response_and_offers_nothing_after | INPUT | positions | [1, 2, 3, 4] | human decision |
@@ -1035,12 +1037,12 @@ at `EXIT_REFUSED`, which refuses. The check that found the refusal routes there 
 | causal_language_model::CT_WRITE_RESPONSE_V0 | writes_a_finished_response_and_offers_nothing_after | RECORDED | written[1]/offered | {candidates: [{word: balance, likelihood: 0.9}]} | human decision |
 | causal_language_model::CT_WRITE_RESPONSE_V0 | writes_a_finished_response_and_offers_nothing_after | RECORDED | written[2]/offered | {candidates: [{word: <end>, likelihood: 0.9}]} | human decision |
 | causal_language_model::CT_WRITE_RESPONSE_V0 | writes_a_finished_response_and_offers_nothing_after | RECORDED | written[3]/offered | {candidates: []} | human decision |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | writes_a_finished_response_and_offers_nothing_after | EXPECTED | result | {text: Your balance, finished: true, stopped_by: '', stopped: [{position: 1, word: '87654321', rule: another_customers_account_number}]} | human decision |
+| causal_language_model::CT_WRITE_RESPONSE_V0 | writes_a_finished_response_and_offers_nothing_after | EXPECTED | result | {text: Your balance, finished: true, stopped_by: none, stopped: [{position: 1, word: '87654321', rule: another_customers_account_number}]} | human decision |
 | causal_language_model::CT_WRITE_RESPONSE_V0 | stops_unfinished_at_the_longest_response | INPUT | reading | {system_prompt: 'Answer briefly.', question: 'What is my balance?', supporting_material: 'Account 12345678 balance 40.'} | human decision |
 | causal_language_model::CT_WRITE_RESPONSE_V0 | stops_unfinished_at_the_longest_response | INPUT | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 0, seed: 7} | human decision |
 | causal_language_model::CT_WRITE_RESPONSE_V0 | stops_unfinished_at_the_longest_response | INPUT | positions | [1] | human decision |
 | causal_language_model::CT_WRITE_RESPONSE_V0 | stops_unfinished_at_the_longest_response | RECORDED | written[0]/offered | {candidates: [{word: Your, likelihood: 0.9}]} | human decision |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | stops_unfinished_at_the_longest_response | EXPECTED | result | {text: Your, finished: false, stopped_by: '', stopped: []} | human decision |
+| causal_language_model::CT_WRITE_RESPONSE_V0 | stops_unfinished_at_the_longest_response | EXPECTED | result | {text: Your, finished: false, stopped_by: none, stopped: []} | human decision |
 
 ---
 
