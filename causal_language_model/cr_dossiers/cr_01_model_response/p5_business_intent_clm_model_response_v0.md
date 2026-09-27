@@ -48,7 +48,7 @@ true, or what happens to a response after it is written.
 | Write a response word by word, each pass offering and then choosing, until it finishes, no permitted word remains, or the longest response is reached | IN_SCOPE | Each pass runs two declared steps, the model's offer and the rules' choice | S4 authoring_scope GAP-08 |
 | Offer the model's next words, with a result not determined by its inputs | IN_SCOPE | The single step declared as not deterministic | S4 authoring_scope GAP-06 |
 | Choose one permitted word under the response rules, the freedom of word choice and a stated seed | IN_SCOPE | Deterministic given the offered words, the rules and the seed | S4 authoring_scope GAP-07 |
-| Run a composed body once per pass of a transform's loop | IN_SCOPE | Owned by the platform; carried by this change | S4 authoring_scope GAP-09 |
+| Run a composed body once per pass of a transform's loop | IN_SCOPE | Owned by the platform, which declares and runs it; reused | S4 authoring_scope GAP-09 |
 | A test model that tries to write another customer's account number | IN_SCOPE | A permanent realization of the model's step | S4 authoring_scope GAP-10 |
 | Retiring models | DEFERRED | Declared excluded from this release | S4 authoring_scope Retiring models |
 | Reviewing a model response after it is written | DEFERRED | The disclosure function | S4 authoring_scope Disclosure |
@@ -103,7 +103,7 @@ true, or what happens to a response after it is written.
 | Every business operation is traceable and auditable | The business must be able to show what was done and by whom | S4 constraint_register #11 |
 | Each word's rule decision is a step governance can see | The rules must visibly act while the model writes | S4 constraint_register #18 |
 | Only the model's step gives results not determined by its inputs | A reader must see exactly where determinism ends | S4 constraint_register #19 |
-| No business moment and no operation's input carries a model response | Two faithful runs of the same user prompt must be comparable | S4 constraint_register #20 |
+| The model's offered words are recorded, and a replay of a user prompt from its record reproduces its trace exactly | A user prompt's trace must be reproducible from what was recorded | S4 constraint_register #20 |
 | Every word chosen more adventurously than the most likely one is drawn from a recorded seed | Anyone reading the record can re-derive each chosen word | S4 constraint_register #21 |
 
 ---
@@ -147,8 +147,11 @@ true, or what happens to a response after it is written.
 | model_response | CC_REGISTER_MODEL_V0 | CC | Record a model's description and fingerprint as its record, registered | S4 gap_register GAP-13 |
 | model_response | CC_PLACE_MODEL_IN_SERVICE_V0 | CC | Open a time in service with its ceiling, system prompt and response rules, and mark the model in service | S4 gap_register GAP-14 |
 | model_response | CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | CC | Close the time in service and mark the model registered | S4 gap_register GAP-14 |
-| model_response | CC_ADMIT_USER_PROMPT_V0 | CC | Refuse a user prompt before the model sees it: model not registered, not in service, kind above the ceiling, or reading too long | S4 gap_register GAP-15 |
-| model_response | CC_WRITE_MODEL_RESPONSE_V0 | CC | Write the response word by word under the rules in force, and release it or refuse with the rule or length that stopped it | S4 gap_register GAP-15 |
+| model_response | CC_ADMIT_USER_PROMPT_V0 | CC | Refuse a user prompt before the model sees it when its model is not registered or not in service | S4 gap_register GAP-15 |
+| model_response | CC_CONFIRM_WITHIN_CEILING_V0 | CC | Refuse a user prompt before the model sees it when it states a kind more sensitive than the ceiling | S4 gap_register GAP-15 |
+| model_response | CC_CONFIRM_READING_FITS_V0 | CC | Assemble exactly what the model reads and refuse it before the model sees it when it is too long | S4 gap_register GAP-15 |
+| model_response | CC_WRITE_MODEL_RESPONSE_V0 | CC | Write the response word by word under the rules in force | S4 gap_register GAP-15 |
+| model_response | CC_CONFIRM_RESPONSE_RELEASABLE_V0 | CC | Release a written response only when it finished and no rule stopped it, refusing it with the rule or length that stopped it | S4 gap_register GAP-15 |
 | model_response | CC_RECORD_USER_PROMPT_V0 | CC | Append the user prompt record with what the model read, the rules in force and the outcome | S4 gap_register GAP-15 |
 | model_response | CC_RETRIEVE_USER_PROMPT_RECORD_V0 | CC | Read the record of a user prompt | S4 gap_register GAP-16 |
 | model_response | CC_APPEND_MODEL_OPERATION_V0 | CC | Append a durable account of a performed operation to the subdomain's own trail | S4 gap_register GAP-17 |
@@ -179,8 +182,7 @@ true, or what happens to a response after it is written.
 
 No capability contract from another subdomain is referenced. The subdomain reuses declared
 mechanisms — durable records, uniqueness, append-only trails and four pure transforms — and composes
-them itself. The test model and the runtime extension are realizations, not capability contracts, and
-are carried to Stage 7.
+them itself. The test model is a realization, not a capability contract, and is carried to Stage 7.
 
 ---
 

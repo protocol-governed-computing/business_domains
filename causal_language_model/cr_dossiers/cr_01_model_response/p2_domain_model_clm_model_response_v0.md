@@ -6,7 +6,7 @@
 **Feeds:** Stage 3 — Analysis Loop
 
 Every claim about what exists is grounded in the pinned baseline
-`1b0cfbd3d094b7e93a965135c32b9f94ba8c3c43c0a1e8e8aacac8ebbdc9d010` — 407 artifacts across
+`f6cfaac48c1fba78ab92d38a65828b91a105ae56f0be78040cfc6b71701b13e6` — 425 artifacts across
 ai_governance, blockchain, book_library_mgmt, inspection, platform, transformation, workload — read
 through the inspection interface. The semantic model is inherited from Stage 1 and confirmed here,
 never re-derived.
@@ -152,8 +152,9 @@ never re-derived.
 | A business subdomain in this composition declares its own stores and binds its own operations to them, so a new subdomain has a worked precedent for owning its records. | book_library_mgmt::STRUCTURE_CATALOG_STORAGE_V0 · book_library_mgmt::RB_CATALOG_BINDINGS_V0 | OBSERVED | S2 belief_verification #1 |
 | Registering something once, identified by several attributes together, has a worked precedent: a key formed from the attributes and a uniqueness registry keyed on it. | book_library_mgmt::CT_PURE_FORM_BOOK_IDENTITY_KEY_V0 · capability_side_effects::CS_REGISTRY_V0 | OBSERVED | S1 identity_and_sameness #1 |
 | Operations in this composition are declared as step sequences that may not return to an earlier step. | workflow::CONSTITUTION_WORKFLOW_V0 · workflow::INVARIANT_WF_EXECUTION_PATH_VALID_V0 | OBSERVED | S1 known_facts — a language model writes a response one word at a time |
-| Transforms are classified by whether they have effects, and the composition carries transforms of two classes only: those with none, and one that emits a final value. No transform is declared to give different results from the same inputs. | capability_transforms::CT_EXEC_EMIT_V0 · capability_transforms::INVARIANT_ATOM_OUTPUT_PURITY_V0 | OBSERVED | S1 known_facts — nobody can predict a language model's exact response in advance |
-| The execution trace declares which of its content is determinative and which is merely observational. | vocabulary::VOCAB_EVIDENCE_CONTENT_CLASSIFICATION_V0 | OBSERVED | S1 known_facts — given the same question twice, it may respond differently |
+| Transforms are placed by what they declare: a deterministic atom, a molecule, or an atom whose result is not determined by its inputs, each governed by its own constitution. Every result of such an atom is recorded when produced, a replay substitutes the record and never runs the atom, and its result is offered to a deterministic step rather than decided on. No transform in the composition is yet declared so. | capability_transforms::CONSTITUTION_NONDETERMINISTIC_ATOMS_V0 · capability_transforms::INVARIANT_CT_GOVERNED_BY_KIND_V0 · capability_transforms::INVARIANT_NONDETERMINISM_NOT_ROUTED_V0 | OBSERVED | S1 known_facts — nobody can predict a language model's exact response in advance |
+| A transform may be a molecule: declared steps, including a loop that runs a composed body once per member of a collection and carries its values between passes. The runtime runs it, and records each step it runs. No composition yet carries a molecule. | capability_transforms::CONSTITUTION_MOLECULES_V0 · capability_transforms::INVARIANT_MOLECULE_RUNNABLE_V0 | OBSERVED | S1 known_facts — a language model writes a response one word at a time |
+| The execution trace declares which of its content is determinative and which is merely observational. A step's detail is determinative, and for an atom whose result is not determined by its inputs that detail carries the result's values. | vocabulary::VOCAB_EVIDENCE_CONTENT_CLASSIFICATION_V0 | OBSERVED | S1 known_facts — given the same question twice, it may respond differently |
 | Recording a performed operation into the subdomain's own trail is already composed as a governed step, within another subdomain. | book_library_mgmt::CC_APPEND_CATALOG_OPERATION_V0 | OBSERVED | S1 business_invariants — every business operation is traceable and auditable |
 
 ---
@@ -163,9 +164,9 @@ never re-derived.
 <!-- register:discovery_concerns business_language -->
 | Concern | Evidence | Severity | Evidence Status | Source Finding |
 |---------|----------|----------|-----------------|----------------|
-| Writing word by word repeats, while operations may not return to an earlier step. The repetition must therefore live below the operation, and the only precedent keeps it inside one transform where no rule decision is visible. | workflow::CONSTITUTION_WORKFLOW_V0 · workload::CT_PURE_COLLATZ_STEP_V0 | CRITICAL | OBSERVED | S1 requested_outcomes #1 |
-| The model is the first capability whose result is not determined by its inputs, and nothing in the composition declares such a capability. Where that part ends, and where the deterministic rules begin, has no declared place. | capability_transforms::INVARIANT_ATOM_OUTPUT_PURITY_V0 · capability_transforms::CT_EXEC_EMIT_V0 | CRITICAL | OBSERVED | S1 known_facts — nobody can predict a language model's exact response in advance |
-| A model response differs between runs of the same user prompt, so recording it where the trace treats content as determinative would make two faithful runs look different. | vocabulary::VOCAB_EVIDENCE_CONTENT_CLASSIFICATION_V0 | MAJOR | INFERRED | S1 known_facts — given the same question twice, it may respond differently |
+| Writing word by word repeats, while operations may not return to an earlier step. The repetition must therefore live below the operation. The platform declares and runs the form it takes — a molecule's loop — and the only composed precedent keeps the repetition inside one atom, where no rule decision is visible. | workflow::CONSTITUTION_WORKFLOW_V0 · capability_transforms::CONSTITUTION_MOLECULES_V0 | MAJOR | OBSERVED | S1 requested_outcomes #1 |
+| The model is the first capability whose result is not determined by its inputs. The platform declares where such a capability belongs, and requires that its result be offered to a deterministic step and never decided on; no composition yet carries one. | capability_transforms::CONSTITUTION_NONDETERMINISTIC_ATOMS_V0 · capability_transforms::INVARIANT_NONDETERMINISM_NOT_ROUTED_V0 | MAJOR | OBSERVED | S1 known_facts — nobody can predict a language model's exact response in advance |
+| A model's offered words differ between runs of the same user prompt, and the trace records them as determinative, so two fresh runs of the same user prompt yield different traces. A replay from the record reproduces one exactly. | vocabulary::VOCAB_EVIDENCE_CONTENT_CLASSIFICATION_V0 · capability_transforms::CONSTITUTION_NONDETERMINISTIC_ATOMS_V0 | MAJOR | OBSERVED | S1 known_facts — given the same question twice, it may respond differently |
 | The rule against another customer's account number needs the account numbers of the customer the user prompt is for, and the statement does not say where the subdomain reads them from. | — | MAJOR | INFERRED | S1 known_facts — "another customer's account number" depends on who the customer is |
 | Comparing a kind of information with a ceiling needs the kinds' order, and the available value-set check confirms membership only. | capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0 | MINOR | OBSERVED | S1 known_facts — the kinds of information, from least to most sensitive |
 | A user prompt record keeps whole what the model read, so its entries are as large as the material submitted. | capability_side_effects::CS_APPENDONLY_JSONL_V0 | MINOR | INFERRED | S1 constraints — the record keeps exactly what the model read |
@@ -179,7 +180,7 @@ never re-derived.
 |----------|----------|----------------|----------------|
 | Where does the subdomain read the customer's account numbers from, to form the rule against another customer's account number? | BUSINESS | The rule cannot be formed for a user prompt without them. | S2 discovery_concerns #4 |
 | How can each word's rule decision be a step governance can see, when the repetition must live below the operation? | ARCHITECTURE | It decides whether the rules visibly act while the model writes, which is the central requested outcome. | S2 discovery_concerns #1 |
-| How is a capability declared whose result is not determined by its inputs? | ARCHITECTURE | The model is such a capability, and the composition declares none. | S2 discovery_concerns #2 |
+| How is a capability declared whose result is not determined by its inputs? | ARCHITECTURE | The model is such a capability, and no composition yet carries one. | S2 discovery_concerns #2 |
 
 ---
 

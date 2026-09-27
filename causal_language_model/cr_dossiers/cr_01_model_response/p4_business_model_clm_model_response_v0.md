@@ -83,7 +83,7 @@ the capability graph exactly as Stage 3 stated it.
 | Offer the model's next words, with a result not determined by its inputs | S3 authoring_decisions Offer the model's next words, with a result not determined by its inputs | CRITICAL | GAP-06 | Nothing in the composition satisfies it. |
 | Choose one permitted word under the response rules, the freedom of word choice and a stated seed | S3 authoring_decisions Choose one permitted word under the response rules, the freedom of word choice and a stated seed | CRITICAL | GAP-07 | Nothing in the composition satisfies it. |
 | Write a response word by word, each pass offering and then choosing, until it finishes, no permitted word remains, or the longest response is reached | S3 authoring_decisions Write a response word by word, each pass offering and then choosing, until it finishes, no permitted word remains, or the longest response is reached | CRITICAL | GAP-08 | Nothing in the composition satisfies it. |
-| Run a composed body once per pass of a transform's loop | S3 authoring_decisions Run a composed body once per pass of a transform's loop | CRITICAL | GAP-09 | Owned by platform: a declared construct the runtime is extended to run. |
+| Run a composed body once per pass of a transform's loop | S3 authoring_decisions Run a composed body once per pass of a transform's loop | SATISFIED | GAP-09 | Owned by platform: capability_transforms::CONSTITUTION_MOLECULES_V0, declared and run. |
 | A test model that tries to write another customer's account number | S3 authoring_decisions A test model that tries to write another customer's account number | CRITICAL | GAP-10 | Nothing in the composition satisfies it. |
 | Model staff and requester actors whose authorization an operation binds | S3 authoring_decisions Model staff and requester actors whose authorization an operation binds | CRITICAL | GAP-11 | Nothing in the composition satisfies it. |
 | Confirm the staff member is model staff, and the requester may act for the customer | S3 authoring_decisions Confirm the staff member is model staff, and the requester may act for the customer | CRITICAL | GAP-12 | Nothing in the composition satisfies it. |
@@ -110,11 +110,12 @@ the capability graph exactly as Stage 3 stated it.
 | model_response | capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0 | capability call | SATISFIED | S3 dependency_discoveries Record shape validation |
 | model_response | capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0 | capability call | SATISFIED | S3 dependency_discoveries Parameter validation |
 | model_response | capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0 | capability call | SATISFIED | S3 dependency_discoveries Value-set membership |
-| model_response | platform | execution | GAP | S3 dependency_discoveries Platform execution |
+| model_response | capability_transforms::CONSTITUTION_MOLECULES_V0 | molecule execution | SATISFIED | S3 dependency_discoveries Molecule execution |
+| model_response | capability_transforms::CONSTITUTION_NONDETERMINISTIC_ATOMS_V0 | non-deterministic step | SATISFIED | S3 dependency_discoveries Non-deterministic step |
 | model_response | The business's existing arrangements | data read | GAP | S1 authority_deferrals #1 |
 
-The dependency on the platform is the runtime extension this change carries. The dependency on the
-business's existing arrangements is owned by the business, not by this change: the subdomain reads
+The dependencies on the platform are satisfied: it declares and runs molecules and steps whose result
+is not determined by their inputs. The dependency on the business's existing arrangements is owned by the business, not by this change: the subdomain reads
 whether a requester may act for a customer and whether staff are model staff, and decides neither.
 
 ---
@@ -143,7 +144,7 @@ whether a requester may act for a customer and whether staff are model staff, an
 | 17 | The business must not claim that a model response is true. | S1 constraints #9 | business policy |
 | 18 | Each pass of writing runs two declared steps, the model's offer and the rules' choice, so each word's rule decision is visible. | S3 analysis_findings #1 | governance rule |
 | 19 | Only the model's step is declared as giving results not determined by its inputs. | S3 analysis_findings #2 | governance rule |
-| 20 | No business moment's payload and no operation's input carries a model response. | S3 analysis_findings #3 | governance rule |
+| 20 | The model's offered words are recorded, and a replay of a user prompt from its record reproduces its trace exactly. | S3 analysis_findings #3 | governance rule |
 | 21 | The rules' step draws from a stated seed, recorded with the rules in force, and never draws one itself. | S3 analysis_findings #10 | governance rule |
 | 22 | The subdomain appends only to stores it owns. | S3 authoring_decisions Record each performed operation in the subdomain's own trail | governance rule |
 
@@ -162,7 +163,7 @@ whether a requester may act for a customer and whether staff are model staff, an
 | GAP-06 | S3 authoring_decisions Offer the model's next words, with a result not determined by its inputs | Offer the model's next words, with a result not determined by its inputs | model_response | NEW |
 | GAP-07 | S3 authoring_decisions Choose one permitted word under the response rules, the freedom of word choice and a stated seed | Choose one permitted word under the response rules, the freedom of word choice and a stated seed | model_response | NEW |
 | GAP-08 | S3 authoring_decisions Write a response word by word, each pass offering and then choosing, until it finishes, no permitted word remains, or the longest response is reached | Write a response word by word, each pass offering and then choosing, until it finishes, no permitted word remains, or the longest response is reached | model_response | NEW |
-| GAP-09 | S3 authoring_decisions Run a composed body once per pass of a transform's loop | Run a composed body once per pass of a transform's loop | platform | EXTEND |
+| GAP-09 | S3 authoring_decisions Run a composed body once per pass of a transform's loop | Run a composed body once per pass of a transform's loop | platform | REUSE |
 | GAP-10 | S3 authoring_decisions A test model that tries to write another customer's account number | A test model that tries to write another customer's account number | model_response | NEW |
 | GAP-11 | S3 authoring_decisions Model staff and requester actors whose authorization an operation binds | Model staff and requester actors whose authorization an operation binds | model_response | NEW |
 | GAP-12 | S3 authoring_decisions Confirm the staff member is model staff, and the requester may act for the customer | Confirm the staff member is model staff, and the requester may act for the customer | model_response | NEW |
@@ -183,9 +184,9 @@ whether a requester may act for a customer and whether staff are model staff, an
 | # | Decision | Source Finding | Rationale | Constraints Imposed |
 |---|----------|----------------|-----------|---------------------|
 | 1 | model_response is a new subdomain, a peer of the five other project functions, rather than an extension of anything existing. | S3 placement_decision | Nothing in the composition carries the project's namespace, registers a model or governs how one writes. | The subdomain owns its records exclusively; the five other functions are adjacent and untouched. |
-| 2 | A response is written word by word, each pass running two declared steps: the model offers its next words, and the response rules choose one. The runtime is extended to run a composed loop body. | S3 analysis_findings #1 | The rules must act while the model writes, visibly to governance; the construct is declared and only its execution is missing. Decided by the business owner. | One platform extension carried by this change; no schema, constitution or invariant changes. |
-| 3 | Only the model's step is declared as giving results not determined by its inputs. | S3 analysis_findings #2 | A reader of the composition must see exactly where determinism ends. | The rules' step and every other transform stay declared deterministic. |
-| 4 | A model response is kept whole in the user prompt record and nowhere in the trace's compared content. | S3 analysis_findings #3 | Two faithful runs of the same user prompt must yield comparable traces. | No business moment's payload and no operation's input carries a model response. |
+| 2 | A response is written word by word, each pass running two declared steps: the model offers its next words, and the response rules choose one. The writing transform is a molecule whose loop runs those two steps each pass. | S3 analysis_findings #1 | The rules must act while the model writes, visibly to governance; the platform declares and runs the construct. Decided by the business owner. | No platform extension; no schema, constitution or invariant changes. |
+| 3 | Only the model's step is declared as giving results not determined by its inputs; its result is offered to the response rules' step and never decided on. | S3 analysis_findings #2 | A reader of the composition must see exactly where determinism ends, and the platform governs that step. | The rules' step and every other transform stay declared deterministic; the writing transform emits the chosen response, never the model's offer. |
+| 4 | The model's offered words are recorded in the trace, and a user prompt's trace is reproduced from its record rather than compared across fresh runs. | S3 analysis_findings #3 | The platform records every result of a step not determined by its inputs; a replay substitutes the record. Decided by the business owner at rebaseline. | A model response may appear wherever the design places it; it is also kept whole in the user prompt record. |
 | 5 | The rules' step draws from a stated seed recorded with the rules in force. | S3 analysis_findings #10 | Given the model's offered words, the rules and the seed, anyone reading the record can re-derive each chosen word. | The seed is an input of the rules' step, never drawn inside it. |
 | 6 | The test model is a permanent realization of the model's step; a real model later joins it as a second realization. | S3 analysis_findings #11 | The rules must be shown to hold against a model that tries to break them, before and after a real model exists. | The model's step is declared by the domain; its realization is supplied outside the domain's own pure transforms. |
 | 7 | The user prompt carries the customer's account numbers; the subdomain reads no customer records of its own. | S3 analysis_findings #4 | The rule against another customer's account number is formed per user prompt. Decided by the business owner. | The account numbers reach the model only if they are also part of the supporting material. |
