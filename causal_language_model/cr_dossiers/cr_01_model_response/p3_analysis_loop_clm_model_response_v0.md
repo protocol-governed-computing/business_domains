@@ -6,7 +6,7 @@
 **Feeds:** Stage 4 — Business Model
 
 Every decision below is grounded in the pinned baseline
-`f6cfaac48c1fba78ab92d38a65828b91a105ae56f0be78040cfc6b71701b13e6`, re-read at this stage rather
+`3918d97c73a7431ecc9ef512938b34afa9028cd6e382626398750dca12defb1f`, re-read at this stage rather
 than inherited from Stage 2. Two questions could not be settled by evidence and were decided by the
 business owner: where the customer's account numbers come from, and how each word's rule decision is
 made visible to governance. The dossier was rebaselined onto this composition after the platform

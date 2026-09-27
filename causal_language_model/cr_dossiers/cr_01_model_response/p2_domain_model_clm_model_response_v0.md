@@ -6,7 +6,7 @@
 **Feeds:** Stage 3 — Analysis Loop
 
 Every claim about what exists is grounded in the pinned baseline
-`f6cfaac48c1fba78ab92d38a65828b91a105ae56f0be78040cfc6b71701b13e6` — 425 artifacts across
+`3918d97c73a7431ecc9ef512938b34afa9028cd6e382626398750dca12defb1f` — 425 artifacts across
 ai_governance, blockchain, book_library_mgmt, inspection, platform, transformation, workload — read
 through the inspection interface. The semantic model is inherited from Stage 1 and confirmed here,
 never re-derived.

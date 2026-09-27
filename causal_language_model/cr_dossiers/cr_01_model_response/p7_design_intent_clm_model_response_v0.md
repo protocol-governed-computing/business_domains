@@ -6,7 +6,7 @@
 **Feeds:** Stage 8 — Authoring Mandate
 
 Every binding names a field the capability declares, read from the pinned baseline
-`f6cfaac48c1fba78ab92d38a65828b91a105ae56f0be78040cfc6b71701b13e6`.
+`3918d97c73a7431ecc9ef512938b34afa9028cd6e382626398750dca12defb1f`.
 
 ---
 
