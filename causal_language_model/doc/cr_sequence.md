@@ -7,6 +7,13 @@ completed one. Each one adds a function that the earlier ones left adjacent.
 The motivation lives in `causal_language_model.md`. It explains why the sequence exists. It does
 not steer the sequence.
 
+> **Where the sequence stands.** CR-1 is delivered and validated (27/27), and the domain is frozen
+> there as a regression domain. CR-2 through CR-6 are parked, not cancelled: each would mostly
+> repeat what CR-1 proved about the platform. That changes the order below in one respect. If the
+> domain moves again, the real model binding comes next, ahead of CR-2 rather than after CR-6. That
+> step tests the idea — genuine non-determinism, capacity in tokens rather than words — where more
+> functions would not. The reasoning is in `.github/process/notes/clm-process-check.md`.
+
 ## The sequence
 
 | CR | Function | Adds | Axis |

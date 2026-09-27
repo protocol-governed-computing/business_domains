@@ -3,6 +3,16 @@
 Nothing here is decided, and no work on the platform should be sequenced around it. Held in `doc/`
 because the idea outlives the session that had it, not because it is scheduled.
 
+> **Since this was written, part of it has been decided.** CR-1, `model_response`, was designed,
+> built and validated by running (27/27). The domain is now in the composition, frozen at CR-1, and
+> kept as a regression domain. It is the one domain with a step not determined by its inputs, so it
+> holds the platform to molecules, recorded outcomes, replay and refusal moments. The change
+> requests after CR-1 are parked. If the domain moves again, the next step is a real model as a
+> second realization of the declared step, not CR-2. The reasoning is in
+> `.github/process/notes/clm-process-check.md`; what CR-1 delivered is in
+> `cr_dossiers/cr_01_model_response/delivery.md`. The rest of this document is the idea as first
+> held, kept unchanged.
+
 ---
 
 ## The idea

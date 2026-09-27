@@ -12,7 +12,8 @@ For the big picture — what PGC is and how the repositories compose — see
 ## 1. What this repo is
 
 This is where **actual businesses** are declared. Registering a person, cataloguing a book, granting
-an AI agent a licence — work someone would want done whether or not this platform existed.
+an AI agent a licence, answering a customer through a language model — work someone would want done
+whether or not this platform existed.
 
 > Everything else in the composition exists so that a domain here can be written **entirely as
 > declaration**. No domain in this repository implements admission, routing, persistence,
@@ -71,6 +72,11 @@ The distinction that explains every design choice in this repository:
                                           for a rule to hide
 ```
 
+The graph names places, not contracts. A **node is a key**, and the contract it runs is named in its
+own right, so one contract can run at several places in a workflow, each with its own inputs,
+continuation and announcement. A language model's submission records its outcome at ten places:
+one responds, and the others refuse for their own reasons.
+
 Two consequences are worth stating outright, because they are what the model buys:
 
 **A rule cannot be bypassed by a caller, because there is no other way in.** An inadmissible
@@ -81,13 +87,14 @@ the above, and the characteristic defect of this repository: it is entirely poss
 domain document describing a rule, compile a domain that does not carry it, and have every test
 pass. Only executing the function and reading what it left behind catches that.
 
-## 4. The three domains
+## 4. The four domains
 
 | domain | subdomains | what it does |
 |---|---|---|
-| **blockchain** | `identity` | register a participant, then accept or reject them — with a durable record of what they registered with |
-| **book_library_mgmt** | `catalog` | register works, editions and physical copies; retire and reinstate them; search |
+| **blockchain** | `identity`, `wallet` | register a participant, then accept or reject them — with a durable record of what they registered with; give an accepted person exactly one wallet |
+| **book_library_mgmt** | `catalog` | register works, editions and physical copies; retire and reinstate them; update bibliographic information; search |
 | **ai_governance** | `agent_governance`, `ai_licensing` | admit or deny an AI agent's action; provision, deny and reclaim licences |
+| **causal_language_model** | `model_response` | register a language model and place it in service under a ceiling, a system prompt and response rules; answer a user prompt only in words those rules permit; record every user prompt, answered or refused |
 
 **A domain is a namespace; a subdomain is a division within it.** `ai_governance` is the case that
 makes the distinction concrete: two subdomains, one namespace, one compiled domain. They are not two
@@ -95,12 +102,19 @@ domains that happen to be filed together, and neither is a fork of the other.
 
 Maturity differs, and pretending otherwise would be the wrong kind of documentation:
 
-- **identity** is functionally complete and reachable over both transport and the command line. Three
-  rules it declares are enforced at its boundary but not within it, deliberately deferred to the
-  first function that will consume its state.
-- **book_library_mgmt** is the largest surface — ten workflows — and has events it declares that no
-  exit yet announces.
-- **ai_governance** has no change dossier and is the least exercised of the three.
+- **blockchain::identity** is functionally complete and reachable over both transport and the
+  command line. Two of its validated criteria are not exercised; both wait on a function that does
+  not exist yet.
+- **blockchain::wallet** is delivered and validated. It is the domain that demonstrates
+  **consulting** another subdomain's records without writing them.
+- **book_library_mgmt** is the largest surface — ten workflows — and six of them announce the moments
+  they complete, from the ending that completes them.
+- **causal_language_model** is delivered at its first change request and frozen there. It is the one
+  domain with a step **not determined by its inputs** — the model's — and so the one exercising
+  molecules, recorded outcomes, replay and refusal moments. Its model is a test model built to break
+  the rules. Five further change requests are designed in outline and parked. It stays in the
+  composition as much for what it holds the platform to as for the function it delivers.
+- **ai_governance** has no change dossier and is the least exercised of the four.
 
 ## 5. What it owns, and what it must never do
 
@@ -117,8 +131,10 @@ Maturity differs, and pretending otherwise would be the wrong kind of documentat
 
 - **import the compiler, the assembler, the runtime, or another domain.** Implementations are
   leaves; cross-domain reference happens through compiled identity, never through Python.
-- **have effects inside a transform.** Transforms are pure and deterministic. Every effect is a
-  declared capability the platform owns.
+- **have effects inside a transform.** Transforms have no effects; every effect is a declared
+  capability the platform owns. A transform is deterministic unless it declares otherwise, and one
+  that does — a language model offering words — has every result recorded, is replayed from the
+  record, and routes nothing until a deterministic step has judged it.
 - **carry its own copy of a platform mechanism.** When a domain needs something neutral the
   substrate lacks, **the substrate gains it** — a domain that compensates with a private invariant
   produces a rule that travels wherever it is copied and is stated nowhere.
@@ -228,6 +244,8 @@ blockchain/
 
 book_library_mgmt/          same shape; subdomain `catalog`; plus implementation/ transforms
 ai_governance/              same shape; two subdomains in one namespace
+causal_language_model/      same shape; subdomain `model_response`; implementation/ holds the pure
+                            transforms and the test model; doc/ holds the idea and the CR sequence
 ```
 
 Each domain also carries its own build manifest, declaring its sources under **this** repository.
@@ -238,7 +256,8 @@ Adding a domain is a sibling directory; nothing upstream is touched.
 1. **A domain declares; it does not implement** admission, routing, persistence or auditing.
 2. **A domain declares its own sources** in its own build manifest and edits nothing upstream.
 3. **No import of compiler, assembler, runtime, or another domain.**
-4. **Transforms are pure and deterministic**; every effect is a declared capability.
+4. **Transforms have no effects**, and are deterministic unless declared otherwise; every effect is a
+   declared capability, and every non-deterministic result is recorded.
 5. **A domain never carries a private copy of a platform mechanism** — the substrate gains it
    instead.
 6. **All references are by fully-qualified identity**, resolved at compile time. No short names.
@@ -248,8 +267,20 @@ Adding a domain is a sibling directory; nothing upstream is touched.
 
 ## 10. How to know it works
 
-Each domain has a testbed of payloads, including ones that **must** be refused. Run a workflow
-against the sealed snapshot:
+Each domain has a testbed of payloads, including ones that **must** be refused. Every domain with a
+change dossier also has an **execution validation**: a suite that dispatches its workflows against a
+fresh data root, one criterion per acceptance criterion its dossier declared, and prints which hold.
+The workspace regression runs all of them on every build:
+
+| suite | criteria exercised, all holding |
+|---|---|
+| `blockchain/testbed/identity/execution_validation.py` | 15, and 2 not exercised |
+| `blockchain/testbed/wallet/execution_validation.py` | 9, and 1 not exercised |
+| `book_library_mgmt/testbed/catalog/execution_validation.py` | 23 |
+| `book_library_mgmt/testbed/catalog/execution_validation_cr02.py` | 21 |
+| `causal_language_model/testbed/model_response/execution_validation.py` | 27 |
+
+To run a single workflow against the sealed snapshot:
 
 ```bash
 cd ../protocol_runtime
@@ -268,6 +299,13 @@ catches the characteristic defect in section 3:
 Defect discovery here is a **coverage** property, not a maturity one — a domain is correct where it
 has been exercised and unverified everywhere else, and that is true no matter how long it has
 existed.
+
+Coverage runs both ways. A domain exercising something no other domain does finds the platform's
+defects there. `causal_language_model` was the first to run one contract at several places in a
+workflow, and running it found that the platform sealed each such contract's routing once, for
+whichever place came last. `ai_governance` had carried the same collision, unnoticed, in two
+workflows. Every phase check had passed. The compiler now refuses a sealed dispatch that does not
+realize every declared transition at its own node.
 
 ## 11. Where the architecture is explained
 

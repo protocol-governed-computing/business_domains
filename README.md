@@ -2,8 +2,8 @@
 
 **Real business work, declared as governed protocol.**
 
-Registering a participant, cataloguing a book, licensing an AI agent — work that would be worth
-doing whether or not this platform existed. Each domain here is a directory of declarations: a
+Registering a participant, cataloguing a book, licensing an AI agent, answering a customer through a
+language model — work that would be worth doing whether or not this platform existed. Each domain here is a directory of declarations: a
 workflow graph, the contracts its nodes name, the intents that admit a request, the events it
 announces, the store it writes to. No domain implements admission, routing, persistence, auditing
 or refusal. It declares them, and the platform enforces what it declared.
@@ -21,6 +21,7 @@ or refusal. It declares them, and the platform enforces what it declared.
 | **`blockchain`** | `identity`, `wallet` | Register a participant, then accept or reject them — keeping a durable record of what they registered with. An accepted person is then given exactly one wallet, whose creation is recorded as a moment on its own trail. Reachable over HTTP and the command line, with a web client. |
 | **`book_library_mgmt`** | `catalog` | Register works, editions and physical copies; retire and reinstate them; update bibliographic information; search. Ten workflows — the largest surface here — of which six announce the business moments they complete. |
 | **`ai_governance`** | `agent_governance`, `ai_licensing` | Admit or deny an AI agent's action; provision, deny and reclaim licences. Two subdomains sharing one namespace. |
+| **`causal_language_model`** | `model_response` | Register a language model and place it in service under a ceiling, a system prompt and response rules. A user prompt is answered only by a model in service, only on what it may read, and only in words the rules in force permit — the rules judge every word the model offers. Every user prompt is recorded, answered or refused, with what the model read. |
 
 A **domain is a namespace**; a **subdomain is a division within it**. `ai_governance` is the case
 that makes the distinction concrete — two subdomains, one compiled domain, neither a fork of the
@@ -31,8 +32,17 @@ complete; two of its validated criteria are not exercised, and both wait on a fu
 exist yet — a timed test, and the transaction half of the wallet claim. `blockchain::wallet` is
 delivered and validated, and it is the domain that demonstrates **consulting** another subdomain's
 records without writing them. `book_library_mgmt` now announces: six of its ten acts emit the moments
-they complete, from the ending that completes them. `ai_governance` carries no change dossier —
-deliberately — and is the least exercised.
+they complete, from the ending that completes them. `causal_language_model` is delivered at its first
+change request and frozen there; it is the one domain with a step not determined by its inputs, so it
+is what holds the platform to molecules, recorded outcomes, replay and refusal moments. Its model is
+a test model built to break the rules. `ai_governance` carries no change dossier — deliberately — and
+is the least exercised.
+
+**The language model is also where the platform's own defect was found.** Its submission runs one
+contract at ten places. Running it showed the platform sealed each such contract's routing once, for
+whichever place came last — a collision `ai_governance` had carried unnoticed in two workflows, with
+every phase check passing. The compiler now refuses a sealed dispatch that does not realize every
+declared transition at its own node.
 
 **The wallet is also where a defect and its repair are on the record.** Its validation once read 7/9
 because the suite registered the same people identity's suite registers, so a shared data root left
@@ -107,7 +117,13 @@ blockchain/
 
 book_library_mgmt/       same shape; subdomain `catalog`; plus implementation/ transforms
 ai_governance/           same shape; two subdomains in one namespace
+causal_language_model/   same shape; subdomain `model_response`; implementation/ holds the pure
+                         transforms and the test model; doc/ holds the idea and the CR sequence
 ```
+
+Every domain with a change dossier has an **execution validation** under `testbed/` — a suite that
+dispatches its workflows against a fresh data root, one criterion per acceptance criterion, and
+prints which hold. The workspace regression runs all of them on every build.
 
 ## A change to a domain is itself governed
 
@@ -136,7 +152,8 @@ cannot describe maintenance.
 - A domain declares; it does not implement admission, routing, persistence or auditing.
 - No import of the compiler, the assembler, the runtime, or another domain. Implementations are
   leaves; cross-domain reference happens through compiled identity.
-- Capability transforms are pure and deterministic. Every effect is a declared capability.
+- Capability transforms have no effects, and are deterministic unless declared otherwise. Every
+  effect is a declared capability; every non-deterministic result is recorded and replayable.
 - All references are by fully-qualified identity, resolved at compile time. No short names.
 
 ## License
