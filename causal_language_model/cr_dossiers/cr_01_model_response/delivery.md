@@ -36,6 +36,11 @@ customer's account number on every word, ahead of the word it should write. A re
 supporting material is therefore evidence that the rules decided what was written, not that the
 model held back.
 
+**P7 and P8 were generated, not typed.** Scripts wrote them from P5 and P6, and the phase checks
+admitted them as they would admit the same text written by hand. The scripts are kept, as they ran,
+in `.github/process/notes/clm-generators/`. After generation, one decision was made by hand in P7:
+retrieval records the operation before reading the record.
+
 ---
 
 ## What it took
