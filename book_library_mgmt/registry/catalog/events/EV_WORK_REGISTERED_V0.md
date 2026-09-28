@@ -20,6 +20,15 @@ core:
   description: The moment a work enters the catalog, created by the edition that evidences it
   subdomain: catalog
   schema:
+    work_key:
+      type: string
+      required: true
+    title:
+      type: string
+      required: true
+    author:
+      type: string
+      required: true
     timestamp:
       type: string
       format: date-time

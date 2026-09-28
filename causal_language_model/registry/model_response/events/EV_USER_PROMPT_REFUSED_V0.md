@@ -28,6 +28,7 @@ core:
       format: date-time
       required: true
       description: When the moment occurred
+  moment: refusal
 ```
 
 ---

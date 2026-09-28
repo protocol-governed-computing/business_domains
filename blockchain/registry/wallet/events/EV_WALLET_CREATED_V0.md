@@ -20,6 +20,15 @@ core:
   description: Announces that a wallet was created, for whom, and when
   subdomain: wallet
   schema:
+    wallet_id:
+      type: string
+      required: true
+    holder:
+      type: string
+      required: true
+    occurred_at:
+      type: string
+      required: true
     timestamp:
       type: string
       format: date-time

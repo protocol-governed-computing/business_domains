@@ -20,6 +20,12 @@ core:
   description: The moment a person is admitted and trusted with nothing
   subdomain: identity
   schema:
+    contact_address:
+      type: string
+      required: true
+    occurred_at:
+      type: string
+      required: true
     timestamp:
       type: string
       format: date-time

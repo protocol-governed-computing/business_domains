@@ -20,6 +20,17 @@ core:
   description: The moment an authority records a decision to trust an actor
   subdomain: identity
   schema:
+    contact_address:
+      type: string
+      required: true
+    verifying_authority:
+      type: string
+      required: true
+    grounds:
+      type: string
+    occurred_at:
+      type: string
+      required: true
     timestamp:
       type: string
       format: date-time

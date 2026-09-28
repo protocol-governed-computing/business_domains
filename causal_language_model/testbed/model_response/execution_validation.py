@@ -42,7 +42,7 @@ for root in (WORKSPACE / "software_governance", WORKSPACE / "business_domains",
         sys.path.insert(0, str(root))
 
 from runtime import api  # noqa: E402
-from runtime.replay import determinative  # noqa: E402
+from runtime.replay import compare  # noqa: E402
 
 NS = "causal_language_model::"
 STORE = "causal_language_model/model_response"
@@ -137,23 +137,6 @@ def offered_words(result) -> list[str]:
     return [c["word"] for e in trace_events(result)
             if e.get("event_type") == "CT_STEP" and (e.get("detail") or {}).get("purity") == "ct_impure"
             for c in (e["detail"].get("outcome") or {}).get("candidates", [])]
-
-
-# The one content a replay cannot reproduce: the identity an append-only store gives a record is read
-# from the clock when it is written. It sits inside `detail`, which the platform's evidence
-# classification declares determinative while stating it does not claim a caller-filled detail holds
-# only determinative content. Until that classification separates it, the comparison names it rather
-# than ignoring it silently: every other difference fails.
-STORE_ASSIGNED = "record_id"
-
-
-def differences(a, b, path: str = "") -> list[str]:
-    """Every path at which two decoded JSON values differ."""
-    if isinstance(a, dict) and isinstance(b, dict):
-        return [d for k in sorted(set(a) | set(b)) for d in differences(a.get(k), b.get(k), f"{path}.{k}")]
-    if isinstance(a, list) and isinstance(b, list) and len(a) == len(b):
-        return [d for i, (x, y) in enumerate(zip(a, b)) for d in differences(x, y, f"{path}[{i}]")]
-    return [] if a == b else [path]
 
 
 def main() -> int:
@@ -363,22 +346,16 @@ def main() -> int:
                                         snapshot_root=str(snapshot), data_root=str(replay_root),
                                         replay_trace=trace_file)
             replay_record = (Run(snapshot, replay_root).prompt_records("up-01") or [{}])[0]
-            original_events = determinative(trace_file)
-            replayed_events = determinative(next(Path(replayed.trace_dir).glob("*.jsonl")))
-            paths = [f"event {n}{d}" for n, (x, y) in enumerate(zip(original_events, replayed_events))
-                     for d in differences(x, y)]
-            other = [p for p in paths if not p.endswith(f".{STORE_ASSIGNED}")]
-            held = len(original_events) == len(replayed_events) and not other
-            detail = (f"{len(original_events)} vs {len(replayed_events)} events; differing: {other[:5]}"
-                      if not held else f"{len(paths)} store-assigned record identities differ")
+            # The store's clock-assigned record identity is declared observational by the evidence
+            # classification the trace carries, so the platform's comparison sets it aside itself.
+            held, detail = compare(trace_file, next(Path(replayed.trace_dir).glob("*.jsonl")))
             replayed_offers = [e for e in trace_events(replayed) if e.get("event_type") == "CT_STEP"
                                and (e.get("detail") or {}).get("purity") == "ct_impure"]
             check("a replay reproduces the response from the recorded offers, without consulting the model",
                   replayed.status == "SUCCESS" and replay_record.get("response") == MATERIAL
                   and all(e["detail"].get("replayed") for e in replayed_offers),
                   f"status {replayed.status}, response {replay_record.get('response')!r}")
-            check("the replay and the original agree on every determinative event but the store's "
-                  "clock-assigned record identity", held, detail)
+            check("the replay and the original agree on every determinative event", held, detail)
         finally:
             shutil.rmtree(replay_root, ignore_errors=True)
 
