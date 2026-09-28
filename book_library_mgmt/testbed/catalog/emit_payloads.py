@@ -34,7 +34,7 @@ PAYLOADS = {
         "identity_key": KEY, "barcode": "BC-0002",
         "copy_fields": {"barcode": "BC-0002", "state": "REGISTERED", **ODYSSEY}},
     "03_update_bibliographic_information": auth() | {
-        **ODYSSEY, "identity_key": KEY,
+        "identity_key": KEY,
         "updated_fields": {**ODYSSEY, "subject": ["epic", "poetry", "greek"],
                            "state": "REGISTERED"}},
     "04_search_catalog": auth() | {
@@ -49,7 +49,7 @@ PAYLOADS = {
 WORKFLOW = {
     "01_register_book": "WF_REGISTER_BOOK_V0",
     "02_register_physical_copy": "WF_REGISTER_PHYSICAL_COPY_V0",
-    "03_update_bibliographic_information": "WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0",
+    "03_update_bibliographic_information": "WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1",
     "04_search_catalog": "WF_SEARCH_CATALOG_V0",
     "05_retrieve_book_details": "WF_RETRIEVE_BOOK_DETAILS_V0",
     "06_retire_physical_copy": "WF_RETIRE_PHYSICAL_COPY_V0",

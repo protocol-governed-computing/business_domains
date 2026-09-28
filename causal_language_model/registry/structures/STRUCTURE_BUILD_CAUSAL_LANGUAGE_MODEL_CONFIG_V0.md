@@ -45,6 +45,7 @@ artifact_discovery:
   - TE
   - TEST_DATA
 output_configuration:
+  root: snapshot
   artifacts:
     layer: PROTOCOL_BUILD_ROOT
     subpath: compiled/canonical

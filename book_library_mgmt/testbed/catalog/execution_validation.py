@@ -197,8 +197,11 @@ def main() -> int:
         ODYSSEY_KEY = "the odyssey|homer|1614"
 
         # 8 — bibliographic information is updated, and a later retrieval returns the new version
-        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0", auth() | {
-            **ODYSSEY, "identity_key": ODYSSEY_KEY,
+        # Through the successor. CR-02 superseded V0, and a superseded workflow is no place execution
+        # can start, so this criterion is held by the act now in force. V1 no longer asks a caller to
+        # restate the title, author and year it is leaving alone.
+        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1", auth() | {
+            "identity_key": ODYSSEY_KEY,
             "updated_fields": {**ODYSSEY, "subject": ["epic", "poetry", "greek"],
                                "state": "REGISTERED"}})
         updated = run.store("books.json").get(ODYSSEY_KEY, {})
@@ -288,8 +291,8 @@ def main() -> int:
 
         # 17 — an update that would duplicate another registered book is refused
         run("WF_REGISTER_BOOK_V0", book_payload(ILIAD, "BC-0100"))
-        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0", auth() | {
-            **ODYSSEY, "identity_key": "the iliad|homer|1611",
+        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1", auth() | {
+            "identity_key": "the iliad|homer|1611",
             "updated_fields": {**ODYSSEY, "subject": ["epic"], "state": "REGISTERED"}})
         check("an update that would duplicate another registered book is refused",
               r.status != "SUCCESS", f"status {r.status}")

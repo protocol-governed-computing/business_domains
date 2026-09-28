@@ -77,6 +77,7 @@ artifact_discovery:
   - STRUCTURE
   - VOCAB
 output_configuration:
+  root: snapshot
   artifacts:
     layer: PROTOCOL_BUILD_ROOT
     subpath: compiled/canonical
