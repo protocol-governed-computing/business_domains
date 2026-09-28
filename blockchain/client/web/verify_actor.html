@@ -74,34 +74,47 @@
         <div id="result" class="result-panel"></div>
 
         <details class="explainer">
-            <summary>Examine the compiled workflow (DAG projection)</summary>
+            <summary>Examine the compiled workflows (DAG projections)</summary>
             <div class="explainer-body">
                 <p>
-                    Below is the <strong>compiled</strong> execution graph of
-                    <code>WF_RECORD_VERIFICATION_DECISION_V0</code>, served live from the sealed
-                    snapshot. <strong>Both acts on this page reach it.</strong>
-                    <code>blockchain.accept_actor</code> and <code>blockchain.reject_actor</code> are
-                    two public names over one workflow — each boundary declaration holds its own
-                    constants, the decision and the occurrence it records. That one workflow serves
-                    two names is invisible to you, and is what lets the business's public names follow
-                    what it records rather than what it executes.
+                    Each act on this page reaches a workflow of its own, served live from the sealed
+                    snapshot: <code>blockchain.accept_actor</code> reaches
+                    <code>WF_ACCEPT_ACTOR_V0</code>, and <code>blockchain.reject_actor</code> reaches
+                    <code>WF_REJECT_ACTOR_V0</code>. They replaced a single deciding workflow that
+                    served both names (CR-04), so that each outcome announces its own moment from an
+                    ending of its own, and a rejection requires its grounds throughout.
                 </p>
                 <p>
                     Read the path: resolve the actor the address names, refuse if none exists, refuse
                     if that actor has already been decided about, move the state, append the
-                    occurrence. Every refusal reaches one ending — which is why the answer tells you
-                    that the business refused, and not yet which refusal it was.
+                    occurrence, announce the decision. A rejection first requires its grounds. Every
+                    refusal reaches one ending — which is why the answer tells you that the business
+                    refused, and not yet which refusal it was.
                 </p>
+                <p><strong>Accept</strong> — <code>WF_ACCEPT_ACTOR_V0</code></p>
                 <img class="wf-projection"
-                     src="/snapshot/behavior_logic/blockchain/WF_RECORD_VERIFICATION_DECISION_V0/WF_RECORD_VERIFICATION_DECISION_V0.projection.png"
-                     alt="Compiled DAG projection of WF_RECORD_VERIFICATION_DECISION_V0"
+                     src="/snapshot/behavior_logic/blockchain/WF_ACCEPT_ACTOR_V0/WF_ACCEPT_ACTOR_V0.projection.png"
+                     alt="Compiled DAG projection of WF_ACCEPT_ACTOR_V0"
                      onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                 <p class="wf-missing">
                     Compiled projection unavailable — the snapshot may have been cleaned or rebuilt.
                     Rebuild the snapshot to regenerate it.
                 </p>
                 <p style="font-size:12px;margin-top:6px;">
-                    <a href="/snapshot/behavior_logic/blockchain/WF_RECORD_VERIFICATION_DECISION_V0/WF_RECORD_VERIFICATION_DECISION_V0.projection.png"
+                    <a href="/snapshot/behavior_logic/blockchain/WF_ACCEPT_ACTOR_V0/WF_ACCEPT_ACTOR_V0.projection.png"
+                       target="_blank" rel="noopener">Open full size &rarr;</a>
+                </p>
+                <p><strong>Reject</strong> — <code>WF_REJECT_ACTOR_V0</code></p>
+                <img class="wf-projection"
+                     src="/snapshot/behavior_logic/blockchain/WF_REJECT_ACTOR_V0/WF_REJECT_ACTOR_V0.projection.png"
+                     alt="Compiled DAG projection of WF_REJECT_ACTOR_V0"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <p class="wf-missing">
+                    Compiled projection unavailable — the snapshot may have been cleaned or rebuilt.
+                    Rebuild the snapshot to regenerate it.
+                </p>
+                <p style="font-size:12px;margin-top:6px;">
+                    <a href="/snapshot/behavior_logic/blockchain/WF_REJECT_ACTOR_V0/WF_REJECT_ACTOR_V0.projection.png"
                        target="_blank" rel="noopener">Open full size &rarr;</a>
                 </p>
             </div>
