@@ -3,17 +3,6 @@
     "staff_id": "s-101",
     "authorized": true
   },
-  "authorization_rules": [
-    {
-      "field": "staff_id",
-      "op": "not_null"
-    },
-    {
-      "field": "authorized",
-      "op": "eq",
-      "value": true
-    }
-  ],
   "staff_id": "s-101",
   "title": "The Odyssey",
   "author": "Homer",

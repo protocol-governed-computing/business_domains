@@ -62,6 +62,9 @@ WORKFLOW = {
 def main() -> int:
     OUT.mkdir(exist_ok=True)
     for name, payload in PAYLOADS.items():
+        # The catalog holds its authorization rules (cr_05_catalog); the CR-1 helpers still send
+        # them, and an act ignores them, so a dispatchable payload leaves them out.
+        payload = {k: v for k, v in payload.items() if k != "authorization_rules"}
         (OUT / f"{name}.json").write_text(json.dumps(payload, indent=2) + "\n")
         print(f"  {name}.json  ->  book_library_mgmt::{WORKFLOW[name]}")
     print(f"\n{len(PAYLOADS)} payload(s) written to {OUT}")
