@@ -21,7 +21,7 @@ or refusal. It declares them, and the platform enforces what it declared.
 | **`blockchain`** | `identity`, `wallet` | Register a participant, then accept or reject them — keeping a durable record of what they registered with. An accepted person is then given exactly one wallet, whose creation is recorded as a moment on its own trail. Reachable over HTTP and the command line, with a web client. |
 | **`book_library_mgmt`** | `catalog` | Register works, editions and physical copies; retire and reinstate them; update bibliographic information; search. Ten workflows — the largest surface here — of which six announce the business moments they complete. |
 | **`ai_governance`** | `agent_governance`, `ai_licensing` | Admit or deny an AI agent's action; provision, deny and reclaim licences. Two subdomains sharing one namespace. |
-| **`causal_language_model`** | `model_response` | Register a language model and place it in service under a ceiling, a system prompt and response rules. A user prompt is answered only by a model in service, only on what it may read, and only in words the rules in force permit — the rules judge every word the model offers. Every user prompt is recorded, answered or refused, with what the model read. |
+| **`causal_language_model`** | `model_response` | Register a language model and place it in service under a ceiling, a system prompt and response rules. A customer's question is answered only by a model in service, only on what it may read, and only in text the rules in force permit. A pretrained model, Qwen3 8B, runs outside PGC and proposes each next token; the business chooses, records and releases, and can require every number to be one the model read. Every request is recorded, answered or refused. |
 
 A **domain is a namespace**; a **subdomain is a division within it**. `ai_governance` is the case
 that makes the distinction concrete — two subdomains, one compiled domain, neither a fork of the
@@ -34,10 +34,12 @@ older than a run that starts from none. `blockchain::wallet` is
 delivered and validated, and it is the domain that demonstrates **consulting** another subdomain's
 records without writing them. `book_library_mgmt` announces: six of its ten acts emit the moments
 they complete, from the ending that completes them. Both `identity` and the catalog now hold every
-rule they apply, so a request no longer states the rules it is judged by. `causal_language_model` is delivered at its first
-change request and frozen there; it is the one domain with a step not determined by its inputs, so it
-is what holds the platform to molecules, recorded outcomes, replay and refusal moments. Its model is
-a test model built to break the rules. `ai_governance` carries one change dossier, which proved its
+rule they apply, so a request no longer states the rules it is judged by. `causal_language_model` answers
+through two ways: a test model built to break the rules, and a pretrained model (Qwen3 8B) whose host
+proposes each token while the business decides it. The test model's step is not determined by its
+inputs, so the domain holds the platform to molecules, recorded outcomes, replay and refusal
+moments; the hosted way shows a model outside PGC governed token by token. It has its own
+[`README.md`](causal_language_model/README.md) and [`ARCHITECTURE.md`](causal_language_model/ARCHITECTURE.md). `ai_governance` carries one change dossier, which proved its
 three licensing checks by the cases stated beside them. It has no execution validation of its own and
 is the least exercised.
 
@@ -121,7 +123,8 @@ blockchain/
 book_library_mgmt/       same shape; subdomain `catalog`; plus implementation/ transforms
 ai_governance/           same shape; two subdomains in one namespace
 causal_language_model/   same shape; subdomain `model_response`; implementation/ holds the pure
-                         transforms and the test model; doc/ holds the idea and the CR sequence
+                         transforms and the test model; host/ the driver for a hosted model,
+                         outside PGC; doc/ holds the idea and the CR sequence
 ```
 
 Every domain whose change dossiers change its acts has an **execution validation** under `testbed/` — a suite that

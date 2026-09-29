@@ -94,7 +94,7 @@ pass. Only executing the function and reading what it left behind catches that.
 | **blockchain** | `identity`, `wallet` | register a participant, then accept or reject them — with a durable record of what they registered with; give an accepted person exactly one wallet |
 | **book_library_mgmt** | `catalog` | register works, editions and physical copies; retire and reinstate them; update bibliographic information; search |
 | **ai_governance** | `agent_governance`, `ai_licensing` | admit or deny an AI agent's action; provision, deny and reclaim licences |
-| **causal_language_model** | `model_response` | register a language model and place it in service under a ceiling, a system prompt and response rules; answer a user prompt only in words those rules permit; record every user prompt, answered or refused |
+| **causal_language_model** | `model_response` | register a language model and place it in service under a ceiling, a system prompt and response rules; answer through a test model or a hosted pretrained model, the business choosing every token; answer a user prompt only in words those rules permit; record every user prompt, answered or refused |
 
 **A domain is a namespace; a subdomain is a division within it.** `ai_governance` is the case that
 makes the distinction concrete: two subdomains, one namespace, one compiled domain. They are not two
@@ -110,11 +110,12 @@ Maturity differs, and pretending otherwise would be the wrong kind of documentat
 - **book_library_mgmt** is the largest surface — ten workflows — and six of them announce the moments
   they complete, from the ending that completes them. Like `identity`, the catalog holds every rule it
   applies: which staff may act, and what a book must contain.
-- **causal_language_model** is delivered at its first change request and frozen there. It is the one
-  domain with a step **not determined by its inputs** — the model's — and so the one exercising
-  molecules, recorded outcomes, replay and refusal moments. Its model is a test model built to break
-  the rules. Five further change requests are designed in outline and parked. It stays in the
-  composition as much for what it holds the platform to as for the function it delivers.
+- **causal_language_model** is delivered at two change requests. The first answers through a test
+  model built to break the rules, a step **not determined by its inputs**, so the domain exercises
+  molecules, recorded outcomes, replay and refusal moments. The second governs a pretrained model,
+  Qwen3 8B, hosted outside PGC: the host proposes each token, and the business chooses it, records
+  it, and releases the answer from its own record. Control is inverted, because an act cannot loop
+  or call out. See [`causal_language_model/ARCHITECTURE.md`](causal_language_model/ARCHITECTURE.md).
 - **ai_governance** is the least exercised of the four. Its one change dossier proved its three
   licensing checks by the cases stated beside them, and changed no act.
 
@@ -247,7 +248,8 @@ blockchain/
 book_library_mgmt/          same shape; subdomain `catalog`; plus implementation/ transforms
 ai_governance/              same shape; two subdomains in one namespace
 causal_language_model/      same shape; subdomain `model_response`; implementation/ holds the pure
-                            transforms and the test model; doc/ holds the idea and the CR sequence
+                            transforms and the test model; host/ the driver for a hosted model,
+                            outside PGC; doc/ holds the idea and the CR sequence
 ```
 
 Each domain also carries its own build manifest, declaring its sources under **this** repository.
@@ -281,6 +283,7 @@ The workspace regression runs all of them on every build:
 | `book_library_mgmt/testbed/catalog/execution_validation.py` | 23 |
 | `book_library_mgmt/testbed/catalog/execution_validation_cr02.py` | 27 |
 | `causal_language_model/testbed/model_response/execution_validation.py` | 27 |
+| `causal_language_model/testbed/hosted_model/execution_validation.py` | 15, and 1 not exercised (Qwen3 8B, with `--qwen`) |
 
 To run a single workflow against the sealed snapshot:
 
