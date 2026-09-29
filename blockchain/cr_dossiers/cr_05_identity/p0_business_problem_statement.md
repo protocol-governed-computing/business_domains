@@ -46,6 +46,8 @@ This change shall:
 - hold in identity which people an authority may decide about, and refuse a decision about anyone
   else, whatever the request says;
 - hold in identity which decisions may be recorded, and refuse any other, whatever the request says;
+- hold in identity that an authority does not decide about themselves, and that a rejection states
+  its grounds, whatever the request says;
 - leave everything a caller sees through the public entrance unchanged.
 
 ### What the business already decided about identity
@@ -91,6 +93,9 @@ not assume them.
   the request, and refusing it would turn a caller's extra words into a failure.
 - **Is anything recorded when a decision is refused because the person was already decided about?**
   Nothing. A refusal changes no record, as today.
+- **Discovery found two more of identity's rules travelling with the request: that an authority
+  does not decide about themselves, and that a rejection states its grounds. Does identity hold
+  those too?** Yes, all five. Every business rule of identity's is held by identity.
 
 The other five blockchain functions remain adjacent to this change: named, planned, and outside its
 scope.

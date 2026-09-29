@@ -51,6 +51,8 @@ then do, which persons may be an authority, or who a caller is.
 | Identity holds which people an authority may decide about, and refuses a decision about anyone else, whatever the request says. |
 | Identity holds which decisions may be recorded, and refuses any other, whatever the request says. |
 | Everything a caller sees through the public entrance is unchanged. |
+| Identity holds that an authority does not decide about themselves, and refuses such a decision, whatever the request says. |
+| Identity holds that a rejection states its grounds, and refuses one that does not, whatever the request says. |
 
 ## 4. Known Facts — Business Truths
 
@@ -68,6 +70,7 @@ then do, which persons may be an authority, or who a caller is.
 | What a request says about the business's rules is ignored, not refused; it is not part of the request. | HIGH |
 | A decision refused because the person was already decided about changes no record. | HIGH |
 | The business adds to its record and does not rewrite it. | HIGH |
+| Every business rule of identity's is held by identity: what a registration must contain, who may be decided about, which decisions may be recorded, that an authority does not decide about themselves, and that a rejection states its grounds. | HIGH |
 
 ## 5. Existing-System Beliefs — Requiring Verification
 
@@ -178,6 +181,8 @@ then do, which persons may be an authority, or who a caller is.
 | A registration missing its name or its address is refused, however identity is reached, and no person is registered by it. |
 | A decision about a person already accepted or rejected is refused, whatever the request says about who may be decided about, and no record changes. |
 | A decision other than an acceptance or a rejection is refused, whatever the request says about which decisions are allowed. |
+| An authority deciding about themselves is refused, whatever the request says. |
+| A rejection stating no grounds is refused, whatever the request says. |
 | A request stating rules of its own is judged by the business's rules, and is not refused for stating them. |
 | Every request admitted through the public entrance before this change is admitted after it, with the same answer; every request refused there is refused, with the same answer. |
 | Records made before this change are unchanged by it. |
