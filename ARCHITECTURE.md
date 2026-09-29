@@ -103,18 +103,20 @@ domains that happen to be filed together, and neither is a fork of the other.
 Maturity differs, and pretending otherwise would be the wrong kind of documentation:
 
 - **blockchain::identity** is functionally complete and reachable over both transport and the
-  command line. Two of its validated criteria are not exercised; both wait on a function that does
-  not exist yet.
+  command line. Three of its validated criteria are not exercised: two wait on a function that does
+  not exist yet, and one asks about records older than a run that starts from none.
 - **blockchain::wallet** is delivered and validated. It is the domain that demonstrates
   **consulting** another subdomain's records without writing them.
 - **book_library_mgmt** is the largest surface — ten workflows — and six of them announce the moments
-  they complete, from the ending that completes them.
+  they complete, from the ending that completes them. Like `identity`, the catalog holds every rule it
+  applies: which staff may act, and what a book must contain.
 - **causal_language_model** is delivered at its first change request and frozen there. It is the one
   domain with a step **not determined by its inputs** — the model's — and so the one exercising
   molecules, recorded outcomes, replay and refusal moments. Its model is a test model built to break
   the rules. Five further change requests are designed in outline and parked. It stays in the
   composition as much for what it holds the platform to as for the function it delivers.
-- **ai_governance** has no change dossier and is the least exercised of the four.
+- **ai_governance** is the least exercised of the four. Its one change dossier proved its three
+  licensing checks by the cases stated beside them, and changed no act.
 
 ## 5. What it owns, and what it must never do
 
@@ -267,17 +269,17 @@ Adding a domain is a sibling directory; nothing upstream is touched.
 
 ## 10. How to know it works
 
-Each domain has a testbed of payloads, including ones that **must** be refused. Every domain with a
-change dossier also has an **execution validation**: a suite that dispatches its workflows against a
+Each domain has a testbed of payloads, including ones that **must** be refused. Every domain whose
+change dossiers change its acts also has an **execution validation**: a suite that dispatches its workflows against a
 fresh data root, one criterion per acceptance criterion its dossier declared, and prints which hold.
 The workspace regression runs all of them on every build:
 
 | suite | criteria exercised, all holding |
 |---|---|
-| `blockchain/testbed/identity/execution_validation.py` | 15, and 2 not exercised |
+| `blockchain/testbed/identity/execution_validation.py` | 19, and 3 not exercised |
 | `blockchain/testbed/wallet/execution_validation.py` | 9, and 1 not exercised |
 | `book_library_mgmt/testbed/catalog/execution_validation.py` | 23 |
-| `book_library_mgmt/testbed/catalog/execution_validation_cr02.py` | 21 |
+| `book_library_mgmt/testbed/catalog/execution_validation_cr02.py` | 27 |
 | `causal_language_model/testbed/model_response/execution_validation.py` | 27 |
 
 To run a single workflow against the sealed snapshot:

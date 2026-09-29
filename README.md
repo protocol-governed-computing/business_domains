@@ -28,14 +28,17 @@ that makes the distinction concrete — two subdomains, one compiled domain, nei
 other.
 
 Maturity differs, and it is stated rather than implied. `blockchain::identity` is functionally
-complete; two of its validated criteria are not exercised, and both wait on a function that does not
-exist yet — a timed test, and the transaction half of the wallet claim. `blockchain::wallet` is
+complete; three of its validated criteria are not exercised. Two wait on a function that does not
+exist yet — a timed test, and the transaction half of the wallet claim — and one asks about records
+older than a run that starts from none. `blockchain::wallet` is
 delivered and validated, and it is the domain that demonstrates **consulting** another subdomain's
-records without writing them. `book_library_mgmt` now announces: six of its ten acts emit the moments
-they complete, from the ending that completes them. `causal_language_model` is delivered at its first
+records without writing them. `book_library_mgmt` announces: six of its ten acts emit the moments
+they complete, from the ending that completes them. Both `identity` and the catalog now hold every
+rule they apply, so a request no longer states the rules it is judged by. `causal_language_model` is delivered at its first
 change request and frozen there; it is the one domain with a step not determined by its inputs, so it
 is what holds the platform to molecules, recorded outcomes, replay and refusal moments. Its model is
-a test model built to break the rules. `ai_governance` carries no change dossier — deliberately — and
+a test model built to break the rules. `ai_governance` carries one change dossier, which proved its
+three licensing checks by the cases stated beside them. It has no execution validation of its own and
 is the least exercised.
 
 **The language model is also where the platform's own defect was found.** Its submission runs one
@@ -121,7 +124,7 @@ causal_language_model/   same shape; subdomain `model_response`; implementation/
                          transforms and the test model; doc/ holds the idea and the CR sequence
 ```
 
-Every domain with a change dossier has an **execution validation** under `testbed/` — a suite that
+Every domain whose change dossiers change its acts has an **execution validation** under `testbed/` — a suite that
 dispatches its workflows against a fresh data root, one criterion per acceptance criterion, and
 prints which hold. The workspace regression runs all of them on every build.
 
