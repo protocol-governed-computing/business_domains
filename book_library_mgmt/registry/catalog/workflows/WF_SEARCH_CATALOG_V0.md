@@ -1,11 +1,5 @@
 # WF_SEARCH_CATALOG_V0
 
-## 1. Intent
-
-Searching by subject or title, excluding retired books
-
----
-
 ## Machine
 
 ```yaml
@@ -34,7 +28,6 @@ core:
       code: CC_CONFIRM_STAFF_AUTHORIZED_V0
       inputs:
         staff_credentials: $.payload.staff_credentials
-        authorization_rules: $.payload.authorization_rules
       next:
         SUCCESS: CC_APPEND_CATALOG_OPERATION_V0
         VIOLATION: EXIT_REJECTED
@@ -66,3 +59,9 @@ core:
     EXIT_REJECTED:
       type: EXIT
 ```
+
+---
+
+## Intent
+
+Searching by subject or title, excluding retired books

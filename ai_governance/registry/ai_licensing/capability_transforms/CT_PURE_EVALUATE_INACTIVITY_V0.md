@@ -1,15 +1,5 @@
 # CT_PURE_EVALUATE_INACTIVITY_V0
 
-## 1. Intent
-
-Decide whether a license has been dormant past its reclamation threshold.
-
-`evaluation_date` is an **explicit declared input**, not a clock read. A pure CT may not consult
-the system clock — doing so would make the transform non-deterministic and unreplayable. The
-caller supplies the evaluation instant, so the same inputs always produce the same verdict.
-
----
-
 ## Machine
 
 ```yaml
@@ -22,10 +12,6 @@ concern: ai_licensing
 core:
   summary: Evaluate license inactivity against a declared threshold
   refusal: raises
-  description: |
-    Signals VIOLATION by raising CTExecutionError; the runtime maps any CT exception to
-    VIOLATION. A false predicate is never returned as a value — a plain return is SUCCESS
-    and would let the consuming pipeline continue past a failed gate.
   inputs:
     last_active_date:
       type: string
@@ -48,6 +34,13 @@ core:
       type: integer
       required: true
       description: Whole days elapsed between last_active_date and evaluation_date
+  description: 'Signals VIOLATION by raising CTExecutionError; the runtime maps any CT exception to
+
+    VIOLATION. A false predicate is never returned as a value — a plain return is SUCCESS
+
+    and would let the consuming pipeline continue past a failed gate.
+
+    '
 machine:
   ct_kind: atom
   ct_purity: ct_pure
@@ -56,3 +49,9 @@ machine:
     module: ai_governance.implementation.capability_transforms.atoms.ct_pure_evaluate_inactivity_v0
     callable: execute
 ```
+
+---
+
+## Intent
+
+Evaluate license inactivity against a declared threshold

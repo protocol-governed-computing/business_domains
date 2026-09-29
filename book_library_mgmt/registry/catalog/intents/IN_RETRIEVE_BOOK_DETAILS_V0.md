@@ -1,11 +1,5 @@
 # IN_RETRIEVE_BOOK_DETAILS_V0
 
-## 1. Intent
-
-A request for a book's complete details with the copies held
-
----
-
 ## Machine
 
 ```yaml
@@ -22,9 +16,6 @@ core:
     staff_credentials:
       type: object
       required: true
-    authorization_rules:
-      type: array
-      required: true
     identity_key:
       type: string
       required: true
@@ -37,3 +28,9 @@ core:
     NACK:
       description: Request rejected
 ```
+
+---
+
+## Intent
+
+A request for a book's complete details with the copies held

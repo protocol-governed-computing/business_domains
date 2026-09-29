@@ -1,11 +1,5 @@
 # IN_REGISTER_BOOK_V0
 
-## 1. Intent
-
-A request to register a book together with its first physical copy
-
----
-
 ## Machine
 
 ```yaml
@@ -22,9 +16,6 @@ core:
     staff_credentials:
       type: object
       required: true
-    authorization_rules:
-      type: array
-      required: true
     title:
       type: string
       required: true
@@ -35,9 +26,6 @@ core:
       type: integer
       required: true
     book_fields:
-      type: object
-      required: true
-    book_schema:
       type: object
       required: true
     barcode:
@@ -55,3 +43,9 @@ core:
     NACK:
       description: Request rejected
 ```
+
+---
+
+## Intent
+
+A request to register a book together with its first physical copy

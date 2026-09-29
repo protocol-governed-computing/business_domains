@@ -1,11 +1,5 @@
 # WF_REGISTER_BOOK_V0
 
-## 1. Intent
-
-The governed sequence that registers a work, its first edition and that edition's first physical copy
-
----
-
 ## Machine
 
 ```yaml
@@ -35,7 +29,6 @@ core:
       code: CC_CONFIRM_STAFF_AUTHORIZED_V0
       inputs:
         staff_credentials: $.payload.staff_credentials
-        authorization_rules: $.payload.authorization_rules
       next:
         SUCCESS: CC_VALIDATE_BOOK_SUBMISSION_V0
         VIOLATION: EXIT_REJECTED
@@ -46,12 +39,11 @@ core:
         work_fields:
           title: $.payload.title
           author: $.payload.author
-        work_schema:
-          required:
-          - title
-          - author
-        book_fields: $.payload.book_fields
-        book_schema: $.payload.book_schema
+        book_fields:
+          title: $.payload.title
+          author: $.payload.author
+          publication_year: $.payload.publication_year
+          subject: $.payload.book_fields.subject
         barcode: $.payload.barcode
       next:
         SUCCESS: CC_CLAIM_WORK_IDENTITY_V0
@@ -100,10 +92,9 @@ core:
           title: $.payload.title
           author: $.payload.author
           publication_year: $.payload.publication_year
-          subject: $.payload.subject
+          subject: $.payload.book_fields.subject
           state: REGISTERED
         identity_key: $.results.CC_CLAIM_BOOK_IDENTITY_V0.identity_key
-        book_schema: $.payload.book_schema
       next:
         SUCCESS: CC_REGISTER_PHYSICAL_COPY_V0
         VIOLATION: EXIT_REJECTED
@@ -143,3 +134,9 @@ core:
     EXIT_REJECTED:
       type: EXIT
 ```
+
+---
+
+## Intent
+
+The governed sequence that registers a work, its first edition and that edition's first physical copy

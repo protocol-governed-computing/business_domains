@@ -1,11 +1,5 @@
 # IN_RETIRE_BOOK_RECORD_V0
 
-## 1. Intent
-
-A request to retire a book record judged obsolete
-
----
-
 ## Machine
 
 ```yaml
@@ -22,9 +16,6 @@ core:
     staff_credentials:
       type: object
       required: true
-    authorization_rules:
-      type: array
-      required: true
     identity_key:
       type: string
       required: true
@@ -37,3 +28,9 @@ core:
     NACK:
       description: Request rejected
 ```
+
+---
+
+## Intent
+
+A request to retire a book record judged obsolete

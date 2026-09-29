@@ -17,9 +17,6 @@ core:
     staff_credentials:
       type: object
       required: true
-    authorization_rules:
-      type: array
-      required: true
     staff_id:
       type: string
       required: true
@@ -34,18 +31,6 @@ core:
       required: true
     subject:
       type: array
-      required: true
-    edition_fields:
-      type: object
-      required: true
-    edition_schema:
-      type: object
-      required: true
-    work_fields:
-      type: object
-      required: true
-    work_schema:
-      type: object
       required: true
   outcomes:
     ACK:

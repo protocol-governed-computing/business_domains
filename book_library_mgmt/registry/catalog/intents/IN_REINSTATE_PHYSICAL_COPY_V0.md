@@ -1,11 +1,5 @@
 # IN_REINSTATE_PHYSICAL_COPY_V0
 
-## 1. Intent
-
-A request to return a retired copy to the registered state
-
----
-
 ## Machine
 
 ```yaml
@@ -22,9 +16,6 @@ core:
     staff_credentials:
       type: object
       required: true
-    authorization_rules:
-      type: array
-      required: true
     barcode:
       type: string
       required: true
@@ -37,3 +28,9 @@ core:
     NACK:
       description: Request rejected
 ```
+
+---
+
+## Intent
+
+A request to return a retired copy to the registered state

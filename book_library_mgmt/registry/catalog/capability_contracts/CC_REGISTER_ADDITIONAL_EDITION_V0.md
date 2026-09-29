@@ -1,11 +1,5 @@
 # CC_REGISTER_ADDITIONAL_EDITION_V0
 
-## 1. Intent
-
-Assembles the edition record against a resolved work and writes it
-
----
-
 ## Machine
 
 ```yaml
@@ -24,9 +18,6 @@ core:
     edition_fields:
       type: object
       required: true
-    edition_schema:
-      type: object
-      required: true
   outputs:
     edition_record:
       type: object
@@ -42,9 +33,38 @@ core:
     transform: capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0
     inputs:
       record: $.inputs.edition_fields
-      schema: $.inputs.edition_schema
+      schema:
+        title:
+          required: true
+          type: string
+        author:
+          required: true
+          type: string
+        publication_year:
+          required: true
+          type: integer
+        subject:
+          required: true
+          type: array
     outputs:
       violations: $.capability_result.violations
+    result_surface:
+    - SUCCESS
+    - VIOLATION
+    on_result:
+      SUCCESS: continue
+      VIOLATION: exit
+  - step: refuse_incomplete_record
+    transform: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
+    inputs:
+      parameters:
+        violations: $.results.validate_edition_fields.violations
+      rules:
+      - field: violations
+        op: eq
+        value: []
+    outputs:
+      valid: $.capability_result.valid
     result_surface:
     - SUCCESS
     - VIOLATION
@@ -81,3 +101,9 @@ core:
       VIOLATION: exit
       BACKEND_ERROR: exit
 ```
+
+---
+
+## Intent
+
+Assembles the edition record against a resolved work and writes it

@@ -326,6 +326,62 @@ def main() -> int:
                    "UPDATE_BIBLIOGRAPHIC_INFORMATION"} <= performed,
               f"{len(trail)} trail entr(ies), {len(performed)} distinct operation(s)")
 
+        # cr_05_catalog — the catalog holds every rule it applies. Each request below states rules
+        # of its own, widened; each is judged by the catalog's. Fresh books, so nothing above moves.
+        WIDE = {"authorization_rules": [], "book_schema": {}, "edition_schema": {}, "work_schema": {}}
+        intruder = {"staff_id": "intruder", "authorized": False}
+        ODYSSEY = {"title": "The Odyssey", "author": "Homer", "publication_year": 1996}
+
+        r = run("WF_REGISTER_BOOK_V0", {**book_payload(ODYSSEY, "BC-ODY-1", staff=intruder), **WIDE})
+        s = run("WF_SEARCH_CATALOG_V0", {**auth(intruder), **WIDE, "search_criteria": {"title": "Dune"}})
+        check("a catalog operation requested by anyone the library has not authorized is refused, "
+              "whatever rules the request states, and no record changes",
+              r.status != "SUCCESS" and s.status != "SUCCESS" and _key(ODYSSEY) not in run.store("books.json"),
+              f"register {r.status}, search {s.status}")
+
+        bare_book = book_payload(ODYSSEY, "BC-ODY-2")
+        bare_book["book_fields"].pop("subject")
+        r = run("WF_REGISTER_BOOK_V0", {**bare_book, **WIDE, "authorization_rules": RULES})
+        EDITION = {"title": "Dune", "author": "Frank Herbert", "publication_year": 2021}
+        e = run("WF_REGISTER_ADDITIONAL_EDITION_V0",
+                {**edition_payload(EDITION), **WIDE, "authorization_rules": RULES, "subject": "science fiction"})
+        check("a book, a work or a further edition missing what the library says it must contain is "
+              "refused, whatever description the request states, and nothing is registered by it",
+              r.status != "SUCCESS" and e.status != "SUCCESS"
+              and _key(ODYSSEY) not in run.store("books.json") and _key(EDITION) not in run.store("books.json"),
+              f"book {r.status}, edition {e.status}")
+
+        r = run("WF_REGISTER_BOOK_V0", {**book_payload(ODYSSEY, "BC-ODY-3", subjects=("epic",)), **WIDE,
+                                         "authorization_rules": RULES})
+        recorded = run.store("books.json").get(_key(ODYSSEY), {})
+        check("what the catalog checks for a registration is what it records",
+              r.status == "SUCCESS" and recorded.get("subject") == ["epic"],
+              f"status {r.status}, recorded subject {recorded.get('subject')}")
+
+        ILIAD = {"title": "The Iliad", "author": "Homer", "publication_year": 1990}
+        retired_copy = book_payload(ILIAD, "BC-ILI-1")
+        retired_copy["copy_fields"]["state"] = "RETIRED"
+        r = run("WF_REGISTER_BOOK_V0", retired_copy)
+        copy_state = run.store("physical_copies.json").get("BC-ILI-1", {}).get("state")
+        check("a physical copy is registered as registered, whatever state the request gives it",
+              r.status == "SUCCESS" and copy_state == "REGISTERED", f"status {r.status}, state {copy_state}")
+
+        c = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1", {**auth(), **WIDE, "authorization_rules": RULES,
+                "identity_key": _key(ILIAD), "updated_fields": {**ILIAD, "subject": ["epic"], "state": "SUSPENDED"}})
+        emptied = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1", {**auth(), "identity_key": _key(ILIAD),
+                      "authorization_rules": RULES, "updated_fields": {**ILIAD, "subject": []}})
+        iliad = run.store("books.json").get(_key(ILIAD), {})
+        check("a correction keeps the record's state, and a correction leaving a book without its "
+              "description is refused",
+              c.status == "SUCCESS" and emptied.status != "SUCCESS"
+              and iliad.get("state") == "REGISTERED" and iliad.get("subject") == ["epic"],
+              f"correction {c.status}, emptied {emptied.status}, record {iliad.get('state')} {iliad.get('subject')}")
+
+        check("a request stating rules of its own is judged by the catalog's rules, and is not refused "
+              "for stating them",
+              recorded.get("state") == "REGISTERED" and c.status == "SUCCESS",
+              "the registration and the correction above each stated widened rules")
+
     finally:
         if keep is None:
             shutil.rmtree(data_root, ignore_errors=True)

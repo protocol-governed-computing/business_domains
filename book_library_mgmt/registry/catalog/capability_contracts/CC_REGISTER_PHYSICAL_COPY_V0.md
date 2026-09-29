@@ -1,11 +1,5 @@
 # CC_REGISTER_PHYSICAL_COPY_V0
 
-## 1. Intent
-
-Record a copy against exactly one book
-
----
-
 ## Machine
 
 ```yaml
@@ -64,7 +58,7 @@ core:
       fields:
         identity_key: $.inputs.identity_key
         barcode: $.inputs.barcode
-        state: $.inputs.copy_fields.state
+        state: REGISTERED
     outputs:
       copy_record: $.capability_result.record
     result_surface:
@@ -91,3 +85,9 @@ core:
       VIOLATION: exit
       BACKEND_ERROR: exit
 ```
+
+---
+
+## Intent
+
+Record a copy against exactly one book

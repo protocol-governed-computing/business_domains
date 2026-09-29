@@ -1,11 +1,5 @@
 # CC_VALIDATE_BOOK_SUBMISSION_V0
 
-## 1. Intent
-
-Confirms a registration carries what a work and an edition require, before any identity is claimed
-
----
-
 ## Machine
 
 ```yaml
@@ -22,13 +16,7 @@ core:
     work_fields:
       type: object
       required: true
-    work_schema:
-      type: object
-      required: true
     book_fields:
-      type: object
-      required: true
-    book_schema:
       type: object
       required: true
     barcode:
@@ -47,7 +35,19 @@ core:
     transform: capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0
     inputs:
       record: $.inputs.book_fields
-      schema: $.inputs.book_schema
+      schema:
+        title:
+          required: true
+          type: string
+        author:
+          required: true
+          type: string
+        publication_year:
+          required: true
+          type: integer
+        subject:
+          required: true
+          type: array
     outputs:
       violations: $.capability_result.violations
     result_surface:
@@ -60,7 +60,13 @@ core:
     transform: capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0
     inputs:
       record: $.inputs.work_fields
-      schema: $.inputs.work_schema
+      schema:
+        title:
+          required: true
+          type: string
+        author:
+          required: true
+          type: string
     outputs:
       violations: $.capability_result.violations
     result_surface:
@@ -75,12 +81,20 @@ core:
       parameters:
         barcode: $.inputs.barcode
         subject: $.inputs.book_fields.subject
+        book_violations: $.results.validate_book_fields.violations
+        work_violations: $.results.validate_work_fields.violations
       rules:
       - field: barcode
         op: neq
         value: ''
       - field: subject
         op: neq
+        value: []
+      - field: book_violations
+        op: eq
+        value: []
+      - field: work_violations
+        op: eq
         value: []
     outputs:
       valid: $.capability_result.valid
@@ -91,3 +105,9 @@ core:
       SUCCESS: exit
       VIOLATION: exit
 ```
+
+---
+
+## Intent
+
+Confirms a registration carries what a work and an edition require, before any identity is claimed

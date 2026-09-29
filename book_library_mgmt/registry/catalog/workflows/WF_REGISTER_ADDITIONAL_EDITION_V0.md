@@ -1,11 +1,5 @@
 # WF_REGISTER_ADDITIONAL_EDITION_V0
 
-## 1. Intent
-
-The governed sequence that registers a further edition of a work the library already holds
-
----
-
 ## Machine
 
 ```yaml
@@ -34,7 +28,6 @@ core:
       code: CC_CONFIRM_STAFF_AUTHORIZED_V0
       inputs:
         staff_credentials: $.payload.staff_credentials
-        authorization_rules: $.payload.authorization_rules
       next:
         SUCCESS: CC_VALIDATE_BOOK_SUBMISSION_V0
         VIOLATION: EXIT_REJECTED
@@ -42,10 +35,14 @@ core:
       type: CC
       code: CC_VALIDATE_BOOK_SUBMISSION_V0
       inputs:
-        book_fields: $.payload.edition_fields
-        book_schema: $.payload.edition_schema
-        work_fields: $.payload.work_fields
-        work_schema: $.payload.work_schema
+        book_fields:
+          title: $.payload.title
+          author: $.payload.author
+          publication_year: $.payload.publication_year
+          subject: $.payload.subject
+        work_fields:
+          title: $.payload.title
+          author: $.payload.author
       next:
         SUCCESS: CC_RESOLVE_WORK_V0
         VIOLATION: EXIT_REJECTED
@@ -77,7 +74,6 @@ core:
       code: CC_REGISTER_ADDITIONAL_EDITION_V0
       inputs:
         identity_key: $.results.CC_CLAIM_BOOK_IDENTITY_V0.identity_key
-        edition_schema: $.payload.edition_schema
         edition_fields:
           identity_key: $.results.CC_CLAIM_BOOK_IDENTITY_V0.identity_key
           title: $.payload.title
@@ -110,3 +106,9 @@ core:
     EXIT_REJECTED:
       type: EXIT
 ```
+
+---
+
+## Intent
+
+The governed sequence that registers a further edition of a work the library already holds

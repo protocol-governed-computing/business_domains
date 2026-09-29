@@ -1,11 +1,5 @@
 # CC_REGISTER_BOOK_V0
 
-## 1. Intent
-
-Validates, assembles and writes an edition record against the work it belongs to
-
----
-
 ## Machine
 
 ```yaml
@@ -23,9 +17,6 @@ core:
       required: true
     identity_key:
       type: string
-      required: true
-    book_schema:
-      type: object
       required: true
   outputs:
     book_record:
@@ -55,9 +46,38 @@ core:
     transform: capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0
     inputs:
       record: $.inputs.book_fields
-      schema: $.inputs.book_schema
+      schema:
+        title:
+          required: true
+          type: string
+        author:
+          required: true
+          type: string
+        publication_year:
+          required: true
+          type: integer
+        subject:
+          required: true
+          type: array
     outputs:
       violations: $.capability_result.violations
+    result_surface:
+    - SUCCESS
+    - VIOLATION
+    on_result:
+      SUCCESS: continue
+      VIOLATION: exit
+  - step: refuse_incomplete_record
+    transform: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
+    inputs:
+      parameters:
+        violations: $.results.validate_book_fields.violations
+      rules:
+      - field: violations
+        op: eq
+        value: []
+    outputs:
+      valid: $.capability_result.valid
     result_surface:
     - SUCCESS
     - VIOLATION
@@ -101,3 +121,9 @@ core:
       VIOLATION: exit
       BACKEND_ERROR: exit
 ```
+
+---
+
+## Intent
+
+Validates, assembles and writes an edition record against the work it belongs to

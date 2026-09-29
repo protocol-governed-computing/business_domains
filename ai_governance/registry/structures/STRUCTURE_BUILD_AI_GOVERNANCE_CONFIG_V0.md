@@ -1,38 +1,5 @@
 # STRUCTURE_BUILD_AI_GOVERNANCE_CONFIG_V0
 
-**Artifact Type**: STRUCTURE
-**Version**: V0
-**Governed By**: structure::CONSTITUTION_STRUCTURE_V0
-
----
-
-## Purpose
-
-Self-describing build manifest for the **AI governance business domain** (`ai_governance::`) — an
-independently-authored domain compiled **against** the already-compiled governance surface, then
-composed into the assembled universe.
-
-This artifact lives in the domain's own repo (`business_domains`), so the governance surface is
-never edited to admit the domain — its identity and hash are unchanged. The compiler merges this
-manifest's `layer_definitions` and `identity_rules` **additively**, for this build only, on top of
-the immutable `STRUCTURE_DISCOVERY_V0` / `STRUCTURE_IDENTITY_V0`.
-
-## Subdomains
-
-The domain is one namespace (`ai_governance`) partitioned into two subdomains, each carried by the
-`subdomain:` declaration on its workflows and resolved by recursive discovery under `registry/`:
-
-| Subdomain | Concern |
-|---|---|
-| `agent_governance` | Constitutional mediation of agent-proposed actions against license-tier authority |
-| `ai_licensing` | License provisioning, cap enforcement, and reclamation of dormant licenses |
-
-Neither subdomain references the other's artifacts. `agent_governance` consumes the license fact
-feed read-only through its own STRUCTURE declaration, so either subdomain can be removed by
-deleting its folder — no other artifact is touched.
-
----
-
 ## Machine
 
 ```yaml
@@ -45,13 +12,11 @@ concern: ai_governance
 structure_scope: ai_governance
 reuse_visibility: business
 core:
-  summary: Build-time STRUCTURE manifest (AI governance business-domain scope)
-  description: 'Compiles the ai_governance domain''s own artifacts (WF/IN/CC/CT/EV/AC/RB/STRUCTURE),
-    resolving governance and platform capability references against the imported compiled governance
-    surface. Emits only ai_governance artifacts. Self-describing: declares its own source layer and
-    namespace rule additively.
-
-    '
+  summary: Build-time STRUCTURE manifest (ai_governance business-domain scope)
+  description: 'Compiles the ai_governance domain''s own artifacts, resolving governance and platform
+    capability references against the imported compiled governance surface. Emits only ai_governance artifacts.
+    Self-describing: declares its own source layer and namespace rule additively. Subdomains: agent_governance,
+    ai_licensing.'
 layer_definitions:
   AI_GOVERNANCE:
     domain_subpath: registry
@@ -67,15 +32,18 @@ artifact_discovery:
   import_surface:
     domain: platform
   artifact_types:
-  - WF
+  - AC
   - IN
+  - WF
   - CC
   - CT
-  - EV
-  - AC
   - RB
-  - STRUCTURE
+  - EV
   - VOCAB
+  - STRUCTURE
+  - TI
+  - TE
+  - TEST_DATA
 output_configuration:
   root: snapshot
   artifacts:
@@ -103,6 +71,9 @@ output_configuration:
   bootstrap_search_roots:
   - layer: GOVERNANCE
     subpath: structure/structures
+  conformance:
+    layer: GOVERNANCE
+    subpath: compiled/transform_conformance
 build_phases:
 - phase: discover
   description: Discover ai_governance artifacts via STRUCTURE
@@ -119,3 +90,8 @@ build_phases:
   target: compiled/artifacts/
 ```
 
+---
+
+## Intent
+
+Build-time STRUCTURE manifest (ai_governance business-domain scope)

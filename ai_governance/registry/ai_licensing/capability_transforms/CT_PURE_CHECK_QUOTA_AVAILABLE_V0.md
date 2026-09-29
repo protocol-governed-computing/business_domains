@@ -1,12 +1,5 @@
 # CT_PURE_CHECK_QUOTA_AVAILABLE_V0
 
-## 1. Intent
-
-Compare assigned license count against the declared cap. Pure comparison — the cap itself is a
-declared policy input, never read from storage by this transform.
-
----
-
 ## Machine
 
 ```yaml
@@ -19,10 +12,6 @@ concern: ai_licensing
 core:
   summary: Evaluate whether license quota remains available under the declared cap
   refusal: raises
-  description: |
-    Signals VIOLATION by raising CTExecutionError; the runtime maps any CT exception to
-    VIOLATION. A false predicate is never returned as a value — a plain return is SUCCESS
-    and would let the consuming pipeline continue past a failed gate.
   inputs:
     assigned_count:
       type: integer
@@ -41,6 +30,13 @@ core:
       type: integer
       required: true
       description: Licenses remaining under the cap, floored at zero
+  description: 'Signals VIOLATION by raising CTExecutionError; the runtime maps any CT exception to
+
+    VIOLATION. A false predicate is never returned as a value — a plain return is SUCCESS
+
+    and would let the consuming pipeline continue past a failed gate.
+
+    '
 machine:
   ct_kind: atom
   ct_purity: ct_pure
@@ -49,3 +45,9 @@ machine:
     module: ai_governance.implementation.capability_transforms.atoms.ct_pure_check_quota_available_v0
     callable: execute
 ```
+
+---
+
+## Intent
+
+Evaluate whether license quota remains available under the declared cap

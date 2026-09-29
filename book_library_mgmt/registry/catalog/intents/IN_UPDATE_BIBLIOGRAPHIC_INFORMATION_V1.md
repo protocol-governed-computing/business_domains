@@ -17,9 +17,6 @@ core:
     staff_credentials:
       type: object
       required: true
-    authorization_rules:
-      type: array
-      required: true
     staff_id:
       type: string
       required: true

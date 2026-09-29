@@ -1,11 +1,5 @@
 # IN_REGISTER_PHYSICAL_COPY_V0
 
-## 1. Intent
-
-A request to register a further copy against a registered book
-
----
-
 ## Machine
 
 ```yaml
@@ -21,9 +15,6 @@ core:
   inputs:
     staff_credentials:
       type: object
-      required: true
-    authorization_rules:
-      type: array
       required: true
     identity_key:
       type: string
@@ -43,3 +34,9 @@ core:
     NACK:
       description: Request rejected
 ```
+
+---
+
+## Intent
+
+A request to register a further copy against a registered book

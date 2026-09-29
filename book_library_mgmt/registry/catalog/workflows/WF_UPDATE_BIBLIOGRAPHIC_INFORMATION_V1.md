@@ -28,7 +28,6 @@ core:
       type: CC
       code: CC_CONFIRM_STAFF_AUTHORIZED_V0
       inputs:
-        authorization_rules: $.payload.authorization_rules
         staff_credentials: $.payload.staff_credentials
       next:
         SUCCESS: CC_RESOLVE_BOOK_IDENTITY_V0

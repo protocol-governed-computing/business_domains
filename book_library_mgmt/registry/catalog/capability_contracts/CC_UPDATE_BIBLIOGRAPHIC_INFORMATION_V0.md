@@ -1,11 +1,5 @@
 # CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
 
-## 1. Intent
-
-Changes a registered edition's descriptive content and refuses a change that would duplicate another edition
-
----
-
 ## Machine
 
 ```yaml
@@ -109,10 +103,56 @@ core:
         author: $.inputs.updated_fields.author
         publication_year: $.inputs.updated_fields.publication_year
         subject: $.inputs.updated_fields.subject
-        state: $.inputs.updated_fields.state
+        state: $.results.read_book_record.book_record.state
         work_key: $.results.read_book_record.book_record.work_key
     outputs:
       updated_record: $.capability_result.record
+    result_surface:
+    - SUCCESS
+    - VIOLATION
+    on_result:
+      SUCCESS: continue
+      VIOLATION: exit
+  - step: check_corrected_record
+    transform: capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0
+    inputs:
+      record: $.results.assemble_updated_record.updated_record
+      schema:
+        title:
+          required: true
+          type: string
+        author:
+          required: true
+          type: string
+        publication_year:
+          required: true
+          type: integer
+        subject:
+          required: true
+          type: array
+    outputs:
+      violations: $.capability_result.violations
+    result_surface:
+    - SUCCESS
+    - VIOLATION
+    on_result:
+      SUCCESS: continue
+      VIOLATION: exit
+  - step: refuse_incomplete_correction
+    transform: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
+    inputs:
+      parameters:
+        violations: $.results.check_corrected_record.violations
+        subject: $.results.assemble_updated_record.updated_record.subject
+      rules:
+      - field: violations
+        op: eq
+        value: []
+      - field: subject
+        op: neq
+        value: []
+    outputs:
+      valid: $.capability_result.valid
     result_surface:
     - SUCCESS
     - VIOLATION
@@ -137,3 +177,9 @@ core:
       VIOLATION: exit
       BACKEND_ERROR: exit
 ```
+
+---
+
+## Intent
+
+Changes a registered edition's descriptive content and refuses a change that would duplicate another edition

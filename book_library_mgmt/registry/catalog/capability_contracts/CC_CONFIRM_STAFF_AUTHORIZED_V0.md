@@ -1,11 +1,5 @@
 # CC_CONFIRM_STAFF_AUTHORIZED_V0
 
-## 1. Intent
-
-Confirm the staff member may perform catalog operations
-
----
-
 ## Machine
 
 ```yaml
@@ -21,9 +15,6 @@ core:
     staff_credentials:
       type: object
       required: true
-    authorization_rules:
-      type: array
-      required: true
   outputs:
     is_authorized:
       type: boolean
@@ -38,7 +29,12 @@ core:
     transform: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
     inputs:
       parameters: $.inputs.staff_credentials
-      rules: $.inputs.authorization_rules
+      rules:
+      - field: staff_id
+        op: not_null
+      - field: authorized
+        op: eq
+        value: true
     outputs:
       is_authorized: $.capability_result.valid
     result_surface:
@@ -48,3 +44,9 @@ core:
       SUCCESS: exit
       VIOLATION: exit
 ```
+
+---
+
+## Intent
+
+Confirm the staff member may perform catalog operations

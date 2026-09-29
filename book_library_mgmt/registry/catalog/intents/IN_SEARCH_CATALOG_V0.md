@@ -1,11 +1,5 @@
 # IN_SEARCH_CATALOG_V0
 
-## 1. Intent
-
-A request to locate material by subject or by title
-
----
-
 ## Machine
 
 ```yaml
@@ -22,9 +16,6 @@ core:
     staff_credentials:
       type: object
       required: true
-    authorization_rules:
-      type: array
-      required: true
     search_criteria:
       type: object
       required: true
@@ -37,3 +28,9 @@ core:
     NACK:
       description: Request rejected
 ```
+
+---
+
+## Intent
+
+A request to locate material by subject or by title
