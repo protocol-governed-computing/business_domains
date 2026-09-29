@@ -27,6 +27,7 @@ identity holds them however it is reached.
 | Register a person unverified | identity | OWNED |  | S5 scope_boundary Register a person unverified |
 | Reach identity from outside | identity | OWNED |  | S5 scope_boundary Reach identity from outside |
 | Admit an acceptance with its grounds | identity | OWNED |  | S5 scope_boundary Admit an acceptance with its grounds |
+| Admit a registration without the schema identity holds | identity | OWNED |  | S5 scope_boundary Admit a registration without the schema identity holds |
 | Record the moment of each act | identity | SATISFIED | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | S4 capability_graph Record the moment of each act |
 | Record the moment of each act as the act's own | identity, in a later change | DEFERRED |  | S5 scope_boundary Record the moment of each act as the act's own |
 | Records made under a request's own rules | nowhere; the business declines to rewrite them | DEFERRED |  | S5 scope_boundary Records made under a request's own rules |
@@ -74,6 +75,7 @@ identity holds them however it is reached.
 | blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 | Present and reused unchanged | REUSE | S4 dependency_graph blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 |
 | blockchain::CC_REGISTER_ACTOR_V0 | Present and reused unchanged | REUSE | S4 dependency_graph blockchain::CC_REGISTER_ACTOR_V0 |
 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | Present and reused unchanged | REUSE | S4 dependency_graph blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 |
+| blockchain::IN_ACTOR_REGISTERED_V0 | Present; requires the schema identity now holds | EXTEND | S3 dependency_discoveries The registration gate |
 
 ---
 
@@ -104,6 +106,7 @@ identity holds them however it is reached.
 | Register a person unverified | identity | S6 ownership Register a person unverified |
 | Reach identity from outside | identity | S6 ownership Reach identity from outside |
 | Admit an acceptance with its grounds | identity | S6 ownership Admit an acceptance with its grounds |
+| Admit a registration without the schema identity holds | identity | S6 ownership Admit a registration without the schema identity holds |
 
 ---
 

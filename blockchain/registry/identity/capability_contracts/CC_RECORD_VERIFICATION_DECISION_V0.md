@@ -1,11 +1,5 @@
 # CC_RECORD_VERIFICATION_DECISION_V0
 
-## 1. Intent
-
-Refuses every declared refusal and moves the actor to its decided state
-
----
-
 ## Machine
 
 ```yaml
@@ -16,19 +10,14 @@ governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 authority: pgc.platform
 concern: identity
 core:
-  summary: Refuses every declared refusal and moves the actor to its decided state
+  summary: Refuses a decision about a person not unverified, a decision other than an acceptance or a
+    rejection, or an authority deciding about themselves, and records the decision it checked
   inputs:
     current_state:
       type: string
       required: true
-    states_admitting_a_decision:
-      type: array
-      required: true
     decision:
       type: string
-      required: true
-    admitted_outcomes:
-      type: array
       required: true
     verifying_authority:
       type: string
@@ -36,15 +25,8 @@ core:
     contact_address:
       type: string
       required: true
-    decided_actor_fields:
-      type: object
-      required: true
-    self_check_parameters:
-      type: object
-      required: true
-    self_check_rules:
-      type: array
-      required: true
+    grounds:
+      type: string
   outputs:
     result_status:
       type: string
@@ -60,7 +42,8 @@ core:
     transform: capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0
     inputs:
       value: $.inputs.current_state
-      allowed_set: $.inputs.states_admitting_a_decision
+      allowed_set:
+      - UNVERIFIED
     outputs:
       is_member: $.capability_result.is_member
     result_surface:
@@ -73,7 +56,9 @@ core:
     transform: capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0
     inputs:
       value: $.inputs.decision
-      allowed_set: $.inputs.admitted_outcomes
+      allowed_set:
+      - ACCEPTED
+      - REJECTED
     outputs:
       is_member: $.capability_result.is_member
     result_surface:
@@ -82,11 +67,28 @@ core:
     on_result:
       SUCCESS: continue
       VIOLATION: exit
-  - step: refuse_self_verification
+  - step: compare_authority_to_person
+    transform: capability_transforms::CT_PURE_COMPARE_EQUAL_V0
+    inputs:
+      left: $.inputs.verifying_authority
+      right: $.inputs.contact_address
+    outputs:
+      is_self: $.capability_result.is_equal
+    result_surface:
+    - SUCCESS
+    - VIOLATION
+    on_result:
+      SUCCESS: continue
+      VIOLATION: exit
+  - step: refuse_self_decision
     transform: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
     inputs:
-      parameters: $.inputs.self_check_parameters
-      rules: $.inputs.self_check_rules
+      parameters:
+        is_self: $.results.compare_authority_to_person.is_self
+      rules:
+      - field: is_self
+        op: eq
+        value: false
     outputs:
       valid: $.capability_result.valid
     result_surface:
@@ -98,7 +100,11 @@ core:
   - step: assemble_decided_actor
     transform: capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0
     inputs:
-      fields: $.inputs.decided_actor_fields
+      fields:
+        contact_address: $.inputs.contact_address
+        state: $.inputs.decision
+        verifying_authority: $.inputs.verifying_authority
+        grounds: $.inputs.grounds
     outputs:
       record: $.capability_result.record
     result_surface:
@@ -125,3 +131,9 @@ core:
       VIOLATION: exit
       BACKEND_ERROR: exit
 ```
+
+---
+
+## Intent
+
+Refuses a decision about a person not unverified, a decision other than an acceptance or a rejection, or an authority deciding about themselves, and records the decision it checked

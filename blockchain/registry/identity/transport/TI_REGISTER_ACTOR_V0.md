@@ -1,11 +1,5 @@
 # TI_REGISTER_ACTOR_V0
 
-## 1. Intent
-
-Admits a request to register an actor, declaring the name and contact address a caller sends and holding the schema, address path, stream, preferences and occurrence label the act requires.
-
----
-
 ## Machine
 
 ```yaml
@@ -18,7 +12,7 @@ concern: identity
 operation: blockchain.register_actor
 core:
   summary: Admits a request to register an actor, declaring the name and contact address a caller sends
-    and holding the schema, address path, stream, preferences and occurrence label the act requires.
+    and holding the address path, stream, preferences and occurrence label the act requires
 input_contract:
   name:
     type: string
@@ -34,16 +28,8 @@ handler:
     actor_record:
       name: ${input.name}
       contact_address: ${input.contact_address}
-      state: UNVERIFIED
       currency_preference: BACHI
       language: en
-    registration_schema:
-      name:
-        required: true
-        type: string
-      contact_address:
-        required: true
-        type: string
     address_path: contact_address
     address_type: string
     stream_id: ACTOR_OCCURRENCES
@@ -51,3 +37,9 @@ handler:
       occurrence: ACTOR_REGISTERED_UNVERIFIED
       contact_address: ${input.contact_address}
 ```
+
+---
+
+## Intent
+
+Admits a request to register an actor, declaring the name and contact address a caller sends and holding the address path, stream, preferences and occurrence label the act requires

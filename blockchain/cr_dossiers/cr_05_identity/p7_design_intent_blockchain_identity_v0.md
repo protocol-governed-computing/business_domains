@@ -8,10 +8,10 @@
 Every binding names a field the capability declares, read from the pinned baseline
 `4d366ccab335cfbd9f94d49ec80b2c43cdcb5a0dd417e56e1895b076fbc10e02`.
 
-Nothing new is authored. Ten artifacts identity already holds are redeclared whole: three contracts
+Nothing new is authored. Eleven artifacts identity already holds are redeclared whole: three contracts
 take their rules as fixed values, three acts stop passing rules along and fix what they write, three
-entrances stop supplying what identity now holds, and the acceptance gate declares the grounds an
-acceptance may carry.
+entrances stop supplying what identity now holds, the registration gate stops requiring the schema,
+and the acceptance gate declares the grounds an acceptance may carry.
 
 ---
 
@@ -26,7 +26,7 @@ acceptance may carry.
 | The decided record is built from the decision the step checked | The state recorded is the decision admitted | The decided record is assembled inside the contract from the checked decision, the authority and the grounds; no request hands it a record | S4 design_decisions #4 |
 | Each act fixes its decision | An acceptance act accepts and a rejection act rejects | The acceptance act hands the contract ACCEPTED and the rejection act REJECTED, as literals | S4 design_decisions #4 |
 | Registration writes the state unverified as its own | The lifecycle has one way in | The registration act builds the record it registers with the state UNVERIFIED as a literal | S4 design_decisions #5 |
-| The entrances stop supplying what identity holds | Nothing a caller sends or is told changes | The three entrances drop the schema, the sets, the rules, the decision and the decided record from their payloads; their input contracts are unchanged | S4 design_decisions #6 |
+| The entrances stop supplying what identity holds | Nothing a caller sends or is told changes | The three entrances drop the schema, the sets, the rules, the decision and the decided record from their payloads; their input contracts are unchanged, and the registration gate stops requiring the schema they no longer send | S4 design_decisions #6 |
 | Records made before this change are left as they are | The record is added to and never rewritten | No migration, backfill or repair step is designed | S4 design_decisions #7 |
 
 ---
@@ -50,7 +50,7 @@ acceptance may carry.
 | blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 | REUSE | | Claims a contact address, unchanged. | S6 pps_artifacts_requiring_action #12 |
 | blockchain::CC_REGISTER_ACTOR_V0 | REUSE | | Records the person it is handed, unchanged; the act now hands it the state. | S6 pps_artifacts_requiring_action #13 |
 | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | REUSE | | Records a moment on a person's trail, unchanged. | S6 pps_artifacts_requiring_action #14 |
-| blockchain::IN_ACTOR_REGISTERED_V0 | REUSE | | Admits a registration, unchanged. | S6 pps_artifacts_requiring_action #4 |
+| blockchain::IN_ACTOR_REGISTERED_V0 | EXTEND | A request to admit a person as an actor | It requires the schema identity now holds and the entrance no longer supplies. | S6 pps_artifacts_requiring_action #15 |
 | blockchain::IN_ACTOR_REJECTION_V0 | REUSE | | Admits a rejection and its grounds, unchanged. | S6 pps_artifacts_requiring_action #6 |
 | blockchain::EV_ACTOR_REGISTERED_UNVERIFIED_V0 | REUSE | | Announced by the registration act, unchanged. | S6 pps_artifacts_requiring_action #4 |
 | blockchain::EV_ACTOR_ACCEPTED_V0 | REUSE | | Announced by the acceptance act, unchanged. | S6 pps_artifacts_requiring_action #5 |
@@ -209,6 +209,7 @@ The routing of the three acts is unchanged. What changes is what each node is ha
 | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | OUTPUT | result_status | string | YES |  | Whether the decision was recorded. |
 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | INPUT | grounds | string | NO |  | Why the person is refused. A rejection stating none is refused by the rule, not by admission. |
 | blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | OUTPUT | valid | boolean | YES |  | Whether grounds were stated. |
+| blockchain::IN_ACTOR_REGISTERED_V0 | INPUT | actor_record | object | YES |  | The registration as the person supplied it. |
 | blockchain::IN_ACTOR_ACCEPTANCE_V0 | INPUT | contact_address | string | YES |  | The person being accepted. |
 | blockchain::IN_ACTOR_ACCEPTANCE_V0 | INPUT | verifying_authority | string | YES |  | The authority recording the acceptance. |
 | blockchain::IN_ACTOR_ACCEPTANCE_V0 | INPUT | grounds | string | NO |  | Why, where the authority chooses to say. |
@@ -307,7 +308,7 @@ The routing of the three acts is unchanged. What changes is what each node is ha
 <!-- register:artifact_summary -->
 | Action (REPLACE, EXTEND, NEW) | Subdomain | Count | Artifacts |
 |-------------------------------|-----------|-------|-----------|
-| EXTEND | identity | 10 | blockchain::CC_VALIDATE_REGISTRATION_V0, blockchain::CC_RECORD_VERIFICATION_DECISION_V0, blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0, blockchain::WF_REGISTER_ACTOR_V0, blockchain::WF_ACCEPT_ACTOR_V0, blockchain::WF_REJECT_ACTOR_V0, blockchain::TI_REGISTER_ACTOR_V0, blockchain::TI_ACCEPT_ACTOR_V0, blockchain::TI_REJECT_ACTOR_V0, blockchain::IN_ACTOR_ACCEPTANCE_V0 |
+| EXTEND | identity | 11 | blockchain::CC_VALIDATE_REGISTRATION_V0, blockchain::CC_RECORD_VERIFICATION_DECISION_V0, blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0, blockchain::WF_REGISTER_ACTOR_V0, blockchain::WF_ACCEPT_ACTOR_V0, blockchain::WF_REJECT_ACTOR_V0, blockchain::TI_REGISTER_ACTOR_V0, blockchain::TI_ACCEPT_ACTOR_V0, blockchain::TI_REJECT_ACTOR_V0, blockchain::IN_ACTOR_ACCEPTANCE_V0, blockchain::IN_ACTOR_REGISTERED_V0 |
 
 ---
 
@@ -388,6 +389,54 @@ The routing of the three acts is unchanged. What changes is what each node is ha
 <!-- register:test_case_values optional -->
 | CT Code | Case | Role (INPUT, EXPECTED, ASSERT, RECORDED) | Field | Value | Source Finding |
 |---------|------|------------------------------------------|-------|-------|----------------|
+
+---
+
+## 25. Withdrawn Facts
+
+<!-- register:withdrawn_facts optional -->
+| Artifact | Fact | Reason | Source Finding |
+|----------|------|--------|----------------|
+| blockchain::CC_VALIDATE_REGISTRATION_V0 | .core.inputs.registration_schema | The contract holds what a registration must contain. | S6 boundary_rules #1 |
+| blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | .core.inputs.states_admitting_a_decision | The contract holds the states a decision may be made from. | S6 boundary_rules #1 |
+| blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | .core.inputs.admitted_outcomes | The contract holds the decisions it admits. | S6 boundary_rules #1 |
+| blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | .core.inputs.self_check_parameters | The self-decision rule compares the authority with the person itself. | S6 boundary_rules #1 |
+| blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | .core.inputs.self_check_rules | The contract holds the self-decision rule. | S6 boundary_rules #1 |
+| blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | .core.inputs.decided_actor_fields | The decided record is built from the decision the contract checked. | S6 boundary_rules #3 |
+| blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | .core.pipeline[refuse_self_verification] | Replaced by a comparison and a fixed rule on its result. | S6 boundary_rules #1 |
+| blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | .core.inputs.grounds_parameters | The contract reads the grounds directly. | S6 boundary_rules #1 |
+| blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0 | .core.inputs.grounds_rules | The contract holds the grounds rules. | S6 boundary_rules #1 |
+| blockchain::IN_ACTOR_REGISTERED_V0 | .core.inputs.registration_schema | The gate no longer requires what identity holds and the entrance no longer supplies. | S6 pps_artifacts_requiring_action #15 |
+| blockchain::WF_REGISTER_ACTOR_V0 | .core.nodes.CC_VALIDATE_REGISTRATION_V0.inputs.registration_schema | The contract no longer takes a schema. | S6 boundary_rules #1 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | .core.nodes.CC_RECORD_VERIFICATION_DECISION_V0.inputs.states_admitting_a_decision | The contract no longer takes this; it holds the rule or builds the record itself. | S6 boundary_rules #1 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | .core.nodes.CC_RECORD_VERIFICATION_DECISION_V0.inputs.admitted_outcomes | The contract no longer takes this; it holds the rule or builds the record itself. | S6 boundary_rules #1 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | .core.nodes.CC_RECORD_VERIFICATION_DECISION_V0.inputs.self_check_parameters | The contract no longer takes this; it holds the rule or builds the record itself. | S6 boundary_rules #1 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | .core.nodes.CC_RECORD_VERIFICATION_DECISION_V0.inputs.self_check_rules | The contract no longer takes this; it holds the rule or builds the record itself. | S6 boundary_rules #1 |
+| blockchain::WF_ACCEPT_ACTOR_V0 | .core.nodes.CC_RECORD_VERIFICATION_DECISION_V0.inputs.decided_actor_fields | The contract no longer takes this; it holds the rule or builds the record itself. | S6 boundary_rules #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | .core.nodes.CC_RECORD_VERIFICATION_DECISION_V0.inputs.states_admitting_a_decision | The contract no longer takes this; it holds the rule or builds the record itself. | S6 boundary_rules #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | .core.nodes.CC_RECORD_VERIFICATION_DECISION_V0.inputs.admitted_outcomes | The contract no longer takes this; it holds the rule or builds the record itself. | S6 boundary_rules #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | .core.nodes.CC_RECORD_VERIFICATION_DECISION_V0.inputs.self_check_parameters | The contract no longer takes this; it holds the rule or builds the record itself. | S6 boundary_rules #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | .core.nodes.CC_RECORD_VERIFICATION_DECISION_V0.inputs.self_check_rules | The contract no longer takes this; it holds the rule or builds the record itself. | S6 boundary_rules #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | .core.nodes.CC_RECORD_VERIFICATION_DECISION_V0.inputs.decided_actor_fields | The contract no longer takes this; it holds the rule or builds the record itself. | S6 boundary_rules #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | .core.nodes.CC_REQUIRE_REJECTION_GROUNDS_V0.inputs.grounds_parameters | The contract no longer takes this; it holds its rules and reads the grounds. | S6 boundary_rules #1 |
+| blockchain::WF_REJECT_ACTOR_V0 | .core.nodes.CC_REQUIRE_REJECTION_GROUNDS_V0.inputs.grounds_rules | The contract no longer takes this; it holds its rules and reads the grounds. | S6 boundary_rules #1 |
+| blockchain::TI_REGISTER_ACTOR_V0 | .handler.payload_template.registration_schema | Identity holds what a registration must contain. | S6 boundary_rules #5 |
+| blockchain::TI_REGISTER_ACTOR_V0 | .handler.payload_template.actor_record.state | Registration writes the state unverified itself. | S6 boundary_rules #4 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | .handler.payload_template.decision | Identity holds this; the entrance stops supplying it. | S6 boundary_rules #5 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | .handler.payload_template.states_admitting_a_decision | Identity holds this; the entrance stops supplying it. | S6 boundary_rules #5 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | .handler.payload_template.admitted_outcomes | Identity holds this; the entrance stops supplying it. | S6 boundary_rules #5 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | .handler.payload_template.decided_actor_fields | Identity holds this; the entrance stops supplying it. | S6 boundary_rules #5 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | .handler.payload_template.self_check_parameters | Identity holds this; the entrance stops supplying it. | S6 boundary_rules #5 |
+| blockchain::TI_ACCEPT_ACTOR_V0 | .handler.payload_template.self_check_rules | Identity holds this; the entrance stops supplying it. | S6 boundary_rules #5 |
+| blockchain::TI_REJECT_ACTOR_V0 | .handler.payload_template.decision | Identity holds this; the entrance stops supplying it. | S6 boundary_rules #5 |
+| blockchain::TI_REJECT_ACTOR_V0 | .handler.payload_template.states_admitting_a_decision | Identity holds this; the entrance stops supplying it. | S6 boundary_rules #5 |
+| blockchain::TI_REJECT_ACTOR_V0 | .handler.payload_template.admitted_outcomes | Identity holds this; the entrance stops supplying it. | S6 boundary_rules #5 |
+| blockchain::TI_REJECT_ACTOR_V0 | .handler.payload_template.decided_actor_fields | Identity holds this; the entrance stops supplying it. | S6 boundary_rules #5 |
+| blockchain::TI_REJECT_ACTOR_V0 | .handler.payload_template.self_check_parameters | Identity holds this; the entrance stops supplying it. | S6 boundary_rules #5 |
+| blockchain::TI_REJECT_ACTOR_V0 | .handler.payload_template.self_check_rules | Identity holds this; the entrance stops supplying it. | S6 boundary_rules #5 |
+| blockchain::TI_REJECT_ACTOR_V0 | .handler.payload_template.grounds_parameters | Identity holds this; the entrance stops supplying it. | S6 boundary_rules #5 |
+| blockchain::TI_REJECT_ACTOR_V0 | .handler.payload_template.grounds_rules | Identity holds this; the entrance stops supplying it. | S6 boundary_rules #5 |
+
 
 ---
 

@@ -1,11 +1,5 @@
 # CC_REQUIRE_REJECTION_GROUNDS_V0
 
-## 1. Intent
-
-Refuses a rejection stating no grounds, before anything is recorded
-
----
-
 ## Machine
 
 ```yaml
@@ -18,12 +12,8 @@ concern: identity
 core:
   summary: Refuses a rejection stating no grounds, before anything is recorded
   inputs:
-    grounds_parameters:
-      type: object
-      required: true
-    grounds_rules:
-      type: array
-      required: true
+    grounds:
+      type: string
   outputs:
     valid:
       type: boolean
@@ -37,8 +27,14 @@ core:
   - step: require_grounds_stated
     transform: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
     inputs:
-      parameters: $.inputs.grounds_parameters
-      rules: $.inputs.grounds_rules
+      parameters:
+        grounds: $.inputs.grounds
+      rules:
+      - field: grounds
+        op: not_null
+      - field: grounds
+        op: neq
+        value: ''
     outputs:
       valid: $.capability_result.valid
     result_surface:
@@ -48,3 +44,9 @@ core:
       SUCCESS: continue
       VIOLATION: exit
 ```
+
+---
+
+## Intent
+
+Refuses a rejection stating no grounds, before anything is recorded

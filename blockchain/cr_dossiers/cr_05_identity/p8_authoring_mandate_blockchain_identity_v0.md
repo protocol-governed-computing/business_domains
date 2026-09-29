@@ -6,7 +6,7 @@
 **Feeds:** Construction
 
 IN WHAT ORDER. Mechanically derived from the design; it reconciles with Stage 7 exactly and adds
-nothing. Nothing is created, so nothing is scheduled: the ten redeclared artifacts are authored
+nothing. Nothing is created, so nothing is scheduled: the eleven redeclared artifacts are authored
 whole in their subdomain.
 
 ---
@@ -32,7 +32,7 @@ whole in their subdomain.
 <!-- register:mandate_artifact_summary -->
 | Action (REPLACE, EXTEND, NEW) | Count | Description |
 |-------------------------------|-------|-------------|
-| EXTEND | 10 | Identity's three contracts, three acts, three entrances and the acceptance gate, redeclared whole so that identity holds every rule it applies and no request supplies one. |
+| EXTEND | 11 | Identity's three contracts, three acts, three entrances and two admission gates, redeclared whole so that identity holds every rule it applies and no request supplies one. |
 
 ---
 
@@ -51,6 +51,7 @@ whole in their subdomain.
 | blockchain::TI_REGISTER_ACTOR_V0 | identity |
 | blockchain::TI_ACCEPT_ACTOR_V0 | identity |
 | blockchain::TI_REJECT_ACTOR_V0 | identity |
+| blockchain::IN_ACTOR_REGISTERED_V0 | identity |
 
 ---
 
@@ -71,6 +72,7 @@ whole in their subdomain.
 | Code | Purpose | Workflow | Inputs |
 |------|---------|----------|--------|
 | blockchain::IN_ACTOR_ACCEPTANCE_V0 | Admits a request to accept a person, with the grounds the authority chooses to state | blockchain::WF_ACCEPT_ACTOR_V0 | contact_address, verifying_authority, grounds |
+| blockchain::IN_ACTOR_REGISTERED_V0 | A request to admit a person as an actor | blockchain::WF_REGISTER_ACTOR_V0 | actor_record |
 
 ---
 

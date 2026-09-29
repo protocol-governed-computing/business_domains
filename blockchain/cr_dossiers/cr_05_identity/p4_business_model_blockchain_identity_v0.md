@@ -69,6 +69,7 @@ it applies instead of being handed it.
 | Register a person unverified | S3 authoring_decisions Register a person unverified | CRITICAL | GAP-06 | The registration act writes the state unverified as its own. |
 | Reach identity from outside | S3 authoring_decisions Reach identity from outside | CRITICAL | GAP-07 | The entrances stop supplying what identity now holds; a caller sends and is told what they are today. |
 | Admit an acceptance with its grounds | S3 authoring_decisions Admit an acceptance with its grounds | CRITICAL | GAP-08 | The acceptance gate declares the optional grounds the act reads. |
+| Admit a registration without the schema identity holds | S3 authoring_decisions Admit a registration without the schema identity holds | CRITICAL | GAP-10 | The registration gate stops requiring what the entrance no longer supplies. |
 | Record the moment of each act | S3 authoring_decisions Record the moment of each act | SATISFIED |  | Unchanged; the moment stays the request's to name, outside this change. |
 
 ## 3. Dependency Graph (dependency_graph)
@@ -113,6 +114,7 @@ it applies instead of being handed it.
 | GAP-07 | S3 authoring_decisions Reach identity from outside | Reach identity from outside | identity | EXTEND |
 | GAP-08 | S3 authoring_decisions Admit an acceptance with its grounds | Admit an acceptance with its grounds | identity | EXTEND |
 | GAP-09 | S3 analysis_findings Q9 | Record the moment of each act as the act's own | identity, in a later change | DEFERRED |
+| GAP-10 | S3 authoring_decisions Admit a registration without the schema identity holds | Admit a registration without the schema identity holds | identity | EXTEND |
 
 ## 6. Design Decisions (design_decisions)
 
@@ -141,6 +143,7 @@ it applies instead of being handed it.
 | Register a person unverified | GAP-06 |
 | Reach identity from outside | GAP-07 |
 | Admit an acceptance with its grounds | GAP-08 |
+| Admit a registration without the schema identity holds | GAP-10 |
 
 ### Deferred — Future CR
 | Capability | Deferred Reason |

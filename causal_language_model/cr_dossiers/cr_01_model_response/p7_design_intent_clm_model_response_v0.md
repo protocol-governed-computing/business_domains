@@ -1046,6 +1046,15 @@ at `EXIT_REFUSED`, which refuses. The check that found the refusal routes there 
 
 ---
 
+## 25. Withdrawn Facts
+
+<!-- register:withdrawn_facts optional -->
+| Artifact | Fact | Reason | Source Finding |
+|----------|------|--------|----------------|
+
+
+---
+
 ## gov_projection — Governed Handoff to Stage 8
 
 | Direction | Fields |

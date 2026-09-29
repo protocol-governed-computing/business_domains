@@ -34,28 +34,32 @@ DOMAIN = HERE.parents[2]
 WORKSPACE = DOMAIN.parents[1]
 
 for root in (WORKSPACE / "software_governance", WORKSPACE / "business_domains",
-             WORKSPACE / "conformance_workloads", WORKSPACE / "transformation"):
+             WORKSPACE / "conformance_workloads", WORKSPACE / "transformation",
+             WORKSPACE / "protocol_transport"):
     if str(root) not in sys.path:
         sys.path.insert(0, str(root))
 
 from runtime import api  # noqa: E402
+from resolver.registry import load_registry  # noqa: E402
+from resolver.resolver import resolve  # noqa: E402
 
 NS = "blockchain::"
 STORE = "blockchain/identity"
 
-# What the business asks of a registration: a name and a contact address, read for absence and for
-# form. Everything else is belief, which is the verification decision's business.
-SCHEMA = {"name": {"required": True, "type": "string"},
-          "contact_address": {"required": True, "type": "string"}}
 ADA, BOB = "ada@example.test", "bob@example.test"
 AUTHORITY = "authority-01"
 
 
+# What a request carries, exactly as the entrances build it. Identity holds what a registration must
+# contain, the states a decision may be made from, the decisions it admits and every refusal rule; a
+# request states none of them, and one that does is judged by identity's rules regardless.
 def registration(name: str, address: str, **overrides) -> dict:
     record = {"name": name, "contact_address": address,
-              "currency_preference": "BACHI", "language": "en", "state": "UNVERIFIED"}
+              "currency_preference": "BACHI", "language": "en"}
     record.update(overrides.pop("record", {}))
-    return {"actor_record": record, "registration_schema": SCHEMA,
+    for field in overrides.pop("without", ()):
+        record.pop(field)
+    return {"actor_record": record,
             "address_path": "contact_address", "address_type": "string",
             "stream_id": "ACTOR_OCCURRENCES",
             "occurrence_fields": {"occurrence": "ACTOR_REGISTERED_UNVERIFIED",
@@ -63,30 +67,28 @@ def registration(name: str, address: str, **overrides) -> dict:
             **overrides}
 
 
-# The rules the rejection path checks its grounds against, before anything is recorded. Stated here
-# because the boundary states them: the caller sends grounds, and what makes grounds sufficient is the
-# business's rule rather than the caller's opinion.
-GROUNDS_RULES = [{"field": "grounds", "op": "not_null"},
-                 {"field": "grounds", "op": "neq", "value": ""}]
+def decision(address: str, outcome: str, grounds: str = "", authority: str = AUTHORITY,
+             **stated) -> dict:
+    """A decision request. `outcome` picks the act; the act, not the request, fixes the decision.
 
-
-def decision(address: str, outcome: str, grounds: str = "", authority: str = AUTHORITY) -> dict:
-    return {"contact_address": address, "verifying_authority": authority,
-            "decision": outcome, "grounds": grounds,
-            "grounds_parameters": {"grounds": grounds},
-            "grounds_rules": GROUNDS_RULES,
-            # A decider is not the person being decided about. Stated at the boundary because the
-            # rule is the business's and the values are the caller's.
-            "self_check_parameters": {"verifying_authority": authority,
-                                      "contact_address": address},
-            "self_check_rules": [{"field": "verifying_authority", "op": "neq", "value": address}],
-            "states_admitting_a_decision": ["UNVERIFIED"],
-            "admitted_outcomes": ["ACCEPTED", "REJECTED"],
-            "decided_actor_fields": {"contact_address": address, "state": outcome,
-                                     "verifying_authority": authority, "grounds": grounds},
+    `stated` is whatever else a request chooses to say — rules, sets, a decided record. Identity
+    reads none of it; the criteria below that pass it prove exactly that.
+    """
+    return {"contact_address": address, "verifying_authority": authority, "grounds": grounds,
             "stream_id": "ACTOR_OCCURRENCES",
             "occurrence_fields": {"occurrence": f"ACTOR_{outcome}", "contact_address": address,
-                                  "verifying_authority": authority, "grounds": grounds}}
+                                  "verifying_authority": authority, "grounds": grounds},
+            **stated}
+
+
+# A request stating identity's rules for itself, each widened: every state admits a decision, any
+# decision is admitted, no one is refused for deciding about themselves or for stating no grounds,
+# and the record written is one the request made up.
+WIDENED = {"states_admitting_a_decision": ["UNVERIFIED", "ACCEPTED", "REJECTED"],
+           "admitted_outcomes": ["ACCEPTED", "REJECTED", "MAYBE", "SUSPENDED"],
+           "self_check_parameters": {}, "self_check_rules": [],
+           "grounds_parameters": {"grounds": "stated"}, "grounds_rules": [],
+           "registration_schema": {}}
 
 
 def deciding_workflow(outcome: str) -> str:
@@ -236,17 +238,6 @@ def main() -> int:
         check("a rejection stating no grounds is refused", r.status != "SUCCESS",
               f"status {r.status}")
 
-        # 10 — an outcome outside the two the business admits is refused
-        #
-        # Now refused twice over, and the second is the stronger. There is no act that records an
-        # arbitrary outcome: the deciding workflow was split into an acceptance and a rejection, so a
-        # third outcome has nowhere to be recorded at all. What remains checkable is that the
-        # contract still refuses one if a caller smuggles it through an act that does exist — driven
-        # through the acceptance path so the outcome gate is what answers, not the grounds gate.
-        r = run(deciding_workflow("ACCEPTED"), decision("grace@example.test", "MAYBE"))
-        check("an outcome that is neither acceptance nor rejection is refused",
-              r.status != "SUCCESS", f"status {r.status}")
-
         # 11 — a person never decides about themselves
         r = run(deciding_workflow("ACCEPTED"),
                 decision("grace@example.test", "ACCEPTED", authority="grace@example.test"))
@@ -285,6 +276,94 @@ def main() -> int:
 
         skip("an unverified or rejected actor has submitted no transaction",
              "transaction is a later function; there is nothing yet to submit")
+
+        # cr_05_identity — identity holds every rule it applies. Each request below states rules of
+        # its own, widened; each is judged by identity's. Fresh persons, so nothing above moves.
+        LIN, HEDY, MAR = "linus@example.test", "hedy@example.test", "margaret@example.test"
+
+        r = run("WF_REGISTER_ACTOR_V0", registration("", "nameless@example.test",
+                                                     without=("name",), **WIDENED))
+        check("a registration missing its name is refused, however identity is reached, and no "
+              "person is registered by it",
+              r.status != "SUCCESS" and "nameless@example.test" not in run.actors(),
+              f"status {r.status}")
+
+        r = run("WF_REGISTER_ACTOR_V0", registration("Linus", LIN, record={"state": "ACCEPTED"}))
+        check("a registration is held unverified whatever state the request carries",
+              r.status == "SUCCESS" and run.actors().get(LIN, {}).get("state") == "UNVERIFIED",
+              f"status {r.status}, state {run.actors().get(LIN, {}).get('state')}")
+
+        before = run.actors().get(ADA)
+        r = run(deciding_workflow("REJECTED"), decision(ADA, "REJECTED", "again", **WIDENED))
+        check("a decision about a person already accepted or rejected is refused, whatever the "
+              "request says about who may be decided about, and no record changes",
+              r.status != "SUCCESS" and run.actors().get(ADA) == before, f"status {r.status}")
+
+        run("WF_REGISTER_ACTOR_V0", registration("Hedy Lamarr", HEDY))
+        r = run(deciding_workflow("ACCEPTED"),
+                decision(HEDY, "ACCEPTED", decision="MAYBE", **WIDENED))
+        states = {v.get("state") for v in run.actors().values()}
+        check("a decision other than an acceptance or a rejection is never recorded, whatever the "
+              "request says about which decisions are allowed",
+              r.status == "SUCCESS" and run.actors().get(HEDY, {}).get("state") == "ACCEPTED"
+              and states <= {"UNVERIFIED", "ACCEPTED", "REJECTED"},
+              f"status {r.status}, states recorded {sorted(s for s in states if s)}")
+
+        run("WF_REGISTER_ACTOR_V0", registration("Margaret Hamilton", MAR))
+        r = run(deciding_workflow("ACCEPTED"), decision(MAR, "ACCEPTED", authority=MAR, **WIDENED))
+        check("an authority deciding about themselves is refused, whatever the request says",
+              r.status != "SUCCESS" and run.actors().get(MAR, {}).get("state") == "UNVERIFIED",
+              f"status {r.status}")
+
+        r = run(deciding_workflow("REJECTED"), decision(MAR, "REJECTED", "", **WIDENED))
+        check("a rejection stating no grounds is refused, whatever the request says",
+              r.status != "SUCCESS" and run.actors().get(MAR, {}).get("state") == "UNVERIFIED",
+              f"status {r.status}")
+
+        r = run(deciding_workflow("REJECTED"), decision(
+            MAR, "REJECTED", "identity not established",
+            decided_actor_fields={"state": "SUSPENDED", "name": "someone else"}, **WIDENED))
+        mar = run.actors().get(MAR, {})
+        check("a request stating rules of its own is judged by the business's rules, and is not "
+              "refused for stating them",
+              r.status == "SUCCESS" and mar.get("state") == "REJECTED"
+              and mar.get("name") == "Margaret Hamilton" and mar.get("grounds"),
+              f"status {r.status}, record {mar}")
+
+        # The public entrance: the same requests a caller sends, resolved by the transport boundary.
+        registry = load_registry(snapshot)
+
+        def entrance(operation: str, **given) -> dict:
+            return resolve({"request_id": operation, "operation": f"blockchain.{operation}",
+                            "input": given}, registry,
+                           data_root=str(data_root), snapshot_root=str(snapshot))
+
+        TIM = "tim@example.test"
+        answers = {
+            "register": entrance("register_actor", name="Tim", contact_address=TIM),
+            "register again": entrance("register_actor", name="Tim", contact_address=TIM),
+            "register with no name": entrance("register_actor", contact_address="x@example.test"),
+            "reject with no grounds": entrance("reject_actor", contact_address=TIM,
+                                               verifying_authority=AUTHORITY),
+            "accept oneself": entrance("accept_actor", contact_address=TIM, verifying_authority=TIM),
+            "accept": entrance("accept_actor", contact_address=TIM, verifying_authority=AUTHORITY),
+            "accept again": entrance("accept_actor", contact_address=TIM,
+                                     verifying_authority=AUTHORITY),
+            "reject someone unknown": entrance("reject_actor", contact_address="nobody@example.test",
+                                               verifying_authority=AUTHORITY, grounds="unknown"),
+        }
+        expected = {"register": "SUCCESS", "register again": "SUCCESS", "accept": "SUCCESS"}
+        wrong = {k: a["result_class"] for k, a in answers.items()
+                 if (a["outcome"] == "SUCCESS") != (k in expected)}
+        check("every request admitted through the public entrance before this change is admitted "
+              "after it, and every request refused there is refused",
+              not wrong and run.actors().get(TIM, {}).get("state") == "ACCEPTED",
+              f"differing: {wrong}; answers: "
+              f"{ {k: a['result_class'] for k, a in answers.items()} }")
+
+        skip("records made before this change are unchanged by it",
+             "this run starts from no records; the change authors no migration, backfill or "
+             "repair, so nothing it adds can write to a record it did not make")
 
     finally:
         if keep is None:

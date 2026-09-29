@@ -1,11 +1,5 @@
 # IN_ACTOR_REGISTERED_V0
 
-## 1. Intent
-
-A request to admit a person as an actor
-
----
-
 ## Machine
 
 ```yaml
@@ -22,12 +16,15 @@ core:
     actor_record:
       type: object
       required: true
-    registration_schema:
-      type: object
-      required: true
   outcomes:
     ACK:
       description: Request accepted for processing
     NACK:
       description: Request rejected
 ```
+
+---
+
+## Intent
+
+A request to admit a person as an actor

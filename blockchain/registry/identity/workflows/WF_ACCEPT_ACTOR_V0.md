@@ -1,11 +1,5 @@
 # WF_ACCEPT_ACTOR_V0
 
-## 1. Intent
-
-The governed sequence that records an acceptance and announces it
-
----
-
 ## Machine
 
 ```yaml
@@ -43,15 +37,11 @@ core:
       type: CC
       code: CC_RECORD_VERIFICATION_DECISION_V0
       inputs:
-        self_check_parameters: $.payload.self_check_parameters
-        self_check_rules: $.payload.self_check_rules
         current_state: $.results.CC_RESOLVE_ACTOR_V0.value.state
-        states_admitting_a_decision: $.payload.states_admitting_a_decision
-        decision: $.payload.decision
-        admitted_outcomes: $.payload.admitted_outcomes
+        decision: ACCEPTED
         verifying_authority: $.payload.verifying_authority
         contact_address: $.payload.contact_address
-        decided_actor_fields: $.payload.decided_actor_fields
+        grounds: $.payload.grounds
       next:
         SUCCESS: CC_APPEND_ACTOR_OCCURRENCE_V0
         VIOLATION: EXIT_REJECTED
@@ -71,3 +61,9 @@ core:
     EXIT_REJECTED:
       type: EXIT
 ```
+
+---
+
+## Intent
+
+The governed sequence that records an acceptance and announces it

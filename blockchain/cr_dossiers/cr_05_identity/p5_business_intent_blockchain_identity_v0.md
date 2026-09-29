@@ -48,6 +48,7 @@ then do, which persons may be an authority, or who a caller is.
 | Register a person unverified | IN_SCOPE | The registration act writes the state unverified as its own. | S4 authoring_scope GAP-06 |
 | Reach identity from outside | IN_SCOPE | The entrances stop supplying what identity holds; nothing a caller sends or is told changes. | S4 authoring_scope GAP-07 |
 | Admit an acceptance with its grounds | IN_SCOPE | The acceptance gate declares the optional grounds the act reads. | S4 authoring_scope GAP-08 |
+| Admit a registration without the schema identity holds | IN_SCOPE | The registration gate stops requiring what identity now holds. | S4 authoring_scope GAP-10 |
 | Record the moment of each act as the act's own | DEFERRED | The moment and its stream stay the request's to name. | S4 authoring_scope Record the moment of each act as the act's own |
 | Records made under a request's own rules | DEFERRED | Declined by the business; the record is added to and never rewritten. | S4 authoring_scope Records made under a request's own rules |
 

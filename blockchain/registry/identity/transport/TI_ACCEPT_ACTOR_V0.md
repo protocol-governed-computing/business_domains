@@ -1,11 +1,5 @@
 # TI_ACCEPT_ACTOR_V0
 
-## 1. Intent
-
-Admits a request to accept a registered actor, declaring the contact address, authority and optional grounds a caller sends and holding the decision, admitted states and outcomes, and the acceptance occurrence label
-
----
-
 ## Machine
 
 ```yaml
@@ -18,8 +12,7 @@ concern: identity
 operation: blockchain.accept_actor
 core:
   summary: Admits a request to accept a registered actor, declaring the contact address, authority and
-    optional grounds a caller sends and holding the decision, admitted states and outcomes, and the acceptance
-    occurrence label
+    optional grounds a caller sends and holding the stream and the acceptance occurrence label
 input_contract:
   contact_address:
     type: string
@@ -36,25 +29,7 @@ handler:
   payload_template:
     contact_address: ${input.contact_address}
     verifying_authority: ${input.verifying_authority}
-    decision: ACCEPTED
     grounds: ${input.grounds}
-    states_admitting_a_decision:
-    - UNVERIFIED
-    admitted_outcomes:
-    - ACCEPTED
-    - REJECTED
-    decided_actor_fields:
-      contact_address: ${input.contact_address}
-      state: ACCEPTED
-      verifying_authority: ${input.verifying_authority}
-      grounds: ${input.grounds}
-    self_check_parameters:
-      verifying_authority: ${input.verifying_authority}
-      contact_address: ${input.contact_address}
-    self_check_rules:
-    - field: verifying_authority
-      op: neq
-      value: ${input.contact_address}
     stream_id: ACTOR_OCCURRENCES
     occurrence_fields:
       occurrence: ACTOR_ACCEPTED
@@ -62,3 +37,9 @@ handler:
       verifying_authority: ${input.verifying_authority}
       grounds: ${input.grounds}
 ```
+
+---
+
+## Intent
+
+Admits a request to accept a registered actor, declaring the contact address, authority and optional grounds a caller sends and holding the stream and the acceptance occurrence label

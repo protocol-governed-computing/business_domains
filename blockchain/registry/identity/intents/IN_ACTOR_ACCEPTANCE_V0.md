@@ -1,11 +1,5 @@
 # IN_ACTOR_ACCEPTANCE_V0
 
-## 1. Intent
-
-Admits a request to accept a person, and refuses one that names nobody
-
----
-
 ## Machine
 
 ```yaml
@@ -17,7 +11,8 @@ authority: pgc.platform
 concern: identity
 supersedes: blockchain::IN_ACTOR_VERIFIED_V0
 core:
-  summary: Admits a request to accept a person, and refuses one that names nobody
+  summary: Admits a request to accept a person, with the grounds the authority chooses to state, and refuses
+    one that names nobody
   workflow: WF_ACCEPT_ACTOR_V0
   inputs:
     contact_address:
@@ -26,9 +21,17 @@ core:
     verifying_authority:
       type: string
       required: true
+    grounds:
+      type: string
   outcomes:
     ACK:
       description: Request accepted for processing
     NACK:
       description: Request rejected
 ```
+
+---
+
+## Intent
+
+Admits a request to accept a person, with the grounds the authority chooses to state, and refuses one that names nobody

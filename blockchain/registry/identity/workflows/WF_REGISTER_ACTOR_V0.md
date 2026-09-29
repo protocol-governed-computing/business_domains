@@ -1,11 +1,5 @@
 # WF_REGISTER_ACTOR_V0
 
-## 1. Intent
-
-The governed sequence that admits a person as an unverified actor, and announces that it did
-
----
-
 ## Machine
 
 ```yaml
@@ -34,7 +28,6 @@ core:
       code: CC_VALIDATE_REGISTRATION_V0
       inputs:
         actor_record: $.payload.actor_record
-        registration_schema: $.payload.registration_schema
       next:
         SUCCESS: CC_CLAIM_CONTACT_ADDRESS_V0
         VIOLATION: EXIT_REJECTED
@@ -53,7 +46,12 @@ core:
       type: CC
       code: CC_REGISTER_ACTOR_V0
       inputs:
-        actor_fields: $.payload.actor_record
+        actor_fields:
+          name: $.payload.actor_record.name
+          contact_address: $.payload.actor_record.contact_address
+          state: UNVERIFIED
+          currency_preference: $.payload.actor_record.currency_preference
+          language: $.payload.actor_record.language
         contact_address: $.results.CC_CLAIM_CONTACT_ADDRESS_V0.result
       next:
         SUCCESS: CC_APPEND_ACTOR_OCCURRENCE_V0
@@ -74,3 +72,9 @@ core:
     EXIT_REJECTED:
       type: EXIT
 ```
+
+---
+
+## Intent
+
+The governed sequence that admits a person as an unverified actor, and announces that it did

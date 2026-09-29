@@ -1,11 +1,5 @@
 # TI_REJECT_ACTOR_V0
 
-## 1. Intent
-
-Admits a request to reject a registered actor, declaring the contact address, authority and required grounds a caller sends and holding the decision, admitted states and outcomes, and the rejection occurrence label
-
----
-
 ## Machine
 
 ```yaml
@@ -18,8 +12,7 @@ concern: identity
 operation: blockchain.reject_actor
 core:
   summary: Admits a request to reject a registered actor, declaring the contact address, authority and
-    required grounds a caller sends and holding the decision, admitted states and outcomes, and the rejection
-    occurrence label
+    required grounds a caller sends and holding the stream and the rejection occurrence label
 input_contract:
   contact_address:
     type: string
@@ -37,37 +30,17 @@ handler:
   payload_template:
     contact_address: ${input.contact_address}
     verifying_authority: ${input.verifying_authority}
-    decision: REJECTED
     grounds: ${input.grounds}
-    states_admitting_a_decision:
-    - UNVERIFIED
-    admitted_outcomes:
-    - ACCEPTED
-    - REJECTED
-    decided_actor_fields:
-      contact_address: ${input.contact_address}
-      state: REJECTED
-      verifying_authority: ${input.verifying_authority}
-      grounds: ${input.grounds}
-    self_check_parameters:
-      verifying_authority: ${input.verifying_authority}
-      contact_address: ${input.contact_address}
-    self_check_rules:
-    - field: verifying_authority
-      op: neq
-      value: ${input.contact_address}
     stream_id: ACTOR_OCCURRENCES
     occurrence_fields:
       occurrence: ACTOR_REJECTED
       contact_address: ${input.contact_address}
       verifying_authority: ${input.verifying_authority}
       grounds: ${input.grounds}
-    grounds_parameters:
-      grounds: ${input.grounds}
-    grounds_rules:
-    - field: grounds
-      op: not_null
-    - field: grounds
-      op: neq
-      value: ''
 ```
+
+---
+
+## Intent
+
+Admits a request to reject a registered actor, declaring the contact address, authority and required grounds a caller sends and holding the stream and the rejection occurrence label
