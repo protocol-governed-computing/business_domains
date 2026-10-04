@@ -1,5 +1,5 @@
 {
-  "snapshot_id": "f8356d9c8938aea16ab7850d7bda964d8d16c42c64e5db9056d5fe58040ec1d0",
+  "snapshot_id": "6783308c59ca6d3f96c88c8101f78397b7411c69d4f76995f0baa5fe6bafbbfb",
   "artifact_count": 500,
   "domains": [
     "ai_governance",
@@ -18,12 +18,6 @@
     },
     "p3": {
       "authoring_decisions": "bp"
-    },
-    "p4": {
-      "dependency_graph": "bp"
-    },
-    "p5": {
-      "cross_subdomain_refs": "bp"
     },
     "p6": {
       "ownership": "bp",
