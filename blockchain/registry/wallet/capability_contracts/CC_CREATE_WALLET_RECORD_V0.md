@@ -1,11 +1,5 @@
 # CC_CREATE_WALLET_RECORD_V0
 
-## 1. Intent
-
-Records the wallet with a balance of zero, its denomination and its classification
-
----
-
 ## Machine
 
 ```yaml
@@ -71,7 +65,15 @@ core:
     result_surface:
     - SUCCESS
     - VIOLATION
+    - BACKEND_ERROR
     on_result:
       SUCCESS: continue
       VIOLATION: exit
+      BACKEND_ERROR: exit
 ```
+
+---
+
+## Intent
+
+Records the wallet with a balance of zero, its denomination and its classification

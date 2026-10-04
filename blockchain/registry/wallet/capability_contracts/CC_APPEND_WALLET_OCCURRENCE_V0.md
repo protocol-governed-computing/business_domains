@@ -1,11 +1,5 @@
 # CC_APPEND_WALLET_OCCURRENCE_V0
 
-## 1. Intent
-
-Records the moment on the wallet's trail
-
----
-
 ## Machine
 
 ```yaml
@@ -71,7 +65,15 @@ core:
     result_surface:
     - SUCCESS
     - VIOLATION
+    - BACKEND_ERROR
     on_result:
       SUCCESS: continue
       VIOLATION: exit
+      BACKEND_ERROR: exit
 ```
+
+---
+
+## Intent
+
+Records the moment on the wallet's trail
