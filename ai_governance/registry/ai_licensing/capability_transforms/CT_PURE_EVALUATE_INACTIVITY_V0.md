@@ -1,0 +1,57 @@
+# CT_PURE_EVALUATE_INACTIVITY_V0
+
+## Machine
+
+```yaml
+fqdn: ai_governance::CT_PURE_EVALUATE_INACTIVITY_V0
+artifact_kind: CAPABILITY_TRANSFORM
+version: v0
+governed_by: capability_transforms::CONSTITUTION_DETERMINISTIC_ATOMS_V0
+authority: pgc.platform
+concern: ai_licensing
+core:
+  summary: Evaluate license inactivity against a declared threshold
+  refusal: raises
+  inputs:
+    last_active_date:
+      type: string
+      required: true
+      description: ISO-8601 date or date-time of last recorded license activity
+    evaluation_date:
+      type: string
+      required: true
+      description: ISO-8601 date or date-time the evaluation is made as of — declared, never a clock read
+    threshold_days:
+      type: integer
+      required: true
+      description: Inactivity threshold in days
+  outputs:
+    is_inactive:
+      type: boolean
+      required: true
+      description: True when days_inactive meets or exceeds threshold_days
+    days_inactive:
+      type: integer
+      required: true
+      description: Whole days elapsed between last_active_date and evaluation_date
+  description: 'Signals VIOLATION by raising CTExecutionError; the runtime maps any CT exception to
+
+    VIOLATION. A false predicate is never returned as a value — a plain return is SUCCESS
+
+    and would let the consuming pipeline continue past a failed gate.
+
+    '
+machine:
+  ct_kind: atom
+  ct_purity: ct_pure
+  operation: PURE_EVALUATE_INACTIVITY
+  implementation:
+    module: ai_governance.implementation.capability_transforms.atoms.ct_pure_evaluate_inactivity_v0
+    callable: execute
+```
+
+---
+
+## Intent
+
+Evaluate license inactivity against a declared threshold

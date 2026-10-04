@@ -1,0 +1,13 @@
+{
+  "contact_address": "ada@example.test",
+  "verifying_authority": "authority-01",
+  "decision": "ACCEPTED",
+  "grounds": "",
+  "stream_id": "ACTOR_OCCURRENCES",
+  "occurrence_fields": {
+    "occurrence": "ACTOR_ACCEPTED",
+    "contact_address": "ada@example.test",
+    "verifying_authority": "authority-01",
+    "grounds": ""
+  }
+}

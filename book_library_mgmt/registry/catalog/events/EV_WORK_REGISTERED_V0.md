@@ -1,0 +1,37 @@
+# EV_WORK_REGISTERED_V0
+
+## 1. Intent
+
+The moment a work enters the catalog, created by the edition that evidences it
+
+---
+
+## Machine
+
+```yaml
+fqdn: book_library_mgmt::EV_WORK_REGISTERED_V0
+artifact_kind: EVENT
+version: v0
+governed_by: event::CONSTITUTION_EVENT_V0
+authority: pgc.platform
+concern: catalog
+core:
+  summary: The moment a work enters the catalog, created by the edition that evidences it
+  description: The moment a work enters the catalog, created by the edition that evidences it
+  subdomain: catalog
+  schema:
+    work_key:
+      type: string
+      required: true
+    title:
+      type: string
+      required: true
+    author:
+      type: string
+      required: true
+    timestamp:
+      type: string
+      format: date-time
+      required: true
+      description: When the moment occurred
+```

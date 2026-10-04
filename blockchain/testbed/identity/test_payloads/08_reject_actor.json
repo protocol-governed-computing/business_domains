@@ -1,0 +1,13 @@
+{
+  "contact_address": "bob@example.test",
+  "verifying_authority": "authority-01",
+  "decision": "REJECTED",
+  "grounds": "identity not established",
+  "stream_id": "ACTOR_OCCURRENCES",
+  "occurrence_fields": {
+    "occurrence": "ACTOR_REJECTED",
+    "contact_address": "bob@example.test",
+    "verifying_authority": "authority-01",
+    "grounds": "identity not established"
+  }
+}

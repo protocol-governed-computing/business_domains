@@ -1,0 +1,45 @@
+{
+  "snapshot_id": "dcfed76f7eec0d0f2024661ef7a9c055b07d8890b8163e4118ed87eb3eab0c0e",
+  "artifact_count": 478,
+  "domains": [
+    "ai_governance",
+    "blockchain",
+    "book_library_mgmt",
+    "causal_language_model",
+    "inspection",
+    "platform",
+    "transformation",
+    "workload"
+  ],
+  "approved_registers": {
+    "p2": {
+      "belief_verification": "business author",
+      "pps_baseline_fqdns": "business author"
+    },
+    "p3": {
+      "authoring_decisions": "business author"
+    },
+    "p4": {
+      "dependency_graph": "business author"
+    },
+    "p5": {
+      "cross_subdomain_refs": "business author"
+    },
+    "p6": {
+      "ownership": "business author",
+      "pps_artifacts_requiring_action": "business author"
+    },
+    "p7": {
+      "cc_composition": "business author",
+      "declared_reach": "business author",
+      "execution_topology": "business author",
+      "existing_inventory": "business author",
+      "new_artifacts": "business author",
+      "refusal_governance_discharge": "business author",
+      "step_bindings": "business author"
+    },
+    "p8": {
+      "build_order": "business author"
+    }
+  }
+}
