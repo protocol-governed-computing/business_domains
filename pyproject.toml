@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pgc-domains"
-version = "4.0.0"
+version = "5.0.0"
 description = "PGC business domains — the capability implementations the composed reference snapshot binds at execution"
 readme = "README.md"
 requires-python = ">=3.10"
