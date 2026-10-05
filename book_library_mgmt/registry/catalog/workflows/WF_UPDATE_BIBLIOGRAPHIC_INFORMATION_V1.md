@@ -5,7 +5,7 @@
 ```yaml
 fqdn: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
 artifact_kind: WORKFLOW
-version: v1
+version: v0
 governed_by: workflow::CONSTITUTION_WORKFLOW_V0
 authority: pgc.platform
 concern: catalog
