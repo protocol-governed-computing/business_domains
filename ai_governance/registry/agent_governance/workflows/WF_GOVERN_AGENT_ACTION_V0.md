@@ -143,7 +143,7 @@ core:
 
     CC_VALIDATE_TOOL_PARAMETERS_V0:
       type: CC
-      code: CC_VALIDATE_TOOL_PARAMETERS_V0
+      code: CC_VALIDATE_TOOL_PARAMETERS_V1
       inputs:
         tool_name: $.payload.tool_name
         parameters: $.payload.parameters
