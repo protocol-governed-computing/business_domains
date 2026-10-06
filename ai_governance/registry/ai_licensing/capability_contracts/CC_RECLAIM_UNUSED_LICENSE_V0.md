@@ -60,6 +60,8 @@ Autonomous reclamation enforces use-it-or-lose-it:
 
 ```yaml
 fqdn: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0
+superseded_by:
+- ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0

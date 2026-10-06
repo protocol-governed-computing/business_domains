@@ -55,6 +55,8 @@ Parameter validation is the fifth governance gate:
 
 ```yaml
 fqdn: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0
+superseded_by:
+- ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0

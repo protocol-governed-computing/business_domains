@@ -1,0 +1,241 @@
+# Stage 7 — Design Intent: ai_governance / reclaim and parameter result
+
+**Stage:** 7 — Design Intent
+**CR:** cr_02_reclaim_and_parameters
+**Status:** DRAFT
+**Feeds:** Stage 8 — Authoring Mandate
+
+Read against the pinned baseline
+`6f931dffd412e3c91cdee4a8c65ba55f269507541436a25faa24a09e716553b9`.
+
+Two contracts v5 published are replaced by their next versions, and the published versions are stood
+down unchanged. The reclaim's next version answers a refused removal at its removal step and ends the
+contract with it; every other step, binding and field is restated as it stands. The parameter check's
+next version reports what it receives: whether every declared rule passed. The reclaim act and the
+governed action are re-pointed to run the next versions, and nothing else about either changes.
+
+---
+
+## 1. Design Decisions Resolution
+
+<!-- register:design_resolution optional -->
+| Decision | Business Fact | Resolution | Source Finding |
+|----------|---------------|------------|----------------|
+| The removal step ends the contract on a refused removal | No reclaim carries on past a removal the registry refused | The deregister_license step of ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 routes VIOLATION to exit | S4 design_decisions #1 |
+| A refused removal ends as still active | A license the registry did not release stays with the employee | ai_governance::WF_AUTO_RECLAIM_V0 already routes the contract's VIOLATION to EXIT_ACTIVE; it is re-pointed and not restated | S4 design_decisions #2 |
+| The check reports what it receives | A check reports only what it receives | ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 maps `validation_result` from the check's `valid`, a boolean | S4 design_decisions #3 |
+| Next versions | A change of meaning is a new identity, and identity is fixed at publication | ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 supersedes ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0, and ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 supersedes ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0 | S4 design_decisions #4 |
+| The acts run the next versions | Each decides exactly as today | ai_governance::WF_AUTO_RECLAIM_V0 and ai_governance::WF_GOVERN_AGENT_ACTION_V0 are re-pointed: the place that runs each contract runs its next version; its label and routes are unchanged | S4 design_decisions #5 |
+
+---
+
+## 2. Artifact Inventory — Existing Artifacts
+
+<!-- register:existing_inventory -->
+| FQDN | Action (REPLACE, REUSE, EXTEND, REPOINT, REVIEW) | Summary | Reason | Source Finding |
+|------|------------------------------------------|---------|--------|----------------|
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0 | REPLACE |  | Its removal step carries on past a refusal its registry declares. Stood down by its next version. | S6 pps_artifacts_requiring_action #1 |
+| ai_governance::CT_PURE_EVALUATE_INACTIVITY_V0 | REUSE |  | Named by the reclaim's next version, unchanged. | S6 pps_artifacts_requiring_action #2 |
+| ai_governance::WF_AUTO_RECLAIM_V0 | REPOINT |  | Runs the reclaim being replaced; re-pointed to its next version. It already routes the refusal to still active. | S6 pps_artifacts_requiring_action #3 |
+| ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0 | REPLACE |  | Reports a result it never receives. Stood down by its next version. | S6 pps_artifacts_requiring_action #4 |
+| ai_governance::WF_GOVERN_AGENT_ACTION_V0 | REPOINT |  | Runs the parameter check being replaced; re-pointed to its next version. | S6 pps_artifacts_requiring_action #5 |
+| capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0 | REUSE |  | Checks the parameters against the rules, unchanged. | S6 pps_artifacts_requiring_action #6 |
+| capability_transforms::CT_PURE_LOOKUP_V0 | REUSE |  | Looks up the tool's rules, unchanged. | S6 pps_artifacts_requiring_action #7 |
+| capability_side_effects::CS_REGISTRY_V0 | REUSE |  | Named by the reclaim's next version, unchanged. | S6 cross_subdomain_deps #1 |
+| ai_governance::RB_LICENSE_BINDINGS_V0 | REUSE |  | Binds the license registry, unchanged. | S6 cross_subdomain_deps #1 |
+| ai_governance::STRUCTURE_AI_LICENSING_STORAGE_V0 | REUSE |  | Places the license registry, unchanged. | S6 cross_subdomain_deps #1 |
+
+---
+
+## 3. Artifact Family Mapping — New Artifacts
+
+<!-- register:new_artifacts optional business_language=capability -->
+| Capability | Family (AC, IN, WF, RB, CC, CT, EV, VOCAB, STRUCTURE, TI, TE) | Code | Summary | Owner Subdomain | Status | Source Finding |
+|------------|------------------------------------------------|------|---------|-----------------|--------|----------------|
+| End a reclaim the registry refuses | CC | ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | Reclaim license from inactive user | ai_licensing | NEW | S6 governance_outcome #1 |
+| Check an action's parameters | CC | ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 | Enforce declared parameter constraints for an authorized tool | agent_governance | NEW | S6 governance_outcome #2 |
+
+---
+
+## 4. Runtime Binding (RB) Declarations
+
+<!-- register:rb_declarations -->
+| RB Code | Binds WF | CS Bindings | Storage Structure | Source Finding |
+|---------|----------|-------------|-------------------|----------------|
+| NONE IDENTIFIED |
+
+---
+
+## 5. Execution Topology
+
+<!-- register:execution_topology optional_columns=runs -->
+| Workflow | Node | Runs | Node Type (IN, CC, EXIT, EXIT_SUCCESS) | Routing | Source Finding |
+|----------|------|------|----------------------------------------|---------|----------------|
+| NONE IDENTIFIED |
+
+---
+
+## 6. Capability Composition
+
+<!-- register:cc_composition optional -->
+| CC Code | Step | Step Name | Capability | Kind (CT, CS) | Operation | Store | Consumes | Produces | Routing | Interpreted By | Semantic Status | Interface |
+|---------|------|-----------|------------|---------------|-----------|-------|----------|----------|---------|----------------|-----------------|-----------|
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | 1 | evaluate_inactivity | ai_governance::CT_PURE_EVALUATE_INACTIVITY_V0 | CT | EVALUATE_INACTIVITY | — | last_active_date, evaluation_date, threshold_days | is_inactive, days_inactive | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: last_active_date=last_active_date, evaluation_date=evaluation_date, threshold_days=threshold_days; out: is_inactive=is_inactive, days_inactive=days_inactive |
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | 2 | deregister_license | capability_side_effects::CS_REGISTRY_V0 | CS | DEREGISTER | LICENSE_REGISTRY | key_or_address | result_status | SUCCESS -> exit; NOT_FOUND -> exit; BACKEND_ERROR -> exit; VIOLATION -> exit | — | SUCCESS | in: key_or_address=employee_id; out: result_status=result_status |
+| ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 | 1 | lookup_parameter_rules | capability_transforms::CT_PURE_LOOKUP_V0 | CT | LOOKUP | — | key, map | result | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: key=tool_name, map=rules declared per tool; out: result=rules |
+| ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 | 2 | validate_parameters | capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0 | CT | VALIDATE_PARAMETER_RULES | — | parameters, rules | valid | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: parameters=parameters, rules=rules; out: valid=validation_result |
+
+---
+
+## 7. Step Bindings
+
+<!-- register:step_bindings optional -->
+| Owner | Step | Direction (INPUT, OUTPUT) | Field | Bound To | Source Finding |
+|-------|------|--------------------------|-------|----------|----------------|
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | evaluate_inactivity | INPUT | last_active_date | inputs.last_active_date | S7 cc_composition evaluate_inactivity |
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | evaluate_inactivity | INPUT | evaluation_date | inputs.evaluation_date | S7 cc_composition evaluate_inactivity |
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | evaluate_inactivity | INPUT | threshold_days | inputs.threshold_days | S7 cc_composition evaluate_inactivity |
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | evaluate_inactivity | OUTPUT | is_inactive | capability_result.is_inactive | S7 cc_composition evaluate_inactivity |
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | evaluate_inactivity | OUTPUT | days_inactive | capability_result.days_inactive | S7 cc_composition evaluate_inactivity |
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | deregister_license | INPUT | key_or_address | inputs.employee_id | S7 cc_composition deregister_license |
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | deregister_license | OUTPUT | result_status | result_status | S7 cc_composition deregister_license |
+| ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 | lookup_parameter_rules | INPUT | key | inputs.tool_name | S7 cc_composition lookup_parameter_rules |
+| ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 | lookup_parameter_rules | INPUT | map | {"READ_RECORD": [{"field": "record_type", "op": "in", "allowed": ["license_pool", "user_profile"]}, {"field": "id", "op": "not_null"}], "PROVISION_STANDARD_LICENSE": [{"field": "tier", "op": "eq", "value": "standard"}, {"field": "quantity", "op": "lte", "value": 100}], "PROVISION_PREMIUM_LICENSE": [{"field": "tier", "op": "eq", "value": "premium"}, {"field": "quantity", "op": "lte", "value": 50}]} | S7 cc_composition lookup_parameter_rules |
+| ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 | lookup_parameter_rules | OUTPUT | rules | capability_result.result | S7 cc_composition lookup_parameter_rules |
+| ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 | validate_parameters | INPUT | parameters | inputs.parameters | S7 cc_composition validate_parameters |
+| ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 | validate_parameters | INPUT | rules | results.lookup_parameter_rules.rules | S7 cc_composition validate_parameters |
+| ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 | validate_parameters | OUTPUT | validation_result | capability_result.valid | S7 cc_composition validate_parameters |
+
+---
+
+## 8. Interface Fields
+
+<!-- register:interface_fields optional -->
+| Artifact | Direction (INPUT, OUTPUT, ATTRIBUTE) | Field | Type | Required (YES, NO) | Default | Meaning |
+|----------|--------------------------------------|-------|------|--------------------|---------|---------|
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | INPUT | license_id | string | YES |  | License to evaluate |
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | INPUT | employee_id | string | YES |  | Employee holding the license |
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | INPUT | last_active_date | string (date-time) | YES |  | Last usage date |
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | INPUT | evaluation_date | string (date-time) | YES |  | The date the reclaim is evaluated as of |
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | INPUT | threshold_days | integer | YES | 30 | Inactivity threshold in days |
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | OUTPUT | result_status | string | NO |  | Operation result |
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | OUTPUT | is_inactive | boolean | NO |  | Whether the user is inactive |
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | OUTPUT | days_inactive | integer | NO |  | Number of days inactive |
+| ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 | INPUT | tool_name | string | YES |  | Tool the agent proposes to use |
+| ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 | INPUT | parameters | object | YES |  | Parameters of the proposed action |
+| ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 | OUTPUT | rules | array | NO |  | The rules declared for the tool |
+| ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 | OUTPUT | validation_result | boolean | NO |  | Whether every declared rule passed |
+
+---
+
+## 9. Artifact Properties
+
+<!-- register:artifact_properties optional -->
+| Artifact | Property | Value | Source Finding |
+|----------|----------|-------|----------------|
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | description | Evaluates inactivity and reclaims license if threshold exceeded | S6 pps_artifacts_requiring_action #1 |
+| ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 | supersedes | ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0 | S4 design_decisions #4 |
+| ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 | supersedes | ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0 | S4 design_decisions #4 |
+| ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 | description | Evaluates declarative parameter constraints — policy in governance, evaluation in generic CT | S6 pps_artifacts_requiring_action #4 |
+
+---
+
+## 10. Structure Stores
+
+<!-- register:structure_stores optional -->
+| Store Name | Storage Type (CS_APPENDONLY_JSONL_V0, CS_MUTABLE_JSON_V0, CS_REGISTRY_V0) | Proposed Path | Used By | Source Finding |
+|------------|------|------|------|----------------|
+
+---
+
+## 11. Artifact Summary
+
+<!-- register:artifact_summary -->
+| Action (REPLACE, EXTEND, NEW) | Subdomain | Count | Artifacts |
+|-------------------------------|-----------|-------|-----------|
+| NEW | ai_licensing | 1 | ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1 |
+| NEW | agent_governance | 1 | ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1 |
+| REPLACE | ai_licensing | 1 | ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0 |
+| REPLACE | agent_governance | 1 | ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0 |
+
+---
+
+## 12. Declared Reach
+
+<!-- register:declared_reach optional -->
+| Act | Consults | Source Finding |
+|-----|----------|----------------|
+
+---
+
+## 13. Unchanged Registers
+
+No transform, vocabulary, policy, entrance or generator is touched. The reclaim act and the governed action are re-pointed, not restated.
+
+<!-- register:implementation_bindings optional -->
+| CT Code | Module | Callable | Operation | Kind (atom, molecule) | Purity (ct_pure, ct_impure) | Refusal (raises, returns, never) | Source Finding |
+|---|---|---|---|---|---|---|---|
+
+<!-- register:vocabulary_extensions optional -->
+| Vocabulary Code | Extends | Group | Casing | Value | Meaning | Source Finding |
+|---|---|---|---|---|---|---|
+
+<!-- register:runtime_policies optional -->
+| RB Code | Capability | Key | Value | Source Finding |
+|---|---|---|---|---|
+
+<!-- register:transport_bindings optional -->
+| Artifact | Direction (INGRESS, EGRESS) | Operation | Handler Kind (WF_INVOCATION, SNAPSHOT_READ) | Handler Target | Field | Bound To | Source Finding |
+|---|---|---|---|---|---|---|---|
+
+<!-- register:generation_provenance optional -->
+| Artifact | Generator | Generator Sources | Source Finding |
+|---|---|---|---|
+
+---
+
+## 14. Refusal Discharge
+
+The refusal the business named is carried by the reclaim act, which this change re-points and does not
+restate: it already routes the contract's VIOLATION to EXIT_ACTIVE. The act states admission rules and
+a renamed node that no register carries, so it cannot be restated here, and the deferral names it.
+
+<!-- register:refusal_discharge optional -->
+| Operation | Refused When | Act | Step | Outcome | Source Finding |
+|-----------|--------------|-----|------|---------|----------------|
+
+<!-- register:refusal_deferrals optional -->
+| Operation | Refused When | Deferred To | Until | Source Finding |
+|---|---|---|---|---|
+| Reclaiming a license | The registry refuses to remove the assignment | ai_governance::WF_AUTO_RECLAIM_V0, re-pointed and not restated: its place ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0, which runs the next version, routes VIOLATION to EXIT_ACTIVE | The act is next restated | S0 operation_refusals #1 |
+
+<!-- register:refusal_governance_discharge optional -->
+| Operation | Refused When | Phase | Governing Rule | Source Finding |
+|---|---|---|---|---|
+
+---
+
+## 15. Molecules, Tests and Withdrawals
+
+No molecule or test is touched, and nothing is withdrawn: each next version keeps every fact its published version has, and gains one answer or reports what it receives.
+
+<!-- register:molecule_steps optional -->
+| CT Code | Step | Kind (atom, molecule, loop) | Target | Over | Iterator | Emits | Source Finding |
+|---|---|---|---|---|---|---|---|
+
+<!-- register:molecule_step_bindings optional -->
+| CT Code | Step | Role (INPUT, CARRY, UPDATE) | Field | Bound To | Source Finding |
+|---|---|---|---|---|---|
+
+<!-- register:test_cases optional -->
+| CT Code | Case | Expected Outcome (SUCCESS, VIOLATION) | Source Finding |
+|---|---|---|---|
+
+<!-- register:test_case_values optional -->
+| CT Code | Case | Role (INPUT, EXPECTED, ASSERT, RECORDED) | Field | Value | Source Finding |
+|---|---|---|---|---|---|
+
+<!-- register:withdrawn_facts optional -->
+| Artifact | Fact | Reason | Source Finding |
+|---|---|---|---|
+

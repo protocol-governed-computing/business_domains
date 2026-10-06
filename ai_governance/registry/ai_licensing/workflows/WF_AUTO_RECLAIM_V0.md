@@ -91,7 +91,7 @@ core:
 
     CC_RECLAIM_UNUSED_LICENSE_V0:
       type: CC
-      code: CC_RECLAIM_UNUSED_LICENSE_V0
+      code: CC_RECLAIM_UNUSED_LICENSE_V1
       inputs:
         license_id: $.payload.license_id
         employee_id: $.payload.context.employee_id
