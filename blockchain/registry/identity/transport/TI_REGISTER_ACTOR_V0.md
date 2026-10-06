@@ -23,7 +23,7 @@ input_contract:
 context_requirements: []
 handler:
   kind: WF_INVOCATION
-  workflow: blockchain::WF_REGISTER_ACTOR_V0
+  workflow: blockchain::WF_REGISTER_ACTOR_V1
   payload_template:
     actor_record:
       name: ${input.name}

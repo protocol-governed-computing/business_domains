@@ -1,16 +1,15 @@
-# WF_REGISTER_ACTOR_V0
+# WF_REGISTER_ACTOR_V1
 
 ## Machine
 
 ```yaml
-fqdn: blockchain::WF_REGISTER_ACTOR_V0
-superseded_by:
-- blockchain::WF_REGISTER_ACTOR_V1
+fqdn: blockchain::WF_REGISTER_ACTOR_V1
 artifact_kind: WORKFLOW
-version: v0
+version: v1
 governed_by: workflow::CONSTITUTION_WORKFLOW_V0
 authority: pgc.platform
 concern: identity
+supersedes: blockchain::WF_REGISTER_ACTOR_V0
 runtime_binding: blockchain::RB_IDENTITY_BINDINGS_V0
 subdomain: identity
 structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0
@@ -44,6 +43,7 @@ core:
         SUCCESS: CC_REGISTER_ACTOR_V0
         ALREADY_EXISTS: CC_APPEND_ACTOR_OCCURRENCE_V0
         VIOLATION: EXIT_REJECTED
+        BACKEND_ERROR: EXIT_REJECTED
     CC_REGISTER_ACTOR_V0:
       type: CC
       code: CC_REGISTER_ACTOR_V0
@@ -58,6 +58,7 @@ core:
       next:
         SUCCESS: CC_APPEND_ACTOR_OCCURRENCE_V0
         VIOLATION: EXIT_REJECTED
+        BACKEND_ERROR: EXIT_REJECTED
     CC_APPEND_ACTOR_OCCURRENCE_V0:
       type: CC
       code: CC_APPEND_ACTOR_OCCURRENCE_V0
@@ -68,6 +69,7 @@ core:
       next:
         SUCCESS: EXIT_SUCCESS
         VIOLATION: EXIT_REJECTED
+        BACKEND_ERROR: EXIT_REJECTED
     EXIT_SUCCESS:
       type: EXIT
       emit: blockchain::EV_ACTOR_REGISTERED_UNVERIFIED_V0

@@ -1,60 +1,52 @@
-# WF_REJECT_ACTOR_V0
+# WF_ACCEPT_ACTOR_V1
 
 ## Machine
 
 ```yaml
-fqdn: blockchain::WF_REJECT_ACTOR_V0
-superseded_by:
-- blockchain::WF_REJECT_ACTOR_V1
+fqdn: blockchain::WF_ACCEPT_ACTOR_V1
 artifact_kind: WORKFLOW
-version: v0
+version: v1
 governed_by: workflow::CONSTITUTION_WORKFLOW_V0
 authority: pgc.platform
 concern: identity
-supersedes: blockchain::WF_RECORD_VERIFICATION_DECISION_V0
+supersedes: blockchain::WF_ACCEPT_ACTOR_V0
 runtime_binding: blockchain::RB_IDENTITY_BINDINGS_V0
 subdomain: identity
 structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
-  summary: The governed sequence that records a rejection, with grounds required, and announces it
+  summary: The governed sequence that records an acceptance and announces it
   actor_context: blockchain::AC_PARTICIPANT_V0
-  start_node: IN_ACTOR_REJECTION_V0
+  start_node: IN_ACTOR_ACCEPTANCE_V0
   nodes:
-    IN_ACTOR_REJECTION_V0:
+    IN_ACTOR_ACCEPTANCE_V0:
       type: IN
-      code: IN_ACTOR_REJECTION_V0
+      code: IN_ACTOR_ACCEPTANCE_V0
       next:
-        ACK: CC_REQUIRE_REJECTION_GROUNDS_V0
+        ACK: CC_RESOLVE_ACTOR_V0
         NACK: EXIT_REJECTED
-    CC_REQUIRE_REJECTION_GROUNDS_V0:
-      type: CC
-      code: CC_REQUIRE_REJECTION_GROUNDS_V0
-      inputs:
-        grounds: $.payload.grounds
-      next:
-        SUCCESS: CC_RESOLVE_ACTOR_V0
-        VIOLATION: EXIT_REJECTED
     CC_RESOLVE_ACTOR_V0:
       type: CC
-      code: CC_RESOLVE_ACTOR_V0
+      code: CC_RESOLVE_ACTOR_V1
       inputs:
         contact_address: $.payload.contact_address
       next:
         SUCCESS: CC_RECORD_VERIFICATION_DECISION_V0
         NOT_FOUND: EXIT_REJECTED
         VIOLATION: EXIT_REJECTED
+        BACKEND_ERROR: EXIT_REJECTED
     CC_RECORD_VERIFICATION_DECISION_V0:
       type: CC
       code: CC_RECORD_VERIFICATION_DECISION_V0
       inputs:
         current_state: $.results.CC_RESOLVE_ACTOR_V0.value.state
-        decision: REJECTED
+        decision: ACCEPTED
         verifying_authority: $.payload.verifying_authority
         contact_address: $.payload.contact_address
         grounds: $.payload.grounds
       next:
         SUCCESS: CC_APPEND_ACTOR_OCCURRENCE_V0
         VIOLATION: EXIT_REJECTED
+        BACKEND_ERROR: EXIT_REJECTED
     CC_APPEND_ACTOR_OCCURRENCE_V0:
       type: CC
       code: CC_APPEND_ACTOR_OCCURRENCE_V0
@@ -65,9 +57,10 @@ core:
       next:
         SUCCESS: EXIT_SUCCESS
         VIOLATION: EXIT_REJECTED
+        BACKEND_ERROR: EXIT_REJECTED
     EXIT_SUCCESS:
       type: EXIT
-      emit: blockchain::EV_ACTOR_REJECTED_V0
+      emit: blockchain::EV_ACTOR_ACCEPTED_V0
     EXIT_REJECTED:
       type: EXIT
 ```
@@ -76,4 +69,4 @@ core:
 
 ## Intent
 
-The governed sequence that records a rejection, with grounds required, and announces it
+The governed sequence that records an acceptance and announces it

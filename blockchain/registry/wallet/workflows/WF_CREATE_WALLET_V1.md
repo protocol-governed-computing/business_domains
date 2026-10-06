@@ -1,22 +1,15 @@
-# WF_CREATE_WALLET_V0
-
-## 1. Intent
-
-The governed sequence that gives an accepted person a wallet and records that it did
-
----
+# WF_CREATE_WALLET_V1
 
 ## Machine
 
 ```yaml
-fqdn: blockchain::WF_CREATE_WALLET_V0
-superseded_by:
-- blockchain::WF_CREATE_WALLET_V1
+fqdn: blockchain::WF_CREATE_WALLET_V1
 artifact_kind: WORKFLOW
-version: v0
+version: v1
 governed_by: workflow::CONSTITUTION_WORKFLOW_V0
 authority: pgc.platform
 concern: wallet
+supersedes: blockchain::WF_CREATE_WALLET_V0
 runtime_binding: blockchain::RB_WALLET_BINDINGS_V0
 consults:
 - blockchain::RB_IDENTITY_BINDINGS_V0
@@ -35,13 +28,14 @@ core:
         NACK: EXIT_REJECTED
     CC_RESOLVE_ACTOR_V0:
       type: CC
-      code: CC_RESOLVE_ACTOR_V0
+      code: CC_RESOLVE_ACTOR_V1
       inputs:
         contact_address: $.payload.contact_address
       next:
         SUCCESS: CC_REQUIRE_ACCEPTED_HOLDER_V0
         NOT_FOUND: EXIT_REJECTED
         VIOLATION: EXIT_REJECTED
+        BACKEND_ERROR: EXIT_REJECTED
     CC_REQUIRE_ACCEPTED_HOLDER_V0:
       type: CC
       code: CC_REQUIRE_ACCEPTED_HOLDER_V0
@@ -63,13 +57,14 @@ core:
         VIOLATION: EXIT_REJECTED
     CC_CLAIM_WALLET_IDENTITY_V0:
       type: CC
-      code: CC_CLAIM_WALLET_IDENTITY_V0
+      code: CC_CLAIM_WALLET_IDENTITY_V1
       inputs:
         wallet_id: $.results.CC_DETERMINE_WALLET_IDENTITY_V0.id
       next:
         SUCCESS: CC_ESTABLISH_WALLET_ADDRESS_V0
         ALREADY_EXISTS: EXIT_REJECTED
         VIOLATION: EXIT_REJECTED
+        BACKEND_ERROR: EXIT_REJECTED
     CC_ESTABLISH_WALLET_ADDRESS_V0:
       type: CC
       code: CC_ESTABLISH_WALLET_ADDRESS_V0
@@ -80,25 +75,33 @@ core:
         VIOLATION: EXIT_REJECTED
     CC_CREATE_WALLET_RECORD_V0:
       type: CC
-      code: CC_CREATE_WALLET_RECORD_V0
+      code: CC_CREATE_WALLET_RECORD_V1
       inputs:
         wallet_id: $.results.CC_DETERMINE_WALLET_IDENTITY_V0.id
         wallet_fields: $.payload.wallet_fields
       next:
         SUCCESS: CC_APPEND_WALLET_OCCURRENCE_V0
         VIOLATION: EXIT_REJECTED
+        BACKEND_ERROR: EXIT_REJECTED
     CC_APPEND_WALLET_OCCURRENCE_V0:
       type: CC
-      code: CC_APPEND_WALLET_OCCURRENCE_V0
+      code: CC_APPEND_WALLET_OCCURRENCE_V1
       inputs:
         stream_id: $.results.CC_DETERMINE_WALLET_IDENTITY_V0.id
         occurrence_fields: $.payload.occurrence_fields
       next:
         SUCCESS: EXIT_SUCCESS
         VIOLATION: EXIT_REJECTED
+        BACKEND_ERROR: EXIT_REJECTED
     EXIT_SUCCESS:
       type: EXIT
       emit: blockchain::EV_WALLET_CREATED_V0
     EXIT_REJECTED:
       type: EXIT
 ```
+
+---
+
+## Intent
+
+The governed sequence that gives an accepted person a wallet and records that it did

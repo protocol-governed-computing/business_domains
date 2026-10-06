@@ -17,7 +17,7 @@ authority: pgc.platform
 concern: wallet
 core:
   summary: Admits a request naming the person a wallet is for, and refuses one that names nobody
-  workflow: WF_CREATE_WALLET_V0
+  workflow: WF_CREATE_WALLET_V1
   inputs:
     contact_address:
       type: string

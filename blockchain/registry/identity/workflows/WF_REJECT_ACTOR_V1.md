@@ -1,17 +1,15 @@
-# WF_REJECT_ACTOR_V0
+# WF_REJECT_ACTOR_V1
 
 ## Machine
 
 ```yaml
-fqdn: blockchain::WF_REJECT_ACTOR_V0
-superseded_by:
-- blockchain::WF_REJECT_ACTOR_V1
+fqdn: blockchain::WF_REJECT_ACTOR_V1
 artifact_kind: WORKFLOW
-version: v0
+version: v1
 governed_by: workflow::CONSTITUTION_WORKFLOW_V0
 authority: pgc.platform
 concern: identity
-supersedes: blockchain::WF_RECORD_VERIFICATION_DECISION_V0
+supersedes: blockchain::WF_REJECT_ACTOR_V0
 runtime_binding: blockchain::RB_IDENTITY_BINDINGS_V0
 subdomain: identity
 structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0
@@ -36,13 +34,14 @@ core:
         VIOLATION: EXIT_REJECTED
     CC_RESOLVE_ACTOR_V0:
       type: CC
-      code: CC_RESOLVE_ACTOR_V0
+      code: CC_RESOLVE_ACTOR_V1
       inputs:
         contact_address: $.payload.contact_address
       next:
         SUCCESS: CC_RECORD_VERIFICATION_DECISION_V0
         NOT_FOUND: EXIT_REJECTED
         VIOLATION: EXIT_REJECTED
+        BACKEND_ERROR: EXIT_REJECTED
     CC_RECORD_VERIFICATION_DECISION_V0:
       type: CC
       code: CC_RECORD_VERIFICATION_DECISION_V0
@@ -55,6 +54,7 @@ core:
       next:
         SUCCESS: CC_APPEND_ACTOR_OCCURRENCE_V0
         VIOLATION: EXIT_REJECTED
+        BACKEND_ERROR: EXIT_REJECTED
     CC_APPEND_ACTOR_OCCURRENCE_V0:
       type: CC
       code: CC_APPEND_ACTOR_OCCURRENCE_V0
@@ -65,6 +65,7 @@ core:
       next:
         SUCCESS: EXIT_SUCCESS
         VIOLATION: EXIT_REJECTED
+        BACKEND_ERROR: EXIT_REJECTED
     EXIT_SUCCESS:
       type: EXIT
       emit: blockchain::EV_ACTOR_REJECTED_V0

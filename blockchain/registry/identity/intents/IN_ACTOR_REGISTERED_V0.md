@@ -11,7 +11,7 @@ authority: pgc.platform
 concern: identity
 core:
   summary: A request to admit a person as an actor
-  workflow: WF_REGISTER_ACTOR_V0
+  workflow: WF_REGISTER_ACTOR_V1
   inputs:
     actor_record:
       type: object

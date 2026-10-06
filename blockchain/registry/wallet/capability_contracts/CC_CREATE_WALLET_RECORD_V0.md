@@ -10,6 +10,8 @@ Records the wallet with a balance of zero, its denomination and its classificati
 
 ```yaml
 fqdn: blockchain::CC_CREATE_WALLET_RECORD_V0
+superseded_by:
+- blockchain::CC_CREATE_WALLET_RECORD_V1
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0

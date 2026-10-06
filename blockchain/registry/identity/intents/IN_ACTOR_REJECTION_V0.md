@@ -18,7 +18,7 @@ concern: identity
 supersedes: blockchain::IN_ACTOR_VERIFIED_V0
 core:
   summary: Admits a request to reject a person, and refuses one that states no grounds
-  workflow: WF_REJECT_ACTOR_V0
+  workflow: WF_REJECT_ACTOR_V1
   inputs:
     contact_address:
       type: string

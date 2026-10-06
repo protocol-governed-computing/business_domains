@@ -4,6 +4,8 @@
 
 ```yaml
 fqdn: blockchain::WF_ACCEPT_ACTOR_V0
+superseded_by:
+- blockchain::WF_ACCEPT_ACTOR_V1
 artifact_kind: WORKFLOW
 version: v0
 governed_by: workflow::CONSTITUTION_WORKFLOW_V0

@@ -1,22 +1,15 @@
-# CC_APPEND_WALLET_OCCURRENCE_V0
-
-## 1. Intent
-
-Records the moment on the wallet's trail
-
----
+# CC_APPEND_WALLET_OCCURRENCE_V1
 
 ## Machine
 
 ```yaml
-fqdn: blockchain::CC_APPEND_WALLET_OCCURRENCE_V0
-superseded_by:
-- blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
+fqdn: blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
 artifact_kind: CAPABILITY_CONTRACT
-version: v0
+version: v1
 governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 authority: pgc.platform
 concern: wallet
+supersedes: blockchain::CC_APPEND_WALLET_OCCURRENCE_V0
 core:
   summary: Records the moment on the wallet's trail
   inputs:
@@ -73,7 +66,15 @@ core:
     result_surface:
     - SUCCESS
     - VIOLATION
+    - BACKEND_ERROR
     on_result:
       SUCCESS: continue
       VIOLATION: exit
+      BACKEND_ERROR: exit
 ```
+
+---
+
+## Intent
+
+Records the moment on the wallet's trail

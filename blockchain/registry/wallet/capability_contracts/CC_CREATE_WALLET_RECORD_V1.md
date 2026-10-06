@@ -1,29 +1,22 @@
-# CC_APPEND_WALLET_OCCURRENCE_V0
-
-## 1. Intent
-
-Records the moment on the wallet's trail
-
----
+# CC_CREATE_WALLET_RECORD_V1
 
 ## Machine
 
 ```yaml
-fqdn: blockchain::CC_APPEND_WALLET_OCCURRENCE_V0
-superseded_by:
-- blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
+fqdn: blockchain::CC_CREATE_WALLET_RECORD_V1
 artifact_kind: CAPABILITY_CONTRACT
-version: v0
+version: v1
 governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 authority: pgc.platform
 concern: wallet
+supersedes: blockchain::CC_CREATE_WALLET_RECORD_V0
 core:
-  summary: Records the moment on the wallet's trail
+  summary: Records the wallet with a balance of zero, its denomination and its classification
   inputs:
-    stream_id:
+    wallet_id:
       type: string
       required: true
-    occurrence_fields:
+    wallet_fields:
       type: object
       required: true
   outputs:
@@ -37,7 +30,7 @@ core:
     - SUCCESS
     on_input_failure: VIOLATION
   pipeline:
-  - step: read_occurred_at
+  - step: read_created_at
     side_effect: capability_side_effects::CS_CLOCK_V0
     op: NOW
     inputs: {}
@@ -49,10 +42,10 @@ core:
     on_result:
       SUCCESS: continue
       BACKEND_ERROR: exit
-  - step: assemble_occurrence
+  - step: assemble_wallet
     transform: capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0
     inputs:
-      fields: $.inputs.occurrence_fields
+      fields: $.inputs.wallet_fields
     outputs:
       record: $.capability_result.record
     result_surface:
@@ -61,19 +54,27 @@ core:
     on_result:
       SUCCESS: continue
       VIOLATION: exit
-  - step: append_occurrence
-    side_effect: capability_side_effects::CS_APPENDONLY_JSONL_V0
-    op: APPEND
-    store: WALLET_OCCURRENCES
+  - step: write_wallet
+    side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
+    op: WRITE
+    store: WALLETS
     inputs:
-      stream_id: $.inputs.stream_id
-      record: $.results.assemble_occurrence.record
+      key: $.inputs.wallet_id
+      value: $.results.assemble_wallet.record
     outputs:
       result_status: $.capability_result.result_status
     result_surface:
     - SUCCESS
     - VIOLATION
+    - BACKEND_ERROR
     on_result:
       SUCCESS: continue
       VIOLATION: exit
+      BACKEND_ERROR: exit
 ```
+
+---
+
+## Intent
+
+Records the wallet with a balance of zero, its denomination and its classification

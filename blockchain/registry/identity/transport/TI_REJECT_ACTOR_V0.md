@@ -26,7 +26,7 @@ input_contract:
 context_requirements: []
 handler:
   kind: WF_INVOCATION
-  workflow: blockchain::WF_REJECT_ACTOR_V0
+  workflow: blockchain::WF_REJECT_ACTOR_V1
   payload_template:
     contact_address: ${input.contact_address}
     verifying_authority: ${input.verifying_authority}

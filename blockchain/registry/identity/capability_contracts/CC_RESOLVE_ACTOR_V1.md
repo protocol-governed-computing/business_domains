@@ -1,22 +1,15 @@
-# CC_RESOLVE_ACTOR_V0
-
-## 1. Intent
-
-Answers which actor a contact address denotes, and reports when none does
-
----
+# CC_RESOLVE_ACTOR_V1
 
 ## Machine
 
 ```yaml
-fqdn: blockchain::CC_RESOLVE_ACTOR_V0
-superseded_by:
-- blockchain::CC_RESOLVE_ACTOR_V1
+fqdn: blockchain::CC_RESOLVE_ACTOR_V1
 artifact_kind: CAPABILITY_CONTRACT
-version: v0
+version: v1
 governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 authority: pgc.platform
 concern: identity
+supersedes: blockchain::CC_RESOLVE_ACTOR_V0
 core:
   summary: Answers which actor a contact address denotes, and reports when none does
   inputs:
@@ -31,6 +24,7 @@ core:
     allowed:
     - NOT_FOUND
     - VIOLATION
+    - BACKEND_ERROR
     - SUCCESS
     on_input_failure: VIOLATION
   pipeline:
@@ -46,10 +40,12 @@ core:
     - SUCCESS
     - NOT_FOUND
     - VIOLATION
+    - BACKEND_ERROR
     on_result:
       SUCCESS: continue
       NOT_FOUND: exit
       VIOLATION: exit
+      BACKEND_ERROR: exit
   - step: read_actor
     side_effect: capability_side_effects::CS_MUTABLE_JSON_V0
     op: READ
@@ -62,8 +58,16 @@ core:
     - SUCCESS
     - NOT_FOUND
     - VIOLATION
+    - BACKEND_ERROR
     on_result:
       SUCCESS: continue
       NOT_FOUND: exit
       VIOLATION: exit
+      BACKEND_ERROR: exit
 ```
+
+---
+
+## Intent
+
+Answers which actor a contact address denotes, and reports when none does
