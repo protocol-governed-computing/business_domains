@@ -36,7 +36,6 @@ IN_PROVISION_AI_LICENSE_V0
 |------|------|---------|
 | IN_PROVISION_AI_LICENSE_V0 | IN | Entry intent for provisioning |
 | CC_VALIDATE_ELIGIBILITY_V0 | CC | Validate training + cap availability |
-| CC_ENFORCE_LICENSE_CAP_V0 | CC | Enforce hard cap limit |
 | CC_PROVISION_LICENSE_V0 | CC | Register license assignment |
 | CC_APPEND_AUDIT_EVENT_V0 | CC | Record decision to audit log |
 | EXIT | EXIT | Terminal node |

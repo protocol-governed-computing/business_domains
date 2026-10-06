@@ -9,7 +9,7 @@ the actor eligible, but the licence cap is already met. That is neither `VIOLATI
 violated) nor `NOT_FOUND` (everything was found) — it is a governed refusal with its own audit
 meaning, so it is declared here rather than mapped onto a platform status that would lose it.
 
-`CAP_REACHED` is consumed by `CC_ENFORCE_LICENSE_CAP_V0` and routed by the provisioning workflow.
+`CAP_REACHED` is a denial reason `EV_PROVISION_DENIED_V0` records.
 
 ---
 
