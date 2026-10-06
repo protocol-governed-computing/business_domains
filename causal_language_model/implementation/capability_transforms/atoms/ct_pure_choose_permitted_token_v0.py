@@ -137,7 +137,8 @@ def execute(inputs: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
     rules = state["opening"]["rules_in_force"]
     forbidden = rules.get("forbidden") or []
     barred, read = _read_numbers(state["opening"]["reading"], forbidden)
-    grounded = state["opening"]["ground_numbers"] is True
+    # A request that does not ask for grounding leaves `ground_numbers` out of the opening.
+    grounded = state["opening"].get("ground_numbers") is True
     freedom, seed = rules.get("freedom", 0), rules.get("seed", 0)
     position, text, limit = state["position"] + 1, state["text"], state["limit"]
 
