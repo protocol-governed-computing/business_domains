@@ -1,8 +1,211 @@
 # Stage 6 — Governance Intent: blockchain / wallet
-**Stage:** 6 — Governance Intent
-**CR:** cr_04_wallet
-**Status:** DRAFT
-**Feeds:** Stage 7 — Design Intent
+
+## Machine
+
+```yaml
+document:
+  phase: p6
+  domain: blockchain
+  subdomain: wallet
+  cr: cr_04_wallet
+  rule_set: transformation.schemas.REGISTER_SCHEMA_P6_V0
+registers:
+  ownership:
+  - capability: Giving an accepted person a wallet
+    owner_subdomain: wallet
+    disposition: OWNED
+    existing_artifact: ''
+    source_finding: {phase: p4, register: gap_register, key: GAP-1}
+  - capability: Establishing the address others may pay to
+    owner_subdomain: wallet
+    disposition: OWNED
+    existing_artifact: ''
+    source_finding: {phase: p4, register: gap_register, key: GAP-2}
+  - capability: Somewhere to hold a wallet and its trail
+    owner_subdomain: wallet
+    disposition: OWNED
+    existing_artifact: ''
+    source_finding: {phase: p4, register: gap_register, key: GAP-3}
+  - capability: Announcing the moment a person is registered, accepted or rejected
+    owner_subdomain: identity
+    disposition: OWNED
+    existing_artifact: ''
+    source_finding: {phase: p4, register: gap_register, key: GAP-4}
+  - capability: Refusing a rejection that states no grounds
+    owner_subdomain: identity
+    disposition: OWNED
+    existing_artifact: ''
+    source_finding: {phase: p4, register: gap_register, key: GAP-5}
+  - capability: Holding a wallet
+    owner_subdomain: wallet
+    disposition: SATISFIED
+    existing_artifact: capability_side_effects::CS_MUTABLE_JSON_V0
+    source_finding: {phase: p4, register: capability_graph, row: 6}
+  - capability: Recording that a wallet was created
+    owner_subdomain: wallet
+    disposition: SATISFIED
+    existing_artifact: capability_side_effects::CS_APPENDONLY_JSONL_V0
+    source_finding: {phase: p4, register: capability_graph, row: 7}
+  - capability: Determining a wallet's identity
+    owner_subdomain: wallet
+    disposition: SATISFIED
+    existing_artifact: capability_transforms::CT_PURE_GENERATE_ID_V0
+    source_finding: {phase: p4, register: capability_graph, row: 8}
+  - capability: Ensuring two wallets never share an identity
+    owner_subdomain: wallet
+    disposition: SATISFIED
+    existing_artifact: capability_side_effects::CS_REGISTRY_V0
+    source_finding: {phase: p4, register: capability_graph, row: 9}
+  - capability: Establishing that a person is held and accepted
+    owner_subdomain: identity
+    disposition: SATISFIED
+    existing_artifact: blockchain::CC_RESOLVE_ACTOR_V0
+    source_finding: {phase: p4, register: capability_graph, row: 10}
+  - capability: Supplying the time a moment occurred
+    owner_subdomain: wallet
+    disposition: SATISFIED
+    existing_artifact: capability_side_effects::CS_CLOCK_V0
+    source_finding: {phase: p4, register: capability_graph, row: 11}
+  - capability: Moving value into or out of a wallet
+    owner_subdomain: wallet
+    disposition: DEFERRED
+    existing_artifact: ''
+    source_finding: {phase: p4, register: authoring_scope, key: 'deferred #1'}
+  - capability: Making a wallet inactive, or closing it
+    owner_subdomain: wallet
+    disposition: DEFERRED
+    existing_artifact: ''
+    source_finding: {phase: p4, register: authoring_scope, key: 'deferred #2'}
+  - capability: Notifying a person that their wallet was created
+    owner_subdomain: wallet
+    disposition: DEFERRED
+    existing_artifact: ''
+    source_finding: {phase: p4, register: authoring_scope, key: 'deferred #3'}
+  - capability: Recovering a wallet whose holder has lost access
+    owner_subdomain: wallet
+    disposition: DEFERRED
+    existing_artifact: ''
+    source_finding: {phase: p4, register: authoring_scope, key: 'deferred #5'}
+  - capability: Declaring that the wallet act reads the records identity owns
+    owner_subdomain: wallet
+    disposition: OWNED
+    existing_artifact: blockchain::WF_CREATE_WALLET_V0
+    source_finding: {phase: p4, register: gap_register, key: GAP-9}
+  - capability: Refusing a wallet to a person the business has not accepted
+    owner_subdomain: wallet
+    disposition: OWNED
+    existing_artifact: ''
+    source_finding: {phase: p4, register: gap_register, key: GAP-10}
+  storage_governance:
+  - storage_need: Somewhere to hold a wallet
+    purpose: Holds what is true of a wallet now — its holder, its balance, its address, its denomination, its classification and its state.
+    subdomain: wallet
+    source_finding: {phase: p5, register: business_objects, row: 1}
+  - storage_need: Somewhere to hold a wallet's trail
+    purpose: Holds the moments a wallet's life passes through, added to and never rewritten.
+    subdomain: wallet
+    source_finding: {phase: p5, register: business_objects, row: 2}
+  - storage_need: Somewhere to claim a wallet's identity
+    purpose: Holds the identities already claimed, so that a second wallet for one person is refused by the claim failing.
+    subdomain: wallet
+    source_finding: {phase: p5, register: business_objects, row: 3}
+  cross_subdomain_deps:
+  - dependency: Establishing that a person is one the business holds, and carrying the state that says whether they were accepted
+    direction: wallet → identity
+    existing_artifact: blockchain::CC_RESOLVE_ACTOR_V0
+    status: SATISFIED
+    source_finding: {phase: p5, register: cross_subdomain_refs, row: 1}
+  - dependency: The moment a person is accepted being announced, so that giving them a wallet has something to follow
+    direction: wallet → identity
+    existing_artifact: blockchain::EV_ACTOR_ACCEPTED_V0
+    status: GAP
+    source_finding: {phase: p4, register: dependency_graph, row: 1}
+  - dependency: The records identity's contract reads, consulted and never written
+    direction: wallet -> identity
+    existing_artifact: blockchain::RB_IDENTITY_BINDINGS_V0
+    status: SATISFIED
+    source_finding: {phase: p4, register: dependency_graph, row: 9}
+  pps_artifacts_requiring_action:
+  - fqdn: blockchain::WF_RECORD_VERIFICATION_DECISION_V0
+    current_status: Records a decision, announces nothing, and does not require grounds on a rejection.
+    action: REPLACE
+    source_finding: {phase: p4, register: gap_register, key: GAP-4}
+  - fqdn: blockchain::CC_RECORD_VERIFICATION_DECISION_V0
+    current_status: Records the decision. Does not read the grounds stated.
+    action: EXTEND
+    source_finding: {phase: p4, register: gap_register, key: GAP-5}
+  - fqdn: blockchain::WF_REGISTER_ACTOR_V0
+    current_status: Admits a person unverified, and announces nothing.
+    action: EXTEND
+    source_finding: {phase: p4, register: gap_register, key: GAP-4}
+  - fqdn: blockchain::EV_ACTOR_ACCEPTED_V0
+    current_status: Declared. Referred to by nothing.
+    action: REUSE
+    source_finding: {phase: p4, register: dependency_graph, row: 1}
+  - fqdn: blockchain::EV_ACTOR_REGISTERED_UNVERIFIED_V0
+    current_status: Declared. Referred to by nothing.
+    action: REUSE
+    source_finding: {phase: p4, register: gap_register, key: GAP-4}
+  - fqdn: blockchain::EV_ACTOR_REJECTED_V0
+    current_status: Declared. Referred to by nothing.
+    action: REUSE
+    source_finding: {phase: p4, register: gap_register, key: GAP-4}
+  - fqdn: blockchain::CC_RESOLVE_ACTOR_V0
+    current_status: Resolves a person and carries their state.
+    action: REUSE
+    source_finding: {phase: p5, register: cross_subdomain_refs, row: 1}
+  - fqdn: blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0
+    current_status: Declares what the domain compiles. It does not know of a second subdomain.
+    action: REVIEW
+    source_finding: {phase: p4, register: gap_register, key: GAP-3}
+  boundary_rules:
+  - rule_name: WALLET_WRITES_ONLY_ITS_OWN
+    statement: Wallet writes the three places it owns and no other. It never writes a person, a person's trail, or anything identity owns.
+    source_finding: {phase: p4, register: constraint_register, row: 7}
+  - rule_name: IDENTITY_WRITES_ONLY_ITS_OWN
+    statement: Identity writes people and their trail. It never writes a wallet, and it does not create one.
+    source_finding: {phase: p4, register: constraint_register, row: 7}
+  - rule_name: ANNOUNCEMENT_OWNED_BY_ITS_SUBJECT
+    statement: The moments a person is registered, accepted or rejected are identity's, because they are moments in a person's life. Wallet consumes the acceptance moment and declares none of the three. A consumer never owns the announcement it waits on.
+    source_finding: {phase: p4, register: gap_register, key: GAP-4}
+  - rule_name: WALLET_READS_A_PERSON_NEVER_WRITES_ONE
+    statement: Wallet establishes that a person is held and accepted by reading what identity already offers. It does not restate a person's state, and it does not correct one.
+    source_finding: {phase: p5, register: cross_subdomain_refs, row: 1}
+  - rule_name: ACCEPTANCE_STANDS_ALONE
+    statement: A wallet that cannot be created does not un-accept the person. The two are separate acts and fail separately.
+    source_finding: {phase: p4, register: design_decisions, row: 7}
+  - rule_name: NO_NEW_WAY_TO_TOUCH_THE_WORLD
+    statement: This change adds no way for the platform to touch the world. Everything it does to anything is one of the ways that already exist.
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - rule_name: A_REACH_IS_DECLARED_WHERE_IT_IS_REVIEWED
+    statement: The act declares every binding it consults, in its own artifact. A reach added to a built artifact by hand works, passes every check, and is a reach no reviewer saw.
+    source_finding: {phase: p4, register: design_decisions, row: 9}
+  - rule_name: A_WALLET_FOLLOWS_ACCEPTANCE_AND_NOTHING_ELSE
+    statement: No wallet exists for a person the business has not accepted. The refusal is a step that raises, placed before anything is claimed or recorded.
+    source_finding: {phase: p4, register: design_decisions, row: 10}
+  governance_outcome:
+  - capability: Giving an accepted person a wallet
+    owner_subdomain: wallet
+    source_finding: {phase: p4, register: gap_register, key: GAP-1}
+  - capability: Establishing the address others may pay to
+    owner_subdomain: wallet
+    source_finding: {phase: p4, register: gap_register, key: GAP-2}
+  - capability: Somewhere to hold a wallet and its trail
+    owner_subdomain: wallet
+    source_finding: {phase: p4, register: gap_register, key: GAP-3}
+  - capability: Announcing the moment a person is registered, accepted or rejected
+    owner_subdomain: identity
+    source_finding: {phase: p4, register: gap_register, key: GAP-4}
+  - capability: Refusing a rejection that states no grounds
+    owner_subdomain: identity
+    source_finding: {phase: p4, register: gap_register, key: GAP-5}
+  - capability: Declaring that the wallet act reads the records identity owns
+    owner_subdomain: wallet
+    source_finding: {phase: p4, register: gap_register, key: GAP-9}
+  - capability: Refusing a wallet to a person the business has not accepted
+    owner_subdomain: wallet
+    source_finding: {phase: p4, register: gap_register, key: GAP-10}
+```
 
 WHERE things belong and who owns them. No new artifact codes; no cross-subdomain writes.
 
@@ -27,95 +230,25 @@ people written by a function that is not about people.
 
 ## 1. Subdomain Boundary — Ownership
 
-<!-- register:ownership business_language=capability -->
-| Capability | Owner Subdomain | Disposition (OWNED, SATISFIED, DEFERRED) | Existing Artifact | Source Finding |
-|------------|-----------------|------------------------------------------|-------------------|----------------|
-| Giving an accepted person a wallet | wallet | OWNED | | S4 gap_register GAP-1 |
-| Establishing the address others may pay to | wallet | OWNED | | S4 gap_register GAP-2 |
-| Somewhere to hold a wallet and its trail | wallet | OWNED | | S4 gap_register GAP-3 |
-| Announcing the moment a person is registered, accepted or rejected | identity | OWNED | | S4 gap_register GAP-4 |
-| Refusing a rejection that states no grounds | identity | OWNED | | S4 gap_register GAP-5 |
-| Holding a wallet | wallet | SATISFIED | capability_side_effects::CS_MUTABLE_JSON_V0 | S4 capability_graph #6 |
-| Recording that a wallet was created | wallet | SATISFIED | capability_side_effects::CS_APPENDONLY_JSONL_V0 | S4 capability_graph #7 |
-| Determining a wallet's identity | wallet | SATISFIED | capability_transforms::CT_PURE_GENERATE_ID_V0 | S4 capability_graph #8 |
-| Ensuring two wallets never share an identity | wallet | SATISFIED | capability_side_effects::CS_REGISTRY_V0 | S4 capability_graph #9 |
-| Establishing that a person is held and accepted | identity | SATISFIED | blockchain::CC_RESOLVE_ACTOR_V0 | S4 capability_graph #10 |
-| Supplying the time a moment occurred | wallet | SATISFIED | capability_side_effects::CS_CLOCK_V0 | S4 capability_graph #11 |
-| Moving value into or out of a wallet | wallet | DEFERRED | | S4 authoring_scope deferred #1 |
-| Making a wallet inactive, or closing it | wallet | DEFERRED | | S4 authoring_scope deferred #2 |
-| Notifying a person that their wallet was created | wallet | DEFERRED | | S4 authoring_scope deferred #3 |
-| Recovering a wallet whose holder has lost access | wallet | DEFERRED | | S4 authoring_scope deferred #5 |
-| Declaring that the wallet act reads the records identity owns | wallet | OWNED | blockchain::WF_CREATE_WALLET_V0 | S4 gap_register GAP-9 |
-| Refusing a wallet to a person the business has not accepted | wallet | OWNED | | S4 gap_register GAP-10 |
-
 ---
 
 ## 2. Storage Governance Requirements
-
-<!-- register:storage_governance business_language=storage_need,purpose -->
-| Storage Need | Purpose | Subdomain | Source Finding |
-|--------------|---------|-----------|----------------|
-| Somewhere to hold a wallet | Holds what is true of a wallet now — its holder, its balance, its address, its denomination, its classification and its state. | wallet | S5 business_objects #1 |
-| Somewhere to hold a wallet's trail | Holds the moments a wallet's life passes through, added to and never rewritten. | wallet | S5 business_objects #2 |
-| Somewhere to claim a wallet's identity | Holds the identities already claimed, so that a second wallet for one person is refused by the claim failing. | wallet | S5 business_objects #3 |
 
 ---
 
 ## 3. Cross-Subdomain Dependency Declaration
 
-<!-- register:cross_subdomain_deps optional business_language=dependency -->
-| Dependency | Direction | Existing Artifact | Status (SATISFIED, GAP) | Source Finding |
-|------------|-----------|-------------------|-------------------------|----------------|
-| Establishing that a person is one the business holds, and carrying the state that says whether they were accepted | wallet → identity | blockchain::CC_RESOLVE_ACTOR_V0 | SATISFIED | S5 cross_subdomain_refs #1 |
-| The moment a person is accepted being announced, so that giving them a wallet has something to follow | wallet → identity | blockchain::EV_ACTOR_ACCEPTED_V0 | GAP | S4 dependency_graph #1 |
-| The records identity's contract reads, consulted and never written | wallet -> identity | blockchain::RB_IDENTITY_BINDINGS_V0 | SATISFIED | S4 dependency_graph #9 |
-
 ---
 
 ## 4. PPS Artifacts Requiring Action
-
-<!-- register:pps_artifacts_requiring_action optional -->
-| FQDN | Current Status | Action (REPLACE, REVIEW, REUSE, EXTEND) | Source Finding |
-|------|----------------|----------------------------------|----------------|
-| blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | Records a decision, announces nothing, and does not require grounds on a rejection. | REPLACE | S4 gap_register GAP-4 |
-| blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | Records the decision. Does not read the grounds stated. | EXTEND | S4 gap_register GAP-5 |
-| blockchain::WF_REGISTER_ACTOR_V0 | Admits a person unverified, and announces nothing. | EXTEND | S4 gap_register GAP-4 |
-| blockchain::EV_ACTOR_ACCEPTED_V0 | Declared. Referred to by nothing. | REUSE | S4 dependency_graph #1 |
-| blockchain::EV_ACTOR_REGISTERED_UNVERIFIED_V0 | Declared. Referred to by nothing. | REUSE | S4 gap_register GAP-4 |
-| blockchain::EV_ACTOR_REJECTED_V0 | Declared. Referred to by nothing. | REUSE | S4 gap_register GAP-4 |
-| blockchain::CC_RESOLVE_ACTOR_V0 | Resolves a person and carries their state. | REUSE | S5 cross_subdomain_refs #1 |
-| blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 | Declares what the domain compiles. It does not know of a second subdomain. | REVIEW | S4 gap_register GAP-3 |
 
 ---
 
 ## 5. Governance Boundary Rules
 
-<!-- register:boundary_rules optional -->
-| Rule Name | Statement | Source Finding |
-|-----------|-----------|----------------|
-| WALLET_WRITES_ONLY_ITS_OWN | Wallet writes the three places it owns and no other. It never writes a person, a person's trail, or anything identity owns. | S4 constraint_register #7 |
-| IDENTITY_WRITES_ONLY_ITS_OWN | Identity writes people and their trail. It never writes a wallet, and it does not create one. | S4 constraint_register #7 |
-| ANNOUNCEMENT_OWNED_BY_ITS_SUBJECT | The moments a person is registered, accepted or rejected are identity's, because they are moments in a person's life. Wallet consumes the acceptance moment and declares none of the three. A consumer never owns the announcement it waits on. | S4 gap_register GAP-4 |
-| WALLET_READS_A_PERSON_NEVER_WRITES_ONE | Wallet establishes that a person is held and accepted by reading what identity already offers. It does not restate a person's state, and it does not correct one. | S5 cross_subdomain_refs #1 |
-| ACCEPTANCE_STANDS_ALONE | A wallet that cannot be created does not un-accept the person. The two are separate acts and fail separately. | S4 design_decisions #7 |
-| NO_NEW_WAY_TO_TOUCH_THE_WORLD | This change adds no way for the platform to touch the world. Everything it does to anything is one of the ways that already exist. | S4 design_decisions #2 |
-| A_REACH_IS_DECLARED_WHERE_IT_IS_REVIEWED | The act declares every binding it consults, in its own artifact. A reach added to a built artifact by hand works, passes every check, and is a reach no reviewer saw. | S4 design_decisions #9 |
-| A_WALLET_FOLLOWS_ACCEPTANCE_AND_NOTHING_ELSE | No wallet exists for a person the business has not accepted. The refusal is a step that raises, placed before anything is claimed or recorded. | S4 design_decisions #10 |
-
 ---
 
 ## 6. Governance Outcome
-
-<!-- register:governance_outcome optional business_language=capability -->
-| Capability | Owner Subdomain | Source Finding |
-|------------|-----------------|----------------|
-| Giving an accepted person a wallet | wallet | S4 gap_register GAP-1 |
-| Establishing the address others may pay to | wallet | S4 gap_register GAP-2 |
-| Somewhere to hold a wallet and its trail | wallet | S4 gap_register GAP-3 |
-| Announcing the moment a person is registered, accepted or rejected | identity | S4 gap_register GAP-4 |
-| Refusing a rejection that states no grounds | identity | S4 gap_register GAP-5 |
-| Declaring that the wallet act reads the records identity owns | wallet | S4 gap_register GAP-9 |
-| Refusing a wallet to a person the business has not accepted | wallet | S4 gap_register GAP-10 |
 
 ---
 

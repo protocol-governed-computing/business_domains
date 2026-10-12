@@ -1,12 +1,180 @@
 # Stage 4 — Business Model: ai_governance / reclaim and parameter result
 
-**Stage:** 4 — Business Model
+## Machine
 
-**CR:** cr_02_reclaim_and_parameters
-
-**Status:** DRAFT
-
-**Feeds:** Stage 5 — Business Intent
+```yaml
+document:
+  phase: p4
+  domain: ai_governance
+  subdomain:
+  - reclaim
+  - parameter result
+  cr: cr_02_reclaim_and_parameters
+  rule_set: transformation.schemas.REGISTER_SCHEMA_P4_V0
+registers:
+  actors:
+  - actor: The business
+    role: Reclaims licenses on its schedule. Unchanged by this change.
+    authority_class: Owning business
+    source_finding: {phase: p2, register: business_processes, row: 1}
+  - actor: An agent
+    role: Proposes an action. Unchanged by this change.
+    authority_class: Ordinary participant
+    source_finding: {phase: p2, register: business_processes, row: 2}
+  - actor: AI Licensing
+    role: Ends a reclaim the registry refuses, with the license still assigned.
+    authority_class: Owning subdomain
+    source_finding: {phase: p3, register: placement_decision, key: ai_licensing}
+  - actor: Agent Governance
+    role: Checks an agent's action against the rules declared for its tool.
+    authority_class: Owning subdomain
+    source_finding: {phase: p3, register: placement_decision, key: agent_governance}
+  bm_entities:
+  - entity: The Assignment
+    description: A license held by an employee.
+    store_model: One registry, unchanged.
+    source_finding: {phase: p2, register: entities, row: 1}
+  - entity: The Reclaim
+    description: Taking back an unused license.
+    store_model: An act, announced when it removes an assignment.
+    source_finding: {phase: p2, register: entities, row: 2}
+  - entity: The Governed Action
+    description: An agent's proposed action, judged and recorded.
+    store_model: Recorded in the governance audit.
+    source_finding: {phase: p2, register: entities, row: 3}
+  - entity: The Parameter Check
+    description: The step that checks an action's parameters.
+    store_model: Run by the governed action.
+    source_finding: {phase: p2, register: entities, row: 4}
+  resources: []
+  events:
+  - event: NONE IDENTIFIED
+    trigger: This change recognises no new moment.
+    lifecycle_meaning: A revocation is not announced for a refused removal.
+    source_finding: {phase: p1, register: business_events, row: 1}
+  relationships:
+  - subject: AI Licensing
+    verb: ends
+    object: a reclaim the registry refuses
+    capability_need: End a reclaim the registry refuses
+    source_finding: {phase: p3, register: authoring_decisions, key: End a reclaim the registry refuses}
+  - subject: Agent Governance
+    verb: checks
+    object: an action's parameters
+    capability_need: Check an action's parameters
+    source_finding: {phase: p3, register: authoring_decisions, key: Check an action's parameters}
+  capability_graph:
+  - capability: End a reclaim the registry refuses
+    source_finding: {phase: p3, register: authoring_decisions, key: End a reclaim the registry refuses}
+    status: CRITICAL
+    gap_register_entry: GAP-01
+    notes: A next version of the reclaim, whose removal step ends the contract on a refused removal.
+  - capability: Check an action's parameters
+    source_finding: {phase: p3, register: authoring_decisions, key: Check an action's parameters}
+    status: CRITICAL
+    gap_register_entry: GAP-02
+    notes: A next version that reports what it receives.
+  dependency_graph:
+  - from: ai_licensing
+    to: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0
+    dependency_type: contract replaced by its next version
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: Reclaiming a license}
+  - from: ai_licensing
+    to: capability_side_effects::CS_REGISTRY_V0
+    dependency_type: platform capability
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: The license registry}
+  - from: ai_licensing
+    to: ai_governance::CT_PURE_EVALUATE_INACTIVITY_V0
+    dependency_type: capability transform
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: The inactivity check}
+  - from: ai_licensing
+    to: ai_governance::WF_AUTO_RECLAIM_V0
+    dependency_type: workflow, re-pointed
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: The reclaim act}
+  - from: agent_governance
+    to: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0
+    dependency_type: contract replaced by its next version
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: The parameter check}
+  - from: agent_governance
+    to: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
+    dependency_type: transform
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: Checking against rules}
+  - from: agent_governance
+    to: capability_transforms::CT_PURE_LOOKUP_V0
+    dependency_type: transform
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: Looking up a tool's rules}
+  - from: agent_governance
+    to: ai_governance::WF_GOVERN_AGENT_ACTION_V0
+    dependency_type: workflow, re-pointed
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: Governing an action}
+  constraint_register:
+  - number: '1'
+    constraint: Every reclaim the registry does not refuse ends exactly as it did before this change.
+    source_finding: {phase: p1, register: constraints, row: 1}
+    source: The business author
+  - number: '2'
+    constraint: No ending is added.
+    source_finding: {phase: p1, register: constraints, row: 2}
+    source: The business author
+  - number: '3'
+    constraint: The governed action decides exactly as it does today.
+    source_finding: {phase: p1, register: constraints, row: 3}
+    source: The business author
+  - number: '4'
+    constraint: No published identity changes what it says, except to be stood down.
+    source_finding: {phase: p1, register: constraints, row: 4}
+    source: The business author
+  gap_register:
+  - gap_code: GAP-01
+    source_finding: {phase: p3, register: authoring_decisions, key: End a reclaim the registry refuses}
+    capability: End a reclaim the registry refuses
+    owner_subdomain: ai_licensing
+    resolution: AUTHOR_NEW
+  - gap_code: GAP-02
+    source_finding: {phase: p3, register: authoring_decisions, key: Check an action's parameters}
+    capability: Check an action's parameters
+    owner_subdomain: agent_governance
+    resolution: AUTHOR_NEW
+  design_decisions:
+  - number: '1'
+    decision: The removal step ends the contract on a refused removal.
+    source_finding: {phase: p3, register: analysis_findings, key: Q1}
+    rationale: A reclaim must not carry on past a removal the registry refused.
+    constraints_imposed: The removal step answers every outcome the registry declares.
+  - number: '2'
+    decision: A refused removal ends as still active.
+    source_finding: {phase: p3, register: analysis_findings, key: Q2}
+    rationale: The license stays assigned, which is what that ending says.
+    constraints_imposed: No route and no ending changes.
+  - number: '3'
+    decision: The new parameter check reports whether every declared rule passed, from the check's own answer.
+    source_finding: {phase: p3, register: analysis_findings, key: Q4}
+    rationale: A check reports only what it receives.
+    constraints_imposed: Its steps, rules and routes are those of the old check.
+  - number: '4'
+    decision: Each of the two contracts is stated under a next version, and its published version is stood down unchanged.
+    source_finding: {phase: p3, register: analysis_findings, key: Q5}
+    rationale: A change of meaning is a new identity, and identity is fixed at publication.
+    constraints_imposed: The published declaration gains only its stand-down.
+  - number: '5'
+    decision: The reclaim act and the governed action are re-pointed to the next versions.
+    source_finding: {phase: p3, register: analysis_findings, key: Q6}
+    rationale: Each decides exactly as today.
+    constraints_imposed: Only the contract each one's place runs changes.
+  authoring_scope:
+  - capability: End a reclaim the registry refuses
+    gap_register_ref: GAP-01
+  - capability: Check an action's parameters
+    gap_register_ref: GAP-02
+```
 
 Consolidation of Stages 1–3. Nothing is re-litigated and nothing new is decided.
 
@@ -14,102 +182,29 @@ Consolidation of Stages 1–3. Nothing is re-litigated and nothing new is decide
 
 ## 1. Discovery Summary
 
-<!-- register:actors business_language -->
 ### Actors (actors)
-| Actor | Role | Authority Class | Source Finding |
-|-------|------|-----------------|----------------|
-| The business | Reclaims licenses on its schedule. Unchanged by this change. | Owning business | S2 business_processes #1 |
-| An agent | Proposes an action. Unchanged by this change. | Ordinary participant | S2 business_processes #2 |
-| AI Licensing | Ends a reclaim the registry refuses, with the license still assigned. | Owning subdomain | S3 placement_decision ai_licensing |
-| Agent Governance | Checks an agent's action against the rules declared for its tool. | Owning subdomain | S3 placement_decision agent_governance |
 
-<!-- register:bm_entities business_language -->
 ### Entities (bm_entities)
-| Entity | Description | Store Model | Source Finding |
-|--------|-------------|-------------|----------------|
-| The Assignment | A license held by an employee. | One registry, unchanged. | S2 entities #1 |
-| The Reclaim | Taking back an unused license. | An act, announced when it removes an assignment. | S2 entities #2 |
-| The Governed Action | An agent's proposed action, judged and recorded. | Recorded in the governance audit. | S2 entities #3 |
-| The Parameter Check | The step that checks an action's parameters. | Run by the governed action. | S2 entities #4 |
 
-<!-- register:resources optional business_language -->
 ### Resources
-| Resource | Description | Source Finding |
-|----------|-------------|----------------|
-| NONE IDENTIFIED |
 
-<!-- register:events business_language -->
 ### Events (events)
-| Event | Trigger | Lifecycle Meaning | Source Finding |
-|-------|---------|-------------------|----------------|
-| NONE IDENTIFIED | This change recognises no new moment. | A revocation is not announced for a refused removal. | S1 business_events #1 |
 
-<!-- register:relationships optional business_language -->
 ### Relationships (Candidate Capabilities)
-| Subject | Verb | Object | Capability Need | Source Finding |
-|---------|------|--------|-----------------|----------------|
-| AI Licensing | ends | a reclaim the registry refuses | End a reclaim the registry refuses | S3 authoring_decisions End a reclaim the registry refuses |
-| Agent Governance | checks | an action's parameters | Check an action's parameters | S3 authoring_decisions Check an action's parameters |
 
 ## 2. Capability Graph (capability_graph)
 
-<!-- register:capability_graph business_language -->
-| Capability | Source Finding | Status | Gap Register Entry | Notes |
-|-----------|----------------|--------|--------------------|-------|
-| End a reclaim the registry refuses | S3 authoring_decisions End a reclaim the registry refuses | CRITICAL | GAP-01 | A next version of the reclaim, whose removal step ends the contract on a refused removal. |
-| Check an action's parameters | S3 authoring_decisions Check an action's parameters | CRITICAL | GAP-02 | A next version that reports what it receives. |
-
 ## 3. Dependency Graph (dependency_graph)
-
-<!-- register:dependency_graph -->
-| From | To | Dependency Type | PPS Status | Source Finding |
-|------|----|-----------------|------------|----------------|
-| ai_licensing | ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0 | contract replaced by its next version | SATISFIED | S3 dependency_discoveries Reclaiming a license |
-| ai_licensing | capability_side_effects::CS_REGISTRY_V0 | platform capability | SATISFIED | S3 dependency_discoveries The license registry |
-| ai_licensing | ai_governance::CT_PURE_EVALUATE_INACTIVITY_V0 | capability transform | SATISFIED | S3 dependency_discoveries The inactivity check |
-| ai_licensing | ai_governance::WF_AUTO_RECLAIM_V0 | workflow, re-pointed | SATISFIED | S3 dependency_discoveries The reclaim act |
-| agent_governance | ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0 | contract replaced by its next version | SATISFIED | S3 dependency_discoveries The parameter check |
-| agent_governance | capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0 | transform | SATISFIED | S3 dependency_discoveries Checking against rules |
-| agent_governance | capability_transforms::CT_PURE_LOOKUP_V0 | transform | SATISFIED | S3 dependency_discoveries Looking up a tool's rules |
-| agent_governance | ai_governance::WF_GOVERN_AGENT_ACTION_V0 | workflow, re-pointed | SATISFIED | S3 dependency_discoveries Governing an action |
 
 ## 4. Constraint Register (constraint_register)
 
-<!-- register:constraint_register -->
-| # | Constraint | Source Finding | Source |
-|---|------------|----------------|--------|
-| 1 | Every reclaim the registry does not refuse ends exactly as it did before this change. | S1 constraints #1 | The business author |
-| 2 | No ending is added. | S1 constraints #2 | The business author |
-| 3 | The governed action decides exactly as it does today. | S1 constraints #3 | The business author |
-| 4 | No published identity changes what it says, except to be stood down. | S1 constraints #4 | The business author |
-
 ## 5. Gap Register (gap_register)
-
-<!-- register:gap_register business_language -->
-| Gap Code | Source Finding | Capability | Owner Subdomain | Resolution |
-|----------|----------------|-----------|-----------------|------------|
-| GAP-01 | S3 authoring_decisions End a reclaim the registry refuses | End a reclaim the registry refuses | ai_licensing | AUTHOR_NEW |
-| GAP-02 | S3 authoring_decisions Check an action's parameters | Check an action's parameters | agent_governance | AUTHOR_NEW |
 
 ## 6. Design Decisions (design_decisions)
 
-<!-- register:design_decisions -->
-| # | Decision | Source Finding | Rationale | Constraints Imposed |
-|---|----------|----------------|-----------|---------------------|
-| 1 | The removal step ends the contract on a refused removal. | S3 analysis_findings Q1 | A reclaim must not carry on past a removal the registry refused. | The removal step answers every outcome the registry declares. |
-| 2 | A refused removal ends as still active. | S3 analysis_findings Q2 | The license stays assigned, which is what that ending says. | No route and no ending changes. |
-| 3 | The new parameter check reports whether every declared rule passed, from the check's own answer. | S3 analysis_findings Q4 | A check reports only what it receives. | Its steps, rules and routes are those of the old check. |
-| 4 | Each of the two contracts is stated under a next version, and its published version is stood down unchanged. | S3 analysis_findings Q5 | A change of meaning is a new identity, and identity is fixed at publication. | The published declaration gains only its stand-down. |
-| 5 | The reclaim act and the governed action are re-pointed to the next versions. | S3 analysis_findings Q6 | Each decides exactly as today. | Only the contract each one's place runs changes. |
-
 ## 7. Authoring Scope (authoring_scope)
 
-<!-- register:authoring_scope -->
 ### In Scope — This CR
-| Capability | Gap Register Ref |
-|-----------|-----------------|
-| End a reclaim the registry refuses | GAP-01 |
-| Check an action's parameters | GAP-02 |
 
 ### Deferred — Future CR
 | Capability | Deferred Reason |

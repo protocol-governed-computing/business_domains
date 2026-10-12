@@ -137,6 +137,9 @@ Each domain carries **change dossiers** — the record of a change from the busi
 (P0) through to the authoring mandate (P8), each phase admissible before the next may be authored.
 Every dossier pins the baseline it was approved against, and that pin stays historical: a completed
 change is never re-pinned forward.
+Each phase document carries its registers as data, in one `## Machine` block. Dossiers delivered
+before v6 were written as tables and converted mechanically, with no value changed. The table-form
+originals are held at the `v5` tag, or in git history for the few delivered after it.
 
 A change need not author anything. One dossier here produces a **two-line diff** — a defect
 correction, fully evidenced, every phase admissible. A lifecycle that can only describe creation

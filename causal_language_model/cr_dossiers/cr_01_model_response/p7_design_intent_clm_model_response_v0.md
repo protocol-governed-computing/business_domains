@@ -1,9 +1,6093 @@
 # Stage 7 — Design Intent: causal_language_model / model_response
 
-**Stage:** 7 — Design Intent
-**CR:** cr_01_model_response
-**Status:** DRAFT
-**Feeds:** Stage 8 — Authoring Mandate
+## Machine
+
+```yaml
+document:
+  phase: p7
+  domain: causal_language_model
+  subdomain: model_response
+  cr: cr_01_model_response
+  rule_set: transformation.schemas.REGISTER_SCHEMA_P7_V0
+registers:
+  design_resolution:
+  - decision: model_response is a new subdomain
+    business_fact: Nothing in the composition registers a model or governs how one writes
+    resolution: A new subdomain of the causal_language_model namespace with its own two actors, five stores, one binding and five operations
+    source_finding: {phase: p4, register: design_decisions, row: 1}
+  - decision: Writing is a molecule of two declared steps per pass
+    business_fact: The rules must act while the model writes, visibly to governance
+    resolution: One pass is a molecule of the model's offer and the rules' choice; the response is a molecule whose loop runs one pass per position up to the longest response
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - decision: Determinism ends at the model's step
+    business_fact: A reader must see exactly where determinism ends
+    resolution: Only the offer is declared ct_impure; the choice emits each pass's result, so nothing is decided on the model's offer
+    source_finding: {phase: p4, register: design_decisions, row: 3}
+  - decision: A trace is reproduced from its record
+    business_fact: A user prompt's trace must be reproducible from what was recorded
+    resolution: The platform records each offer where it is produced; the writing molecule's vectors state recorded offers and are proven by substituting them
+    source_finding: {phase: p4, register: design_decisions, row: 4}
+  - decision: The seed is a recorded input
+    business_fact: Anyone reading the record can re-derive each chosen word
+    resolution: The user prompt states a seed; it enters the rules in force, which the user prompt record keeps whole
+    source_finding: {phase: p4, register: design_decisions, row: 5}
+  - decision: The test model is a realization of the model's step
+    business_fact: The rules must be shown to hold against a model that tries to break them
+    resolution: The offer's implementation is the test model, which offers another customer's account number first
+    source_finding: {phase: p4, register: design_decisions, row: 6}
+  - decision: The customer's account numbers travel with the user prompt
+    business_fact: The rule against another customer's account number is formed per user prompt
+    resolution: The rules in force add one forbidden pattern, the account-number shape, excepting the customer's own numbers; every rule is read against the response so far joined to the candidate, so a number written across several words is stopped at the word that completes it
+    source_finding: {phase: p4, register: design_decisions, row: 7}
+  - decision: Uniqueness by a formed key
+    business_fact: Two registrations with the same description and fingerprint are the same model
+    resolution: A pure transform forms one key from the description and fingerprint; the registry claims it atomically, and ALREADY_EXISTS is the duplicate refusal
+    source_finding: {phase: p4, register: design_decisions, row: 8}
+  - decision: State is data on the record
+    business_fact: A model moves into and out of service repeatedly
+    resolution: The model record carries its state and its open time in service. Placement and withdrawal change the model's state only from the state they expect, in one conditional update, and refuse when it matched nothing; the time in service record is written after, so a failure between the two leaves a model no user prompt can reach rather than one answering under no rules
+    source_finding: {phase: p4, register: design_decisions, row: 9}
+  - decision: Membership before order
+    business_fact: Membership is mechanism; the comparison is this subdomain's rule
+    resolution: The stated kind is confirmed a declared kind, then compared with the ceiling by the declared order
+    source_finding: {phase: p4, register: design_decisions, row: 10}
+  - decision: Retrieval raises no event
+    business_fact: Nothing reacts to a read
+    resolution: Retrieval appends to the operation trail and declares no business moment
+    source_finding: {phase: p4, register: design_decisions, row: 11}
+  - decision: Authorization is read, never granted
+    business_fact: Which staff are model staff and who may act for which customer is decided elsewhere
+    resolution: The business's existing arrangements are the trusted source of who is model staff and whom a requester may act for; they assert both through the ingress, as the staff member's credentials and the requester's permitted customers, and model_response trusts that assertion and authenticates neither. The rules the credentials are checked against, and the schema a description is checked against, are fixed by this design and never supplied by the caller
+    source_finding: {phase: p4, register: design_decisions, row: 12}
+  - decision: Every refusal is recorded with its reason
+    business_fact: Every user prompt is recorded, whether responded to or refused
+    resolution: 'Each refusal routes to its own place in the submission, where the recording contract runs with that refusal''s reason; a failure to write the response, or a store failing before the model reads, is recorded as FAILED with the stage. Not recorded: a payload the intent refuses, a second submission under a claimed identity, and a failure of the user prompt records themselves, which ends the act rejected and reports no record. A submission is traced by its user prompt record, which names the requester'
+    source_finding: {phase: p4, register: constraint_register, row: 9}
+  - decision: One identity, one record
+    business_fact: Each model the business holds has exactly one record
+    resolution: A time in service and a user prompt are each claimed in their own register before anything is written under them; a duplicate is refused rather than overwriting or appending a second record
+    source_finding: {phase: p4, register: design_decisions, row: 8}
+  - decision: The governed unit is a word
+    business_fact: A language model writes a response one word at a time
+    resolution: 'Choosing, stopping and reading capacity are counted in words, which is exact for the test model and a simulation for a real one: a real model''s tokens join this design only through a realization that offers whole words. A rule governs what its pattern can express and nothing else; the business does not claim a response is true'
+    source_finding: {phase: p4, register: design_decisions, row: 6}
+  - decision: How the seed draws an adventurous word
+    business_fact: Anyone reading the record can re-derive each chosen word
+    resolution: The permitted candidates, most likely first and ties in offered order, are narrowed to the first freedom-plus-one; the word at position (seed plus the word's position) modulo that count is chosen. Freedom zero always chooses the most likely permitted word
+    source_finding: {phase: p4, register: design_decisions, row: 5}
+  - decision: A finished response invokes no model
+    business_fact: An unfinished response is not a response
+    resolution: The loop runs one pass per position to the longest response, as molecules run; once the response has finished or a rule has stopped it, the offer is handed that fact and returns no words without consulting the model, and the choice changes nothing
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - decision: The kinds of information are copied into three bindings
+    business_fact: The kinds are declared once, in order, least sensitive first
+    resolution: A binding cannot read a vocabulary, so the ordered kinds are written as a literal where membership and order are checked, each copy identical to the vocabulary's entries in the same order
+    source_finding: {phase: p4, register: design_decisions, row: 10}
+  existing_inventory:
+  - fqdn: capability_side_effects::CS_MUTABLE_JSON_V0
+    action: REUSE
+    summary: ''
+    reason: Holds the model record and the time in service record, read and updated in place.
+    source_finding: {phase: p6, register: pps_artifacts_requiring_action, key: 'capability_side_effects::CS_MUTABLE_JSON_V0'}
+  - fqdn: capability_side_effects::CS_REGISTRY_V0
+    action: REUSE
+    summary: ''
+    reason: Register-if-absent gives the atomic claim duplicate prevention needs, on a key the subdomain forms.
+    source_finding: {phase: p6, register: pps_artifacts_requiring_action, key: 'capability_side_effects::CS_REGISTRY_V0'}
+  - fqdn: capability_side_effects::CS_APPENDONLY_JSONL_V0
+    action: REUSE
+    summary: ''
+    reason: Appends the user prompt record and the operation trail, neither of which can be amended.
+    source_finding: {phase: p6, register: pps_artifacts_requiring_action, key: 'capability_side_effects::CS_APPENDONLY_JSONL_V0'}
+  - fqdn: capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0
+    action: REUSE
+    summary: ''
+    reason: Assembles the model, time in service and user prompt records from supplied values.
+    source_finding: {phase: p6, register: pps_artifacts_requiring_action, key: 'capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0'}
+  - fqdn: capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0
+    action: REUSE
+    summary: ''
+    reason: Reports what a model description lacks of the fields registration requires; a following rule refuses it when anything is reported.
+    source_finding: {phase: p6, register: pps_artifacts_requiring_action, key: 'capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0'}
+  - fqdn: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
+    action: REUSE
+    summary: ''
+    reason: Confirms model staff credentials, a model's state and a response's release conditions against declared rules, and interprets each into a decision.
+    source_finding: {phase: p6, register: pps_artifacts_requiring_action, key: 'capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0'}
+  - fqdn: capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0
+    action: REUSE
+    summary: ''
+    reason: Confirms a stated kind of information is a declared kind, and that a requester may act for the customer.
+    source_finding: {phase: p6, register: pps_artifacts_requiring_action, key: 'capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0'}
+  - fqdn: capability_transforms::CT_PURE_FILTER_RECORDS_V0
+    action: REUSE
+    summary: ''
+    reason: Selects the one user prompt record retrieved, and interprets a record not found into a refusal.
+    source_finding: {phase: p6, register: ownership, key: Append an entry to a trail that cannot be amended}
+  - fqdn: capability_transforms::CONSTITUTION_MOLECULES_V0
+    action: REUSE
+    summary: ''
+    reason: Governs the two writing molecules and runs the loop's body once per pass.
+    source_finding: {phase: p6, register: pps_artifacts_requiring_action, key: 'capability_transforms::CONSTITUTION_MOLECULES_V0'}
+  - fqdn: capability_transforms::CONSTITUTION_NONDETERMINISTIC_ATOMS_V0
+    action: REUSE
+    summary: ''
+    reason: 'Governs the model''s offer: recorded when produced, replayed from the record, offered to a deterministic step.'
+    source_finding: {phase: p6, register: pps_artifacts_requiring_action, key: 'capability_transforms::CONSTITUTION_NONDETERMINISTIC_ATOMS_V0'}
+  new_artifacts:
+  - capability: The authorized model staff member who registers, places, withdraws and retrieves
+    family: AC
+    code: causal_language_model::AC_MODEL_STAFF_V0
+    summary: The actor whose authorization every model staff operation binds
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: AC_MODEL_STAFF_V0}
+  - capability: The authorized requester who submits a user prompt on behalf of a customer
+    family: AC
+    code: causal_language_model::AC_REQUESTER_V0
+    summary: The actor who submits a user prompt for one customer
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: AC_REQUESTER_V0}
+  - capability: A request to register a model with its description and fingerprint
+    family: IN
+    code: causal_language_model::IN_REGISTER_MODEL_V0
+    summary: A request to register a model with its description and fingerprint
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: IN_REGISTER_MODEL_V0}
+  - capability: A request to place a registered model in service with its ceiling, system prompt and response rules
+    family: IN
+    code: causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0
+    summary: A request to place a registered model in service with its ceiling, system prompt and response rules
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: IN_PLACE_MODEL_IN_SERVICE_V0}
+  - capability: A request to withdraw a model from service
+    family: IN
+    code: causal_language_model::IN_WITHDRAW_MODEL_FROM_SERVICE_V0
+    summary: A request to withdraw a model from service
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: IN_WITHDRAW_MODEL_FROM_SERVICE_V0}
+  - capability: A user prompt submitted on behalf of a customer
+    family: IN
+    code: causal_language_model::IN_SUBMIT_USER_PROMPT_V0
+    summary: A user prompt submitted on behalf of a customer
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: IN_SUBMIT_USER_PROMPT_V0}
+  - capability: A request to retrieve the record of a user prompt
+    family: IN
+    code: causal_language_model::IN_RETRIEVE_USER_PROMPT_RECORD_V0
+    summary: A request to retrieve the record of a user prompt
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: IN_RETRIEVE_USER_PROMPT_RECORD_V0}
+  - capability: Registering a model, refusing a second registration of the same model
+    family: WF
+    code: causal_language_model::WF_REGISTER_MODEL_V0
+    summary: Registering a model, refusing a second registration of the same model
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: WF_REGISTER_MODEL_V0}
+  - capability: Opening a time in service for a registered model not already in service
+    family: WF
+    code: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    summary: Opening a time in service for a registered model not already in service
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: WF_PLACE_MODEL_IN_SERVICE_V0}
+  - capability: Closing a model's time in service
+    family: WF
+    code: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    summary: Closing a model's time in service
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: WF_WITHDRAW_MODEL_FROM_SERVICE_V0}
+  - capability: Admitting a user prompt, writing the response under the rules, releasing or refusing it, and recording it
+    family: WF
+    code: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    summary: Admitting a user prompt, writing the response under the rules, releasing or refusing it, and recording it
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: WF_SUBMIT_USER_PROMPT_V0}
+  - capability: Reading a user prompt record and recording that it was read
+    family: WF
+    code: causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0
+    summary: Reading a user prompt record and recording that it was read
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: WF_RETRIEVE_USER_PROMPT_RECORD_V0}
+  - capability: Confirm the staff member is model staff
+    family: CC
+    code: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    summary: Confirm the staff member is model staff
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0}
+  - capability: Claim a user prompt's identity so a second submission under it is refused
+    family: CC
+    code: causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0
+    summary: Claim a user prompt's identity so a second submission under it is refused
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CC_CLAIM_USER_PROMPT_IDENTITY_V0}
+  - capability: Confirm the requester may act for the customer the user prompt is for
+    family: CC
+    code: causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0
+    summary: Confirm the requester may act for the customer the user prompt is for
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0}
+  - capability: Claim a model's identity so a second registration of the same model is refused
+    family: CC
+    code: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    summary: Claim a model's identity so a second registration of the same model is refused
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CC_CLAIM_MODEL_IDENTITY_V0}
+  - capability: Record a model's description and fingerprint as its record, registered
+    family: CC
+    code: causal_language_model::CC_REGISTER_MODEL_V0
+    summary: Record a model's description and fingerprint as its record, registered
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CC_REGISTER_MODEL_V0}
+  - capability: Open a time in service with its ceiling, system prompt and response rules, and mark the model in service
+    family: CC
+    code: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    summary: Open a time in service with its ceiling, system prompt and response rules, and mark the model in service
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CC_PLACE_MODEL_IN_SERVICE_V0}
+  - capability: Close the time in service and mark the model registered
+    family: CC
+    code: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    summary: Close the time in service and mark the model registered
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CC_WITHDRAW_MODEL_FROM_SERVICE_V0}
+  - capability: Refuse a user prompt whose model is not registered or not in service
+    family: CC
+    code: causal_language_model::CC_ADMIT_USER_PROMPT_V0
+    summary: Refuse a user prompt before the model sees it when its model is not registered or not in service
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CC_ADMIT_USER_PROMPT_V0}
+  - capability: Refuse a user prompt whose kind of information is above the model's ceiling
+    family: CC
+    code: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    summary: Refuse a user prompt before the model sees it when it states a kind more sensitive than the ceiling
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CC_ADMIT_USER_PROMPT_V0}
+  - capability: Refuse a user prompt longer than the model can read at once
+    family: CC
+    code: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    summary: Assemble exactly what the model reads and refuse it before the model sees it when it is too long
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CC_ADMIT_USER_PROMPT_V0}
+  - capability: Write the response word by word under the rules in force
+    family: CC
+    code: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    summary: Form the rules in force and write the response word by word under them
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CC_WRITE_MODEL_RESPONSE_V0}
+  - capability: Release a written response only when it finished and no rule stopped it
+    family: CC
+    code: causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0
+    summary: Confirm one release condition of a written response, refusing it otherwise
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CC_WRITE_MODEL_RESPONSE_V0}
+  - capability: Append the user prompt record with what the model read, the rules in force and the outcome
+    family: CC
+    code: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    summary: Append the user prompt record with what the model read, the rules in force and the outcome
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CC_RECORD_USER_PROMPT_V0}
+  - capability: Read the record of a user prompt
+    family: CC
+    code: causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0
+    summary: Read the record of a user prompt
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CC_RETRIEVE_USER_PROMPT_RECORD_V0}
+  - capability: Append a durable account of a performed operation to the subdomain's own trail
+    family: CC
+    code: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    summary: Append a durable account of a performed operation to the subdomain's own trail
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CC_APPEND_MODEL_OPERATION_V0}
+  - capability: Form the single key claimed for a model from its description and fingerprint
+    family: CT
+    code: causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0
+    summary: Forms the single key claimed for a model from its description and fingerprint
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CT_PURE_FORM_MODEL_IDENTITY_KEY_V0}
+  - capability: Decide whether a kind of information is no more sensitive than a ceiling
+    family: CT
+    code: causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0
+    summary: Decides whether a kind of information is no more sensitive than a ceiling, by the declared order
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CT_PURE_COMPARE_SENSITIVITY_V0}
+  - capability: Assemble exactly what the model reads and decide whether it fits
+    family: CT
+    code: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    summary: Assembles exactly what the model reads and decides whether it fits what the model can read at once
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CT_PURE_ASSEMBLE_MODEL_READING_V0}
+  - capability: Form the response rules in force for one user prompt
+    family: CT
+    code: causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0
+    summary: Forms the response rules in force for one user prompt from the time in service and the customer's account numbers
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CT_PURE_FORM_RESPONSE_RULES_V0}
+  - capability: The model's offer of its next words
+    family: CT
+    code: causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0
+    summary: 'The model''s step: offers its next words given the response so far; the one step whose result is not determined by its inputs'
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CT_IMPURE_OFFER_NEXT_WORDS_V0}
+  - capability: Stop forbidden words and choose one permitted word
+    family: CT
+    code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    summary: Stops forbidden words among those offered and chooses one permitted word under the freedom of word choice and a stated seed
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CT_PURE_CHOOSE_PERMITTED_WORD_V0}
+  - capability: 'One pass of writing: the model''s offer, then the rules'' choice'
+    family: CT
+    code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    summary: One pass of writing, composed of the model's offer and the rules' choice
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CT_WRITE_NEXT_WORD_V0}
+  - capability: Write a response one pass per word, up to the longest response
+    family: CT
+    code: causal_language_model::CT_WRITE_RESPONSE_V0
+    summary: Writes a response by repeating one pass per word, up to the longest response, carrying the response so far and the words stopped
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: CT_WRITE_RESPONSE_V0}
+  - capability: The moment the business records a model
+    family: EV
+    code: causal_language_model::EV_MODEL_REGISTERED_V0
+    summary: The moment the business records a model
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: EV_MODEL_REGISTERED_V0}
+  - capability: The moment a model is placed in service and a time in service begins
+    family: EV
+    code: causal_language_model::EV_MODEL_SERVICE_STARTED_V0
+    summary: The moment a model is placed in service and a time in service begins
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: EV_MODEL_SERVICE_STARTED_V0}
+  - capability: The moment a model is withdrawn from service and its time in service ends
+    family: EV
+    code: causal_language_model::EV_MODEL_SERVICE_ENDED_V0
+    summary: The moment a model is withdrawn from service and its time in service ends
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: EV_MODEL_SERVICE_ENDED_V0}
+  - capability: The moment a model response is released
+    family: EV
+    code: causal_language_model::EV_USER_PROMPT_RESPONDED_V0
+    summary: The moment a model response is released
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: EV_USER_PROMPT_RESPONDED_V0}
+  - capability: The moment a user prompt yields no response
+    family: EV
+    code: causal_language_model::EV_USER_PROMPT_REFUSED_V0
+    summary: The moment a user prompt yields no response
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: EV_USER_PROMPT_REFUSED_V0}
+  - capability: The kinds of information, least sensitive first
+    family: VOCAB
+    code: causal_language_model::VOCAB_KIND_OF_INFORMATION_V0
+    summary: 'The kinds of information, least sensitive first: public, internal, confidential, restricted'
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: VOCAB_KIND_OF_INFORMATION_V0}
+  - capability: Bind the subdomain's operations to the stores and mechanisms they use
+    family: RB
+    code: causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0
+    summary: Binds every model response workflow to the mechanisms and stores it uses
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: RB_MODEL_RESPONSE_BINDINGS_V0}
+  - capability: Declare the stores the subdomain owns
+    family: STRUCTURE
+    code: causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0
+    summary: Declares the seven stores the subdomain owns and the paths they occupy
+    owner_subdomain: model_response
+    status: NEW
+    source_finding: {phase: p5, register: provisional_codes, key: STRUCTURE_MODEL_RESPONSE_STORAGE_V0}
+  rb_declarations:
+  - rb_code: causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0
+    binds_wf: causal_language_model::WF_REGISTER_MODEL_V0
+    cs_bindings:
+    - capability_side_effects::CS_MUTABLE_JSON_V0
+    - capability_side_effects::CS_REGISTRY_V0
+    - capability_side_effects::CS_APPENDONLY_JSONL_V0
+    storage_structure: causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0
+    source_finding: {phase: p6, register: storage_governance, key: A durable record of every model the business holds}
+  - rb_code: causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0
+    binds_wf: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    cs_bindings:
+    - capability_side_effects::CS_MUTABLE_JSON_V0
+    - capability_side_effects::CS_REGISTRY_V0
+    - capability_side_effects::CS_APPENDONLY_JSONL_V0
+    storage_structure: causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0
+    source_finding: {phase: p6, register: storage_governance, key: A durable record of every model the business holds}
+  - rb_code: causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0
+    binds_wf: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    cs_bindings:
+    - capability_side_effects::CS_MUTABLE_JSON_V0
+    - capability_side_effects::CS_REGISTRY_V0
+    - capability_side_effects::CS_APPENDONLY_JSONL_V0
+    storage_structure: causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0
+    source_finding: {phase: p6, register: storage_governance, key: A durable record of every model the business holds}
+  - rb_code: causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0
+    binds_wf: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    cs_bindings:
+    - capability_side_effects::CS_MUTABLE_JSON_V0
+    - capability_side_effects::CS_REGISTRY_V0
+    - capability_side_effects::CS_APPENDONLY_JSONL_V0
+    storage_structure: causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0
+    source_finding: {phase: p6, register: storage_governance, key: A durable record of every model the business holds}
+  - rb_code: causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0
+    binds_wf: causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0
+    cs_bindings:
+    - capability_side_effects::CS_MUTABLE_JSON_V0
+    - capability_side_effects::CS_REGISTRY_V0
+    - capability_side_effects::CS_APPENDONLY_JSONL_V0
+    storage_structure: causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0
+    source_finding: {phase: p6, register: storage_governance, key: A durable record of every model the business holds}
+  execution_topology:
+  - workflow: causal_language_model::WF_REGISTER_MODEL_V0
+    node: causal_language_model::IN_REGISTER_MODEL_V0
+    runs: ''
+    node_type: IN
+    routing:
+      ACK: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+      NACK: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: IN_REGISTER_MODEL_V0}
+  - workflow: causal_language_model::WF_REGISTER_MODEL_V0
+    node: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+      VIOLATION: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0}
+  - workflow: causal_language_model::WF_REGISTER_MODEL_V0
+    node: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: causal_language_model::CC_REGISTER_MODEL_V0
+      ALREADY_EXISTS: EXIT_REJECTED
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_CLAIM_MODEL_IDENTITY_V0}
+  - workflow: causal_language_model::WF_REGISTER_MODEL_V0
+    node: causal_language_model::CC_REGISTER_MODEL_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_REGISTER_MODEL_V0}
+  - workflow: causal_language_model::WF_REGISTER_MODEL_V0
+    node: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: EXIT_REGISTERED
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_APPEND_MODEL_OPERATION_V0}
+  - workflow: causal_language_model::WF_REGISTER_MODEL_V0
+    node: EXIT_REGISTERED
+    runs: ''
+    node_type: EXIT_SUCCESS
+    routing: null
+    source_finding: {phase: p7, register: execution_topology, key: WF_REGISTER_MODEL_V0}
+  - workflow: causal_language_model::WF_REGISTER_MODEL_V0
+    node: EXIT_REJECTED
+    runs: ''
+    node_type: EXIT
+    routing: null
+    source_finding: {phase: p7, register: execution_topology, key: WF_REGISTER_MODEL_V0}
+  - workflow: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    node: causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0
+    runs: ''
+    node_type: IN
+    routing:
+      ACK: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+      NACK: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: IN_PLACE_MODEL_IN_SERVICE_V0}
+  - workflow: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    node: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+      VIOLATION: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0}
+  - workflow: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    node: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+      NOT_FOUND: EXIT_REJECTED
+      ALREADY_EXISTS: EXIT_REJECTED
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_PLACE_MODEL_IN_SERVICE_V0}
+  - workflow: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    node: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: EXIT_PLACED
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_APPEND_MODEL_OPERATION_V0}
+  - workflow: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    node: EXIT_PLACED
+    runs: ''
+    node_type: EXIT_SUCCESS
+    routing: null
+    source_finding: {phase: p7, register: execution_topology, key: WF_PLACE_MODEL_IN_SERVICE_V0}
+  - workflow: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    node: EXIT_REJECTED
+    runs: ''
+    node_type: EXIT
+    routing: null
+    source_finding: {phase: p7, register: execution_topology, key: WF_PLACE_MODEL_IN_SERVICE_V0}
+  - workflow: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    node: causal_language_model::IN_WITHDRAW_MODEL_FROM_SERVICE_V0
+    runs: ''
+    node_type: IN
+    routing:
+      ACK: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+      NACK: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: IN_WITHDRAW_MODEL_FROM_SERVICE_V0}
+  - workflow: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    node: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+      VIOLATION: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0}
+  - workflow: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    node: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+      NOT_FOUND: EXIT_REJECTED
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_WITHDRAW_MODEL_FROM_SERVICE_V0}
+  - workflow: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    node: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: EXIT_WITHDRAWN
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_APPEND_MODEL_OPERATION_V0}
+  - workflow: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    node: EXIT_WITHDRAWN
+    runs: ''
+    node_type: EXIT_SUCCESS
+    routing: null
+    source_finding: {phase: p7, register: execution_topology, key: WF_WITHDRAW_MODEL_FROM_SERVICE_V0}
+  - workflow: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    node: EXIT_REJECTED
+    runs: ''
+    node_type: EXIT
+    routing: null
+    source_finding: {phase: p7, register: execution_topology, key: WF_WITHDRAW_MODEL_FROM_SERVICE_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: causal_language_model::IN_SUBMIT_USER_PROMPT_V0
+    runs: ''
+    node_type: IN
+    routing:
+      ACK: causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0
+      NACK: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: IN_SUBMIT_USER_PROMPT_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0
+      ALREADY_EXISTS: EXIT_REJECTED
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_CLAIM_USER_PROMPT_IDENTITY_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: causal_language_model::CC_ADMIT_USER_PROMPT_V0
+      VIOLATION: RECORD_REFUSED_NOT_PERMITTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: causal_language_model::CC_ADMIT_USER_PROMPT_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+      NOT_FOUND: RECORD_REFUSED_NOT_REGISTERED
+      VIOLATION: RECORD_REFUSED_NOT_IN_SERVICE
+      BACKEND_ERROR: RECORD_FAILED_BEFORE_READING
+    source_finding: {phase: p7, register: new_artifacts, key: CC_ADMIT_USER_PROMPT_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: causal_language_model::CC_CONFIRM_READING_FITS_V0
+      NOT_FOUND: RECORD_REFUSED_NOT_IN_SERVICE
+      VIOLATION: RECORD_REFUSED_ABOVE_CEILING
+      BACKEND_ERROR: RECORD_FAILED_BEFORE_READING
+    source_finding: {phase: p7, register: new_artifacts, key: CC_CONFIRM_WITHIN_CEILING_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+      VIOLATION: RECORD_REFUSED_TOO_LONG_TO_READ
+    source_finding: {phase: p7, register: new_artifacts, key: CC_CONFIRM_READING_FITS_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: CONFIRM_NO_RULE_STOPPED
+      VIOLATION: RECORD_FAILED_WHILE_WRITING
+    source_finding: {phase: p7, register: new_artifacts, key: CC_WRITE_MODEL_RESPONSE_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: CONFIRM_NO_RULE_STOPPED
+    runs: causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0
+    node_type: CC
+    routing:
+      SUCCESS: CONFIRM_FINISHED
+      VIOLATION: RECORD_REFUSED_BY_RULE
+    source_finding: {phase: p7, register: new_artifacts, key: CC_CONFIRM_RESPONSE_RELEASABLE_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: CONFIRM_FINISHED
+    runs: causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0
+    node_type: CC
+    routing:
+      SUCCESS: RECORD_RESPONDED
+      VIOLATION: RECORD_REFUSED_UNFINISHED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_CONFIRM_RESPONSE_RELEASABLE_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: RECORD_RESPONDED
+    runs: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    node_type: CC
+    routing:
+      SUCCESS: EXIT_RESPONDED
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_RECORD_USER_PROMPT_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: RECORD_REFUSED_NOT_PERMITTED
+    runs: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    node_type: CC
+    routing:
+      SUCCESS: EXIT_REFUSED
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_RECORD_USER_PROMPT_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: RECORD_REFUSED_NOT_REGISTERED
+    runs: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    node_type: CC
+    routing:
+      SUCCESS: EXIT_REFUSED
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_RECORD_USER_PROMPT_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: RECORD_REFUSED_NOT_IN_SERVICE
+    runs: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    node_type: CC
+    routing:
+      SUCCESS: EXIT_REFUSED
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_RECORD_USER_PROMPT_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: RECORD_REFUSED_ABOVE_CEILING
+    runs: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    node_type: CC
+    routing:
+      SUCCESS: EXIT_REFUSED
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_RECORD_USER_PROMPT_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: RECORD_REFUSED_TOO_LONG_TO_READ
+    runs: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    node_type: CC
+    routing:
+      SUCCESS: EXIT_REFUSED
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_RECORD_USER_PROMPT_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: RECORD_REFUSED_BY_RULE
+    runs: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    node_type: CC
+    routing:
+      SUCCESS: EXIT_REFUSED
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_RECORD_USER_PROMPT_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: RECORD_REFUSED_UNFINISHED
+    runs: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    node_type: CC
+    routing:
+      SUCCESS: EXIT_REFUSED
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_RECORD_USER_PROMPT_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: RECORD_FAILED_BEFORE_READING
+    runs: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    node_type: CC
+    routing:
+      SUCCESS: EXIT_REJECTED
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_RECORD_USER_PROMPT_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: RECORD_FAILED_WHILE_WRITING
+    runs: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    node_type: CC
+    routing:
+      SUCCESS: EXIT_REJECTED
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_RECORD_USER_PROMPT_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: EXIT_RESPONDED
+    runs: ''
+    node_type: EXIT_SUCCESS
+    routing: null
+    source_finding: {phase: p7, register: execution_topology, key: WF_SUBMIT_USER_PROMPT_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: EXIT_REFUSED
+    runs: ''
+    node_type: EXIT
+    routing: null
+    source_finding: {phase: p7, register: execution_topology, key: WF_SUBMIT_USER_PROMPT_V0}
+  - workflow: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    node: EXIT_REJECTED
+    runs: ''
+    node_type: EXIT
+    routing: null
+    source_finding: {phase: p7, register: execution_topology, key: WF_SUBMIT_USER_PROMPT_V0}
+  - workflow: causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0
+    node: causal_language_model::IN_RETRIEVE_USER_PROMPT_RECORD_V0
+    runs: ''
+    node_type: IN
+    routing:
+      ACK: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+      NACK: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: IN_RETRIEVE_USER_PROMPT_RECORD_V0}
+  - workflow: causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0
+    node: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+      VIOLATION: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0}
+  - workflow: causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0
+    node: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_APPEND_MODEL_OPERATION_V0}
+  - workflow: causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0
+    node: causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0
+    runs: ''
+    node_type: CC
+    routing:
+      SUCCESS: EXIT_RETRIEVED
+      VIOLATION: EXIT_REJECTED
+      BACKEND_ERROR: EXIT_REJECTED
+    source_finding: {phase: p7, register: new_artifacts, key: CC_RETRIEVE_USER_PROMPT_RECORD_V0}
+  - workflow: causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0
+    node: EXIT_RETRIEVED
+    runs: ''
+    node_type: EXIT_SUCCESS
+    routing: null
+    source_finding: {phase: p7, register: execution_topology, key: WF_RETRIEVE_USER_PROMPT_RECORD_V0}
+  - workflow: causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0
+    node: EXIT_REJECTED
+    runs: ''
+    node_type: EXIT
+    routing: null
+    source_finding: {phase: p7, register: execution_topology, key: WF_RETRIEVE_USER_PROMPT_RECORD_V0}
+  cc_composition:
+  - cc_code: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    step: '1'
+    step_name: confirm_authorization
+    capability: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
+    kind: CT
+    operation: VALIDATE_PARAMETER_RULES
+    store: null
+    consumes:
+    - staff_credentials
+    - authorization_rules
+    produces:
+    - is_authorized
+    routing:
+      SUCCESS: exit
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        parameters: staff_credentials
+        rules: authorization_rules
+      out:
+        valid: is_authorized
+  - cc_code: causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0
+    step: '1'
+    step_name: confirm_acts_for_customer
+    capability: capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0
+    kind: CT
+    operation: VALIDATE_SET_MEMBERSHIP
+    store: null
+    consumes:
+    - customer_id
+    - permitted_customers
+    produces:
+    - acts_for_customer
+    routing:
+      SUCCESS: exit
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        value: customer_id
+        allowed_set: permitted_customers
+      out:
+        is_member: acts_for_customer
+  - cc_code: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: '1'
+    step_name: validate_description
+    capability: capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0
+    kind: CT
+    operation: VALIDATE_RECORD_STRUCTURE
+    store: null
+    consumes:
+    - description
+    - description_schema
+    produces:
+    - violations
+    routing:
+      SUCCESS: continue
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        record: description
+        schema: description_schema
+      out:
+        violations: violations
+  - cc_code: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: '2'
+    step_name: require_description_complete
+    capability: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
+    kind: CT
+    operation: VALIDATE_PARAMETER_RULES
+    store: null
+    consumes:
+    - violations
+    produces:
+    - valid
+    routing:
+      SUCCESS: continue
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        parameters: description_findings
+        rules: completeness_rules
+      out:
+        valid: valid
+  - cc_code: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: '3'
+    step_name: form_identity_key
+    capability: causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0
+    kind: CT
+    operation: FORM_MODEL_IDENTITY_KEY
+    store: null
+    consumes:
+    - description
+    - fingerprint
+    produces:
+    - identity_key
+    routing:
+      SUCCESS: continue
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        description: description
+        fingerprint: fingerprint
+      out:
+        identity_key: identity_key
+  - cc_code: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: '4'
+    step_name: claim_identity
+    capability: capability_side_effects::CS_REGISTRY_V0
+    kind: CS
+    operation: REGISTER
+    store: MODEL_IDENTITY_REGISTRY
+    consumes:
+    - key
+    - target_cs
+    - target_ref
+    produces:
+    - address
+    routing:
+      SUCCESS: exit
+      ALREADY_EXISTS: exit
+      VIOLATION: exit
+      BACKEND_ERROR: exit
+    interpreted_by: null
+    semantic_status: ALREADY_EXISTS
+    interface: null
+  - cc_code: causal_language_model::CC_REGISTER_MODEL_V0
+    step: '1'
+    step_name: assemble_model_record
+    capability: capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0
+    kind: CT
+    operation: ASSEMBLE_RECORD
+    store: null
+    consumes:
+    - identity_key
+    - description
+    - fingerprint
+    produces:
+    - model_record
+    routing:
+      SUCCESS: continue
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        fields: model_fields
+      out:
+        record: model_record
+  - cc_code: causal_language_model::CC_REGISTER_MODEL_V0
+    step: '2'
+    step_name: write_model_record
+    capability: capability_side_effects::CS_MUTABLE_JSON_V0
+    kind: CS
+    operation: WRITE
+    store: MODELS
+    consumes:
+    - key
+    - value
+    produces:
+    - result_status
+    routing:
+      SUCCESS: exit
+      VIOLATION: exit
+      BACKEND_ERROR: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface: null
+  - cc_code: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: '1'
+    step_name: read_model_record
+    capability: capability_side_effects::CS_MUTABLE_JSON_V0
+    kind: CS
+    operation: READ
+    store: MODELS
+    consumes:
+    - key
+    produces:
+    - model_record
+    routing:
+      SUCCESS: continue
+      NOT_FOUND: exit
+      VIOLATION: exit
+      BACKEND_ERROR: exit
+    interpreted_by: null
+    semantic_status: NOT_FOUND
+    interface: null
+  - cc_code: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: '2'
+    step_name: require_registered
+    capability: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
+    kind: CT
+    operation: VALIDATE_PARAMETER_RULES
+    store: null
+    consumes:
+    - model_record
+    produces:
+    - valid
+    routing:
+      SUCCESS: continue
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        parameters: model_state
+        rules: state_rules
+      out:
+        valid: valid
+  - cc_code: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: '3'
+    step_name: confirm_ceiling_declared
+    capability: capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0
+    kind: CT
+    operation: VALIDATE_SET_MEMBERSHIP
+    store: null
+    consumes:
+    - ceiling
+    produces:
+    - ceiling_declared
+    routing:
+      SUCCESS: continue
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        value: ceiling
+        allowed_set: kinds
+      out:
+        is_member: ceiling_declared
+  - cc_code: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: '4'
+    step_name: claim_time_in_service
+    capability: capability_side_effects::CS_REGISTRY_V0
+    kind: CS
+    operation: REGISTER
+    store: TIME_IN_SERVICE_REGISTRY
+    consumes:
+    - key
+    - target_cs
+    - target_ref
+    produces:
+    - address
+    routing:
+      SUCCESS: continue
+      ALREADY_EXISTS: exit
+      VIOLATION: exit
+      BACKEND_ERROR: exit
+    interpreted_by: null
+    semantic_status: ALREADY_EXISTS
+    interface: null
+  - cc_code: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: '5'
+    step_name: mark_in_service
+    capability: capability_side_effects::CS_MUTABLE_JSON_V0
+    kind: CS
+    operation: UPDATE_WHERE
+    store: MODELS
+    consumes:
+    - filter
+    - updates
+    produces:
+    - matched_keys
+    - updated_count
+    routing:
+      SUCCESS: continue
+      VIOLATION: exit
+      BACKEND_ERROR: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface: null
+  - cc_code: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: '6'
+    step_name: require_transition
+    capability: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
+    kind: CT
+    operation: VALIDATE_PARAMETER_RULES
+    store: null
+    consumes:
+    - updated_count
+    produces:
+    - valid
+    routing:
+      SUCCESS: continue
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        parameters: transition
+        rules: transition_rules
+      out:
+        valid: valid
+  - cc_code: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: '7'
+    step_name: assemble_time_in_service
+    capability: capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0
+    kind: CT
+    operation: ASSEMBLE_RECORD
+    store: null
+    consumes:
+    - time_in_service_id
+    - identity_key
+    - ceiling
+    - system_prompt
+    - response_rules
+    produces:
+    - time_in_service
+    routing:
+      SUCCESS: continue
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        fields: time_in_service_fields
+      out:
+        record: time_in_service
+  - cc_code: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: '8'
+    step_name: write_time_in_service
+    capability: capability_side_effects::CS_MUTABLE_JSON_V0
+    kind: CS
+    operation: WRITE
+    store: TIMES_IN_SERVICE
+    consumes:
+    - key
+    - value
+    produces:
+    - result_status
+    routing:
+      SUCCESS: exit
+      VIOLATION: exit
+      BACKEND_ERROR: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface: null
+  - cc_code: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: '1'
+    step_name: read_model_record
+    capability: capability_side_effects::CS_MUTABLE_JSON_V0
+    kind: CS
+    operation: READ
+    store: MODELS
+    consumes:
+    - key
+    produces:
+    - model_record
+    routing:
+      SUCCESS: continue
+      NOT_FOUND: exit
+      VIOLATION: exit
+      BACKEND_ERROR: exit
+    interpreted_by: null
+    semantic_status: NOT_FOUND
+    interface: null
+  - cc_code: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: '2'
+    step_name: require_in_service
+    capability: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
+    kind: CT
+    operation: VALIDATE_PARAMETER_RULES
+    store: null
+    consumes:
+    - model_record
+    produces:
+    - valid
+    routing:
+      SUCCESS: continue
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        parameters: model_state
+        rules: state_rules
+      out:
+        valid: valid
+  - cc_code: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: '3'
+    step_name: mark_registered
+    capability: capability_side_effects::CS_MUTABLE_JSON_V0
+    kind: CS
+    operation: UPDATE_WHERE
+    store: MODELS
+    consumes:
+    - filter
+    - updates
+    produces:
+    - matched_keys
+    - updated_count
+    routing:
+      SUCCESS: continue
+      VIOLATION: exit
+      BACKEND_ERROR: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface: null
+  - cc_code: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: '4'
+    step_name: require_transition
+    capability: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
+    kind: CT
+    operation: VALIDATE_PARAMETER_RULES
+    store: null
+    consumes:
+    - updated_count
+    produces:
+    - valid
+    routing:
+      SUCCESS: continue
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        parameters: transition
+        rules: transition_rules
+      out:
+        valid: valid
+  - cc_code: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: '5'
+    step_name: close_time_in_service
+    capability: capability_side_effects::CS_MUTABLE_JSON_V0
+    kind: CS
+    operation: UPDATE
+    store: TIMES_IN_SERVICE
+    consumes:
+    - key
+    - updates
+    produces:
+    - result_status
+    routing:
+      SUCCESS: exit
+      VIOLATION: exit
+      BACKEND_ERROR: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface: null
+  - cc_code: causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0
+    step: '1'
+    step_name: claim_user_prompt
+    capability: capability_side_effects::CS_REGISTRY_V0
+    kind: CS
+    operation: REGISTER
+    store: USER_PROMPT_REGISTRY
+    consumes:
+    - key
+    - target_cs
+    - target_ref
+    produces:
+    - address
+    routing:
+      SUCCESS: exit
+      ALREADY_EXISTS: exit
+      VIOLATION: exit
+      BACKEND_ERROR: exit
+    interpreted_by: null
+    semantic_status: ALREADY_EXISTS
+    interface: null
+  - cc_code: causal_language_model::CC_ADMIT_USER_PROMPT_V0
+    step: '1'
+    step_name: read_model_record
+    capability: capability_side_effects::CS_MUTABLE_JSON_V0
+    kind: CS
+    operation: READ
+    store: MODELS
+    consumes:
+    - key
+    produces:
+    - model_record
+    routing:
+      SUCCESS: continue
+      NOT_FOUND: exit
+      VIOLATION: exit
+      BACKEND_ERROR: exit
+    interpreted_by: null
+    semantic_status: NOT_FOUND
+    interface: null
+  - cc_code: causal_language_model::CC_ADMIT_USER_PROMPT_V0
+    step: '2'
+    step_name: require_in_service
+    capability: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
+    kind: CT
+    operation: VALIDATE_PARAMETER_RULES
+    store: null
+    consumes:
+    - model_record
+    produces:
+    - valid
+    routing:
+      SUCCESS: exit
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        parameters: model_state
+        rules: state_rules
+      out:
+        valid: valid
+  - cc_code: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    step: '1'
+    step_name: read_time_in_service
+    capability: capability_side_effects::CS_MUTABLE_JSON_V0
+    kind: CS
+    operation: READ
+    store: TIMES_IN_SERVICE
+    consumes:
+    - key
+    produces:
+    - time_in_service
+    routing:
+      SUCCESS: continue
+      NOT_FOUND: exit
+      VIOLATION: exit
+      BACKEND_ERROR: exit
+    interpreted_by: null
+    semantic_status: NOT_FOUND
+    interface: null
+  - cc_code: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    step: '2'
+    step_name: confirm_kind_declared
+    capability: capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0
+    kind: CT
+    operation: VALIDATE_SET_MEMBERSHIP
+    store: null
+    consumes:
+    - kind
+    produces:
+    - kind_declared
+    routing:
+      SUCCESS: continue
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        value: kind
+        allowed_set: kinds
+      out:
+        is_member: kind_declared
+  - cc_code: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    step: '3'
+    step_name: compare_sensitivity
+    capability: causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0
+    kind: CT
+    operation: COMPARE_SENSITIVITY
+    store: null
+    consumes:
+    - kind
+    - time_in_service
+    produces:
+    - within_ceiling
+    routing:
+      SUCCESS: exit
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        kind: kind
+        ceiling: ceiling
+        kinds: kinds
+      out:
+        within_ceiling: within_ceiling
+  - cc_code: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    step: '1'
+    step_name: assemble_reading
+    capability: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    kind: CT
+    operation: ASSEMBLE_MODEL_READING
+    store: null
+    consumes:
+    - system_prompt
+    - question
+    - supporting_material
+    - reading_capacity
+    produces:
+    - reading
+    - reading_length
+    routing:
+      SUCCESS: exit
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        system_prompt: system_prompt
+        question: question
+        supporting_material: supporting_material
+        reading_capacity: reading_capacity
+      out:
+        reading: reading
+        reading_length: reading_length
+  - cc_code: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    step: '1'
+    step_name: form_rules_in_force
+    capability: causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0
+    kind: CT
+    operation: FORM_RESPONSE_RULES
+    store: null
+    consumes:
+    - response_rules
+    - account_numbers
+    - seed
+    produces:
+    - rules_in_force
+    - positions
+    routing:
+      SUCCESS: continue
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        response_rules: response_rules
+        account_numbers: account_numbers
+        seed: seed
+      out:
+        rules_in_force: rules_in_force
+        positions: positions
+  - cc_code: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    step: '2'
+    step_name: write_response
+    capability: causal_language_model::CT_WRITE_RESPONSE_V0
+    kind: CT
+    operation: WRITE_RESPONSE
+    store: null
+    consumes:
+    - reading
+    - rules_in_force
+    - positions
+    produces:
+    - written_response
+    routing:
+      SUCCESS: exit
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        reading: reading
+        rules_in_force: rules_in_force
+        positions: positions
+      out:
+        result: written_response
+  - cc_code: causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0
+    step: '1'
+    step_name: confirm_releasable
+    capability: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
+    kind: CT
+    operation: VALIDATE_PARAMETER_RULES
+    store: null
+    consumes:
+    - release_facts
+    - release_rules
+    produces:
+    - releasable
+    routing:
+      SUCCESS: exit
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        parameters: release_facts
+        rules: release_rules
+      out:
+        valid: releasable
+  - cc_code: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    step: '1'
+    step_name: assemble_user_prompt_record
+    capability: capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0
+    kind: CT
+    operation: ASSEMBLE_RECORD
+    store: null
+    consumes:
+    - user_prompt_id
+    - requester_id
+    - customer_id
+    - identity_key
+    - kind
+    - question
+    - supporting_material
+    - outcome
+    - time_in_service_id
+    - reading
+    - rules_in_force
+    - response
+    - reason
+    produces:
+    - user_prompt_record
+    routing:
+      SUCCESS: continue
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        fields: user_prompt_fields
+      out:
+        record: user_prompt_record
+  - cc_code: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    step: '2'
+    step_name: append_user_prompt_record
+    capability: capability_side_effects::CS_APPENDONLY_JSONL_V0
+    kind: CS
+    operation: APPEND
+    store: USER_PROMPT_RECORDS
+    consumes:
+    - record
+    - stream_id
+    - actor_id
+    produces:
+    - record_id
+    - sequence_number
+    routing:
+      SUCCESS: exit
+      VIOLATION: exit
+      BACKEND_ERROR: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface: null
+  - cc_code: causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0
+    step: '1'
+    step_name: read_user_prompt_entries
+    capability: capability_side_effects::CS_APPENDONLY_JSONL_V0
+    kind: CS
+    operation: GET_ALL
+    store: USER_PROMPT_RECORDS
+    consumes:
+    - stream_id
+    produces:
+    - entries
+    routing:
+      SUCCESS: continue
+      BACKEND_ERROR: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface: null
+  - cc_code: causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0
+    step: '2'
+    step_name: select_user_prompt_record
+    capability: capability_transforms::CT_PURE_FILTER_RECORDS_V0
+    kind: CT
+    operation: FILTER_RECORDS
+    store: null
+    consumes:
+    - entries
+    - record_criteria
+    produces:
+    - user_prompt_record
+    routing:
+      SUCCESS: exit
+      VIOLATION: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface:
+      in:
+        source: entries
+        filter: record_criteria
+      out:
+        extracted: user_prompt_record
+  - cc_code: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    step: '1'
+    step_name: append_operation
+    capability: capability_side_effects::CS_APPENDONLY_JSONL_V0
+    kind: CS
+    operation: APPEND
+    store: MODEL_OPERATIONS
+    consumes:
+    - record
+    - stream_id
+    - actor_id
+    produces:
+    - record_id
+    - sequence_number
+    routing:
+      SUCCESS: exit
+      VIOLATION: exit
+      BACKEND_ERROR: exit
+    interpreted_by: null
+    semantic_status: SUCCESS
+    interface: null
+  step_bindings:
+  - owner: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    step: confirm_authorization
+    direction: INPUT
+    field: parameters
+    bound_to: inputs.staff_credentials
+    source_finding: {phase: p7, register: cc_composition, key: confirm_authorization}
+  - owner: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    step: confirm_authorization
+    direction: INPUT
+    field: rules
+    bound_to: inputs.authorization_rules
+    source_finding: {phase: p7, register: cc_composition, key: confirm_authorization}
+  - owner: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    step: confirm_authorization
+    direction: OUTPUT
+    field: is_authorized
+    bound_to: capability_result.valid
+    source_finding: {phase: p7, register: cc_composition, key: confirm_authorization}
+  - owner: causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0
+    step: confirm_acts_for_customer
+    direction: INPUT
+    field: value
+    bound_to: inputs.customer_id
+    source_finding: {phase: p7, register: cc_composition, key: confirm_acts_for_customer}
+  - owner: causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0
+    step: confirm_acts_for_customer
+    direction: INPUT
+    field: allowed_set
+    bound_to: inputs.permitted_customers
+    source_finding: {phase: p7, register: cc_composition, key: confirm_acts_for_customer}
+  - owner: causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0
+    step: confirm_acts_for_customer
+    direction: OUTPUT
+    field: acts_for_customer
+    bound_to: capability_result.is_member
+    source_finding: {phase: p7, register: cc_composition, key: confirm_acts_for_customer}
+  - owner: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: validate_description
+    direction: INPUT
+    field: record
+    bound_to: inputs.description
+    source_finding: {phase: p7, register: cc_composition, key: validate_description}
+  - owner: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: validate_description
+    direction: INPUT
+    field: schema
+    bound_to: inputs.description_schema
+    source_finding: {phase: p7, register: cc_composition, key: validate_description}
+  - owner: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: validate_description
+    direction: OUTPUT
+    field: violations
+    bound_to: capability_result.violations
+    source_finding: {phase: p7, register: cc_composition, key: validate_description}
+  - owner: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: require_description_complete
+    direction: INPUT
+    field: parameters
+    bound_to:
+      literal:
+        violations: $.results.validate_description.violations
+    source_finding: {phase: p7, register: cc_composition, key: require_description_complete}
+  - owner: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: require_description_complete
+    direction: INPUT
+    field: rules
+    bound_to:
+      literal:
+      - field: violations
+        op: eq
+        value: []
+    source_finding: {phase: p7, register: cc_composition, key: require_description_complete}
+  - owner: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: require_description_complete
+    direction: OUTPUT
+    field: valid
+    bound_to: capability_result.valid
+    source_finding: {phase: p7, register: cc_composition, key: require_description_complete}
+  - owner: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: form_identity_key
+    direction: INPUT
+    field: description
+    bound_to: inputs.description
+    source_finding: {phase: p7, register: cc_composition, key: form_identity_key}
+  - owner: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: form_identity_key
+    direction: INPUT
+    field: fingerprint
+    bound_to: inputs.fingerprint
+    source_finding: {phase: p7, register: cc_composition, key: form_identity_key}
+  - owner: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: form_identity_key
+    direction: OUTPUT
+    field: identity_key
+    bound_to: capability_result.identity_key
+    source_finding: {phase: p7, register: cc_composition, key: form_identity_key}
+  - owner: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: claim_identity
+    direction: INPUT
+    field: key
+    bound_to: results.form_identity_key.identity_key
+    source_finding: {phase: p7, register: cc_composition, key: claim_identity}
+  - owner: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: claim_identity
+    direction: INPUT
+    field: target_cs
+    bound_to:
+      literal: CS_MUTABLE_JSON_V0
+    source_finding: {phase: p7, register: cc_composition, key: claim_identity}
+  - owner: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: claim_identity
+    direction: INPUT
+    field: target_ref
+    bound_to:
+      literal: MODELS
+    source_finding: {phase: p7, register: cc_composition, key: claim_identity}
+  - owner: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: claim_identity
+    direction: OUTPUT
+    field: address
+    bound_to: capability_result.address
+    source_finding: {phase: p7, register: cc_composition, key: claim_identity}
+  - owner: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    step: claim_identity
+    direction: OUTPUT
+    field: result_status
+    bound_to:
+      literal: $.result_status
+    source_finding: {phase: p7, register: cc_composition, key: claim_identity}
+  - owner: causal_language_model::CC_REGISTER_MODEL_V0
+    step: assemble_model_record
+    direction: INPUT
+    field: fields
+    bound_to:
+      literal:
+        identity_key: $.inputs.identity_key
+        description: $.inputs.description
+        fingerprint: $.inputs.fingerprint
+        state: REGISTERED
+        time_in_service_id: ''
+    source_finding: {phase: p7, register: cc_composition, key: assemble_model_record}
+  - owner: causal_language_model::CC_REGISTER_MODEL_V0
+    step: assemble_model_record
+    direction: OUTPUT
+    field: model_record
+    bound_to: capability_result.record
+    source_finding: {phase: p7, register: cc_composition, key: assemble_model_record}
+  - owner: causal_language_model::CC_REGISTER_MODEL_V0
+    step: write_model_record
+    direction: INPUT
+    field: key
+    bound_to: inputs.identity_key
+    source_finding: {phase: p7, register: cc_composition, key: write_model_record}
+  - owner: causal_language_model::CC_REGISTER_MODEL_V0
+    step: write_model_record
+    direction: INPUT
+    field: value
+    bound_to: results.assemble_model_record.model_record
+    source_finding: {phase: p7, register: cc_composition, key: write_model_record}
+  - owner: causal_language_model::CC_REGISTER_MODEL_V0
+    step: write_model_record
+    direction: OUTPUT
+    field: result_status
+    bound_to:
+      literal: $.result_status
+    source_finding: {phase: p7, register: cc_composition, key: write_model_record}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: read_model_record
+    direction: INPUT
+    field: key
+    bound_to: inputs.identity_key
+    source_finding: {phase: p7, register: cc_composition, key: read_model_record}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: read_model_record
+    direction: OUTPUT
+    field: model_record
+    bound_to: capability_result.value
+    source_finding: {phase: p7, register: cc_composition, key: read_model_record}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: read_model_record
+    direction: OUTPUT
+    field: result_status
+    bound_to:
+      literal: $.result_status
+    source_finding: {phase: p7, register: cc_composition, key: read_model_record}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: require_registered
+    direction: INPUT
+    field: parameters
+    bound_to:
+      literal:
+        state: $.results.read_model_record.model_record.state
+    source_finding: {phase: p7, register: cc_composition, key: require_registered}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: require_registered
+    direction: INPUT
+    field: rules
+    bound_to:
+      literal:
+      - field: state
+        op: eq
+        value: REGISTERED
+    source_finding: {phase: p7, register: cc_composition, key: require_registered}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: require_registered
+    direction: OUTPUT
+    field: valid
+    bound_to: capability_result.valid
+    source_finding: {phase: p7, register: cc_composition, key: require_registered}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: confirm_ceiling_declared
+    direction: INPUT
+    field: value
+    bound_to: inputs.ceiling
+    source_finding: {phase: p7, register: cc_composition, key: confirm_ceiling_declared}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: confirm_ceiling_declared
+    direction: INPUT
+    field: allowed_set
+    bound_to:
+      literal:
+      - public
+      - internal
+      - confidential
+      - restricted
+    source_finding: {phase: p7, register: cc_composition, key: confirm_ceiling_declared}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: confirm_ceiling_declared
+    direction: OUTPUT
+    field: ceiling_declared
+    bound_to: capability_result.is_member
+    source_finding: {phase: p7, register: cc_composition, key: confirm_ceiling_declared}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: claim_time_in_service
+    direction: INPUT
+    field: key
+    bound_to: inputs.time_in_service_id
+    source_finding: {phase: p7, register: cc_composition, key: claim_time_in_service}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: claim_time_in_service
+    direction: INPUT
+    field: target_cs
+    bound_to:
+      literal: CS_MUTABLE_JSON_V0
+    source_finding: {phase: p7, register: cc_composition, key: claim_time_in_service}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: claim_time_in_service
+    direction: INPUT
+    field: target_ref
+    bound_to:
+      literal: TIMES_IN_SERVICE
+    source_finding: {phase: p7, register: cc_composition, key: claim_time_in_service}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: claim_time_in_service
+    direction: OUTPUT
+    field: address
+    bound_to: capability_result.address
+    source_finding: {phase: p7, register: cc_composition, key: claim_time_in_service}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: claim_time_in_service
+    direction: OUTPUT
+    field: result_status
+    bound_to:
+      literal: $.result_status
+    source_finding: {phase: p7, register: cc_composition, key: claim_time_in_service}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: mark_in_service
+    direction: INPUT
+    field: filter
+    bound_to:
+      literal:
+        identity_key: $.inputs.identity_key
+        state: REGISTERED
+    source_finding: {phase: p7, register: cc_composition, key: mark_in_service}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: mark_in_service
+    direction: INPUT
+    field: updates
+    bound_to:
+      literal:
+        state: IN_SERVICE
+        time_in_service_id: $.inputs.time_in_service_id
+    source_finding: {phase: p7, register: cc_composition, key: mark_in_service}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: mark_in_service
+    direction: OUTPUT
+    field: matched_keys
+    bound_to: capability_result.matched_keys
+    source_finding: {phase: p7, register: cc_composition, key: mark_in_service}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: mark_in_service
+    direction: OUTPUT
+    field: updated_count
+    bound_to: capability_result.updated_count
+    source_finding: {phase: p7, register: cc_composition, key: mark_in_service}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: mark_in_service
+    direction: OUTPUT
+    field: result_status
+    bound_to:
+      literal: $.result_status
+    source_finding: {phase: p7, register: cc_composition, key: mark_in_service}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: require_transition
+    direction: INPUT
+    field: parameters
+    bound_to:
+      literal:
+        updated_count: $.results.mark_in_service.updated_count
+    source_finding: {phase: p7, register: cc_composition, key: require_transition}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: require_transition
+    direction: INPUT
+    field: rules
+    bound_to:
+      literal:
+      - field: updated_count
+        op: eq
+        value: 1
+    source_finding: {phase: p7, register: cc_composition, key: require_transition}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: require_transition
+    direction: OUTPUT
+    field: valid
+    bound_to: capability_result.valid
+    source_finding: {phase: p7, register: cc_composition, key: require_transition}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: assemble_time_in_service
+    direction: INPUT
+    field: fields
+    bound_to:
+      literal:
+        time_in_service_id: $.inputs.time_in_service_id
+        identity_key: $.inputs.identity_key
+        ceiling: $.inputs.ceiling
+        system_prompt: $.inputs.system_prompt
+        response_rules: $.inputs.response_rules
+        state: OPEN
+    source_finding: {phase: p7, register: cc_composition, key: assemble_time_in_service}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: assemble_time_in_service
+    direction: OUTPUT
+    field: time_in_service
+    bound_to: capability_result.record
+    source_finding: {phase: p7, register: cc_composition, key: assemble_time_in_service}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: write_time_in_service
+    direction: INPUT
+    field: key
+    bound_to: inputs.time_in_service_id
+    source_finding: {phase: p7, register: cc_composition, key: write_time_in_service}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: write_time_in_service
+    direction: INPUT
+    field: value
+    bound_to: results.assemble_time_in_service.time_in_service
+    source_finding: {phase: p7, register: cc_composition, key: write_time_in_service}
+  - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    step: write_time_in_service
+    direction: OUTPUT
+    field: result_status
+    bound_to:
+      literal: $.result_status
+    source_finding: {phase: p7, register: cc_composition, key: write_time_in_service}
+  - owner: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: read_model_record
+    direction: INPUT
+    field: key
+    bound_to: inputs.identity_key
+    source_finding: {phase: p7, register: cc_composition, key: read_model_record}
+  - owner: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: read_model_record
+    direction: OUTPUT
+    field: model_record
+    bound_to: capability_result.value
+    source_finding: {phase: p7, register: cc_composition, key: read_model_record}
+  - owner: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: read_model_record
+    direction: OUTPUT
+    field: result_status
+    bound_to:
+      literal: $.result_status
+    source_finding: {phase: p7, register: cc_composition, key: read_model_record}
+  - owner: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: require_in_service
+    direction: INPUT
+    field: parameters
+    bound_to:
+      literal:
+        state: $.results.read_model_record.model_record.state
+    source_finding: {phase: p7, register: cc_composition, key: require_in_service}
+  - owner: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: require_in_service
+    direction: INPUT
+    field: rules
+    bound_to:
+      literal:
+      - field: state
+        op: eq
+        value: IN_SERVICE
+    source_finding: {phase: p7, register: cc_composition, key: require_in_service}
+  - owner: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: require_in_service
+    direction: OUTPUT
+    field: valid
+    bound_to: capability_result.valid
+    source_finding: {phase: p7, register: cc_composition, key: require_in_service}
+  - owner: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: mark_registered
+    direction: INPUT
+    field: filter
+    bound_to:
+      literal:
+        identity_key: $.inputs.identity_key
+        state: IN_SERVICE
+    source_finding: {phase: p7, register: cc_composition, key: mark_registered}
+  - owner: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: mark_registered
+    direction: INPUT
+    field: updates
+    bound_to:
+      literal:
+        state: REGISTERED
+        time_in_service_id: ''
+    source_finding: {phase: p7, register: cc_composition, key: mark_registered}
+  - owner: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: mark_registered
+    direction: OUTPUT
+    field: matched_keys
+    bound_to: capability_result.matched_keys
+    source_finding: {phase: p7, register: cc_composition, key: mark_registered}
+  - owner: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: mark_registered
+    direction: OUTPUT
+    field: updated_count
+    bound_to: capability_result.updated_count
+    source_finding: {phase: p7, register: cc_composition, key: mark_registered}
+  - owner: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: mark_registered
+    direction: OUTPUT
+    field: result_status
+    bound_to:
+      literal: $.result_status
+    source_finding: {phase: p7, register: cc_composition, key: mark_registered}
+  - owner: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: require_transition
+    direction: INPUT
+    field: parameters
+    bound_to:
+      literal:
+        updated_count: $.results.mark_registered.updated_count
+    source_finding: {phase: p7, register: cc_composition, key: require_transition}
+  - owner: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: require_transition
+    direction: INPUT
+    field: rules
+    bound_to:
+      literal:
+      - field: updated_count
+        op: eq
+        value: 1
+    source_finding: {phase: p7, register: cc_composition, key: require_transition}
+  - owner: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: require_transition
+    direction: OUTPUT
+    field: valid
+    bound_to: capability_result.valid
+    source_finding: {phase: p7, register: cc_composition, key: require_transition}
+  - owner: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: close_time_in_service
+    direction: INPUT
+    field: key
+    bound_to: results.read_model_record.model_record.time_in_service_id
+    source_finding: {phase: p7, register: cc_composition, key: close_time_in_service}
+  - owner: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: close_time_in_service
+    direction: INPUT
+    field: updates
+    bound_to:
+      literal:
+        state: CLOSED
+    source_finding: {phase: p7, register: cc_composition, key: close_time_in_service}
+  - owner: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: close_time_in_service
+    direction: OUTPUT
+    field: result_status
+    bound_to:
+      literal: $.result_status
+    source_finding: {phase: p7, register: cc_composition, key: close_time_in_service}
+  - owner: causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0
+    step: claim_user_prompt
+    direction: INPUT
+    field: key
+    bound_to: inputs.user_prompt_id
+    source_finding: {phase: p7, register: cc_composition, key: claim_user_prompt}
+  - owner: causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0
+    step: claim_user_prompt
+    direction: INPUT
+    field: target_cs
+    bound_to:
+      literal: CS_APPENDONLY_JSONL_V0
+    source_finding: {phase: p7, register: cc_composition, key: claim_user_prompt}
+  - owner: causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0
+    step: claim_user_prompt
+    direction: INPUT
+    field: target_ref
+    bound_to:
+      literal: USER_PROMPT_RECORDS
+    source_finding: {phase: p7, register: cc_composition, key: claim_user_prompt}
+  - owner: causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0
+    step: claim_user_prompt
+    direction: OUTPUT
+    field: address
+    bound_to: capability_result.address
+    source_finding: {phase: p7, register: cc_composition, key: claim_user_prompt}
+  - owner: causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0
+    step: claim_user_prompt
+    direction: OUTPUT
+    field: result_status
+    bound_to:
+      literal: $.result_status
+    source_finding: {phase: p7, register: cc_composition, key: claim_user_prompt}
+  - owner: causal_language_model::CC_ADMIT_USER_PROMPT_V0
+    step: read_model_record
+    direction: INPUT
+    field: key
+    bound_to: inputs.identity_key
+    source_finding: {phase: p7, register: cc_composition, key: read_model_record}
+  - owner: causal_language_model::CC_ADMIT_USER_PROMPT_V0
+    step: read_model_record
+    direction: OUTPUT
+    field: model_record
+    bound_to: capability_result.value
+    source_finding: {phase: p7, register: cc_composition, key: read_model_record}
+  - owner: causal_language_model::CC_ADMIT_USER_PROMPT_V0
+    step: read_model_record
+    direction: OUTPUT
+    field: result_status
+    bound_to:
+      literal: $.result_status
+    source_finding: {phase: p7, register: cc_composition, key: read_model_record}
+  - owner: causal_language_model::CC_ADMIT_USER_PROMPT_V0
+    step: require_in_service
+    direction: INPUT
+    field: parameters
+    bound_to:
+      literal:
+        state: $.results.read_model_record.model_record.state
+    source_finding: {phase: p7, register: cc_composition, key: require_in_service}
+  - owner: causal_language_model::CC_ADMIT_USER_PROMPT_V0
+    step: require_in_service
+    direction: INPUT
+    field: rules
+    bound_to:
+      literal:
+      - field: state
+        op: eq
+        value: IN_SERVICE
+    source_finding: {phase: p7, register: cc_composition, key: require_in_service}
+  - owner: causal_language_model::CC_ADMIT_USER_PROMPT_V0
+    step: require_in_service
+    direction: OUTPUT
+    field: valid
+    bound_to: capability_result.valid
+    source_finding: {phase: p7, register: cc_composition, key: require_in_service}
+  - owner: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    step: read_time_in_service
+    direction: INPUT
+    field: key
+    bound_to: inputs.time_in_service_id
+    source_finding: {phase: p7, register: cc_composition, key: read_time_in_service}
+  - owner: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    step: read_time_in_service
+    direction: OUTPUT
+    field: time_in_service
+    bound_to: capability_result.value
+    source_finding: {phase: p7, register: cc_composition, key: read_time_in_service}
+  - owner: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    step: read_time_in_service
+    direction: OUTPUT
+    field: result_status
+    bound_to:
+      literal: $.result_status
+    source_finding: {phase: p7, register: cc_composition, key: read_time_in_service}
+  - owner: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    step: confirm_kind_declared
+    direction: INPUT
+    field: value
+    bound_to: inputs.kind
+    source_finding: {phase: p7, register: cc_composition, key: confirm_kind_declared}
+  - owner: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    step: confirm_kind_declared
+    direction: INPUT
+    field: allowed_set
+    bound_to:
+      literal:
+      - public
+      - internal
+      - confidential
+      - restricted
+    source_finding: {phase: p7, register: cc_composition, key: confirm_kind_declared}
+  - owner: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    step: confirm_kind_declared
+    direction: OUTPUT
+    field: kind_declared
+    bound_to: capability_result.is_member
+    source_finding: {phase: p7, register: cc_composition, key: confirm_kind_declared}
+  - owner: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    step: compare_sensitivity
+    direction: INPUT
+    field: kind
+    bound_to: inputs.kind
+    source_finding: {phase: p7, register: cc_composition, key: compare_sensitivity}
+  - owner: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    step: compare_sensitivity
+    direction: INPUT
+    field: ceiling
+    bound_to: results.read_time_in_service.time_in_service.ceiling
+    source_finding: {phase: p7, register: cc_composition, key: compare_sensitivity}
+  - owner: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    step: compare_sensitivity
+    direction: INPUT
+    field: kinds
+    bound_to:
+      literal:
+      - public
+      - internal
+      - confidential
+      - restricted
+    source_finding: {phase: p7, register: cc_composition, key: compare_sensitivity}
+  - owner: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    step: compare_sensitivity
+    direction: OUTPUT
+    field: within_ceiling
+    bound_to: capability_result.within_ceiling
+    source_finding: {phase: p7, register: cc_composition, key: compare_sensitivity}
+  - owner: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    step: assemble_reading
+    direction: INPUT
+    field: system_prompt
+    bound_to: inputs.system_prompt
+    source_finding: {phase: p7, register: cc_composition, key: assemble_reading}
+  - owner: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    step: assemble_reading
+    direction: INPUT
+    field: question
+    bound_to: inputs.question
+    source_finding: {phase: p7, register: cc_composition, key: assemble_reading}
+  - owner: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    step: assemble_reading
+    direction: INPUT
+    field: supporting_material
+    bound_to: inputs.supporting_material
+    source_finding: {phase: p7, register: cc_composition, key: assemble_reading}
+  - owner: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    step: assemble_reading
+    direction: INPUT
+    field: reading_capacity
+    bound_to: inputs.reading_capacity
+    source_finding: {phase: p7, register: cc_composition, key: assemble_reading}
+  - owner: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    step: assemble_reading
+    direction: OUTPUT
+    field: reading
+    bound_to: capability_result.reading
+    source_finding: {phase: p7, register: cc_composition, key: assemble_reading}
+  - owner: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    step: assemble_reading
+    direction: OUTPUT
+    field: reading_length
+    bound_to: capability_result.reading_length
+    source_finding: {phase: p7, register: cc_composition, key: assemble_reading}
+  - owner: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    step: form_rules_in_force
+    direction: INPUT
+    field: response_rules
+    bound_to: inputs.response_rules
+    source_finding: {phase: p7, register: cc_composition, key: form_rules_in_force}
+  - owner: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    step: form_rules_in_force
+    direction: INPUT
+    field: account_numbers
+    bound_to: inputs.account_numbers
+    source_finding: {phase: p7, register: cc_composition, key: form_rules_in_force}
+  - owner: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    step: form_rules_in_force
+    direction: INPUT
+    field: seed
+    bound_to: inputs.seed
+    source_finding: {phase: p7, register: cc_composition, key: form_rules_in_force}
+  - owner: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    step: form_rules_in_force
+    direction: OUTPUT
+    field: rules_in_force
+    bound_to: capability_result.rules_in_force
+    source_finding: {phase: p7, register: cc_composition, key: form_rules_in_force}
+  - owner: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    step: form_rules_in_force
+    direction: OUTPUT
+    field: positions
+    bound_to: capability_result.positions
+    source_finding: {phase: p7, register: cc_composition, key: form_rules_in_force}
+  - owner: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    step: write_response
+    direction: INPUT
+    field: reading
+    bound_to: inputs.reading
+    source_finding: {phase: p7, register: cc_composition, key: write_response}
+  - owner: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    step: write_response
+    direction: INPUT
+    field: rules_in_force
+    bound_to: results.form_rules_in_force.rules_in_force
+    source_finding: {phase: p7, register: cc_composition, key: write_response}
+  - owner: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    step: write_response
+    direction: INPUT
+    field: positions
+    bound_to: results.form_rules_in_force.positions
+    source_finding: {phase: p7, register: cc_composition, key: write_response}
+  - owner: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    step: write_response
+    direction: OUTPUT
+    field: written_response
+    bound_to: capability_result.result
+    source_finding: {phase: p7, register: cc_composition, key: write_response}
+  - owner: causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0
+    step: confirm_releasable
+    direction: INPUT
+    field: parameters
+    bound_to: inputs.release_facts
+    source_finding: {phase: p7, register: cc_composition, key: confirm_releasable}
+  - owner: causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0
+    step: confirm_releasable
+    direction: INPUT
+    field: rules
+    bound_to: inputs.release_rules
+    source_finding: {phase: p7, register: cc_composition, key: confirm_releasable}
+  - owner: causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0
+    step: confirm_releasable
+    direction: OUTPUT
+    field: releasable
+    bound_to: capability_result.valid
+    source_finding: {phase: p7, register: cc_composition, key: confirm_releasable}
+  - owner: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    step: assemble_user_prompt_record
+    direction: INPUT
+    field: fields
+    bound_to:
+      literal:
+        user_prompt_id: $.inputs.user_prompt_id
+        requester_id: $.inputs.requester_id
+        customer_id: $.inputs.customer_id
+        identity_key: $.inputs.identity_key
+        kind: $.inputs.kind
+        question: $.inputs.question
+        supporting_material: $.inputs.supporting_material
+        outcome: $.inputs.outcome
+        time_in_service_id: $.inputs.time_in_service_id
+        reading: $.inputs.reading
+        rules_in_force: $.inputs.rules_in_force
+        response: $.inputs.response
+        reason: $.inputs.reason
+    source_finding: {phase: p7, register: cc_composition, key: assemble_user_prompt_record}
+  - owner: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    step: assemble_user_prompt_record
+    direction: OUTPUT
+    field: user_prompt_record
+    bound_to: capability_result.record
+    source_finding: {phase: p7, register: cc_composition, key: assemble_user_prompt_record}
+  - owner: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    step: append_user_prompt_record
+    direction: INPUT
+    field: record
+    bound_to: results.assemble_user_prompt_record.user_prompt_record
+    source_finding: {phase: p7, register: cc_composition, key: append_user_prompt_record}
+  - owner: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    step: append_user_prompt_record
+    direction: INPUT
+    field: stream_id
+    bound_to: inputs.user_prompt_id
+    source_finding: {phase: p7, register: cc_composition, key: append_user_prompt_record}
+  - owner: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    step: append_user_prompt_record
+    direction: INPUT
+    field: actor_id
+    bound_to: inputs.requester_id
+    source_finding: {phase: p7, register: cc_composition, key: append_user_prompt_record}
+  - owner: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    step: append_user_prompt_record
+    direction: OUTPUT
+    field: record_id
+    bound_to: capability_result.record_id
+    source_finding: {phase: p7, register: cc_composition, key: append_user_prompt_record}
+  - owner: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    step: append_user_prompt_record
+    direction: OUTPUT
+    field: sequence_number
+    bound_to: capability_result.sequence_number
+    source_finding: {phase: p7, register: cc_composition, key: append_user_prompt_record}
+  - owner: causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0
+    step: read_user_prompt_entries
+    direction: INPUT
+    field: stream_id
+    bound_to: inputs.user_prompt_id
+    source_finding: {phase: p7, register: cc_composition, key: read_user_prompt_entries}
+  - owner: causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0
+    step: read_user_prompt_entries
+    direction: OUTPUT
+    field: entries
+    bound_to: capability_result.entries
+    source_finding: {phase: p7, register: cc_composition, key: read_user_prompt_entries}
+  - owner: causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0
+    step: read_user_prompt_entries
+    direction: OUTPUT
+    field: result_status
+    bound_to:
+      literal: $.result_status
+    source_finding: {phase: p7, register: cc_composition, key: read_user_prompt_entries}
+  - owner: causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0
+    step: select_user_prompt_record
+    direction: INPUT
+    field: source
+    bound_to: results.read_user_prompt_entries.entries
+    source_finding: {phase: p7, register: cc_composition, key: select_user_prompt_record}
+  - owner: causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0
+    step: select_user_prompt_record
+    direction: INPUT
+    field: filter
+    bound_to:
+      literal:
+        stream_id: $.inputs.user_prompt_id
+    source_finding: {phase: p7, register: cc_composition, key: select_user_prompt_record}
+  - owner: causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0
+    step: select_user_prompt_record
+    direction: OUTPUT
+    field: user_prompt_record
+    bound_to: capability_result.extracted
+    source_finding: {phase: p7, register: cc_composition, key: select_user_prompt_record}
+  - owner: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    step: append_operation
+    direction: INPUT
+    field: record
+    bound_to: inputs.record
+    source_finding: {phase: p7, register: cc_composition, key: append_operation}
+  - owner: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    step: append_operation
+    direction: INPUT
+    field: stream_id
+    bound_to:
+      literal: MODEL_OPERATIONS
+    source_finding: {phase: p7, register: cc_composition, key: append_operation}
+  - owner: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    step: append_operation
+    direction: INPUT
+    field: actor_id
+    bound_to: inputs.staff_id
+    source_finding: {phase: p7, register: cc_composition, key: append_operation}
+  - owner: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    step: append_operation
+    direction: OUTPUT
+    field: record_id
+    bound_to: capability_result.record_id
+    source_finding: {phase: p7, register: cc_composition, key: append_operation}
+  - owner: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    step: append_operation
+    direction: OUTPUT
+    field: sequence_number
+    bound_to: capability_result.sequence_number
+    source_finding: {phase: p7, register: cc_composition, key: append_operation}
+  - owner: causal_language_model::WF_REGISTER_MODEL_V0
+    step: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    direction: INPUT
+    field: staff_credentials
+    bound_to: payload.staff_credentials
+    source_finding: {phase: p7, register: execution_topology, key: CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0}
+  - owner: causal_language_model::WF_REGISTER_MODEL_V0
+    step: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    direction: INPUT
+    field: authorization_rules
+    bound_to:
+      literal:
+      - field: role
+        op: eq
+        value: model_staff
+    source_finding: {phase: p7, register: execution_topology, key: CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0}
+  - owner: causal_language_model::WF_REGISTER_MODEL_V0
+    step: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    direction: INPUT
+    field: staff_id
+    bound_to: payload.staff_id
+    source_finding: {phase: p7, register: execution_topology, key: CC_APPEND_MODEL_OPERATION_V0}
+  - owner: causal_language_model::WF_REGISTER_MODEL_V0
+    step: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    direction: INPUT
+    field: operation
+    bound_to:
+      literal: REGISTER_MODEL
+    source_finding: {phase: p7, register: execution_topology, key: CC_APPEND_MODEL_OPERATION_V0}
+  - owner: causal_language_model::WF_REGISTER_MODEL_V0
+    step: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    direction: INPUT
+    field: record
+    bound_to:
+      literal:
+        operation: REGISTER_MODEL
+        staff_id: $.payload.staff_id
+        subject: $.results.CC_CLAIM_MODEL_IDENTITY_V0.identity_key
+    source_finding: {phase: p7, register: execution_topology, key: CC_APPEND_MODEL_OPERATION_V0}
+  - owner: causal_language_model::WF_REGISTER_MODEL_V0
+    step: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    direction: INPUT
+    field: description
+    bound_to: payload.description
+    source_finding: {phase: p7, register: execution_topology, key: CC_CLAIM_MODEL_IDENTITY_V0}
+  - owner: causal_language_model::WF_REGISTER_MODEL_V0
+    step: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    direction: INPUT
+    field: fingerprint
+    bound_to: payload.fingerprint
+    source_finding: {phase: p7, register: execution_topology, key: CC_CLAIM_MODEL_IDENTITY_V0}
+  - owner: causal_language_model::WF_REGISTER_MODEL_V0
+    step: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    direction: INPUT
+    field: description_schema
+    bound_to:
+      literal:
+        reading_capacity:
+          type: integer
+          required: true
+    source_finding: {phase: p7, register: execution_topology, key: CC_CLAIM_MODEL_IDENTITY_V0}
+  - owner: causal_language_model::WF_REGISTER_MODEL_V0
+    step: causal_language_model::CC_REGISTER_MODEL_V0
+    direction: INPUT
+    field: identity_key
+    bound_to: results.CC_CLAIM_MODEL_IDENTITY_V0.identity_key
+    source_finding: {phase: p7, register: execution_topology, key: CC_REGISTER_MODEL_V0}
+  - owner: causal_language_model::WF_REGISTER_MODEL_V0
+    step: causal_language_model::CC_REGISTER_MODEL_V0
+    direction: INPUT
+    field: description
+    bound_to: payload.description
+    source_finding: {phase: p7, register: execution_topology, key: CC_REGISTER_MODEL_V0}
+  - owner: causal_language_model::WF_REGISTER_MODEL_V0
+    step: causal_language_model::CC_REGISTER_MODEL_V0
+    direction: INPUT
+    field: fingerprint
+    bound_to: payload.fingerprint
+    source_finding: {phase: p7, register: execution_topology, key: CC_REGISTER_MODEL_V0}
+  - owner: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    step: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    direction: INPUT
+    field: staff_credentials
+    bound_to: payload.staff_credentials
+    source_finding: {phase: p7, register: execution_topology, key: CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0}
+  - owner: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    step: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    direction: INPUT
+    field: authorization_rules
+    bound_to:
+      literal:
+      - field: role
+        op: eq
+        value: model_staff
+    source_finding: {phase: p7, register: execution_topology, key: CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0}
+  - owner: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    step: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    direction: INPUT
+    field: staff_id
+    bound_to: payload.staff_id
+    source_finding: {phase: p7, register: execution_topology, key: CC_APPEND_MODEL_OPERATION_V0}
+  - owner: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    step: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    direction: INPUT
+    field: operation
+    bound_to:
+      literal: PLACE_MODEL_IN_SERVICE
+    source_finding: {phase: p7, register: execution_topology, key: CC_APPEND_MODEL_OPERATION_V0}
+  - owner: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    step: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    direction: INPUT
+    field: record
+    bound_to:
+      literal:
+        operation: PLACE_MODEL_IN_SERVICE
+        staff_id: $.payload.staff_id
+        subject: $.payload.identity_key
+    source_finding: {phase: p7, register: execution_topology, key: CC_APPEND_MODEL_OPERATION_V0}
+  - owner: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    step: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    direction: INPUT
+    field: identity_key
+    bound_to: payload.identity_key
+    source_finding: {phase: p7, register: execution_topology, key: CC_PLACE_MODEL_IN_SERVICE_V0}
+  - owner: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    step: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    direction: INPUT
+    field: time_in_service_id
+    bound_to: payload.time_in_service_id
+    source_finding: {phase: p7, register: execution_topology, key: CC_PLACE_MODEL_IN_SERVICE_V0}
+  - owner: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    step: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    direction: INPUT
+    field: ceiling
+    bound_to: payload.ceiling
+    source_finding: {phase: p7, register: execution_topology, key: CC_PLACE_MODEL_IN_SERVICE_V0}
+  - owner: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    step: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    direction: INPUT
+    field: system_prompt
+    bound_to: payload.system_prompt
+    source_finding: {phase: p7, register: execution_topology, key: CC_PLACE_MODEL_IN_SERVICE_V0}
+  - owner: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    step: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    direction: INPUT
+    field: response_rules
+    bound_to: payload.response_rules
+    source_finding: {phase: p7, register: execution_topology, key: CC_PLACE_MODEL_IN_SERVICE_V0}
+  - owner: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    direction: INPUT
+    field: staff_credentials
+    bound_to: payload.staff_credentials
+    source_finding: {phase: p7, register: execution_topology, key: CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0}
+  - owner: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    direction: INPUT
+    field: authorization_rules
+    bound_to:
+      literal:
+      - field: role
+        op: eq
+        value: model_staff
+    source_finding: {phase: p7, register: execution_topology, key: CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0}
+  - owner: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    direction: INPUT
+    field: staff_id
+    bound_to: payload.staff_id
+    source_finding: {phase: p7, register: execution_topology, key: CC_APPEND_MODEL_OPERATION_V0}
+  - owner: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    direction: INPUT
+    field: operation
+    bound_to:
+      literal: WITHDRAW_MODEL_FROM_SERVICE
+    source_finding: {phase: p7, register: execution_topology, key: CC_APPEND_MODEL_OPERATION_V0}
+  - owner: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    direction: INPUT
+    field: record
+    bound_to:
+      literal:
+        operation: WITHDRAW_MODEL_FROM_SERVICE
+        staff_id: $.payload.staff_id
+        subject: $.payload.identity_key
+    source_finding: {phase: p7, register: execution_topology, key: CC_APPEND_MODEL_OPERATION_V0}
+  - owner: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    direction: INPUT
+    field: identity_key
+    bound_to: payload.identity_key
+    source_finding: {phase: p7, register: execution_topology, key: CC_WITHDRAW_MODEL_FROM_SERVICE_V0}
+  - owner: causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0
+    step: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    direction: INPUT
+    field: staff_credentials
+    bound_to: payload.staff_credentials
+    source_finding: {phase: p7, register: execution_topology, key: CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0}
+  - owner: causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0
+    step: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    direction: INPUT
+    field: authorization_rules
+    bound_to:
+      literal:
+      - field: role
+        op: eq
+        value: model_staff
+    source_finding: {phase: p7, register: execution_topology, key: CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0}
+  - owner: causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0
+    step: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    direction: INPUT
+    field: staff_id
+    bound_to: payload.staff_id
+    source_finding: {phase: p7, register: execution_topology, key: CC_APPEND_MODEL_OPERATION_V0}
+  - owner: causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0
+    step: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    direction: INPUT
+    field: operation
+    bound_to:
+      literal: RETRIEVE_USER_PROMPT_RECORD
+    source_finding: {phase: p7, register: execution_topology, key: CC_APPEND_MODEL_OPERATION_V0}
+  - owner: causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0
+    step: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    direction: INPUT
+    field: record
+    bound_to:
+      literal:
+        operation: RETRIEVE_USER_PROMPT_RECORD
+        staff_id: $.payload.staff_id
+        subject: $.payload.user_prompt_id
+    source_finding: {phase: p7, register: execution_topology, key: CC_APPEND_MODEL_OPERATION_V0}
+  - owner: causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0
+    step: causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0
+    direction: INPUT
+    field: user_prompt_id
+    bound_to: payload.user_prompt_id
+    source_finding: {phase: p7, register: execution_topology, key: CC_RETRIEVE_USER_PROMPT_RECORD_V0}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0
+    direction: INPUT
+    field: user_prompt_id
+    bound_to: payload.user_prompt_id
+    source_finding: {phase: p7, register: execution_topology, key: CC_CLAIM_USER_PROMPT_IDENTITY_V0}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0
+    direction: INPUT
+    field: customer_id
+    bound_to: payload.customer_id
+    source_finding: {phase: p7, register: execution_topology, key: CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0
+    direction: INPUT
+    field: permitted_customers
+    bound_to: payload.permitted_customers
+    source_finding: {phase: p7, register: execution_topology, key: CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: causal_language_model::CC_ADMIT_USER_PROMPT_V0
+    direction: INPUT
+    field: identity_key
+    bound_to: payload.identity_key
+    source_finding: {phase: p7, register: execution_topology, key: CC_ADMIT_USER_PROMPT_V0}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    direction: INPUT
+    field: time_in_service_id
+    bound_to: results.CC_ADMIT_USER_PROMPT_V0.model_record.time_in_service_id
+    source_finding: {phase: p7, register: execution_topology, key: CC_CONFIRM_WITHIN_CEILING_V0}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    direction: INPUT
+    field: kind
+    bound_to: payload.kind
+    source_finding: {phase: p7, register: execution_topology, key: CC_CONFIRM_WITHIN_CEILING_V0}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    direction: INPUT
+    field: system_prompt
+    bound_to: results.CC_CONFIRM_WITHIN_CEILING_V0.time_in_service.system_prompt
+    source_finding: {phase: p7, register: execution_topology, key: CC_CONFIRM_READING_FITS_V0}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    direction: INPUT
+    field: question
+    bound_to: payload.question
+    source_finding: {phase: p7, register: execution_topology, key: CC_CONFIRM_READING_FITS_V0}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    direction: INPUT
+    field: supporting_material
+    bound_to: payload.supporting_material
+    source_finding: {phase: p7, register: execution_topology, key: CC_CONFIRM_READING_FITS_V0}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    direction: INPUT
+    field: reading_capacity
+    bound_to: results.CC_ADMIT_USER_PROMPT_V0.model_record.description.reading_capacity
+    source_finding: {phase: p7, register: execution_topology, key: CC_CONFIRM_READING_FITS_V0}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    direction: INPUT
+    field: response_rules
+    bound_to: results.CC_CONFIRM_WITHIN_CEILING_V0.time_in_service.response_rules
+    source_finding: {phase: p7, register: execution_topology, key: CC_WRITE_MODEL_RESPONSE_V0}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    direction: INPUT
+    field: account_numbers
+    bound_to: payload.account_numbers
+    source_finding: {phase: p7, register: execution_topology, key: CC_WRITE_MODEL_RESPONSE_V0}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    direction: INPUT
+    field: seed
+    bound_to: payload.seed
+    source_finding: {phase: p7, register: execution_topology, key: CC_WRITE_MODEL_RESPONSE_V0}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    direction: INPUT
+    field: reading
+    bound_to: results.CC_CONFIRM_READING_FITS_V0.reading
+    source_finding: {phase: p7, register: execution_topology, key: CC_WRITE_MODEL_RESPONSE_V0}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: CONFIRM_NO_RULE_STOPPED
+    direction: INPUT
+    field: release_facts
+    bound_to:
+      literal:
+        stopped_by: $.results.CC_WRITE_MODEL_RESPONSE_V0.written_response.stopped_by
+    source_finding: {phase: p7, register: execution_topology, key: CONFIRM_NO_RULE_STOPPED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: CONFIRM_NO_RULE_STOPPED
+    direction: INPUT
+    field: release_rules
+    bound_to:
+      literal:
+      - field: stopped_by
+        op: eq
+        value: none
+    source_finding: {phase: p7, register: execution_topology, key: CONFIRM_NO_RULE_STOPPED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: CONFIRM_FINISHED
+    direction: INPUT
+    field: release_facts
+    bound_to:
+      literal:
+        finished: $.results.CC_WRITE_MODEL_RESPONSE_V0.written_response.finished
+    source_finding: {phase: p7, register: execution_topology, key: CONFIRM_FINISHED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: CONFIRM_FINISHED
+    direction: INPUT
+    field: release_rules
+    bound_to:
+      literal:
+      - field: finished
+        op: eq
+        value: true
+    source_finding: {phase: p7, register: execution_topology, key: CONFIRM_FINISHED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_RESPONDED
+    direction: INPUT
+    field: user_prompt_id
+    bound_to: payload.user_prompt_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_RESPONDED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_RESPONDED
+    direction: INPUT
+    field: requester_id
+    bound_to: payload.requester_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_RESPONDED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_RESPONDED
+    direction: INPUT
+    field: customer_id
+    bound_to: payload.customer_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_RESPONDED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_RESPONDED
+    direction: INPUT
+    field: identity_key
+    bound_to: payload.identity_key
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_RESPONDED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_RESPONDED
+    direction: INPUT
+    field: kind
+    bound_to: payload.kind
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_RESPONDED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_RESPONDED
+    direction: INPUT
+    field: question
+    bound_to: payload.question
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_RESPONDED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_RESPONDED
+    direction: INPUT
+    field: supporting_material
+    bound_to: payload.supporting_material
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_RESPONDED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_RESPONDED
+    direction: INPUT
+    field: time_in_service_id
+    bound_to: results.CC_ADMIT_USER_PROMPT_V0.model_record.time_in_service_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_RESPONDED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_RESPONDED
+    direction: INPUT
+    field: reading
+    bound_to: results.CC_CONFIRM_READING_FITS_V0.reading
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_RESPONDED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_RESPONDED
+    direction: INPUT
+    field: rules_in_force
+    bound_to: results.CC_WRITE_MODEL_RESPONSE_V0.rules_in_force
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_RESPONDED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_RESPONDED
+    direction: INPUT
+    field: response
+    bound_to: results.CC_WRITE_MODEL_RESPONSE_V0.written_response.text
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_RESPONDED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_RESPONDED
+    direction: INPUT
+    field: outcome
+    bound_to:
+      literal: RESPONDED
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_RESPONDED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_PERMITTED
+    direction: INPUT
+    field: user_prompt_id
+    bound_to: payload.user_prompt_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_PERMITTED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_PERMITTED
+    direction: INPUT
+    field: requester_id
+    bound_to: payload.requester_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_PERMITTED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_PERMITTED
+    direction: INPUT
+    field: customer_id
+    bound_to: payload.customer_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_PERMITTED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_PERMITTED
+    direction: INPUT
+    field: identity_key
+    bound_to: payload.identity_key
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_PERMITTED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_PERMITTED
+    direction: INPUT
+    field: kind
+    bound_to: payload.kind
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_PERMITTED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_PERMITTED
+    direction: INPUT
+    field: question
+    bound_to: payload.question
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_PERMITTED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_PERMITTED
+    direction: INPUT
+    field: supporting_material
+    bound_to: payload.supporting_material
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_PERMITTED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_PERMITTED
+    direction: INPUT
+    field: outcome
+    bound_to:
+      literal: REFUSED
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_PERMITTED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_PERMITTED
+    direction: INPUT
+    field: reason
+    bound_to:
+      literal: requester_not_permitted_for_customer
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_PERMITTED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_REGISTERED
+    direction: INPUT
+    field: user_prompt_id
+    bound_to: payload.user_prompt_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_REGISTERED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_REGISTERED
+    direction: INPUT
+    field: requester_id
+    bound_to: payload.requester_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_REGISTERED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_REGISTERED
+    direction: INPUT
+    field: customer_id
+    bound_to: payload.customer_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_REGISTERED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_REGISTERED
+    direction: INPUT
+    field: identity_key
+    bound_to: payload.identity_key
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_REGISTERED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_REGISTERED
+    direction: INPUT
+    field: kind
+    bound_to: payload.kind
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_REGISTERED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_REGISTERED
+    direction: INPUT
+    field: question
+    bound_to: payload.question
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_REGISTERED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_REGISTERED
+    direction: INPUT
+    field: supporting_material
+    bound_to: payload.supporting_material
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_REGISTERED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_REGISTERED
+    direction: INPUT
+    field: outcome
+    bound_to:
+      literal: REFUSED
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_REGISTERED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_REGISTERED
+    direction: INPUT
+    field: reason
+    bound_to:
+      literal: model_not_registered
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_REGISTERED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_IN_SERVICE
+    direction: INPUT
+    field: user_prompt_id
+    bound_to: payload.user_prompt_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_IN_SERVICE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_IN_SERVICE
+    direction: INPUT
+    field: requester_id
+    bound_to: payload.requester_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_IN_SERVICE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_IN_SERVICE
+    direction: INPUT
+    field: customer_id
+    bound_to: payload.customer_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_IN_SERVICE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_IN_SERVICE
+    direction: INPUT
+    field: identity_key
+    bound_to: payload.identity_key
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_IN_SERVICE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_IN_SERVICE
+    direction: INPUT
+    field: kind
+    bound_to: payload.kind
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_IN_SERVICE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_IN_SERVICE
+    direction: INPUT
+    field: question
+    bound_to: payload.question
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_IN_SERVICE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_IN_SERVICE
+    direction: INPUT
+    field: supporting_material
+    bound_to: payload.supporting_material
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_IN_SERVICE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_IN_SERVICE
+    direction: INPUT
+    field: outcome
+    bound_to:
+      literal: REFUSED
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_IN_SERVICE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_IN_SERVICE
+    direction: INPUT
+    field: reason
+    bound_to:
+      literal: model_not_in_service
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_NOT_IN_SERVICE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_ABOVE_CEILING
+    direction: INPUT
+    field: user_prompt_id
+    bound_to: payload.user_prompt_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_ABOVE_CEILING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_ABOVE_CEILING
+    direction: INPUT
+    field: requester_id
+    bound_to: payload.requester_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_ABOVE_CEILING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_ABOVE_CEILING
+    direction: INPUT
+    field: customer_id
+    bound_to: payload.customer_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_ABOVE_CEILING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_ABOVE_CEILING
+    direction: INPUT
+    field: identity_key
+    bound_to: payload.identity_key
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_ABOVE_CEILING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_ABOVE_CEILING
+    direction: INPUT
+    field: kind
+    bound_to: payload.kind
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_ABOVE_CEILING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_ABOVE_CEILING
+    direction: INPUT
+    field: question
+    bound_to: payload.question
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_ABOVE_CEILING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_ABOVE_CEILING
+    direction: INPUT
+    field: supporting_material
+    bound_to: payload.supporting_material
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_ABOVE_CEILING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_ABOVE_CEILING
+    direction: INPUT
+    field: time_in_service_id
+    bound_to: results.CC_ADMIT_USER_PROMPT_V0.model_record.time_in_service_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_ABOVE_CEILING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_ABOVE_CEILING
+    direction: INPUT
+    field: outcome
+    bound_to:
+      literal: REFUSED
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_ABOVE_CEILING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_ABOVE_CEILING
+    direction: INPUT
+    field: reason
+    bound_to:
+      literal: kind_above_sensitivity_ceiling
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_ABOVE_CEILING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_TOO_LONG_TO_READ
+    direction: INPUT
+    field: user_prompt_id
+    bound_to: payload.user_prompt_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_TOO_LONG_TO_READ}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_TOO_LONG_TO_READ
+    direction: INPUT
+    field: requester_id
+    bound_to: payload.requester_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_TOO_LONG_TO_READ}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_TOO_LONG_TO_READ
+    direction: INPUT
+    field: customer_id
+    bound_to: payload.customer_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_TOO_LONG_TO_READ}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_TOO_LONG_TO_READ
+    direction: INPUT
+    field: identity_key
+    bound_to: payload.identity_key
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_TOO_LONG_TO_READ}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_TOO_LONG_TO_READ
+    direction: INPUT
+    field: kind
+    bound_to: payload.kind
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_TOO_LONG_TO_READ}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_TOO_LONG_TO_READ
+    direction: INPUT
+    field: question
+    bound_to: payload.question
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_TOO_LONG_TO_READ}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_TOO_LONG_TO_READ
+    direction: INPUT
+    field: supporting_material
+    bound_to: payload.supporting_material
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_TOO_LONG_TO_READ}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_TOO_LONG_TO_READ
+    direction: INPUT
+    field: time_in_service_id
+    bound_to: results.CC_ADMIT_USER_PROMPT_V0.model_record.time_in_service_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_TOO_LONG_TO_READ}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_TOO_LONG_TO_READ
+    direction: INPUT
+    field: outcome
+    bound_to:
+      literal: REFUSED
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_TOO_LONG_TO_READ}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_TOO_LONG_TO_READ
+    direction: INPUT
+    field: reason
+    bound_to:
+      literal: reading_longer_than_model_can_read
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_TOO_LONG_TO_READ}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_BY_RULE
+    direction: INPUT
+    field: user_prompt_id
+    bound_to: payload.user_prompt_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_BY_RULE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_BY_RULE
+    direction: INPUT
+    field: requester_id
+    bound_to: payload.requester_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_BY_RULE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_BY_RULE
+    direction: INPUT
+    field: customer_id
+    bound_to: payload.customer_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_BY_RULE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_BY_RULE
+    direction: INPUT
+    field: identity_key
+    bound_to: payload.identity_key
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_BY_RULE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_BY_RULE
+    direction: INPUT
+    field: kind
+    bound_to: payload.kind
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_BY_RULE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_BY_RULE
+    direction: INPUT
+    field: question
+    bound_to: payload.question
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_BY_RULE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_BY_RULE
+    direction: INPUT
+    field: supporting_material
+    bound_to: payload.supporting_material
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_BY_RULE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_BY_RULE
+    direction: INPUT
+    field: time_in_service_id
+    bound_to: results.CC_ADMIT_USER_PROMPT_V0.model_record.time_in_service_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_BY_RULE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_BY_RULE
+    direction: INPUT
+    field: reading
+    bound_to: results.CC_CONFIRM_READING_FITS_V0.reading
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_BY_RULE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_BY_RULE
+    direction: INPUT
+    field: rules_in_force
+    bound_to: results.CC_WRITE_MODEL_RESPONSE_V0.rules_in_force
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_BY_RULE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_BY_RULE
+    direction: INPUT
+    field: outcome
+    bound_to:
+      literal: REFUSED
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_BY_RULE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_BY_RULE
+    direction: INPUT
+    field: reason
+    bound_to: results.CC_WRITE_MODEL_RESPONSE_V0.written_response.stopped_by
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_BY_RULE}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_UNFINISHED
+    direction: INPUT
+    field: user_prompt_id
+    bound_to: payload.user_prompt_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_UNFINISHED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_UNFINISHED
+    direction: INPUT
+    field: requester_id
+    bound_to: payload.requester_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_UNFINISHED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_UNFINISHED
+    direction: INPUT
+    field: customer_id
+    bound_to: payload.customer_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_UNFINISHED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_UNFINISHED
+    direction: INPUT
+    field: identity_key
+    bound_to: payload.identity_key
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_UNFINISHED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_UNFINISHED
+    direction: INPUT
+    field: kind
+    bound_to: payload.kind
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_UNFINISHED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_UNFINISHED
+    direction: INPUT
+    field: question
+    bound_to: payload.question
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_UNFINISHED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_UNFINISHED
+    direction: INPUT
+    field: supporting_material
+    bound_to: payload.supporting_material
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_UNFINISHED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_UNFINISHED
+    direction: INPUT
+    field: time_in_service_id
+    bound_to: results.CC_ADMIT_USER_PROMPT_V0.model_record.time_in_service_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_UNFINISHED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_UNFINISHED
+    direction: INPUT
+    field: reading
+    bound_to: results.CC_CONFIRM_READING_FITS_V0.reading
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_UNFINISHED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_UNFINISHED
+    direction: INPUT
+    field: rules_in_force
+    bound_to: results.CC_WRITE_MODEL_RESPONSE_V0.rules_in_force
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_UNFINISHED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_UNFINISHED
+    direction: INPUT
+    field: outcome
+    bound_to:
+      literal: REFUSED
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_UNFINISHED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_UNFINISHED
+    direction: INPUT
+    field: reason
+    bound_to:
+      literal: longest_response_reached
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_REFUSED_UNFINISHED}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_BEFORE_READING
+    direction: INPUT
+    field: user_prompt_id
+    bound_to: payload.user_prompt_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_BEFORE_READING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_BEFORE_READING
+    direction: INPUT
+    field: requester_id
+    bound_to: payload.requester_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_BEFORE_READING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_BEFORE_READING
+    direction: INPUT
+    field: customer_id
+    bound_to: payload.customer_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_BEFORE_READING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_BEFORE_READING
+    direction: INPUT
+    field: identity_key
+    bound_to: payload.identity_key
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_BEFORE_READING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_BEFORE_READING
+    direction: INPUT
+    field: kind
+    bound_to: payload.kind
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_BEFORE_READING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_BEFORE_READING
+    direction: INPUT
+    field: question
+    bound_to: payload.question
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_BEFORE_READING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_BEFORE_READING
+    direction: INPUT
+    field: supporting_material
+    bound_to: payload.supporting_material
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_BEFORE_READING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_BEFORE_READING
+    direction: INPUT
+    field: outcome
+    bound_to:
+      literal: FAILED
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_BEFORE_READING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_BEFORE_READING
+    direction: INPUT
+    field: reason
+    bound_to:
+      literal: store_failed_before_the_model_read
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_BEFORE_READING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_WHILE_WRITING
+    direction: INPUT
+    field: user_prompt_id
+    bound_to: payload.user_prompt_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_WHILE_WRITING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_WHILE_WRITING
+    direction: INPUT
+    field: requester_id
+    bound_to: payload.requester_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_WHILE_WRITING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_WHILE_WRITING
+    direction: INPUT
+    field: customer_id
+    bound_to: payload.customer_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_WHILE_WRITING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_WHILE_WRITING
+    direction: INPUT
+    field: identity_key
+    bound_to: payload.identity_key
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_WHILE_WRITING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_WHILE_WRITING
+    direction: INPUT
+    field: kind
+    bound_to: payload.kind
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_WHILE_WRITING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_WHILE_WRITING
+    direction: INPUT
+    field: question
+    bound_to: payload.question
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_WHILE_WRITING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_WHILE_WRITING
+    direction: INPUT
+    field: supporting_material
+    bound_to: payload.supporting_material
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_WHILE_WRITING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_WHILE_WRITING
+    direction: INPUT
+    field: time_in_service_id
+    bound_to: results.CC_ADMIT_USER_PROMPT_V0.model_record.time_in_service_id
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_WHILE_WRITING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_WHILE_WRITING
+    direction: INPUT
+    field: reading
+    bound_to: results.CC_CONFIRM_READING_FITS_V0.reading
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_WHILE_WRITING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_WHILE_WRITING
+    direction: INPUT
+    field: outcome
+    bound_to:
+      literal: FAILED
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_WHILE_WRITING}
+  - owner: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_FAILED_WHILE_WRITING
+    direction: INPUT
+    field: reason
+    bound_to:
+      literal: writing_failed
+    source_finding: {phase: p7, register: execution_topology, key: RECORD_FAILED_WHILE_WRITING}
+  interface_fields:
+  - artifact: causal_language_model::IN_REGISTER_MODEL_V0
+    direction: INPUT
+    field: staff_credentials
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: Who is performing the operation and their role, as the business's existing arrangements assert it
+  - artifact: causal_language_model::IN_REGISTER_MODEL_V0
+    direction: INPUT
+    field: staff_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The staff member recorded against the operation in the operation trail
+  - artifact: causal_language_model::IN_REGISTER_MODEL_V0
+    direction: INPUT
+    field: description
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: How the model is built, including the amount of text it can read at once
+  - artifact: causal_language_model::IN_REGISTER_MODEL_V0
+    direction: INPUT
+    field: fingerprint
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The training fingerprint, the provider's claim
+  - artifact: causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0
+    direction: INPUT
+    field: staff_credentials
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: Who is performing the operation and their role, as the business's existing arrangements assert it
+  - artifact: causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0
+    direction: INPUT
+    field: staff_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The staff member recorded against the operation in the operation trail
+  - artifact: causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0
+    direction: INPUT
+    field: identity_key
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The key formed from a model's description and fingerprint
+  - artifact: causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0
+    direction: INPUT
+    field: time_in_service_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The time in service's identity, claimed once at placement
+  - artifact: causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0
+    direction: INPUT
+    field: ceiling
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The most sensitive kind of information the model may read
+  - artifact: causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0
+    direction: INPUT
+    field: system_prompt
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The business's standing instructions to the model for its time in service
+  - artifact: causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0
+    direction: INPUT
+    field: response_rules
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The forbidden words and patterns, the account-number shape, the freedom of word choice and the longest response
+  - artifact: causal_language_model::IN_WITHDRAW_MODEL_FROM_SERVICE_V0
+    direction: INPUT
+    field: staff_credentials
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: Who is performing the operation and their role, as the business's existing arrangements assert it
+  - artifact: causal_language_model::IN_WITHDRAW_MODEL_FROM_SERVICE_V0
+    direction: INPUT
+    field: staff_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The staff member recorded against the operation in the operation trail
+  - artifact: causal_language_model::IN_WITHDRAW_MODEL_FROM_SERVICE_V0
+    direction: INPUT
+    field: identity_key
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The key formed from a model's description and fingerprint
+  - artifact: causal_language_model::IN_SUBMIT_USER_PROMPT_V0
+    direction: INPUT
+    field: user_prompt_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The user prompt's identity, named by the requester and claimed once
+  - artifact: causal_language_model::IN_SUBMIT_USER_PROMPT_V0
+    direction: INPUT
+    field: requester_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The requester who submits the user prompt
+  - artifact: causal_language_model::IN_SUBMIT_USER_PROMPT_V0
+    direction: INPUT
+    field: permitted_customers
+    type: array
+    required: 'YES'
+    default: ''
+    meaning: The customers the requester may act for, as the business's existing arrangements state
+  - artifact: causal_language_model::IN_SUBMIT_USER_PROMPT_V0
+    direction: INPUT
+    field: customer_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The customer the user prompt is for
+  - artifact: causal_language_model::IN_SUBMIT_USER_PROMPT_V0
+    direction: INPUT
+    field: account_numbers
+    type: array
+    required: 'YES'
+    default: ''
+    meaning: The customer's own account numbers, from the business's existing records
+  - artifact: causal_language_model::IN_SUBMIT_USER_PROMPT_V0
+    direction: INPUT
+    field: identity_key
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The key formed from a model's description and fingerprint
+  - artifact: causal_language_model::IN_SUBMIT_USER_PROMPT_V0
+    direction: INPUT
+    field: kind
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The most sensitive kind of information the question and its material contain
+  - artifact: causal_language_model::IN_SUBMIT_USER_PROMPT_V0
+    direction: INPUT
+    field: question
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: What the requester asks on the customer's behalf
+  - artifact: causal_language_model::IN_SUBMIT_USER_PROMPT_V0
+    direction: INPUT
+    field: supporting_material
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: Material carried with the question for the model to read
+  - artifact: causal_language_model::IN_SUBMIT_USER_PROMPT_V0
+    direction: INPUT
+    field: seed
+    type: integer
+    required: 'YES'
+    default: ''
+    meaning: The seed each adventurous word choice is drawn from
+  - artifact: causal_language_model::IN_RETRIEVE_USER_PROMPT_RECORD_V0
+    direction: INPUT
+    field: staff_credentials
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: Who is performing the operation and their role, as the business's existing arrangements assert it
+  - artifact: causal_language_model::IN_RETRIEVE_USER_PROMPT_RECORD_V0
+    direction: INPUT
+    field: staff_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The staff member recorded against the operation in the operation trail
+  - artifact: causal_language_model::IN_RETRIEVE_USER_PROMPT_RECORD_V0
+    direction: INPUT
+    field: user_prompt_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The user prompt's identity, named by the requester and claimed once
+  - artifact: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    direction: INPUT
+    field: staff_credentials
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: Who is performing the operation and their role, as the business's existing arrangements assert it
+  - artifact: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    direction: INPUT
+    field: authorization_rules
+    type: array
+    required: 'YES'
+    default: ''
+    meaning: The rules the staff member's credentials are checked against, fixed by this design
+  - artifact: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    direction: OUTPUT
+    field: is_authorized
+    type: boolean
+    required: 'YES'
+    default: ''
+    meaning: Whether the staff member is model staff
+  - artifact: causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0
+    direction: INPUT
+    field: user_prompt_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The user prompt's identity, named by the requester and claimed once
+  - artifact: causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0
+    direction: OUTPUT
+    field: address
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: Where the claimed identity resolves to
+  - artifact: causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0
+    direction: INPUT
+    field: customer_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The customer the user prompt is for
+  - artifact: causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0
+    direction: INPUT
+    field: permitted_customers
+    type: array
+    required: 'YES'
+    default: ''
+    meaning: The customers the requester may act for, as the business's existing arrangements state
+  - artifact: causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0
+    direction: OUTPUT
+    field: acts_for_customer
+    type: boolean
+    required: 'YES'
+    default: ''
+    meaning: Whether the requester may act for the customer
+  - artifact: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    direction: INPUT
+    field: description
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: How the model is built, including the amount of text it can read at once
+  - artifact: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    direction: INPUT
+    field: description_schema
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The fields a model description must carry, fixed by this design
+  - artifact: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    direction: INPUT
+    field: fingerprint
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The training fingerprint, the provider's claim
+  - artifact: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    direction: OUTPUT
+    field: identity_key
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The key formed from a model's description and fingerprint
+  - artifact: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    direction: OUTPUT
+    field: address
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: Where the claimed key resolves to
+  - artifact: causal_language_model::CC_REGISTER_MODEL_V0
+    direction: INPUT
+    field: identity_key
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The key formed from a model's description and fingerprint
+  - artifact: causal_language_model::CC_REGISTER_MODEL_V0
+    direction: INPUT
+    field: description
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: How the model is built, including the amount of text it can read at once
+  - artifact: causal_language_model::CC_REGISTER_MODEL_V0
+    direction: INPUT
+    field: fingerprint
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The training fingerprint, the provider's claim
+  - artifact: causal_language_model::CC_REGISTER_MODEL_V0
+    direction: OUTPUT
+    field: model_record
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The model's record, registered
+  - artifact: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    direction: INPUT
+    field: identity_key
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The key formed from a model's description and fingerprint
+  - artifact: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    direction: INPUT
+    field: time_in_service_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The time in service's identity, claimed once at placement
+  - artifact: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    direction: INPUT
+    field: ceiling
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The most sensitive kind of information the model may read
+  - artifact: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    direction: INPUT
+    field: system_prompt
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The business's standing instructions to the model for its time in service
+  - artifact: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    direction: INPUT
+    field: response_rules
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The forbidden words and patterns, the account-number shape, the freedom of word choice and the longest response
+  - artifact: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    direction: OUTPUT
+    field: time_in_service
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The time in service opened
+  - artifact: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    direction: INPUT
+    field: identity_key
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The key formed from a model's description and fingerprint
+  - artifact: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    direction: OUTPUT
+    field: model_record
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The model's record as it stood before withdrawal
+  - artifact: causal_language_model::CC_ADMIT_USER_PROMPT_V0
+    direction: INPUT
+    field: identity_key
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The key formed from a model's description and fingerprint
+  - artifact: causal_language_model::CC_ADMIT_USER_PROMPT_V0
+    direction: OUTPUT
+    field: model_record
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The record of the model the user prompt names, in service
+  - artifact: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    direction: INPUT
+    field: time_in_service_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The time in service's identity, claimed once at placement
+  - artifact: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    direction: INPUT
+    field: kind
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The most sensitive kind of information the question and its material contain
+  - artifact: causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0
+    direction: OUTPUT
+    field: time_in_service
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The model's open time in service, with its ceiling, system prompt and response rules
+  - artifact: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    direction: INPUT
+    field: system_prompt
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The business's standing instructions to the model for its time in service
+  - artifact: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    direction: INPUT
+    field: question
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: What the requester asks on the customer's behalf
+  - artifact: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    direction: INPUT
+    field: supporting_material
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: Material carried with the question for the model to read
+  - artifact: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    direction: INPUT
+    field: reading_capacity
+    type: integer
+    required: 'YES'
+    default: ''
+    meaning: How many words the model can read at once; words, not a real model's tokens
+  - artifact: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    direction: OUTPUT
+    field: reading
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: Exactly what the model reads
+  - artifact: causal_language_model::CC_CONFIRM_READING_FITS_V0
+    direction: OUTPUT
+    field: reading_length
+    type: integer
+    required: 'YES'
+    default: ''
+    meaning: How long what the model reads is, in words
+  - artifact: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    direction: INPUT
+    field: response_rules
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The forbidden words and patterns, the account-number shape, the freedom of word choice and the longest response
+  - artifact: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    direction: INPUT
+    field: account_numbers
+    type: array
+    required: 'YES'
+    default: ''
+    meaning: The customer's own account numbers, from the business's existing records
+  - artifact: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    direction: INPUT
+    field: seed
+    type: integer
+    required: 'YES'
+    default: ''
+    meaning: The seed each adventurous word choice is drawn from
+  - artifact: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    direction: INPUT
+    field: reading
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: Exactly what the model read, when it read anything
+  - artifact: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    direction: OUTPUT
+    field: rules_in_force
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The response rules in force for this user prompt, with its seed
+  - artifact: causal_language_model::CC_WRITE_MODEL_RESPONSE_V0
+    direction: OUTPUT
+    field: written_response
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The response as written, whether it finished, the rule that stopped it and the words stopped
+  - artifact: causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0
+    direction: INPUT
+    field: release_facts
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The facts of the written response one release condition reads
+  - artifact: causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0
+    direction: INPUT
+    field: release_rules
+    type: array
+    required: 'YES'
+    default: ''
+    meaning: The release condition, as a rule over those facts
+  - artifact: causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0
+    direction: OUTPUT
+    field: releasable
+    type: boolean
+    required: 'YES'
+    default: ''
+    meaning: Whether the condition for release holds
+  - artifact: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    direction: INPUT
+    field: user_prompt_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The user prompt's identity, named by the requester and claimed once
+  - artifact: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    direction: INPUT
+    field: requester_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The requester who submits the user prompt
+  - artifact: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    direction: INPUT
+    field: customer_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The customer the user prompt is for
+  - artifact: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    direction: INPUT
+    field: identity_key
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The key formed from a model's description and fingerprint
+  - artifact: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    direction: INPUT
+    field: kind
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The most sensitive kind of information the question and its material contain
+  - artifact: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    direction: INPUT
+    field: question
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: What the requester asks on the customer's behalf
+  - artifact: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    direction: INPUT
+    field: supporting_material
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: Material carried with the question for the model to read
+  - artifact: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    direction: INPUT
+    field: outcome
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: RESPONDED, REFUSED or FAILED
+  - artifact: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    direction: INPUT
+    field: time_in_service_id
+    type: string
+    required: 'NO'
+    default: ''
+    meaning: The time in service's identity, claimed once at placement
+  - artifact: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    direction: INPUT
+    field: reading
+    type: object
+    required: 'NO'
+    default: ''
+    meaning: Exactly what the model read, when it read anything
+  - artifact: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    direction: INPUT
+    field: rules_in_force
+    type: object
+    required: 'NO'
+    default: ''
+    meaning: The response rules in force, when the model wrote
+  - artifact: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    direction: INPUT
+    field: response
+    type: string
+    required: 'NO'
+    default: ''
+    meaning: The model response released
+  - artifact: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    direction: INPUT
+    field: reason
+    type: string
+    required: 'NO'
+    default: ''
+    meaning: Why the user prompt was refused, or where it failed
+  - artifact: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    direction: OUTPUT
+    field: record_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The identity of the appended user prompt record
+  - artifact: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    direction: OUTPUT
+    field: sequence_number
+    type: integer
+    required: 'YES'
+    default: ''
+    meaning: The record's position in the user prompt records
+  - artifact: causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0
+    direction: INPUT
+    field: user_prompt_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The user prompt's identity, named by the requester and claimed once
+  - artifact: causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0
+    direction: OUTPUT
+    field: user_prompt_record
+    type: array
+    required: 'YES'
+    default: ''
+    meaning: The record of the user prompt
+  - artifact: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    direction: INPUT
+    field: record
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The account of the performed operation
+  - artifact: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    direction: INPUT
+    field: staff_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The staff member recorded against the operation in the operation trail
+  - artifact: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    direction: INPUT
+    field: operation
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The operation performed
+  - artifact: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    direction: OUTPUT
+    field: record_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The identity of the appended trail entry
+  - artifact: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    direction: OUTPUT
+    field: sequence_number
+    type: integer
+    required: 'YES'
+    default: ''
+    meaning: The entry's position in the trail
+  - artifact: causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0
+    direction: INPUT
+    field: description
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: How the model is built, including the amount of text it can read at once
+  - artifact: causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0
+    direction: INPUT
+    field: fingerprint
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The training fingerprint, the provider's claim
+  - artifact: causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0
+    direction: OUTPUT
+    field: identity_key
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The key formed from a model's description and fingerprint
+  - artifact: causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0
+    direction: INPUT
+    field: kind
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The kind of information stated
+  - artifact: causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0
+    direction: INPUT
+    field: ceiling
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The most sensitive kind of information the model may read
+  - artifact: causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0
+    direction: INPUT
+    field: kinds
+    type: array
+    required: 'YES'
+    default: ''
+    meaning: The declared kinds, least sensitive first
+  - artifact: causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0
+    direction: OUTPUT
+    field: within_ceiling
+    type: boolean
+    required: 'YES'
+    default: ''
+    meaning: Whether the kind is no more sensitive than the ceiling
+  - artifact: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    direction: INPUT
+    field: system_prompt
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The business's standing instructions to the model for its time in service
+  - artifact: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    direction: INPUT
+    field: question
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: What the requester asks on the customer's behalf
+  - artifact: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    direction: INPUT
+    field: supporting_material
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: Material carried with the question for the model to read
+  - artifact: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    direction: INPUT
+    field: reading_capacity
+    type: integer
+    required: 'YES'
+    default: ''
+    meaning: How many words the model can read at once; words, not a real model's tokens
+  - artifact: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    direction: OUTPUT
+    field: reading
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: Exactly what the model reads
+  - artifact: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    direction: OUTPUT
+    field: reading_length
+    type: integer
+    required: 'YES'
+    default: ''
+    meaning: How long it is, in words
+  - artifact: causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0
+    direction: INPUT
+    field: response_rules
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The forbidden words and patterns, the account-number shape, the freedom of word choice and the longest response
+  - artifact: causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0
+    direction: INPUT
+    field: account_numbers
+    type: array
+    required: 'YES'
+    default: ''
+    meaning: The customer's own account numbers, from the business's existing records
+  - artifact: causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0
+    direction: INPUT
+    field: seed
+    type: integer
+    required: 'YES'
+    default: ''
+    meaning: The seed each adventurous word choice is drawn from
+  - artifact: causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0
+    direction: OUTPUT
+    field: rules_in_force
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The forbidden rules, the freedom of word choice and the seed in force
+  - artifact: causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0
+    direction: OUTPUT
+    field: positions
+    type: array
+    required: 'YES'
+    default: ''
+    meaning: One position per word up to the longest response
+  - artifact: causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0
+    direction: INPUT
+    field: reading
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: Exactly what the model reads
+  - artifact: causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0
+    direction: INPUT
+    field: text
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The response so far
+  - artifact: causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0
+    direction: INPUT
+    field: finished
+    type: boolean
+    required: 'YES'
+    default: ''
+    meaning: Whether the response has finished, in which case no word is offered
+  - artifact: causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0
+    direction: INPUT
+    field: stopped_by
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The rule that stopped the response, in which case no word is offered
+  - artifact: causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0
+    direction: OUTPUT
+    field: candidates
+    type: array
+    required: 'YES'
+    default: ''
+    meaning: The words the model offers next, each with its likelihood
+  - artifact: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    direction: INPUT
+    field: candidates
+    type: array
+    required: 'YES'
+    default: ''
+    meaning: The words offered, each with its likelihood
+  - artifact: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    direction: INPUT
+    field: rules_in_force
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The response rules in force
+  - artifact: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    direction: INPUT
+    field: position
+    type: integer
+    required: 'YES'
+    default: ''
+    meaning: Which word this is
+  - artifact: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    direction: INPUT
+    field: text
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The response so far
+  - artifact: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    direction: INPUT
+    field: finished
+    type: boolean
+    required: 'YES'
+    default: ''
+    meaning: Whether the response has finished
+  - artifact: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    direction: INPUT
+    field: stopped_by
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The rule that left no permitted word, or none
+  - artifact: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    direction: INPUT
+    field: stopped
+    type: array
+    required: 'YES'
+    default: ''
+    meaning: The words stopped so far, each with its position and rule
+  - artifact: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    direction: OUTPUT
+    field: text
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The response so far, with the chosen word
+  - artifact: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    direction: OUTPUT
+    field: finished
+    type: boolean
+    required: 'YES'
+    default: ''
+    meaning: Whether the chosen word ends the response
+  - artifact: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    direction: OUTPUT
+    field: stopped_by
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The rule that left no permitted word, or none
+  - artifact: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    direction: OUTPUT
+    field: stopped
+    type: array
+    required: 'YES'
+    default: ''
+    meaning: The words stopped so far, with those stopped this pass
+  - artifact: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    direction: INPUT
+    field: reading
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: Exactly what the model reads
+  - artifact: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    direction: INPUT
+    field: rules_in_force
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The response rules in force
+  - artifact: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    direction: INPUT
+    field: position
+    type: integer
+    required: 'YES'
+    default: ''
+    meaning: Which word this is
+  - artifact: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    direction: INPUT
+    field: text
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The response so far
+  - artifact: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    direction: INPUT
+    field: finished
+    type: boolean
+    required: 'YES'
+    default: ''
+    meaning: Whether the response has finished
+  - artifact: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    direction: INPUT
+    field: stopped_by
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The rule that left no permitted word, or none
+  - artifact: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    direction: INPUT
+    field: stopped
+    type: array
+    required: 'YES'
+    default: ''
+    meaning: The words stopped so far
+  - artifact: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    direction: OUTPUT
+    field: result
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The response so far, whether it finished, the rule that stopped it and the words stopped
+  - artifact: causal_language_model::CT_WRITE_RESPONSE_V0
+    direction: INPUT
+    field: reading
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: Exactly what the model reads
+  - artifact: causal_language_model::CT_WRITE_RESPONSE_V0
+    direction: INPUT
+    field: rules_in_force
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The response rules in force
+  - artifact: causal_language_model::CT_WRITE_RESPONSE_V0
+    direction: INPUT
+    field: positions
+    type: array
+    required: 'YES'
+    default: ''
+    meaning: One position per word up to the longest response
+  - artifact: causal_language_model::CT_WRITE_RESPONSE_V0
+    direction: OUTPUT
+    field: result
+    type: object
+    required: 'YES'
+    default: ''
+    meaning: The response as written, whether it finished, the rule that stopped it and the words stopped
+  - artifact: causal_language_model::EV_MODEL_REGISTERED_V0
+    direction: OUTPUT
+    field: identity_key
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The key formed from a model's description and fingerprint
+  - artifact: causal_language_model::EV_MODEL_REGISTERED_V0
+    direction: OUTPUT
+    field: staff_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The staff member recorded against the operation in the operation trail
+  - artifact: causal_language_model::EV_MODEL_SERVICE_STARTED_V0
+    direction: OUTPUT
+    field: identity_key
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The key formed from a model's description and fingerprint
+  - artifact: causal_language_model::EV_MODEL_SERVICE_STARTED_V0
+    direction: OUTPUT
+    field: time_in_service_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The time in service's identity, claimed once at placement
+  - artifact: causal_language_model::EV_MODEL_SERVICE_STARTED_V0
+    direction: OUTPUT
+    field: staff_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The staff member recorded against the operation in the operation trail
+  - artifact: causal_language_model::EV_MODEL_SERVICE_ENDED_V0
+    direction: OUTPUT
+    field: identity_key
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The key formed from a model's description and fingerprint
+  - artifact: causal_language_model::EV_MODEL_SERVICE_ENDED_V0
+    direction: OUTPUT
+    field: staff_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The staff member recorded against the operation in the operation trail
+  - artifact: causal_language_model::EV_USER_PROMPT_RESPONDED_V0
+    direction: OUTPUT
+    field: user_prompt_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The user prompt's identity, named by the requester and claimed once
+  - artifact: causal_language_model::EV_USER_PROMPT_RESPONDED_V0
+    direction: OUTPUT
+    field: identity_key
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The key formed from a model's description and fingerprint
+  - artifact: causal_language_model::EV_USER_PROMPT_RESPONDED_V0
+    direction: OUTPUT
+    field: requester_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The requester who submits the user prompt
+  - artifact: causal_language_model::EV_USER_PROMPT_REFUSED_V0
+    direction: OUTPUT
+    field: user_prompt_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The user prompt's identity, named by the requester and claimed once
+  - artifact: causal_language_model::EV_USER_PROMPT_REFUSED_V0
+    direction: OUTPUT
+    field: identity_key
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The key formed from a model's description and fingerprint
+  - artifact: causal_language_model::EV_USER_PROMPT_REFUSED_V0
+    direction: OUTPUT
+    field: requester_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The requester who submits the user prompt
+  - artifact: causal_language_model::AC_MODEL_STAFF_V0
+    direction: ATTRIBUTE
+    field: staff_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The staff member's identity as the business knows it
+  - artifact: causal_language_model::AC_MODEL_STAFF_V0
+    direction: ATTRIBUTE
+    field: authorized
+    type: boolean
+    required: 'NO'
+    default: false
+    meaning: Whether the staff member is model staff; decided by the business's existing arrangements, read here
+  - artifact: causal_language_model::AC_REQUESTER_V0
+    direction: ATTRIBUTE
+    field: requester_id
+    type: string
+    required: 'YES'
+    default: ''
+    meaning: The requester's identity as the business knows it
+  - artifact: causal_language_model::AC_REQUESTER_V0
+    direction: ATTRIBUTE
+    field: permitted_customers
+    type: array
+    required: 'NO'
+    default: '[]'
+    meaning: The customers the requester may act for; decided by the business's existing arrangements, read here
+  implementation_bindings:
+  - ct_code: causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0
+    callable: execute
+    operation: FORM_MODEL_IDENTITY_KEY
+    kind: atom
+    purity: ct_pure
+    refusal: never
+    source_finding: {phase: p7, register: new_artifacts, key: CT_PURE_FORM_MODEL_IDENTITY_KEY_V0}
+  - ct_code: causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0
+    callable: execute
+    operation: COMPARE_SENSITIVITY
+    kind: atom
+    purity: ct_pure
+    refusal: raises
+    source_finding: {phase: p7, register: new_artifacts, key: CT_PURE_COMPARE_SENSITIVITY_V0}
+  - ct_code: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    callable: execute
+    operation: ASSEMBLE_MODEL_READING
+    kind: atom
+    purity: ct_pure
+    refusal: raises
+    source_finding: {phase: p7, register: new_artifacts, key: CT_PURE_ASSEMBLE_MODEL_READING_V0}
+  - ct_code: causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0
+    callable: execute
+    operation: FORM_RESPONSE_RULES
+    kind: atom
+    purity: ct_pure
+    refusal: never
+    source_finding: {phase: p7, register: new_artifacts, key: CT_PURE_FORM_RESPONSE_RULES_V0}
+  - ct_code: causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0
+    callable: execute
+    operation: OFFER_NEXT_WORDS
+    kind: atom
+    purity: ct_impure
+    refusal: never
+    source_finding: {phase: p7, register: new_artifacts, key: CT_IMPURE_OFFER_NEXT_WORDS_V0}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    callable: execute
+    operation: CHOOSE_PERMITTED_WORD
+    kind: atom
+    purity: ct_pure
+    refusal: returns
+    source_finding: {phase: p7, register: new_artifacts, key: CT_PURE_CHOOSE_PERMITTED_WORD_V0}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    callable: ''
+    operation: WRITE_NEXT_WORD
+    kind: molecule
+    purity: ct_impure
+    refusal: returns
+    source_finding: {phase: p7, register: new_artifacts, key: CT_WRITE_NEXT_WORD_V0}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    callable: ''
+    operation: WRITE_RESPONSE
+    kind: molecule
+    purity: ct_impure
+    refusal: returns
+    source_finding: {phase: p7, register: new_artifacts, key: CT_WRITE_RESPONSE_V0}
+  vocabulary_extensions:
+  - vocabulary_code: causal_language_model::VOCAB_KIND_OF_INFORMATION_V0
+    extends: null
+    group: kind_of_information
+    casing: lower_snake
+    value: public
+    meaning: The least sensitive kind
+    source_finding: {phase: p5, register: provisional_codes, key: VOCAB_KIND_OF_INFORMATION_V0}
+  - vocabulary_code: causal_language_model::VOCAB_KIND_OF_INFORMATION_V0
+    extends: null
+    group: kind_of_information
+    casing: lower_snake
+    value: internal
+    meaning: More sensitive than public
+    source_finding: {phase: p5, register: provisional_codes, key: VOCAB_KIND_OF_INFORMATION_V0}
+  - vocabulary_code: causal_language_model::VOCAB_KIND_OF_INFORMATION_V0
+    extends: null
+    group: kind_of_information
+    casing: lower_snake
+    value: confidential
+    meaning: More sensitive than internal
+    source_finding: {phase: p5, register: provisional_codes, key: VOCAB_KIND_OF_INFORMATION_V0}
+  - vocabulary_code: causal_language_model::VOCAB_KIND_OF_INFORMATION_V0
+    extends: null
+    group: kind_of_information
+    casing: lower_snake
+    value: restricted
+    meaning: The most sensitive kind
+    source_finding: {phase: p5, register: provisional_codes, key: VOCAB_KIND_OF_INFORMATION_V0}
+  runtime_policies:
+  - rb_code: causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0
+    capability: capability_side_effects::CS_MUTABLE_JSON_V0
+    key: structure
+    value: causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0
+    source_finding: {phase: p7, register: rb_declarations, key: RB_MODEL_RESPONSE_BINDINGS_V0}
+  - rb_code: causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0
+    capability: capability_side_effects::CS_REGISTRY_V0
+    key: structure
+    value: causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0
+    source_finding: {phase: p7, register: rb_declarations, key: RB_MODEL_RESPONSE_BINDINGS_V0}
+  - rb_code: causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0
+    capability: capability_side_effects::CS_APPENDONLY_JSONL_V0
+    key: structure
+    value: causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0
+    source_finding: {phase: p7, register: rb_declarations, key: RB_MODEL_RESPONSE_BINDINGS_V0}
+  artifact_properties:
+  - artifact: causal_language_model::AC_MODEL_STAFF_V0
+    property: type
+    value: ENDUSER
+    source_finding: {phase: p5, register: provisional_codes, key: AC_MODEL_STAFF_V0}
+  - artifact: causal_language_model::AC_REQUESTER_V0
+    property: type
+    value: ENDUSER
+    source_finding: {phase: p5, register: provisional_codes, key: AC_REQUESTER_V0}
+  - artifact: causal_language_model::WF_REGISTER_MODEL_V0
+    property: emit.EXIT_REGISTERED
+    value:
+    - causal_language_model::EV_MODEL_REGISTERED_V0
+    source_finding: {phase: p4, register: gap_register, key: GAP-20}
+  - artifact: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    property: emit.EXIT_PLACED
+    value:
+    - causal_language_model::EV_MODEL_SERVICE_STARTED_V0
+    source_finding: {phase: p4, register: gap_register, key: GAP-20}
+  - artifact: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    property: emit.EXIT_WITHDRAWN
+    value:
+    - causal_language_model::EV_MODEL_SERVICE_ENDED_V0
+    source_finding: {phase: p4, register: gap_register, key: GAP-20}
+  - artifact: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    property: emit.EXIT_RESPONDED
+    value:
+    - causal_language_model::EV_USER_PROMPT_RESPONDED_V0
+    source_finding: {phase: p4, register: gap_register, key: GAP-20}
+  - artifact: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    property: emit.EXIT_REFUSED
+    value:
+    - causal_language_model::EV_USER_PROMPT_REFUSED_V0
+    source_finding: {phase: p4, register: gap_register, key: GAP-20}
+  - artifact: causal_language_model::EV_USER_PROMPT_REFUSED_V0
+    property: moment
+    value: refusal
+    source_finding: {phase: p0, register: business_events, key: User Prompt Refused}
+  - artifact: causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0
+    property: layer
+    value: DOMAINS
+    source_finding: {phase: p5, register: provisional_codes, key: STRUCTURE_MODEL_RESPONSE_STORAGE_V0}
+  structure_stores:
+  - store_name: MODELS
+    storage_type: CS_MUTABLE_JSON_V0
+    proposed_path: causal_language_model/model_response/models.json
+    used_by: causal_language_model::CC_REGISTER_MODEL_V0
+    source_finding: {phase: p6, register: storage_governance, key: A durable record of every model the business holds}
+  - store_name: MODEL_IDENTITY_REGISTRY
+    storage_type: CS_REGISTRY_V0
+    proposed_path: causal_language_model/model_response/model_identity_registry.jsonl
+    used_by: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    source_finding: {phase: p6, register: storage_governance, key: 'A claim on each model''s identity, held once'}
+  - store_name: TIME_IN_SERVICE_REGISTRY
+    storage_type: CS_REGISTRY_V0
+    proposed_path: causal_language_model/model_response/time_in_service_registry.jsonl
+    used_by: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    source_finding: {phase: p6, register: storage_governance, key: 'A claim on each time in service''s identity, held once'}
+  - store_name: USER_PROMPT_REGISTRY
+    storage_type: CS_REGISTRY_V0
+    proposed_path: causal_language_model/model_response/user_prompt_registry.jsonl
+    used_by: causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0
+    source_finding: {phase: p6, register: storage_governance, key: 'A claim on each user prompt''s identity, held once'}
+  - store_name: TIMES_IN_SERVICE
+    storage_type: CS_MUTABLE_JSON_V0
+    proposed_path: causal_language_model/model_response/times_in_service.json
+    used_by: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    source_finding: {phase: p6, register: storage_governance, key: A durable record of every time in service}
+  - store_name: USER_PROMPT_RECORDS
+    storage_type: CS_APPENDONLY_JSONL_V0
+    proposed_path: causal_language_model/model_response/user_prompt_records.jsonl
+    used_by: causal_language_model::CC_RECORD_USER_PROMPT_V0
+    source_finding: {phase: p6, register: storage_governance, key: A record of every user prompt that cannot be amended}
+  - store_name: MODEL_OPERATIONS
+    storage_type: CS_APPENDONLY_JSONL_V0
+    proposed_path: causal_language_model/model_response/model_operations.jsonl
+    used_by: causal_language_model::CC_APPEND_MODEL_OPERATION_V0
+    source_finding: {phase: p6, register: storage_governance, key: A trail of performed operations that cannot be amended}
+  transport_bindings: []
+  artifact_summary:
+  - action: NEW
+    subdomain: model_response
+    count: '43'
+    artifacts: 2 AC, 5 IN, 5 WF, 15 CC, 8 CT, 5 EV, 1 VOCAB, 1 RB, 1 STRUCTURE
+  generation_provenance: []
+  declared_reach: []
+  refusal_discharge:
+  - operation: Register a model
+    refused_when: Its description and fingerprint match a registered model.
+    act: causal_language_model::WF_REGISTER_MODEL_V0
+    step: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
+    outcome: ALREADY_EXISTS
+    source_finding: {phase: p0, register: operation_refusals, row: 1}
+  - operation: Place a model in service
+    refused_when: The model is not registered.
+    act: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    step: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    outcome: NOT_FOUND
+    source_finding: {phase: p0, register: operation_refusals, row: 2}
+  - operation: Place a model in service
+    refused_when: The model is already in service.
+    act: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    step: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
+    outcome: VIOLATION
+    source_finding: {phase: p0, register: operation_refusals, row: 3}
+  - operation: Withdraw a model from service
+    refused_when: The model is not in service.
+    act: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    outcome: VIOLATION
+    source_finding: {phase: p0, register: operation_refusals, row: 4}
+  - operation: Withdraw a model from service
+    refused_when: The model is not in service.
+    act: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0
+    outcome: NOT_FOUND
+    source_finding: {phase: p0, register: operation_refusals, row: 4}
+  - operation: Submit a user prompt
+    refused_when: The model is not registered.
+    act: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_REGISTERED
+    outcome: SUCCESS
+    source_finding: {phase: p0, register: operation_refusals, row: 5}
+  - operation: Submit a user prompt
+    refused_when: The model is not in service.
+    act: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_IN_SERVICE
+    outcome: SUCCESS
+    source_finding: {phase: p0, register: operation_refusals, row: 6}
+  - operation: Submit a user prompt
+    refused_when: The user prompt contains a more sensitive kind of information than the model may read.
+    act: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_ABOVE_CEILING
+    outcome: SUCCESS
+    source_finding: {phase: p0, register: operation_refusals, row: 7}
+  - operation: Submit a user prompt
+    refused_when: What the model would read is longer than the model can read at once.
+    act: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_TOO_LONG_TO_READ
+    outcome: SUCCESS
+    source_finding: {phase: p0, register: operation_refusals, row: 8}
+  - operation: Submit a user prompt
+    refused_when: The requester is not permitted to act for the customer.
+    act: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_NOT_PERMITTED
+    outcome: SUCCESS
+    source_finding: {phase: p0, register: operation_refusals, row: 9}
+  - operation: Submit a user prompt
+    refused_when: The model cannot finish a response without breaking a response rule.
+    act: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_BY_RULE
+    outcome: SUCCESS
+    source_finding: {phase: p0, register: operation_refusals, row: 10}
+  - operation: Submit a user prompt
+    refused_when: The response reaches the longest response before it is finished.
+    act: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    step: RECORD_REFUSED_UNFINISHED
+    outcome: SUCCESS
+    source_finding: {phase: p0, register: operation_refusals, row: 11}
+  - operation: Register a model, place in service, withdraw, retrieve a record
+    refused_when: The staff member is not authorized model staff.
+    act: causal_language_model::WF_REGISTER_MODEL_V0
+    step: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    outcome: VIOLATION
+    source_finding: {phase: p0, register: operation_refusals, row: 12}
+  - operation: Register a model, place in service, withdraw, retrieve a record
+    refused_when: The staff member is not authorized model staff.
+    act: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    step: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    outcome: VIOLATION
+    source_finding: {phase: p0, register: operation_refusals, row: 12}
+  - operation: Register a model, place in service, withdraw, retrieve a record
+    refused_when: The staff member is not authorized model staff.
+    act: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    step: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    outcome: VIOLATION
+    source_finding: {phase: p0, register: operation_refusals, row: 12}
+  - operation: Register a model, place in service, withdraw, retrieve a record
+    refused_when: The staff member is not authorized model staff.
+    act: causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0
+    step: causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0
+    outcome: VIOLATION
+    source_finding: {phase: p0, register: operation_refusals, row: 12}
+  refusal_deferrals: []
+  refusal_governance_discharge: []
+  molecule_steps:
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    step: offered
+    kind: atom
+    target: causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0
+    over: null
+    iterator: null
+    emits: null
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    step: chosen
+    kind: atom
+    target: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    over: null
+    iterator: null
+    emits: result
+    source_finding: {phase: p4, register: design_decisions, row: 3}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    step: written
+    kind: loop
+    target: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    over: inputs.positions
+    iterator: position
+    emits: result
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  molecule_step_bindings:
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    step: offered
+    role: INPUT
+    field: reading
+    bound_to: inputs.reading
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    step: offered
+    role: INPUT
+    field: text
+    bound_to: inputs.text
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    step: offered
+    role: INPUT
+    field: finished
+    bound_to: inputs.finished
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    step: offered
+    role: INPUT
+    field: stopped_by
+    bound_to: inputs.stopped_by
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    step: chosen
+    role: INPUT
+    field: candidates
+    bound_to: results.offered.candidates
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    step: chosen
+    role: INPUT
+    field: rules_in_force
+    bound_to: inputs.rules_in_force
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    step: chosen
+    role: INPUT
+    field: position
+    bound_to: inputs.position
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    step: chosen
+    role: INPUT
+    field: text
+    bound_to: inputs.text
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    step: chosen
+    role: INPUT
+    field: finished
+    bound_to: inputs.finished
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    step: chosen
+    role: INPUT
+    field: stopped_by
+    bound_to: inputs.stopped_by
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    step: chosen
+    role: INPUT
+    field: stopped
+    bound_to: inputs.stopped
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    step: written
+    role: CARRY
+    field: text
+    bound_to:
+      literal: ''
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    step: written
+    role: CARRY
+    field: finished
+    bound_to:
+      literal: false
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    step: written
+    role: CARRY
+    field: stopped_by
+    bound_to:
+      literal: none
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    step: written
+    role: CARRY
+    field: stopped
+    bound_to:
+      literal: []
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    step: written
+    role: INPUT
+    field: position
+    bound_to: iterator
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    step: written
+    role: INPUT
+    field: reading
+    bound_to: inputs.reading
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    step: written
+    role: INPUT
+    field: rules_in_force
+    bound_to: inputs.rules_in_force
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    step: written
+    role: INPUT
+    field: text
+    bound_to: accumulator.text
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    step: written
+    role: INPUT
+    field: finished
+    bound_to: accumulator.finished
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    step: written
+    role: INPUT
+    field: stopped_by
+    bound_to: accumulator.stopped_by
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    step: written
+    role: INPUT
+    field: stopped
+    bound_to: accumulator.stopped
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    step: written
+    role: UPDATE
+    field: text
+    bound_to: results.text
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    step: written
+    role: UPDATE
+    field: finished
+    bound_to: results.finished
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    step: written
+    role: UPDATE
+    field: stopped_by
+    bound_to: results.stopped_by
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    step: written
+    role: UPDATE
+    field: stopped
+    bound_to: results.stopped
+    source_finding: {phase: p4, register: design_decisions, row: 2}
+  test_cases:
+  - ct_code: causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0
+    case: forms_key_from_description_and_fingerprint
+    expected_outcome: SUCCESS
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0
+    case: refuses_blank_fingerprint
+    expected_outcome: VIOLATION
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0
+    case: admits_kind_within_ceiling
+    expected_outcome: SUCCESS
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0
+    case: refuses_kind_above_ceiling
+    expected_outcome: VIOLATION
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    case: assembles_what_fits
+    expected_outcome: SUCCESS
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    case: refuses_reading_too_long
+    expected_outcome: VIOLATION
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0
+    case: adds_the_account_rule_and_positions
+    expected_outcome: SUCCESS
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0
+    case: offers_candidates
+    expected_outcome: SUCCESS
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_another_customers_account_and_continues
+    expected_outcome: SUCCESS
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_an_account_number_written_across_two_words
+    expected_outcome: SUCCESS
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: writes_the_customers_own_account_across_two_words
+    expected_outcome: SUCCESS
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: names_the_rule_when_no_permitted_word_remains
+    expected_outcome: SUCCESS
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: draws_an_adventurous_word_from_the_seed
+    expected_outcome: SUCCESS
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: finishes_on_the_end_of_the_response
+    expected_outcome: SUCCESS
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    case: writes_one_permitted_word_from_a_recorded_offer
+    expected_outcome: SUCCESS
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    case: writes_a_finished_response_and_offers_nothing_after
+    expected_outcome: SUCCESS
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    case: stops_unfinished_at_the_longest_response
+    expected_outcome: SUCCESS
+    source_finding: {source: human}
+  test_case_values:
+  - ct_code: causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0
+    case: forms_key_from_description_and_fingerprint
+    role: INPUT
+    field: description
+    value:
+      reading_capacity: 64
+      layers: 2
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0
+    case: forms_key_from_description_and_fingerprint
+    role: INPUT
+    field: fingerprint
+    value: sha256:ab12
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0
+    case: forms_key_from_description_and_fingerprint
+    role: EXPECTED
+    field: identity_key
+    value: '{"layers":2,"reading_capacity":64}|sha256:ab12'
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0
+    case: refuses_blank_fingerprint
+    role: INPUT
+    field: description
+    value:
+      reading_capacity: 64
+      layers: 2
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0
+    case: refuses_blank_fingerprint
+    role: INPUT
+    field: fingerprint
+    value: ' '
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0
+    case: admits_kind_within_ceiling
+    role: INPUT
+    field: kind
+    value: internal
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0
+    case: admits_kind_within_ceiling
+    role: INPUT
+    field: ceiling
+    value: confidential
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0
+    case: admits_kind_within_ceiling
+    role: INPUT
+    field: kinds
+    value:
+    - public
+    - internal
+    - confidential
+    - restricted
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0
+    case: admits_kind_within_ceiling
+    role: EXPECTED
+    field: within_ceiling
+    value: true
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0
+    case: refuses_kind_above_ceiling
+    role: INPUT
+    field: kind
+    value: restricted
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0
+    case: refuses_kind_above_ceiling
+    role: INPUT
+    field: ceiling
+    value: internal
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0
+    case: refuses_kind_above_ceiling
+    role: INPUT
+    field: kinds
+    value:
+    - public
+    - internal
+    - confidential
+    - restricted
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    case: assembles_what_fits
+    role: INPUT
+    field: system_prompt
+    value: Answer briefly.
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    case: assembles_what_fits
+    role: INPUT
+    field: question
+    value: What is my balance?
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    case: assembles_what_fits
+    role: INPUT
+    field: supporting_material
+    value: Account 12345678 balance 40.
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    case: assembles_what_fits
+    role: INPUT
+    field: reading_capacity
+    value: 20
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    case: assembles_what_fits
+    role: EXPECTED
+    field: reading
+    value:
+      system_prompt: Answer briefly.
+      question: What is my balance?
+      supporting_material: Account 12345678 balance 40.
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    case: assembles_what_fits
+    role: EXPECTED
+    field: reading_length
+    value: 10
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    case: refuses_reading_too_long
+    role: INPUT
+    field: system_prompt
+    value: Answer briefly.
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    case: refuses_reading_too_long
+    role: INPUT
+    field: question
+    value: What is my balance?
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    case: refuses_reading_too_long
+    role: INPUT
+    field: supporting_material
+    value: Account 12345678 balance 40.
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0
+    case: refuses_reading_too_long
+    role: INPUT
+    field: reading_capacity
+    value: 5
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0
+    case: adds_the_account_rule_and_positions
+    role: INPUT
+    field: response_rules
+    value:
+      forbidden:
+      - rule: no_guarantees
+        pattern: \bguaranteed\b
+      account_number_pattern: '[0-9](?:[ -]?[0-9]){7}'
+      freedom: 0
+      longest_response: 3
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0
+    case: adds_the_account_rule_and_positions
+    role: INPUT
+    field: account_numbers
+    value:
+    - '12345678'
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0
+    case: adds_the_account_rule_and_positions
+    role: INPUT
+    field: seed
+    value: 7
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0
+    case: adds_the_account_rule_and_positions
+    role: EXPECTED
+    field: rules_in_force
+    value:
+      forbidden:
+      - rule: no_guarantees
+        pattern: \bguaranteed\b
+      - rule: another_customers_account_number
+        pattern: '[0-9](?:[ -]?[0-9]){7}'
+        except:
+        - '12345678'
+      freedom: 0
+      seed: 7
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0
+    case: adds_the_account_rule_and_positions
+    role: EXPECTED
+    field: positions
+    value:
+    - 1
+    - 2
+    - 3
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0
+    case: offers_candidates
+    role: INPUT
+    field: reading
+    value:
+      system_prompt: Answer briefly.
+      question: What is my balance?
+      supporting_material: Account 12345678 balance 40.
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0
+    case: offers_candidates
+    role: INPUT
+    field: text
+    value: ''
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0
+    case: offers_candidates
+    role: INPUT
+    field: finished
+    value: false
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0
+    case: offers_candidates
+    role: INPUT
+    field: stopped_by
+    value: none
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0
+    case: offers_candidates
+    role: ASSERT
+    field: candidates
+    value:
+      mode: property
+      type: non_zero
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_another_customers_account_and_continues
+    role: INPUT
+    field: candidates
+    value:
+    - word: '87654321'
+      likelihood: 0.6
+    - word: Your
+      likelihood: 0.3
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_another_customers_account_and_continues
+    role: INPUT
+    field: rules_in_force
+    value:
+      forbidden:
+      - rule: no_guarantees
+        pattern: \bguaranteed\b
+      - rule: another_customers_account_number
+        pattern: '[0-9](?:[ -]?[0-9]){7}'
+        except:
+        - '12345678'
+      freedom: 0
+      seed: 7
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_another_customers_account_and_continues
+    role: INPUT
+    field: position
+    value: 1
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_another_customers_account_and_continues
+    role: INPUT
+    field: text
+    value: ''
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_another_customers_account_and_continues
+    role: INPUT
+    field: finished
+    value: false
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_another_customers_account_and_continues
+    role: INPUT
+    field: stopped_by
+    value: none
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_another_customers_account_and_continues
+    role: INPUT
+    field: stopped
+    value: []
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_another_customers_account_and_continues
+    role: EXPECTED
+    field: text
+    value: Your
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_another_customers_account_and_continues
+    role: EXPECTED
+    field: finished
+    value: false
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_another_customers_account_and_continues
+    role: EXPECTED
+    field: stopped_by
+    value: none
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_another_customers_account_and_continues
+    role: EXPECTED
+    field: stopped
+    value:
+    - position: 1
+      word: '87654321'
+      rule: another_customers_account_number
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_an_account_number_written_across_two_words
+    role: INPUT
+    field: candidates
+    value:
+    - word: '4321'
+      likelihood: 0.7
+    - word: is
+      likelihood: 0.2
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_an_account_number_written_across_two_words
+    role: INPUT
+    field: rules_in_force
+    value:
+      forbidden:
+      - rule: no_guarantees
+        pattern: \bguaranteed\b
+      - rule: another_customers_account_number
+        pattern: '[0-9](?:[ -]?[0-9]){7}'
+        except:
+        - '12345678'
+      freedom: 0
+      seed: 7
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_an_account_number_written_across_two_words
+    role: INPUT
+    field: position
+    value: 3
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_an_account_number_written_across_two_words
+    role: INPUT
+    field: text
+    value: Account 8765
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_an_account_number_written_across_two_words
+    role: INPUT
+    field: finished
+    value: false
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_an_account_number_written_across_two_words
+    role: INPUT
+    field: stopped_by
+    value: none
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_an_account_number_written_across_two_words
+    role: INPUT
+    field: stopped
+    value: []
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_an_account_number_written_across_two_words
+    role: EXPECTED
+    field: text
+    value: Account 8765 is
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_an_account_number_written_across_two_words
+    role: EXPECTED
+    field: finished
+    value: false
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_an_account_number_written_across_two_words
+    role: EXPECTED
+    field: stopped_by
+    value: none
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: stops_an_account_number_written_across_two_words
+    role: EXPECTED
+    field: stopped
+    value:
+    - position: 3
+      word: '4321'
+      rule: another_customers_account_number
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: writes_the_customers_own_account_across_two_words
+    role: INPUT
+    field: candidates
+    value:
+    - word: '5678'
+      likelihood: 0.8
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: writes_the_customers_own_account_across_two_words
+    role: INPUT
+    field: rules_in_force
+    value:
+      forbidden:
+      - rule: no_guarantees
+        pattern: \bguaranteed\b
+      - rule: another_customers_account_number
+        pattern: '[0-9](?:[ -]?[0-9]){7}'
+        except:
+        - '12345678'
+      freedom: 0
+      seed: 7
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: writes_the_customers_own_account_across_two_words
+    role: INPUT
+    field: position
+    value: 3
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: writes_the_customers_own_account_across_two_words
+    role: INPUT
+    field: text
+    value: Account 1234
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: writes_the_customers_own_account_across_two_words
+    role: INPUT
+    field: finished
+    value: false
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: writes_the_customers_own_account_across_two_words
+    role: INPUT
+    field: stopped_by
+    value: none
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: writes_the_customers_own_account_across_two_words
+    role: INPUT
+    field: stopped
+    value: []
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: writes_the_customers_own_account_across_two_words
+    role: EXPECTED
+    field: text
+    value: Account 1234 5678
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: writes_the_customers_own_account_across_two_words
+    role: EXPECTED
+    field: finished
+    value: false
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: writes_the_customers_own_account_across_two_words
+    role: EXPECTED
+    field: stopped_by
+    value: none
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: writes_the_customers_own_account_across_two_words
+    role: EXPECTED
+    field: stopped
+    value: []
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: names_the_rule_when_no_permitted_word_remains
+    role: INPUT
+    field: candidates
+    value:
+    - word: '87654321'
+      likelihood: 0.9
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: names_the_rule_when_no_permitted_word_remains
+    role: INPUT
+    field: rules_in_force
+    value:
+      forbidden:
+      - rule: no_guarantees
+        pattern: \bguaranteed\b
+      - rule: another_customers_account_number
+        pattern: '[0-9](?:[ -]?[0-9]){7}'
+        except:
+        - '12345678'
+      freedom: 0
+      seed: 7
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: names_the_rule_when_no_permitted_word_remains
+    role: INPUT
+    field: position
+    value: 1
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: names_the_rule_when_no_permitted_word_remains
+    role: INPUT
+    field: text
+    value: ''
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: names_the_rule_when_no_permitted_word_remains
+    role: INPUT
+    field: finished
+    value: false
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: names_the_rule_when_no_permitted_word_remains
+    role: INPUT
+    field: stopped_by
+    value: none
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: names_the_rule_when_no_permitted_word_remains
+    role: INPUT
+    field: stopped
+    value: []
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: names_the_rule_when_no_permitted_word_remains
+    role: EXPECTED
+    field: text
+    value: ''
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: names_the_rule_when_no_permitted_word_remains
+    role: EXPECTED
+    field: finished
+    value: false
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: names_the_rule_when_no_permitted_word_remains
+    role: EXPECTED
+    field: stopped_by
+    value: another_customers_account_number
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: names_the_rule_when_no_permitted_word_remains
+    role: EXPECTED
+    field: stopped
+    value:
+    - position: 1
+      word: '87654321'
+      rule: another_customers_account_number
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: draws_an_adventurous_word_from_the_seed
+    role: INPUT
+    field: candidates
+    value:
+    - word: balance
+      likelihood: 0.6
+    - word: savings
+      likelihood: 0.3
+    - word: loan
+      likelihood: 0.1
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: draws_an_adventurous_word_from_the_seed
+    role: INPUT
+    field: rules_in_force
+    value:
+      forbidden:
+      - rule: no_guarantees
+        pattern: \bguaranteed\b
+      - rule: another_customers_account_number
+        pattern: '[0-9](?:[ -]?[0-9]){7}'
+        except:
+        - '12345678'
+      freedom: 1
+      seed: 7
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: draws_an_adventurous_word_from_the_seed
+    role: INPUT
+    field: position
+    value: 2
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: draws_an_adventurous_word_from_the_seed
+    role: INPUT
+    field: text
+    value: Your
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: draws_an_adventurous_word_from_the_seed
+    role: INPUT
+    field: finished
+    value: false
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: draws_an_adventurous_word_from_the_seed
+    role: INPUT
+    field: stopped_by
+    value: none
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: draws_an_adventurous_word_from_the_seed
+    role: INPUT
+    field: stopped
+    value: []
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: draws_an_adventurous_word_from_the_seed
+    role: EXPECTED
+    field: text
+    value: Your savings
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: draws_an_adventurous_word_from_the_seed
+    role: EXPECTED
+    field: finished
+    value: false
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: draws_an_adventurous_word_from_the_seed
+    role: EXPECTED
+    field: stopped_by
+    value: none
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: draws_an_adventurous_word_from_the_seed
+    role: EXPECTED
+    field: stopped
+    value: []
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: finishes_on_the_end_of_the_response
+    role: INPUT
+    field: candidates
+    value:
+    - word: <end>
+      likelihood: 0.9
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: finishes_on_the_end_of_the_response
+    role: INPUT
+    field: rules_in_force
+    value:
+      forbidden:
+      - rule: no_guarantees
+        pattern: \bguaranteed\b
+      - rule: another_customers_account_number
+        pattern: '[0-9](?:[ -]?[0-9]){7}'
+        except:
+        - '12345678'
+      freedom: 0
+      seed: 7
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: finishes_on_the_end_of_the_response
+    role: INPUT
+    field: position
+    value: 3
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: finishes_on_the_end_of_the_response
+    role: INPUT
+    field: text
+    value: Your balance
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: finishes_on_the_end_of_the_response
+    role: INPUT
+    field: finished
+    value: false
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: finishes_on_the_end_of_the_response
+    role: INPUT
+    field: stopped_by
+    value: none
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: finishes_on_the_end_of_the_response
+    role: INPUT
+    field: stopped
+    value: []
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: finishes_on_the_end_of_the_response
+    role: EXPECTED
+    field: text
+    value: Your balance
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: finishes_on_the_end_of_the_response
+    role: EXPECTED
+    field: finished
+    value: true
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: finishes_on_the_end_of_the_response
+    role: EXPECTED
+    field: stopped_by
+    value: none
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0
+    case: finishes_on_the_end_of_the_response
+    role: EXPECTED
+    field: stopped
+    value: []
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    case: writes_one_permitted_word_from_a_recorded_offer
+    role: INPUT
+    field: reading
+    value:
+      system_prompt: Answer briefly.
+      question: What is my balance?
+      supporting_material: Account 12345678 balance 40.
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    case: writes_one_permitted_word_from_a_recorded_offer
+    role: INPUT
+    field: rules_in_force
+    value:
+      forbidden:
+      - rule: no_guarantees
+        pattern: \bguaranteed\b
+      - rule: another_customers_account_number
+        pattern: '[0-9](?:[ -]?[0-9]){7}'
+        except:
+        - '12345678'
+      freedom: 0
+      seed: 7
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    case: writes_one_permitted_word_from_a_recorded_offer
+    role: INPUT
+    field: position
+    value: 1
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    case: writes_one_permitted_word_from_a_recorded_offer
+    role: INPUT
+    field: text
+    value: ''
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    case: writes_one_permitted_word_from_a_recorded_offer
+    role: INPUT
+    field: finished
+    value: false
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    case: writes_one_permitted_word_from_a_recorded_offer
+    role: INPUT
+    field: stopped_by
+    value: none
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    case: writes_one_permitted_word_from_a_recorded_offer
+    role: INPUT
+    field: stopped
+    value: []
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    case: writes_one_permitted_word_from_a_recorded_offer
+    role: RECORDED
+    field: offered
+    value:
+      candidates:
+      - word: '87654321'
+        likelihood: 0.6
+      - word: Your
+        likelihood: 0.3
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_NEXT_WORD_V0
+    case: writes_one_permitted_word_from_a_recorded_offer
+    role: EXPECTED
+    field: result
+    value:
+      text: Your
+      finished: false
+      stopped_by: none
+      stopped:
+      - position: 1
+        word: '87654321'
+        rule: another_customers_account_number
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    case: writes_a_finished_response_and_offers_nothing_after
+    role: INPUT
+    field: reading
+    value:
+      system_prompt: Answer briefly.
+      question: What is my balance?
+      supporting_material: Account 12345678 balance 40.
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    case: writes_a_finished_response_and_offers_nothing_after
+    role: INPUT
+    field: rules_in_force
+    value:
+      forbidden:
+      - rule: no_guarantees
+        pattern: \bguaranteed\b
+      - rule: another_customers_account_number
+        pattern: '[0-9](?:[ -]?[0-9]){7}'
+        except:
+        - '12345678'
+      freedom: 0
+      seed: 7
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    case: writes_a_finished_response_and_offers_nothing_after
+    role: INPUT
+    field: positions
+    value:
+    - 1
+    - 2
+    - 3
+    - 4
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    case: writes_a_finished_response_and_offers_nothing_after
+    role: RECORDED
+    field: written[0]/offered
+    value:
+      candidates:
+      - word: '87654321'
+        likelihood: 0.6
+      - word: Your
+        likelihood: 0.3
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    case: writes_a_finished_response_and_offers_nothing_after
+    role: RECORDED
+    field: written[1]/offered
+    value:
+      candidates:
+      - word: balance
+        likelihood: 0.9
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    case: writes_a_finished_response_and_offers_nothing_after
+    role: RECORDED
+    field: written[2]/offered
+    value:
+      candidates:
+      - word: <end>
+        likelihood: 0.9
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    case: writes_a_finished_response_and_offers_nothing_after
+    role: RECORDED
+    field: written[3]/offered
+    value:
+      candidates: []
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    case: writes_a_finished_response_and_offers_nothing_after
+    role: EXPECTED
+    field: result
+    value:
+      text: Your balance
+      finished: true
+      stopped_by: none
+      stopped:
+      - position: 1
+        word: '87654321'
+        rule: another_customers_account_number
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    case: stops_unfinished_at_the_longest_response
+    role: INPUT
+    field: reading
+    value:
+      system_prompt: Answer briefly.
+      question: What is my balance?
+      supporting_material: Account 12345678 balance 40.
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    case: stops_unfinished_at_the_longest_response
+    role: INPUT
+    field: rules_in_force
+    value:
+      forbidden:
+      - rule: no_guarantees
+        pattern: \bguaranteed\b
+      - rule: another_customers_account_number
+        pattern: '[0-9](?:[ -]?[0-9]){7}'
+        except:
+        - '12345678'
+      freedom: 0
+      seed: 7
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    case: stops_unfinished_at_the_longest_response
+    role: INPUT
+    field: positions
+    value:
+    - 1
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    case: stops_unfinished_at_the_longest_response
+    role: RECORDED
+    field: written[0]/offered
+    value:
+      candidates:
+      - word: Your
+        likelihood: 0.9
+    source_finding: {source: human}
+  - ct_code: causal_language_model::CT_WRITE_RESPONSE_V0
+    case: stops_unfinished_at_the_longest_response
+    role: EXPECTED
+    field: result
+    value:
+      text: Your
+      finished: false
+      stopped_by: none
+      stopped: []
+    source_finding: {source: human}
+  withdrawn_facts: null
+```
 
 Every binding names a field the capability declares, read from the pinned baseline
 `3918d97c73a7431ecc9ef512938b34afa9028cd6e382626398750dca12defb1f`.
@@ -12,109 +6096,17 @@ Every binding names a field the capability declares, read from the pinned baseli
 
 ## 1. Design Decisions Resolution
 
-<!-- register:design_resolution optional -->
-| Decision | Business Fact | Resolution | Source Finding |
-|----------|---------------|------------|----------------|
-| model_response is a new subdomain | Nothing in the composition registers a model or governs how one writes | A new subdomain of the causal_language_model namespace with its own two actors, five stores, one binding and five operations | S4 design_decisions #1 |
-| Writing is a molecule of two declared steps per pass | The rules must act while the model writes, visibly to governance | One pass is a molecule of the model's offer and the rules' choice; the response is a molecule whose loop runs one pass per position up to the longest response | S4 design_decisions #2 |
-| Determinism ends at the model's step | A reader must see exactly where determinism ends | Only the offer is declared ct_impure; the choice emits each pass's result, so nothing is decided on the model's offer | S4 design_decisions #3 |
-| A trace is reproduced from its record | A user prompt's trace must be reproducible from what was recorded | The platform records each offer where it is produced; the writing molecule's vectors state recorded offers and are proven by substituting them | S4 design_decisions #4 |
-| The seed is a recorded input | Anyone reading the record can re-derive each chosen word | The user prompt states a seed; it enters the rules in force, which the user prompt record keeps whole | S4 design_decisions #5 |
-| The test model is a realization of the model's step | The rules must be shown to hold against a model that tries to break them | The offer's implementation is the test model, which offers another customer's account number first | S4 design_decisions #6 |
-| The customer's account numbers travel with the user prompt | The rule against another customer's account number is formed per user prompt | The rules in force add one forbidden pattern, the account-number shape, excepting the customer's own numbers; every rule is read against the response so far joined to the candidate, so a number written across several words is stopped at the word that completes it | S4 design_decisions #7 |
-| Uniqueness by a formed key | Two registrations with the same description and fingerprint are the same model | A pure transform forms one key from the description and fingerprint; the registry claims it atomically, and ALREADY_EXISTS is the duplicate refusal | S4 design_decisions #8 |
-| State is data on the record | A model moves into and out of service repeatedly | The model record carries its state and its open time in service. Placement and withdrawal change the model's state only from the state they expect, in one conditional update, and refuse when it matched nothing; the time in service record is written after, so a failure between the two leaves a model no user prompt can reach rather than one answering under no rules | S4 design_decisions #9 |
-| Membership before order | Membership is mechanism; the comparison is this subdomain's rule | The stated kind is confirmed a declared kind, then compared with the ceiling by the declared order | S4 design_decisions #10 |
-| Retrieval raises no event | Nothing reacts to a read | Retrieval appends to the operation trail and declares no business moment | S4 design_decisions #11 |
-| Authorization is read, never granted | Which staff are model staff and who may act for which customer is decided elsewhere | The business's existing arrangements are the trusted source of who is model staff and whom a requester may act for; they assert both through the ingress, as the staff member's credentials and the requester's permitted customers, and model_response trusts that assertion and authenticates neither. The rules the credentials are checked against, and the schema a description is checked against, are fixed by this design and never supplied by the caller | S4 design_decisions #12 |
-| Every refusal is recorded with its reason | Every user prompt is recorded, whether responded to or refused | Each refusal routes to its own place in the submission, where the recording contract runs with that refusal's reason; a failure to write the response, or a store failing before the model reads, is recorded as FAILED with the stage. Not recorded: a payload the intent refuses, a second submission under a claimed identity, and a failure of the user prompt records themselves, which ends the act rejected and reports no record. A submission is traced by its user prompt record, which names the requester | S4 constraint_register #9 |
-| One identity, one record | Each model the business holds has exactly one record | A time in service and a user prompt are each claimed in their own register before anything is written under them; a duplicate is refused rather than overwriting or appending a second record | S4 design_decisions #8 |
-| The governed unit is a word | A language model writes a response one word at a time | Choosing, stopping and reading capacity are counted in words, which is exact for the test model and a simulation for a real one: a real model's tokens join this design only through a realization that offers whole words. A rule governs what its pattern can express and nothing else; the business does not claim a response is true | S4 design_decisions #6 |
-| How the seed draws an adventurous word | Anyone reading the record can re-derive each chosen word | The permitted candidates, most likely first and ties in offered order, are narrowed to the first freedom-plus-one; the word at position (seed plus the word's position) modulo that count is chosen. Freedom zero always chooses the most likely permitted word | S4 design_decisions #5 |
-| A finished response invokes no model | An unfinished response is not a response | The loop runs one pass per position to the longest response, as molecules run; once the response has finished or a rule has stopped it, the offer is handed that fact and returns no words without consulting the model, and the choice changes nothing | S4 design_decisions #2 |
-| The kinds of information are copied into three bindings | The kinds are declared once, in order, least sensitive first | A binding cannot read a vocabulary, so the ordered kinds are written as a literal where membership and order are checked, each copy identical to the vocabulary's entries in the same order | S4 design_decisions #10 |
-
 ---
 
 ## 2. Artifact Inventory — Existing Artifacts
-
-<!-- register:existing_inventory -->
-| FQDN | Action (REPLACE, REUSE, EXTEND, REVIEW) | Summary | Reason | Source Finding |
-|------|-----------------------------------------|---------|--------|----------------|
-| capability_side_effects::CS_MUTABLE_JSON_V0 | REUSE |  | Holds the model record and the time in service record, read and updated in place. | S6 pps_artifacts_requiring_action capability_side_effects::CS_MUTABLE_JSON_V0 |
-| capability_side_effects::CS_REGISTRY_V0 | REUSE |  | Register-if-absent gives the atomic claim duplicate prevention needs, on a key the subdomain forms. | S6 pps_artifacts_requiring_action capability_side_effects::CS_REGISTRY_V0 |
-| capability_side_effects::CS_APPENDONLY_JSONL_V0 | REUSE |  | Appends the user prompt record and the operation trail, neither of which can be amended. | S6 pps_artifacts_requiring_action capability_side_effects::CS_APPENDONLY_JSONL_V0 |
-| capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 | REUSE |  | Assembles the model, time in service and user prompt records from supplied values. | S6 pps_artifacts_requiring_action capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 |
-| capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0 | REUSE |  | Reports what a model description lacks of the fields registration requires; a following rule refuses it when anything is reported. | S6 pps_artifacts_requiring_action capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0 |
-| capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0 | REUSE |  | Confirms model staff credentials, a model's state and a response's release conditions against declared rules, and interprets each into a decision. | S6 pps_artifacts_requiring_action capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0 |
-| capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0 | REUSE |  | Confirms a stated kind of information is a declared kind, and that a requester may act for the customer. | S6 pps_artifacts_requiring_action capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0 |
-| capability_transforms::CT_PURE_FILTER_RECORDS_V0 | REUSE |  | Selects the one user prompt record retrieved, and interprets a record not found into a refusal. | S6 ownership Append an entry to a trail that cannot be amended |
-| capability_transforms::CONSTITUTION_MOLECULES_V0 | REUSE |  | Governs the two writing molecules and runs the loop's body once per pass. | S6 pps_artifacts_requiring_action capability_transforms::CONSTITUTION_MOLECULES_V0 |
-| capability_transforms::CONSTITUTION_NONDETERMINISTIC_ATOMS_V0 | REUSE |  | Governs the model's offer: recorded when produced, replayed from the record, offered to a deterministic step. | S6 pps_artifacts_requiring_action capability_transforms::CONSTITUTION_NONDETERMINISTIC_ATOMS_V0 |
 
 ---
 
 ## 3. Artifact Family Mapping — New Artifacts
 
-<!-- register:new_artifacts business_language=capability -->
-| Capability | Family (AC, IN, WF, RB, CC, CT, EV, VOCAB, STRUCTURE, TI, TE) | Code | Summary | Owner Subdomain | Status | Source Finding |
-|------------|---------------------------------------------------------------|------|---------|-----------------|--------|----------------|
-| The authorized model staff member who registers, places, withdraws and retrieves | AC | causal_language_model::AC_MODEL_STAFF_V0 | The actor whose authorization every model staff operation binds | model_response | NEW | S5 provisional_codes AC_MODEL_STAFF_V0 |
-| The authorized requester who submits a user prompt on behalf of a customer | AC | causal_language_model::AC_REQUESTER_V0 | The actor who submits a user prompt for one customer | model_response | NEW | S5 provisional_codes AC_REQUESTER_V0 |
-| A request to register a model with its description and fingerprint | IN | causal_language_model::IN_REGISTER_MODEL_V0 | A request to register a model with its description and fingerprint | model_response | NEW | S5 provisional_codes IN_REGISTER_MODEL_V0 |
-| A request to place a registered model in service with its ceiling, system prompt and response rules | IN | causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0 | A request to place a registered model in service with its ceiling, system prompt and response rules | model_response | NEW | S5 provisional_codes IN_PLACE_MODEL_IN_SERVICE_V0 |
-| A request to withdraw a model from service | IN | causal_language_model::IN_WITHDRAW_MODEL_FROM_SERVICE_V0 | A request to withdraw a model from service | model_response | NEW | S5 provisional_codes IN_WITHDRAW_MODEL_FROM_SERVICE_V0 |
-| A user prompt submitted on behalf of a customer | IN | causal_language_model::IN_SUBMIT_USER_PROMPT_V0 | A user prompt submitted on behalf of a customer | model_response | NEW | S5 provisional_codes IN_SUBMIT_USER_PROMPT_V0 |
-| A request to retrieve the record of a user prompt | IN | causal_language_model::IN_RETRIEVE_USER_PROMPT_RECORD_V0 | A request to retrieve the record of a user prompt | model_response | NEW | S5 provisional_codes IN_RETRIEVE_USER_PROMPT_RECORD_V0 |
-| Registering a model, refusing a second registration of the same model | WF | causal_language_model::WF_REGISTER_MODEL_V0 | Registering a model, refusing a second registration of the same model | model_response | NEW | S5 provisional_codes WF_REGISTER_MODEL_V0 |
-| Opening a time in service for a registered model not already in service | WF | causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | Opening a time in service for a registered model not already in service | model_response | NEW | S5 provisional_codes WF_PLACE_MODEL_IN_SERVICE_V0 |
-| Closing a model's time in service | WF | causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | Closing a model's time in service | model_response | NEW | S5 provisional_codes WF_WITHDRAW_MODEL_FROM_SERVICE_V0 |
-| Admitting a user prompt, writing the response under the rules, releasing or refusing it, and recording it | WF | causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | Admitting a user prompt, writing the response under the rules, releasing or refusing it, and recording it | model_response | NEW | S5 provisional_codes WF_SUBMIT_USER_PROMPT_V0 |
-| Reading a user prompt record and recording that it was read | WF | causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0 | Reading a user prompt record and recording that it was read | model_response | NEW | S5 provisional_codes WF_RETRIEVE_USER_PROMPT_RECORD_V0 |
-| Confirm the staff member is model staff | CC | causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | Confirm the staff member is model staff | model_response | NEW | S5 provisional_codes CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 |
-| Claim a user prompt's identity so a second submission under it is refused | CC | causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0 | Claim a user prompt's identity so a second submission under it is refused | model_response | NEW | S5 provisional_codes CC_CLAIM_USER_PROMPT_IDENTITY_V0 |
-| Confirm the requester may act for the customer the user prompt is for | CC | causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0 | Confirm the requester may act for the customer the user prompt is for | model_response | NEW | S5 provisional_codes CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0 |
-| Claim a model's identity so a second registration of the same model is refused | CC | causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | Claim a model's identity so a second registration of the same model is refused | model_response | NEW | S5 provisional_codes CC_CLAIM_MODEL_IDENTITY_V0 |
-| Record a model's description and fingerprint as its record, registered | CC | causal_language_model::CC_REGISTER_MODEL_V0 | Record a model's description and fingerprint as its record, registered | model_response | NEW | S5 provisional_codes CC_REGISTER_MODEL_V0 |
-| Open a time in service with its ceiling, system prompt and response rules, and mark the model in service | CC | causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | Open a time in service with its ceiling, system prompt and response rules, and mark the model in service | model_response | NEW | S5 provisional_codes CC_PLACE_MODEL_IN_SERVICE_V0 |
-| Close the time in service and mark the model registered | CC | causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | Close the time in service and mark the model registered | model_response | NEW | S5 provisional_codes CC_WITHDRAW_MODEL_FROM_SERVICE_V0 |
-| Refuse a user prompt whose model is not registered or not in service | CC | causal_language_model::CC_ADMIT_USER_PROMPT_V0 | Refuse a user prompt before the model sees it when its model is not registered or not in service | model_response | NEW | S5 provisional_codes CC_ADMIT_USER_PROMPT_V0 |
-| Refuse a user prompt whose kind of information is above the model's ceiling | CC | causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | Refuse a user prompt before the model sees it when it states a kind more sensitive than the ceiling | model_response | NEW | S5 provisional_codes CC_ADMIT_USER_PROMPT_V0 |
-| Refuse a user prompt longer than the model can read at once | CC | causal_language_model::CC_CONFIRM_READING_FITS_V0 | Assemble exactly what the model reads and refuse it before the model sees it when it is too long | model_response | NEW | S5 provisional_codes CC_ADMIT_USER_PROMPT_V0 |
-| Write the response word by word under the rules in force | CC | causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | Form the rules in force and write the response word by word under them | model_response | NEW | S5 provisional_codes CC_WRITE_MODEL_RESPONSE_V0 |
-| Release a written response only when it finished and no rule stopped it | CC | causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0 | Confirm one release condition of a written response, refusing it otherwise | model_response | NEW | S5 provisional_codes CC_WRITE_MODEL_RESPONSE_V0 |
-| Append the user prompt record with what the model read, the rules in force and the outcome | CC | causal_language_model::CC_RECORD_USER_PROMPT_V0 | Append the user prompt record with what the model read, the rules in force and the outcome | model_response | NEW | S5 provisional_codes CC_RECORD_USER_PROMPT_V0 |
-| Read the record of a user prompt | CC | causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0 | Read the record of a user prompt | model_response | NEW | S5 provisional_codes CC_RETRIEVE_USER_PROMPT_RECORD_V0 |
-| Append a durable account of a performed operation to the subdomain's own trail | CC | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | Append a durable account of a performed operation to the subdomain's own trail | model_response | NEW | S5 provisional_codes CC_APPEND_MODEL_OPERATION_V0 |
-| Form the single key claimed for a model from its description and fingerprint | CT | causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0 | Forms the single key claimed for a model from its description and fingerprint | model_response | NEW | S5 provisional_codes CT_PURE_FORM_MODEL_IDENTITY_KEY_V0 |
-| Decide whether a kind of information is no more sensitive than a ceiling | CT | causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0 | Decides whether a kind of information is no more sensitive than a ceiling, by the declared order | model_response | NEW | S5 provisional_codes CT_PURE_COMPARE_SENSITIVITY_V0 |
-| Assemble exactly what the model reads and decide whether it fits | CT | causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | Assembles exactly what the model reads and decides whether it fits what the model can read at once | model_response | NEW | S5 provisional_codes CT_PURE_ASSEMBLE_MODEL_READING_V0 |
-| Form the response rules in force for one user prompt | CT | causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0 | Forms the response rules in force for one user prompt from the time in service and the customer's account numbers | model_response | NEW | S5 provisional_codes CT_PURE_FORM_RESPONSE_RULES_V0 |
-| The model's offer of its next words | CT | causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | The model's step: offers its next words given the response so far; the one step whose result is not determined by its inputs | model_response | NEW | S5 provisional_codes CT_IMPURE_OFFER_NEXT_WORDS_V0 |
-| Stop forbidden words and choose one permitted word | CT | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | Stops forbidden words among those offered and chooses one permitted word under the freedom of word choice and a stated seed | model_response | NEW | S5 provisional_codes CT_PURE_CHOOSE_PERMITTED_WORD_V0 |
-| One pass of writing: the model's offer, then the rules' choice | CT | causal_language_model::CT_WRITE_NEXT_WORD_V0 | One pass of writing, composed of the model's offer and the rules' choice | model_response | NEW | S5 provisional_codes CT_WRITE_NEXT_WORD_V0 |
-| Write a response one pass per word, up to the longest response | CT | causal_language_model::CT_WRITE_RESPONSE_V0 | Writes a response by repeating one pass per word, up to the longest response, carrying the response so far and the words stopped | model_response | NEW | S5 provisional_codes CT_WRITE_RESPONSE_V0 |
-| The moment the business records a model | EV | causal_language_model::EV_MODEL_REGISTERED_V0 | The moment the business records a model | model_response | NEW | S5 provisional_codes EV_MODEL_REGISTERED_V0 |
-| The moment a model is placed in service and a time in service begins | EV | causal_language_model::EV_MODEL_SERVICE_STARTED_V0 | The moment a model is placed in service and a time in service begins | model_response | NEW | S5 provisional_codes EV_MODEL_SERVICE_STARTED_V0 |
-| The moment a model is withdrawn from service and its time in service ends | EV | causal_language_model::EV_MODEL_SERVICE_ENDED_V0 | The moment a model is withdrawn from service and its time in service ends | model_response | NEW | S5 provisional_codes EV_MODEL_SERVICE_ENDED_V0 |
-| The moment a model response is released | EV | causal_language_model::EV_USER_PROMPT_RESPONDED_V0 | The moment a model response is released | model_response | NEW | S5 provisional_codes EV_USER_PROMPT_RESPONDED_V0 |
-| The moment a user prompt yields no response | EV | causal_language_model::EV_USER_PROMPT_REFUSED_V0 | The moment a user prompt yields no response | model_response | NEW | S5 provisional_codes EV_USER_PROMPT_REFUSED_V0 |
-| The kinds of information, least sensitive first | VOCAB | causal_language_model::VOCAB_KIND_OF_INFORMATION_V0 | The kinds of information, least sensitive first: public, internal, confidential, restricted | model_response | NEW | S5 provisional_codes VOCAB_KIND_OF_INFORMATION_V0 |
-| Bind the subdomain's operations to the stores and mechanisms they use | RB | causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0 | Binds every model response workflow to the mechanisms and stores it uses | model_response | NEW | S5 provisional_codes RB_MODEL_RESPONSE_BINDINGS_V0 |
-| Declare the stores the subdomain owns | STRUCTURE | causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0 | Declares the seven stores the subdomain owns and the paths they occupy | model_response | NEW | S5 provisional_codes STRUCTURE_MODEL_RESPONSE_STORAGE_V0 |
-
 ---
 
 ## 4. Runtime Binding (RB) Declarations
-
-<!-- register:rb_declarations -->
-| RB Code | Binds WF | CS Bindings | Storage Structure | Source Finding |
-|---------|----------|-------------|-------------------|----------------|
-| causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0 | causal_language_model::WF_REGISTER_MODEL_V0 | capability_side_effects::CS_MUTABLE_JSON_V0, capability_side_effects::CS_REGISTRY_V0, capability_side_effects::CS_APPENDONLY_JSONL_V0 | causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0 | S6 storage_governance A durable record of every model the business holds |
-| causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0 | causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | capability_side_effects::CS_MUTABLE_JSON_V0, capability_side_effects::CS_REGISTRY_V0, capability_side_effects::CS_APPENDONLY_JSONL_V0 | causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0 | S6 storage_governance A durable record of every model the business holds |
-| causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0 | causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | capability_side_effects::CS_MUTABLE_JSON_V0, capability_side_effects::CS_REGISTRY_V0, capability_side_effects::CS_APPENDONLY_JSONL_V0 | causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0 | S6 storage_governance A durable record of every model the business holds |
-| causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0 | causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | capability_side_effects::CS_MUTABLE_JSON_V0, capability_side_effects::CS_REGISTRY_V0, capability_side_effects::CS_APPENDONLY_JSONL_V0 | causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0 | S6 storage_governance A durable record of every model the business holds |
-| causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0 | causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0 | capability_side_effects::CS_MUTABLE_JSON_V0, capability_side_effects::CS_REGISTRY_V0, capability_side_effects::CS_APPENDONLY_JSONL_V0 | causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0 | S6 storage_governance A durable record of every model the business holds |
 
 ---
 
@@ -125,553 +6117,17 @@ places in the submission, one per outcome, each handed its own outcome and reaso
 contract and `Node` names the place. The two release conditions run one contract at two places the
 same way.
 
-<!-- register:execution_topology optional_columns=runs -->
-| Workflow | Node | Runs | Node Type (IN, CC, EXIT, EXIT_SUCCESS) | Routing | Source Finding |
-|----------|------|------|----------------------------------------|---------|----------------|
-| causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::IN_REGISTER_MODEL_V0 |  | IN | ACK -> causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0; NACK -> EXIT_REJECTED | S7 new_artifacts IN_REGISTER_MODEL_V0 |
-| causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 |  | CC | SUCCESS -> causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0; VIOLATION -> EXIT_REJECTED | S7 new_artifacts CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 |
-| causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 |  | CC | SUCCESS -> causal_language_model::CC_REGISTER_MODEL_V0; ALREADY_EXISTS -> EXIT_REJECTED; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_CLAIM_MODEL_IDENTITY_V0 |
-| causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::CC_REGISTER_MODEL_V0 |  | CC | SUCCESS -> causal_language_model::CC_APPEND_MODEL_OPERATION_V0; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_REGISTER_MODEL_V0 |
-| causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 |  | CC | SUCCESS -> EXIT_REGISTERED; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_APPEND_MODEL_OPERATION_V0 |
-| causal_language_model::WF_REGISTER_MODEL_V0 | EXIT_REGISTERED |  | EXIT_SUCCESS | — | S7 execution_topology WF_REGISTER_MODEL_V0 |
-| causal_language_model::WF_REGISTER_MODEL_V0 | EXIT_REJECTED |  | EXIT | — | S7 execution_topology WF_REGISTER_MODEL_V0 |
-| causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0 |  | IN | ACK -> causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0; NACK -> EXIT_REJECTED | S7 new_artifacts IN_PLACE_MODEL_IN_SERVICE_V0 |
-| causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 |  | CC | SUCCESS -> causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0; VIOLATION -> EXIT_REJECTED | S7 new_artifacts CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 |
-| causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 |  | CC | SUCCESS -> causal_language_model::CC_APPEND_MODEL_OPERATION_V0; NOT_FOUND -> EXIT_REJECTED; ALREADY_EXISTS -> EXIT_REJECTED; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_PLACE_MODEL_IN_SERVICE_V0 |
-| causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 |  | CC | SUCCESS -> EXIT_PLACED; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_APPEND_MODEL_OPERATION_V0 |
-| causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | EXIT_PLACED |  | EXIT_SUCCESS | — | S7 execution_topology WF_PLACE_MODEL_IN_SERVICE_V0 |
-| causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | EXIT_REJECTED |  | EXIT | — | S7 execution_topology WF_PLACE_MODEL_IN_SERVICE_V0 |
-| causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | causal_language_model::IN_WITHDRAW_MODEL_FROM_SERVICE_V0 |  | IN | ACK -> causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0; NACK -> EXIT_REJECTED | S7 new_artifacts IN_WITHDRAW_MODEL_FROM_SERVICE_V0 |
-| causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 |  | CC | SUCCESS -> causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0; VIOLATION -> EXIT_REJECTED | S7 new_artifacts CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 |
-| causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 |  | CC | SUCCESS -> causal_language_model::CC_APPEND_MODEL_OPERATION_V0; NOT_FOUND -> EXIT_REJECTED; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_WITHDRAW_MODEL_FROM_SERVICE_V0 |
-| causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 |  | CC | SUCCESS -> EXIT_WITHDRAWN; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_APPEND_MODEL_OPERATION_V0 |
-| causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | EXIT_WITHDRAWN |  | EXIT_SUCCESS | — | S7 execution_topology WF_WITHDRAW_MODEL_FROM_SERVICE_V0 |
-| causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | EXIT_REJECTED |  | EXIT | — | S7 execution_topology WF_WITHDRAW_MODEL_FROM_SERVICE_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::IN_SUBMIT_USER_PROMPT_V0 |  | IN | ACK -> causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0; NACK -> EXIT_REJECTED | S7 new_artifacts IN_SUBMIT_USER_PROMPT_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0 |  | CC | SUCCESS -> causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0; ALREADY_EXISTS -> EXIT_REJECTED; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_CLAIM_USER_PROMPT_IDENTITY_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0 |  | CC | SUCCESS -> causal_language_model::CC_ADMIT_USER_PROMPT_V0; VIOLATION -> RECORD_REFUSED_NOT_PERMITTED | S7 new_artifacts CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_ADMIT_USER_PROMPT_V0 |  | CC | SUCCESS -> causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0; NOT_FOUND -> RECORD_REFUSED_NOT_REGISTERED; VIOLATION -> RECORD_REFUSED_NOT_IN_SERVICE; BACKEND_ERROR -> RECORD_FAILED_BEFORE_READING | S7 new_artifacts CC_ADMIT_USER_PROMPT_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 |  | CC | SUCCESS -> causal_language_model::CC_CONFIRM_READING_FITS_V0; NOT_FOUND -> RECORD_REFUSED_NOT_IN_SERVICE; VIOLATION -> RECORD_REFUSED_ABOVE_CEILING; BACKEND_ERROR -> RECORD_FAILED_BEFORE_READING | S7 new_artifacts CC_CONFIRM_WITHIN_CEILING_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_CONFIRM_READING_FITS_V0 |  | CC | SUCCESS -> causal_language_model::CC_WRITE_MODEL_RESPONSE_V0; VIOLATION -> RECORD_REFUSED_TOO_LONG_TO_READ | S7 new_artifacts CC_CONFIRM_READING_FITS_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 |  | CC | SUCCESS -> CONFIRM_NO_RULE_STOPPED; VIOLATION -> RECORD_FAILED_WHILE_WRITING | S7 new_artifacts CC_WRITE_MODEL_RESPONSE_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | CONFIRM_NO_RULE_STOPPED | causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0 | CC | SUCCESS -> CONFIRM_FINISHED; VIOLATION -> RECORD_REFUSED_BY_RULE | S7 new_artifacts CC_CONFIRM_RESPONSE_RELEASABLE_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | CONFIRM_FINISHED | causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0 | CC | SUCCESS -> RECORD_RESPONDED; VIOLATION -> RECORD_REFUSED_UNFINISHED | S7 new_artifacts CC_CONFIRM_RESPONSE_RELEASABLE_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_RESPONDED | causal_language_model::CC_RECORD_USER_PROMPT_V0 | CC | SUCCESS -> EXIT_RESPONDED; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_RECORD_USER_PROMPT_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_PERMITTED | causal_language_model::CC_RECORD_USER_PROMPT_V0 | CC | SUCCESS -> EXIT_REFUSED; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_RECORD_USER_PROMPT_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_REGISTERED | causal_language_model::CC_RECORD_USER_PROMPT_V0 | CC | SUCCESS -> EXIT_REFUSED; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_RECORD_USER_PROMPT_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_IN_SERVICE | causal_language_model::CC_RECORD_USER_PROMPT_V0 | CC | SUCCESS -> EXIT_REFUSED; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_RECORD_USER_PROMPT_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_ABOVE_CEILING | causal_language_model::CC_RECORD_USER_PROMPT_V0 | CC | SUCCESS -> EXIT_REFUSED; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_RECORD_USER_PROMPT_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_TOO_LONG_TO_READ | causal_language_model::CC_RECORD_USER_PROMPT_V0 | CC | SUCCESS -> EXIT_REFUSED; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_RECORD_USER_PROMPT_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_BY_RULE | causal_language_model::CC_RECORD_USER_PROMPT_V0 | CC | SUCCESS -> EXIT_REFUSED; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_RECORD_USER_PROMPT_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_UNFINISHED | causal_language_model::CC_RECORD_USER_PROMPT_V0 | CC | SUCCESS -> EXIT_REFUSED; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_RECORD_USER_PROMPT_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_BEFORE_READING | causal_language_model::CC_RECORD_USER_PROMPT_V0 | CC | SUCCESS -> EXIT_REJECTED; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_RECORD_USER_PROMPT_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_WHILE_WRITING | causal_language_model::CC_RECORD_USER_PROMPT_V0 | CC | SUCCESS -> EXIT_REJECTED; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_RECORD_USER_PROMPT_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | EXIT_RESPONDED |  | EXIT_SUCCESS | — | S7 execution_topology WF_SUBMIT_USER_PROMPT_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | EXIT_REFUSED |  | EXIT | — | S7 execution_topology WF_SUBMIT_USER_PROMPT_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | EXIT_REJECTED |  | EXIT | — | S7 execution_topology WF_SUBMIT_USER_PROMPT_V0 |
-| causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0 | causal_language_model::IN_RETRIEVE_USER_PROMPT_RECORD_V0 |  | IN | ACK -> causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0; NACK -> EXIT_REJECTED | S7 new_artifacts IN_RETRIEVE_USER_PROMPT_RECORD_V0 |
-| causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0 | causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 |  | CC | SUCCESS -> causal_language_model::CC_APPEND_MODEL_OPERATION_V0; VIOLATION -> EXIT_REJECTED | S7 new_artifacts CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 |
-| causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0 | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 |  | CC | SUCCESS -> causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_APPEND_MODEL_OPERATION_V0 |
-| causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0 | causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0 |  | CC | SUCCESS -> EXIT_RETRIEVED; VIOLATION -> EXIT_REJECTED; BACKEND_ERROR -> EXIT_REJECTED | S7 new_artifacts CC_RETRIEVE_USER_PROMPT_RECORD_V0 |
-| causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0 | EXIT_RETRIEVED |  | EXIT_SUCCESS | — | S7 execution_topology WF_RETRIEVE_USER_PROMPT_RECORD_V0 |
-| causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0 | EXIT_REJECTED |  | EXIT | — | S7 execution_topology WF_RETRIEVE_USER_PROMPT_RECORD_V0 |
-
 ---
 
 ## 6. Capability Composition
-
-<!-- register:cc_composition optional -->
-| CC Code | Step | Step Name | Capability | Kind (CT, CS) | Operation | Store | Consumes | Produces | Routing | Interpreted By | Semantic Status | Interface |
-|---------|------|-----------|------------|---------------|-----------|-------|----------|----------|---------|----------------|-----------------|-----------|
-| causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | 1 | confirm_authorization | capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0 | CT | VALIDATE_PARAMETER_RULES | — | staff_credentials, authorization_rules | is_authorized | SUCCESS -> exit; VIOLATION -> exit | — | SUCCESS | in: parameters=staff_credentials, rules=authorization_rules; out: valid=is_authorized |
-| causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0 | 1 | confirm_acts_for_customer | capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0 | CT | VALIDATE_SET_MEMBERSHIP | — | customer_id, permitted_customers | acts_for_customer | SUCCESS -> exit; VIOLATION -> exit | — | SUCCESS | in: value=customer_id, allowed_set=permitted_customers; out: is_member=acts_for_customer |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | 1 | validate_description | capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0 | CT | VALIDATE_RECORD_STRUCTURE | — | description, description_schema | violations | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: record=description, schema=description_schema; out: violations=violations |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | 2 | require_description_complete | capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0 | CT | VALIDATE_PARAMETER_RULES | — | violations | valid | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: parameters=description_findings, rules=completeness_rules; out: valid=valid |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | 3 | form_identity_key | causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0 | CT | FORM_MODEL_IDENTITY_KEY | — | description, fingerprint | identity_key | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: description=description, fingerprint=fingerprint; out: identity_key=identity_key |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | 4 | claim_identity | capability_side_effects::CS_REGISTRY_V0 | CS | REGISTER | MODEL_IDENTITY_REGISTRY | key, target_cs, target_ref | address | SUCCESS -> exit; ALREADY_EXISTS -> exit; VIOLATION -> exit; BACKEND_ERROR -> exit | — | ALREADY_EXISTS | — |
-| causal_language_model::CC_REGISTER_MODEL_V0 | 1 | assemble_model_record | capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 | CT | ASSEMBLE_RECORD | — | identity_key, description, fingerprint | model_record | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: fields=model_fields; out: record=model_record |
-| causal_language_model::CC_REGISTER_MODEL_V0 | 2 | write_model_record | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | WRITE | MODELS | key, value | result_status | SUCCESS -> exit; VIOLATION -> exit; BACKEND_ERROR -> exit | — | SUCCESS | — |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | 1 | read_model_record | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | READ | MODELS | key | model_record | SUCCESS -> continue; NOT_FOUND -> exit; VIOLATION -> exit; BACKEND_ERROR -> exit | — | NOT_FOUND | — |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | 2 | require_registered | capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0 | CT | VALIDATE_PARAMETER_RULES | — | model_record | valid | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: parameters=model_state, rules=state_rules; out: valid=valid |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | 3 | confirm_ceiling_declared | capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0 | CT | VALIDATE_SET_MEMBERSHIP | — | ceiling | ceiling_declared | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: value=ceiling, allowed_set=kinds; out: is_member=ceiling_declared |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | 4 | claim_time_in_service | capability_side_effects::CS_REGISTRY_V0 | CS | REGISTER | TIME_IN_SERVICE_REGISTRY | key, target_cs, target_ref | address | SUCCESS -> continue; ALREADY_EXISTS -> exit; VIOLATION -> exit; BACKEND_ERROR -> exit | — | ALREADY_EXISTS | — |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | 5 | mark_in_service | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | UPDATE_WHERE | MODELS | filter, updates | matched_keys, updated_count | SUCCESS -> continue; VIOLATION -> exit; BACKEND_ERROR -> exit | — | SUCCESS | — |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | 6 | require_transition | capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0 | CT | VALIDATE_PARAMETER_RULES | — | updated_count | valid | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: parameters=transition, rules=transition_rules; out: valid=valid |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | 7 | assemble_time_in_service | capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 | CT | ASSEMBLE_RECORD | — | time_in_service_id, identity_key, ceiling, system_prompt, response_rules | time_in_service | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: fields=time_in_service_fields; out: record=time_in_service |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | 8 | write_time_in_service | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | WRITE | TIMES_IN_SERVICE | key, value | result_status | SUCCESS -> exit; VIOLATION -> exit; BACKEND_ERROR -> exit | — | SUCCESS | — |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | 1 | read_model_record | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | READ | MODELS | key | model_record | SUCCESS -> continue; NOT_FOUND -> exit; VIOLATION -> exit; BACKEND_ERROR -> exit | — | NOT_FOUND | — |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | 2 | require_in_service | capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0 | CT | VALIDATE_PARAMETER_RULES | — | model_record | valid | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: parameters=model_state, rules=state_rules; out: valid=valid |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | 3 | mark_registered | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | UPDATE_WHERE | MODELS | filter, updates | matched_keys, updated_count | SUCCESS -> continue; VIOLATION -> exit; BACKEND_ERROR -> exit | — | SUCCESS | — |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | 4 | require_transition | capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0 | CT | VALIDATE_PARAMETER_RULES | — | updated_count | valid | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: parameters=transition, rules=transition_rules; out: valid=valid |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | 5 | close_time_in_service | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | UPDATE | TIMES_IN_SERVICE | key, updates | result_status | SUCCESS -> exit; VIOLATION -> exit; BACKEND_ERROR -> exit | — | SUCCESS | — |
-| causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0 | 1 | claim_user_prompt | capability_side_effects::CS_REGISTRY_V0 | CS | REGISTER | USER_PROMPT_REGISTRY | key, target_cs, target_ref | address | SUCCESS -> exit; ALREADY_EXISTS -> exit; VIOLATION -> exit; BACKEND_ERROR -> exit | — | ALREADY_EXISTS | — |
-| causal_language_model::CC_ADMIT_USER_PROMPT_V0 | 1 | read_model_record | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | READ | MODELS | key | model_record | SUCCESS -> continue; NOT_FOUND -> exit; VIOLATION -> exit; BACKEND_ERROR -> exit | — | NOT_FOUND | — |
-| causal_language_model::CC_ADMIT_USER_PROMPT_V0 | 2 | require_in_service | capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0 | CT | VALIDATE_PARAMETER_RULES | — | model_record | valid | SUCCESS -> exit; VIOLATION -> exit | — | SUCCESS | in: parameters=model_state, rules=state_rules; out: valid=valid |
-| causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | 1 | read_time_in_service | capability_side_effects::CS_MUTABLE_JSON_V0 | CS | READ | TIMES_IN_SERVICE | key | time_in_service | SUCCESS -> continue; NOT_FOUND -> exit; VIOLATION -> exit; BACKEND_ERROR -> exit | — | NOT_FOUND | — |
-| causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | 2 | confirm_kind_declared | capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0 | CT | VALIDATE_SET_MEMBERSHIP | — | kind | kind_declared | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: value=kind, allowed_set=kinds; out: is_member=kind_declared |
-| causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | 3 | compare_sensitivity | causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0 | CT | COMPARE_SENSITIVITY | — | kind, time_in_service | within_ceiling | SUCCESS -> exit; VIOLATION -> exit | — | SUCCESS | in: kind=kind, ceiling=ceiling, kinds=kinds; out: within_ceiling=within_ceiling |
-| causal_language_model::CC_CONFIRM_READING_FITS_V0 | 1 | assemble_reading | causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | CT | ASSEMBLE_MODEL_READING | — | system_prompt, question, supporting_material, reading_capacity | reading, reading_length | SUCCESS -> exit; VIOLATION -> exit | — | SUCCESS | in: system_prompt=system_prompt, question=question, supporting_material=supporting_material, reading_capacity=reading_capacity; out: reading=reading, reading_length=reading_length |
-| causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | 1 | form_rules_in_force | causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0 | CT | FORM_RESPONSE_RULES | — | response_rules, account_numbers, seed | rules_in_force, positions | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: response_rules=response_rules, account_numbers=account_numbers, seed=seed; out: rules_in_force=rules_in_force, positions=positions |
-| causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | 2 | write_response | causal_language_model::CT_WRITE_RESPONSE_V0 | CT | WRITE_RESPONSE | — | reading, rules_in_force, positions | written_response | SUCCESS -> exit; VIOLATION -> exit | — | SUCCESS | in: reading=reading, rules_in_force=rules_in_force, positions=positions; out: result=written_response |
-| causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0 | 1 | confirm_releasable | capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0 | CT | VALIDATE_PARAMETER_RULES | — | release_facts, release_rules | releasable | SUCCESS -> exit; VIOLATION -> exit | — | SUCCESS | in: parameters=release_facts, rules=release_rules; out: valid=releasable |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | 1 | assemble_user_prompt_record | capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0 | CT | ASSEMBLE_RECORD | — | user_prompt_id, requester_id, customer_id, identity_key, kind, question, supporting_material, outcome, time_in_service_id, reading, rules_in_force, response, reason | user_prompt_record | SUCCESS -> continue; VIOLATION -> exit | — | SUCCESS | in: fields=user_prompt_fields; out: record=user_prompt_record |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | 2 | append_user_prompt_record | capability_side_effects::CS_APPENDONLY_JSONL_V0 | CS | APPEND | USER_PROMPT_RECORDS | record, stream_id, actor_id | record_id, sequence_number | SUCCESS -> exit; VIOLATION -> exit; BACKEND_ERROR -> exit | — | SUCCESS | — |
-| causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0 | 1 | read_user_prompt_entries | capability_side_effects::CS_APPENDONLY_JSONL_V0 | CS | GET_ALL | USER_PROMPT_RECORDS | stream_id | entries | SUCCESS -> continue; BACKEND_ERROR -> exit | — | SUCCESS | — |
-| causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0 | 2 | select_user_prompt_record | capability_transforms::CT_PURE_FILTER_RECORDS_V0 | CT | FILTER_RECORDS | — | entries, record_criteria | user_prompt_record | SUCCESS -> exit; VIOLATION -> exit | — | SUCCESS | in: source=entries, filter=record_criteria; out: extracted=user_prompt_record |
-| causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | 1 | append_operation | capability_side_effects::CS_APPENDONLY_JSONL_V0 | CS | APPEND | MODEL_OPERATIONS | record, stream_id, actor_id | record_id, sequence_number | SUCCESS -> exit; VIOLATION -> exit; BACKEND_ERROR -> exit | — | SUCCESS | — |
 
 ---
 
 ## 7. Step Bindings
 
-<!-- register:step_bindings optional -->
-| Owner | Step | Direction (INPUT, OUTPUT) | Field | Bound To | Source Finding |
-|-------|------|---------------------------|-------|----------|----------------|
-| causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | confirm_authorization | INPUT | parameters | inputs.staff_credentials | S7 cc_composition confirm_authorization |
-| causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | confirm_authorization | INPUT | rules | inputs.authorization_rules | S7 cc_composition confirm_authorization |
-| causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | confirm_authorization | OUTPUT | is_authorized | capability_result.valid | S7 cc_composition confirm_authorization |
-| causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0 | confirm_acts_for_customer | INPUT | value | inputs.customer_id | S7 cc_composition confirm_acts_for_customer |
-| causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0 | confirm_acts_for_customer | INPUT | allowed_set | inputs.permitted_customers | S7 cc_composition confirm_acts_for_customer |
-| causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0 | confirm_acts_for_customer | OUTPUT | acts_for_customer | capability_result.is_member | S7 cc_composition confirm_acts_for_customer |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | validate_description | INPUT | record | inputs.description | S7 cc_composition validate_description |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | validate_description | INPUT | schema | inputs.description_schema | S7 cc_composition validate_description |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | validate_description | OUTPUT | violations | capability_result.violations | S7 cc_composition validate_description |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | require_description_complete | INPUT | parameters | {'violations': '$.results.validate_description.violations'} | S7 cc_composition require_description_complete |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | require_description_complete | INPUT | rules | [{'field': 'violations', 'op': 'eq', 'value': []}] | S7 cc_composition require_description_complete |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | require_description_complete | OUTPUT | valid | capability_result.valid | S7 cc_composition require_description_complete |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | form_identity_key | INPUT | description | inputs.description | S7 cc_composition form_identity_key |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | form_identity_key | INPUT | fingerprint | inputs.fingerprint | S7 cc_composition form_identity_key |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | form_identity_key | OUTPUT | identity_key | capability_result.identity_key | S7 cc_composition form_identity_key |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | claim_identity | INPUT | key | results.form_identity_key.identity_key | S7 cc_composition claim_identity |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | claim_identity | INPUT | target_cs | CS_MUTABLE_JSON_V0 | S7 cc_composition claim_identity |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | claim_identity | INPUT | target_ref | MODELS | S7 cc_composition claim_identity |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | claim_identity | OUTPUT | address | capability_result.address | S7 cc_composition claim_identity |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | claim_identity | OUTPUT | result_status | result_status | S7 cc_composition claim_identity |
-| causal_language_model::CC_REGISTER_MODEL_V0 | assemble_model_record | INPUT | fields | {'identity_key': '$.inputs.identity_key', 'description': '$.inputs.description', 'fingerprint': '$.inputs.fingerprint', 'state': 'REGISTERED', 'time_in_service_id': ''} | S7 cc_composition assemble_model_record |
-| causal_language_model::CC_REGISTER_MODEL_V0 | assemble_model_record | OUTPUT | model_record | capability_result.record | S7 cc_composition assemble_model_record |
-| causal_language_model::CC_REGISTER_MODEL_V0 | write_model_record | INPUT | key | inputs.identity_key | S7 cc_composition write_model_record |
-| causal_language_model::CC_REGISTER_MODEL_V0 | write_model_record | INPUT | value | results.assemble_model_record.model_record | S7 cc_composition write_model_record |
-| causal_language_model::CC_REGISTER_MODEL_V0 | write_model_record | OUTPUT | result_status | result_status | S7 cc_composition write_model_record |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | read_model_record | INPUT | key | inputs.identity_key | S7 cc_composition read_model_record |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | read_model_record | OUTPUT | model_record | capability_result.value | S7 cc_composition read_model_record |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | read_model_record | OUTPUT | result_status | result_status | S7 cc_composition read_model_record |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | require_registered | INPUT | parameters | {'state': '$.results.read_model_record.model_record.state'} | S7 cc_composition require_registered |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | require_registered | INPUT | rules | [{'field': 'state', 'op': 'eq', 'value': 'REGISTERED'}] | S7 cc_composition require_registered |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | require_registered | OUTPUT | valid | capability_result.valid | S7 cc_composition require_registered |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | confirm_ceiling_declared | INPUT | value | inputs.ceiling | S7 cc_composition confirm_ceiling_declared |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | confirm_ceiling_declared | INPUT | allowed_set | ['public', 'internal', 'confidential', 'restricted'] | S7 cc_composition confirm_ceiling_declared |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | confirm_ceiling_declared | OUTPUT | ceiling_declared | capability_result.is_member | S7 cc_composition confirm_ceiling_declared |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | claim_time_in_service | INPUT | key | inputs.time_in_service_id | S7 cc_composition claim_time_in_service |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | claim_time_in_service | INPUT | target_cs | CS_MUTABLE_JSON_V0 | S7 cc_composition claim_time_in_service |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | claim_time_in_service | INPUT | target_ref | TIMES_IN_SERVICE | S7 cc_composition claim_time_in_service |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | claim_time_in_service | OUTPUT | address | capability_result.address | S7 cc_composition claim_time_in_service |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | claim_time_in_service | OUTPUT | result_status | result_status | S7 cc_composition claim_time_in_service |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | mark_in_service | INPUT | filter | {'identity_key': '$.inputs.identity_key', 'state': 'REGISTERED'} | S7 cc_composition mark_in_service |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | mark_in_service | INPUT | updates | {'state': 'IN_SERVICE', 'time_in_service_id': '$.inputs.time_in_service_id'} | S7 cc_composition mark_in_service |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | mark_in_service | OUTPUT | matched_keys | capability_result.matched_keys | S7 cc_composition mark_in_service |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | mark_in_service | OUTPUT | updated_count | capability_result.updated_count | S7 cc_composition mark_in_service |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | mark_in_service | OUTPUT | result_status | result_status | S7 cc_composition mark_in_service |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | require_transition | INPUT | parameters | {'updated_count': '$.results.mark_in_service.updated_count'} | S7 cc_composition require_transition |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | require_transition | INPUT | rules | [{'field': 'updated_count', 'op': 'eq', 'value': 1}] | S7 cc_composition require_transition |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | require_transition | OUTPUT | valid | capability_result.valid | S7 cc_composition require_transition |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | assemble_time_in_service | INPUT | fields | {'time_in_service_id': '$.inputs.time_in_service_id', 'identity_key': '$.inputs.identity_key', 'ceiling': '$.inputs.ceiling', 'system_prompt': '$.inputs.system_prompt', 'response_rules': '$.inputs.response_rules', 'state': 'OPEN'} | S7 cc_composition assemble_time_in_service |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | assemble_time_in_service | OUTPUT | time_in_service | capability_result.record | S7 cc_composition assemble_time_in_service |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | write_time_in_service | INPUT | key | inputs.time_in_service_id | S7 cc_composition write_time_in_service |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | write_time_in_service | INPUT | value | results.assemble_time_in_service.time_in_service | S7 cc_composition write_time_in_service |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | write_time_in_service | OUTPUT | result_status | result_status | S7 cc_composition write_time_in_service |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | read_model_record | INPUT | key | inputs.identity_key | S7 cc_composition read_model_record |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | read_model_record | OUTPUT | model_record | capability_result.value | S7 cc_composition read_model_record |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | read_model_record | OUTPUT | result_status | result_status | S7 cc_composition read_model_record |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | require_in_service | INPUT | parameters | {'state': '$.results.read_model_record.model_record.state'} | S7 cc_composition require_in_service |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | require_in_service | INPUT | rules | [{'field': 'state', 'op': 'eq', 'value': 'IN_SERVICE'}] | S7 cc_composition require_in_service |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | require_in_service | OUTPUT | valid | capability_result.valid | S7 cc_composition require_in_service |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | mark_registered | INPUT | filter | {'identity_key': '$.inputs.identity_key', 'state': 'IN_SERVICE'} | S7 cc_composition mark_registered |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | mark_registered | INPUT | updates | {'state': 'REGISTERED', 'time_in_service_id': ''} | S7 cc_composition mark_registered |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | mark_registered | OUTPUT | matched_keys | capability_result.matched_keys | S7 cc_composition mark_registered |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | mark_registered | OUTPUT | updated_count | capability_result.updated_count | S7 cc_composition mark_registered |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | mark_registered | OUTPUT | result_status | result_status | S7 cc_composition mark_registered |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | require_transition | INPUT | parameters | {'updated_count': '$.results.mark_registered.updated_count'} | S7 cc_composition require_transition |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | require_transition | INPUT | rules | [{'field': 'updated_count', 'op': 'eq', 'value': 1}] | S7 cc_composition require_transition |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | require_transition | OUTPUT | valid | capability_result.valid | S7 cc_composition require_transition |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | close_time_in_service | INPUT | key | results.read_model_record.model_record.time_in_service_id | S7 cc_composition close_time_in_service |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | close_time_in_service | INPUT | updates | {'state': 'CLOSED'} | S7 cc_composition close_time_in_service |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | close_time_in_service | OUTPUT | result_status | result_status | S7 cc_composition close_time_in_service |
-| causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0 | claim_user_prompt | INPUT | key | inputs.user_prompt_id | S7 cc_composition claim_user_prompt |
-| causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0 | claim_user_prompt | INPUT | target_cs | CS_APPENDONLY_JSONL_V0 | S7 cc_composition claim_user_prompt |
-| causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0 | claim_user_prompt | INPUT | target_ref | USER_PROMPT_RECORDS | S7 cc_composition claim_user_prompt |
-| causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0 | claim_user_prompt | OUTPUT | address | capability_result.address | S7 cc_composition claim_user_prompt |
-| causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0 | claim_user_prompt | OUTPUT | result_status | result_status | S7 cc_composition claim_user_prompt |
-| causal_language_model::CC_ADMIT_USER_PROMPT_V0 | read_model_record | INPUT | key | inputs.identity_key | S7 cc_composition read_model_record |
-| causal_language_model::CC_ADMIT_USER_PROMPT_V0 | read_model_record | OUTPUT | model_record | capability_result.value | S7 cc_composition read_model_record |
-| causal_language_model::CC_ADMIT_USER_PROMPT_V0 | read_model_record | OUTPUT | result_status | result_status | S7 cc_composition read_model_record |
-| causal_language_model::CC_ADMIT_USER_PROMPT_V0 | require_in_service | INPUT | parameters | {'state': '$.results.read_model_record.model_record.state'} | S7 cc_composition require_in_service |
-| causal_language_model::CC_ADMIT_USER_PROMPT_V0 | require_in_service | INPUT | rules | [{'field': 'state', 'op': 'eq', 'value': 'IN_SERVICE'}] | S7 cc_composition require_in_service |
-| causal_language_model::CC_ADMIT_USER_PROMPT_V0 | require_in_service | OUTPUT | valid | capability_result.valid | S7 cc_composition require_in_service |
-| causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | read_time_in_service | INPUT | key | inputs.time_in_service_id | S7 cc_composition read_time_in_service |
-| causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | read_time_in_service | OUTPUT | time_in_service | capability_result.value | S7 cc_composition read_time_in_service |
-| causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | read_time_in_service | OUTPUT | result_status | result_status | S7 cc_composition read_time_in_service |
-| causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | confirm_kind_declared | INPUT | value | inputs.kind | S7 cc_composition confirm_kind_declared |
-| causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | confirm_kind_declared | INPUT | allowed_set | ['public', 'internal', 'confidential', 'restricted'] | S7 cc_composition confirm_kind_declared |
-| causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | confirm_kind_declared | OUTPUT | kind_declared | capability_result.is_member | S7 cc_composition confirm_kind_declared |
-| causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | compare_sensitivity | INPUT | kind | inputs.kind | S7 cc_composition compare_sensitivity |
-| causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | compare_sensitivity | INPUT | ceiling | results.read_time_in_service.time_in_service.ceiling | S7 cc_composition compare_sensitivity |
-| causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | compare_sensitivity | INPUT | kinds | ['public', 'internal', 'confidential', 'restricted'] | S7 cc_composition compare_sensitivity |
-| causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | compare_sensitivity | OUTPUT | within_ceiling | capability_result.within_ceiling | S7 cc_composition compare_sensitivity |
-| causal_language_model::CC_CONFIRM_READING_FITS_V0 | assemble_reading | INPUT | system_prompt | inputs.system_prompt | S7 cc_composition assemble_reading |
-| causal_language_model::CC_CONFIRM_READING_FITS_V0 | assemble_reading | INPUT | question | inputs.question | S7 cc_composition assemble_reading |
-| causal_language_model::CC_CONFIRM_READING_FITS_V0 | assemble_reading | INPUT | supporting_material | inputs.supporting_material | S7 cc_composition assemble_reading |
-| causal_language_model::CC_CONFIRM_READING_FITS_V0 | assemble_reading | INPUT | reading_capacity | inputs.reading_capacity | S7 cc_composition assemble_reading |
-| causal_language_model::CC_CONFIRM_READING_FITS_V0 | assemble_reading | OUTPUT | reading | capability_result.reading | S7 cc_composition assemble_reading |
-| causal_language_model::CC_CONFIRM_READING_FITS_V0 | assemble_reading | OUTPUT | reading_length | capability_result.reading_length | S7 cc_composition assemble_reading |
-| causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | form_rules_in_force | INPUT | response_rules | inputs.response_rules | S7 cc_composition form_rules_in_force |
-| causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | form_rules_in_force | INPUT | account_numbers | inputs.account_numbers | S7 cc_composition form_rules_in_force |
-| causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | form_rules_in_force | INPUT | seed | inputs.seed | S7 cc_composition form_rules_in_force |
-| causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | form_rules_in_force | OUTPUT | rules_in_force | capability_result.rules_in_force | S7 cc_composition form_rules_in_force |
-| causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | form_rules_in_force | OUTPUT | positions | capability_result.positions | S7 cc_composition form_rules_in_force |
-| causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | write_response | INPUT | reading | inputs.reading | S7 cc_composition write_response |
-| causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | write_response | INPUT | rules_in_force | results.form_rules_in_force.rules_in_force | S7 cc_composition write_response |
-| causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | write_response | INPUT | positions | results.form_rules_in_force.positions | S7 cc_composition write_response |
-| causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | write_response | OUTPUT | written_response | capability_result.result | S7 cc_composition write_response |
-| causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0 | confirm_releasable | INPUT | parameters | inputs.release_facts | S7 cc_composition confirm_releasable |
-| causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0 | confirm_releasable | INPUT | rules | inputs.release_rules | S7 cc_composition confirm_releasable |
-| causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0 | confirm_releasable | OUTPUT | releasable | capability_result.valid | S7 cc_composition confirm_releasable |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | assemble_user_prompt_record | INPUT | fields | {'user_prompt_id': '$.inputs.user_prompt_id', 'requester_id': '$.inputs.requester_id', 'customer_id': '$.inputs.customer_id', 'identity_key': '$.inputs.identity_key', 'kind': '$.inputs.kind', 'question': '$.inputs.question', 'supporting_material': '$.inputs.supporting_material', 'outcome': '$.inputs.outcome', 'time_in_service_id': '$.inputs.time_in_service_id', 'reading': '$.inputs.reading', 'rules_in_force': '$.inputs.rules_in_force', 'response': '$.inputs.response', 'reason': '$.inputs.reason'} | S7 cc_composition assemble_user_prompt_record |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | assemble_user_prompt_record | OUTPUT | user_prompt_record | capability_result.record | S7 cc_composition assemble_user_prompt_record |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | append_user_prompt_record | INPUT | record | results.assemble_user_prompt_record.user_prompt_record | S7 cc_composition append_user_prompt_record |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | append_user_prompt_record | INPUT | stream_id | inputs.user_prompt_id | S7 cc_composition append_user_prompt_record |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | append_user_prompt_record | INPUT | actor_id | inputs.requester_id | S7 cc_composition append_user_prompt_record |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | append_user_prompt_record | OUTPUT | record_id | capability_result.record_id | S7 cc_composition append_user_prompt_record |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | append_user_prompt_record | OUTPUT | sequence_number | capability_result.sequence_number | S7 cc_composition append_user_prompt_record |
-| causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0 | read_user_prompt_entries | INPUT | stream_id | inputs.user_prompt_id | S7 cc_composition read_user_prompt_entries |
-| causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0 | read_user_prompt_entries | OUTPUT | entries | capability_result.entries | S7 cc_composition read_user_prompt_entries |
-| causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0 | read_user_prompt_entries | OUTPUT | result_status | result_status | S7 cc_composition read_user_prompt_entries |
-| causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0 | select_user_prompt_record | INPUT | source | results.read_user_prompt_entries.entries | S7 cc_composition select_user_prompt_record |
-| causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0 | select_user_prompt_record | INPUT | filter | {'stream_id': '$.inputs.user_prompt_id'} | S7 cc_composition select_user_prompt_record |
-| causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0 | select_user_prompt_record | OUTPUT | user_prompt_record | capability_result.extracted | S7 cc_composition select_user_prompt_record |
-| causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | append_operation | INPUT | record | inputs.record | S7 cc_composition append_operation |
-| causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | append_operation | INPUT | stream_id | MODEL_OPERATIONS | S7 cc_composition append_operation |
-| causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | append_operation | INPUT | actor_id | inputs.staff_id | S7 cc_composition append_operation |
-| causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | append_operation | OUTPUT | record_id | capability_result.record_id | S7 cc_composition append_operation |
-| causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | append_operation | OUTPUT | sequence_number | capability_result.sequence_number | S7 cc_composition append_operation |
-| causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | INPUT | staff_credentials | payload.staff_credentials | S7 execution_topology CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 |
-| causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | INPUT | authorization_rules | [{'field': 'role', 'op': 'eq', 'value': 'model_staff'}] | S7 execution_topology CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 |
-| causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | INPUT | staff_id | payload.staff_id | S7 execution_topology CC_APPEND_MODEL_OPERATION_V0 |
-| causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | INPUT | operation | REGISTER_MODEL | S7 execution_topology CC_APPEND_MODEL_OPERATION_V0 |
-| causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | INPUT | record | {'operation': 'REGISTER_MODEL', 'staff_id': '$.payload.staff_id', 'subject': '$.results.CC_CLAIM_MODEL_IDENTITY_V0.identity_key'} | S7 execution_topology CC_APPEND_MODEL_OPERATION_V0 |
-| causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | INPUT | description | payload.description | S7 execution_topology CC_CLAIM_MODEL_IDENTITY_V0 |
-| causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | INPUT | fingerprint | payload.fingerprint | S7 execution_topology CC_CLAIM_MODEL_IDENTITY_V0 |
-| causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | INPUT | description_schema | {'reading_capacity': {'type': 'integer', 'required': True}} | S7 execution_topology CC_CLAIM_MODEL_IDENTITY_V0 |
-| causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::CC_REGISTER_MODEL_V0 | INPUT | identity_key | results.CC_CLAIM_MODEL_IDENTITY_V0.identity_key | S7 execution_topology CC_REGISTER_MODEL_V0 |
-| causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::CC_REGISTER_MODEL_V0 | INPUT | description | payload.description | S7 execution_topology CC_REGISTER_MODEL_V0 |
-| causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::CC_REGISTER_MODEL_V0 | INPUT | fingerprint | payload.fingerprint | S7 execution_topology CC_REGISTER_MODEL_V0 |
-| causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | INPUT | staff_credentials | payload.staff_credentials | S7 execution_topology CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 |
-| causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | INPUT | authorization_rules | [{'field': 'role', 'op': 'eq', 'value': 'model_staff'}] | S7 execution_topology CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 |
-| causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | INPUT | staff_id | payload.staff_id | S7 execution_topology CC_APPEND_MODEL_OPERATION_V0 |
-| causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | INPUT | operation | PLACE_MODEL_IN_SERVICE | S7 execution_topology CC_APPEND_MODEL_OPERATION_V0 |
-| causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | INPUT | record | {'operation': 'PLACE_MODEL_IN_SERVICE', 'staff_id': '$.payload.staff_id', 'subject': '$.payload.identity_key'} | S7 execution_topology CC_APPEND_MODEL_OPERATION_V0 |
-| causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | INPUT | identity_key | payload.identity_key | S7 execution_topology CC_PLACE_MODEL_IN_SERVICE_V0 |
-| causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | INPUT | time_in_service_id | payload.time_in_service_id | S7 execution_topology CC_PLACE_MODEL_IN_SERVICE_V0 |
-| causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | INPUT | ceiling | payload.ceiling | S7 execution_topology CC_PLACE_MODEL_IN_SERVICE_V0 |
-| causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | INPUT | system_prompt | payload.system_prompt | S7 execution_topology CC_PLACE_MODEL_IN_SERVICE_V0 |
-| causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | INPUT | response_rules | payload.response_rules | S7 execution_topology CC_PLACE_MODEL_IN_SERVICE_V0 |
-| causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | INPUT | staff_credentials | payload.staff_credentials | S7 execution_topology CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 |
-| causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | INPUT | authorization_rules | [{'field': 'role', 'op': 'eq', 'value': 'model_staff'}] | S7 execution_topology CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 |
-| causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | INPUT | staff_id | payload.staff_id | S7 execution_topology CC_APPEND_MODEL_OPERATION_V0 |
-| causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | INPUT | operation | WITHDRAW_MODEL_FROM_SERVICE | S7 execution_topology CC_APPEND_MODEL_OPERATION_V0 |
-| causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | INPUT | record | {'operation': 'WITHDRAW_MODEL_FROM_SERVICE', 'staff_id': '$.payload.staff_id', 'subject': '$.payload.identity_key'} | S7 execution_topology CC_APPEND_MODEL_OPERATION_V0 |
-| causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | INPUT | identity_key | payload.identity_key | S7 execution_topology CC_WITHDRAW_MODEL_FROM_SERVICE_V0 |
-| causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0 | causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | INPUT | staff_credentials | payload.staff_credentials | S7 execution_topology CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 |
-| causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0 | causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | INPUT | authorization_rules | [{'field': 'role', 'op': 'eq', 'value': 'model_staff'}] | S7 execution_topology CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 |
-| causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0 | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | INPUT | staff_id | payload.staff_id | S7 execution_topology CC_APPEND_MODEL_OPERATION_V0 |
-| causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0 | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | INPUT | operation | RETRIEVE_USER_PROMPT_RECORD | S7 execution_topology CC_APPEND_MODEL_OPERATION_V0 |
-| causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0 | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | INPUT | record | {'operation': 'RETRIEVE_USER_PROMPT_RECORD', 'staff_id': '$.payload.staff_id', 'subject': '$.payload.user_prompt_id'} | S7 execution_topology CC_APPEND_MODEL_OPERATION_V0 |
-| causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0 | causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0 | INPUT | user_prompt_id | payload.user_prompt_id | S7 execution_topology CC_RETRIEVE_USER_PROMPT_RECORD_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0 | INPUT | user_prompt_id | payload.user_prompt_id | S7 execution_topology CC_CLAIM_USER_PROMPT_IDENTITY_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0 | INPUT | customer_id | payload.customer_id | S7 execution_topology CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0 | INPUT | permitted_customers | payload.permitted_customers | S7 execution_topology CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_ADMIT_USER_PROMPT_V0 | INPUT | identity_key | payload.identity_key | S7 execution_topology CC_ADMIT_USER_PROMPT_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | INPUT | time_in_service_id | results.CC_ADMIT_USER_PROMPT_V0.model_record.time_in_service_id | S7 execution_topology CC_CONFIRM_WITHIN_CEILING_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | INPUT | kind | payload.kind | S7 execution_topology CC_CONFIRM_WITHIN_CEILING_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_CONFIRM_READING_FITS_V0 | INPUT | system_prompt | results.CC_CONFIRM_WITHIN_CEILING_V0.time_in_service.system_prompt | S7 execution_topology CC_CONFIRM_READING_FITS_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_CONFIRM_READING_FITS_V0 | INPUT | question | payload.question | S7 execution_topology CC_CONFIRM_READING_FITS_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_CONFIRM_READING_FITS_V0 | INPUT | supporting_material | payload.supporting_material | S7 execution_topology CC_CONFIRM_READING_FITS_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_CONFIRM_READING_FITS_V0 | INPUT | reading_capacity | results.CC_ADMIT_USER_PROMPT_V0.model_record.description.reading_capacity | S7 execution_topology CC_CONFIRM_READING_FITS_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | INPUT | response_rules | results.CC_CONFIRM_WITHIN_CEILING_V0.time_in_service.response_rules | S7 execution_topology CC_WRITE_MODEL_RESPONSE_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | INPUT | account_numbers | payload.account_numbers | S7 execution_topology CC_WRITE_MODEL_RESPONSE_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | INPUT | seed | payload.seed | S7 execution_topology CC_WRITE_MODEL_RESPONSE_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | INPUT | reading | results.CC_CONFIRM_READING_FITS_V0.reading | S7 execution_topology CC_WRITE_MODEL_RESPONSE_V0 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | CONFIRM_NO_RULE_STOPPED | INPUT | release_facts | {'stopped_by': '$.results.CC_WRITE_MODEL_RESPONSE_V0.written_response.stopped_by'} | S7 execution_topology CONFIRM_NO_RULE_STOPPED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | CONFIRM_NO_RULE_STOPPED | INPUT | release_rules | [{'field': 'stopped_by', 'op': 'eq', 'value': 'none'}] | S7 execution_topology CONFIRM_NO_RULE_STOPPED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | CONFIRM_FINISHED | INPUT | release_facts | {'finished': '$.results.CC_WRITE_MODEL_RESPONSE_V0.written_response.finished'} | S7 execution_topology CONFIRM_FINISHED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | CONFIRM_FINISHED | INPUT | release_rules | [{'field': 'finished', 'op': 'eq', 'value': True}] | S7 execution_topology CONFIRM_FINISHED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_RESPONDED | INPUT | user_prompt_id | payload.user_prompt_id | S7 execution_topology RECORD_RESPONDED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_RESPONDED | INPUT | requester_id | payload.requester_id | S7 execution_topology RECORD_RESPONDED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_RESPONDED | INPUT | customer_id | payload.customer_id | S7 execution_topology RECORD_RESPONDED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_RESPONDED | INPUT | identity_key | payload.identity_key | S7 execution_topology RECORD_RESPONDED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_RESPONDED | INPUT | kind | payload.kind | S7 execution_topology RECORD_RESPONDED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_RESPONDED | INPUT | question | payload.question | S7 execution_topology RECORD_RESPONDED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_RESPONDED | INPUT | supporting_material | payload.supporting_material | S7 execution_topology RECORD_RESPONDED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_RESPONDED | INPUT | time_in_service_id | results.CC_ADMIT_USER_PROMPT_V0.model_record.time_in_service_id | S7 execution_topology RECORD_RESPONDED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_RESPONDED | INPUT | reading | results.CC_CONFIRM_READING_FITS_V0.reading | S7 execution_topology RECORD_RESPONDED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_RESPONDED | INPUT | rules_in_force | results.CC_WRITE_MODEL_RESPONSE_V0.rules_in_force | S7 execution_topology RECORD_RESPONDED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_RESPONDED | INPUT | response | results.CC_WRITE_MODEL_RESPONSE_V0.written_response.text | S7 execution_topology RECORD_RESPONDED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_RESPONDED | INPUT | outcome | RESPONDED | S7 execution_topology RECORD_RESPONDED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_PERMITTED | INPUT | user_prompt_id | payload.user_prompt_id | S7 execution_topology RECORD_REFUSED_NOT_PERMITTED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_PERMITTED | INPUT | requester_id | payload.requester_id | S7 execution_topology RECORD_REFUSED_NOT_PERMITTED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_PERMITTED | INPUT | customer_id | payload.customer_id | S7 execution_topology RECORD_REFUSED_NOT_PERMITTED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_PERMITTED | INPUT | identity_key | payload.identity_key | S7 execution_topology RECORD_REFUSED_NOT_PERMITTED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_PERMITTED | INPUT | kind | payload.kind | S7 execution_topology RECORD_REFUSED_NOT_PERMITTED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_PERMITTED | INPUT | question | payload.question | S7 execution_topology RECORD_REFUSED_NOT_PERMITTED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_PERMITTED | INPUT | supporting_material | payload.supporting_material | S7 execution_topology RECORD_REFUSED_NOT_PERMITTED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_PERMITTED | INPUT | outcome | REFUSED | S7 execution_topology RECORD_REFUSED_NOT_PERMITTED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_PERMITTED | INPUT | reason | requester_not_permitted_for_customer | S7 execution_topology RECORD_REFUSED_NOT_PERMITTED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_REGISTERED | INPUT | user_prompt_id | payload.user_prompt_id | S7 execution_topology RECORD_REFUSED_NOT_REGISTERED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_REGISTERED | INPUT | requester_id | payload.requester_id | S7 execution_topology RECORD_REFUSED_NOT_REGISTERED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_REGISTERED | INPUT | customer_id | payload.customer_id | S7 execution_topology RECORD_REFUSED_NOT_REGISTERED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_REGISTERED | INPUT | identity_key | payload.identity_key | S7 execution_topology RECORD_REFUSED_NOT_REGISTERED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_REGISTERED | INPUT | kind | payload.kind | S7 execution_topology RECORD_REFUSED_NOT_REGISTERED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_REGISTERED | INPUT | question | payload.question | S7 execution_topology RECORD_REFUSED_NOT_REGISTERED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_REGISTERED | INPUT | supporting_material | payload.supporting_material | S7 execution_topology RECORD_REFUSED_NOT_REGISTERED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_REGISTERED | INPUT | outcome | REFUSED | S7 execution_topology RECORD_REFUSED_NOT_REGISTERED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_REGISTERED | INPUT | reason | model_not_registered | S7 execution_topology RECORD_REFUSED_NOT_REGISTERED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_IN_SERVICE | INPUT | user_prompt_id | payload.user_prompt_id | S7 execution_topology RECORD_REFUSED_NOT_IN_SERVICE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_IN_SERVICE | INPUT | requester_id | payload.requester_id | S7 execution_topology RECORD_REFUSED_NOT_IN_SERVICE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_IN_SERVICE | INPUT | customer_id | payload.customer_id | S7 execution_topology RECORD_REFUSED_NOT_IN_SERVICE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_IN_SERVICE | INPUT | identity_key | payload.identity_key | S7 execution_topology RECORD_REFUSED_NOT_IN_SERVICE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_IN_SERVICE | INPUT | kind | payload.kind | S7 execution_topology RECORD_REFUSED_NOT_IN_SERVICE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_IN_SERVICE | INPUT | question | payload.question | S7 execution_topology RECORD_REFUSED_NOT_IN_SERVICE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_IN_SERVICE | INPUT | supporting_material | payload.supporting_material | S7 execution_topology RECORD_REFUSED_NOT_IN_SERVICE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_IN_SERVICE | INPUT | outcome | REFUSED | S7 execution_topology RECORD_REFUSED_NOT_IN_SERVICE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_IN_SERVICE | INPUT | reason | model_not_in_service | S7 execution_topology RECORD_REFUSED_NOT_IN_SERVICE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_ABOVE_CEILING | INPUT | user_prompt_id | payload.user_prompt_id | S7 execution_topology RECORD_REFUSED_ABOVE_CEILING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_ABOVE_CEILING | INPUT | requester_id | payload.requester_id | S7 execution_topology RECORD_REFUSED_ABOVE_CEILING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_ABOVE_CEILING | INPUT | customer_id | payload.customer_id | S7 execution_topology RECORD_REFUSED_ABOVE_CEILING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_ABOVE_CEILING | INPUT | identity_key | payload.identity_key | S7 execution_topology RECORD_REFUSED_ABOVE_CEILING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_ABOVE_CEILING | INPUT | kind | payload.kind | S7 execution_topology RECORD_REFUSED_ABOVE_CEILING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_ABOVE_CEILING | INPUT | question | payload.question | S7 execution_topology RECORD_REFUSED_ABOVE_CEILING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_ABOVE_CEILING | INPUT | supporting_material | payload.supporting_material | S7 execution_topology RECORD_REFUSED_ABOVE_CEILING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_ABOVE_CEILING | INPUT | time_in_service_id | results.CC_ADMIT_USER_PROMPT_V0.model_record.time_in_service_id | S7 execution_topology RECORD_REFUSED_ABOVE_CEILING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_ABOVE_CEILING | INPUT | outcome | REFUSED | S7 execution_topology RECORD_REFUSED_ABOVE_CEILING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_ABOVE_CEILING | INPUT | reason | kind_above_sensitivity_ceiling | S7 execution_topology RECORD_REFUSED_ABOVE_CEILING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_TOO_LONG_TO_READ | INPUT | user_prompt_id | payload.user_prompt_id | S7 execution_topology RECORD_REFUSED_TOO_LONG_TO_READ |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_TOO_LONG_TO_READ | INPUT | requester_id | payload.requester_id | S7 execution_topology RECORD_REFUSED_TOO_LONG_TO_READ |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_TOO_LONG_TO_READ | INPUT | customer_id | payload.customer_id | S7 execution_topology RECORD_REFUSED_TOO_LONG_TO_READ |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_TOO_LONG_TO_READ | INPUT | identity_key | payload.identity_key | S7 execution_topology RECORD_REFUSED_TOO_LONG_TO_READ |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_TOO_LONG_TO_READ | INPUT | kind | payload.kind | S7 execution_topology RECORD_REFUSED_TOO_LONG_TO_READ |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_TOO_LONG_TO_READ | INPUT | question | payload.question | S7 execution_topology RECORD_REFUSED_TOO_LONG_TO_READ |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_TOO_LONG_TO_READ | INPUT | supporting_material | payload.supporting_material | S7 execution_topology RECORD_REFUSED_TOO_LONG_TO_READ |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_TOO_LONG_TO_READ | INPUT | time_in_service_id | results.CC_ADMIT_USER_PROMPT_V0.model_record.time_in_service_id | S7 execution_topology RECORD_REFUSED_TOO_LONG_TO_READ |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_TOO_LONG_TO_READ | INPUT | outcome | REFUSED | S7 execution_topology RECORD_REFUSED_TOO_LONG_TO_READ |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_TOO_LONG_TO_READ | INPUT | reason | reading_longer_than_model_can_read | S7 execution_topology RECORD_REFUSED_TOO_LONG_TO_READ |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_BY_RULE | INPUT | user_prompt_id | payload.user_prompt_id | S7 execution_topology RECORD_REFUSED_BY_RULE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_BY_RULE | INPUT | requester_id | payload.requester_id | S7 execution_topology RECORD_REFUSED_BY_RULE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_BY_RULE | INPUT | customer_id | payload.customer_id | S7 execution_topology RECORD_REFUSED_BY_RULE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_BY_RULE | INPUT | identity_key | payload.identity_key | S7 execution_topology RECORD_REFUSED_BY_RULE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_BY_RULE | INPUT | kind | payload.kind | S7 execution_topology RECORD_REFUSED_BY_RULE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_BY_RULE | INPUT | question | payload.question | S7 execution_topology RECORD_REFUSED_BY_RULE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_BY_RULE | INPUT | supporting_material | payload.supporting_material | S7 execution_topology RECORD_REFUSED_BY_RULE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_BY_RULE | INPUT | time_in_service_id | results.CC_ADMIT_USER_PROMPT_V0.model_record.time_in_service_id | S7 execution_topology RECORD_REFUSED_BY_RULE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_BY_RULE | INPUT | reading | results.CC_CONFIRM_READING_FITS_V0.reading | S7 execution_topology RECORD_REFUSED_BY_RULE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_BY_RULE | INPUT | rules_in_force | results.CC_WRITE_MODEL_RESPONSE_V0.rules_in_force | S7 execution_topology RECORD_REFUSED_BY_RULE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_BY_RULE | INPUT | outcome | REFUSED | S7 execution_topology RECORD_REFUSED_BY_RULE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_BY_RULE | INPUT | reason | results.CC_WRITE_MODEL_RESPONSE_V0.written_response.stopped_by | S7 execution_topology RECORD_REFUSED_BY_RULE |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_UNFINISHED | INPUT | user_prompt_id | payload.user_prompt_id | S7 execution_topology RECORD_REFUSED_UNFINISHED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_UNFINISHED | INPUT | requester_id | payload.requester_id | S7 execution_topology RECORD_REFUSED_UNFINISHED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_UNFINISHED | INPUT | customer_id | payload.customer_id | S7 execution_topology RECORD_REFUSED_UNFINISHED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_UNFINISHED | INPUT | identity_key | payload.identity_key | S7 execution_topology RECORD_REFUSED_UNFINISHED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_UNFINISHED | INPUT | kind | payload.kind | S7 execution_topology RECORD_REFUSED_UNFINISHED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_UNFINISHED | INPUT | question | payload.question | S7 execution_topology RECORD_REFUSED_UNFINISHED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_UNFINISHED | INPUT | supporting_material | payload.supporting_material | S7 execution_topology RECORD_REFUSED_UNFINISHED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_UNFINISHED | INPUT | time_in_service_id | results.CC_ADMIT_USER_PROMPT_V0.model_record.time_in_service_id | S7 execution_topology RECORD_REFUSED_UNFINISHED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_UNFINISHED | INPUT | reading | results.CC_CONFIRM_READING_FITS_V0.reading | S7 execution_topology RECORD_REFUSED_UNFINISHED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_UNFINISHED | INPUT | rules_in_force | results.CC_WRITE_MODEL_RESPONSE_V0.rules_in_force | S7 execution_topology RECORD_REFUSED_UNFINISHED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_UNFINISHED | INPUT | outcome | REFUSED | S7 execution_topology RECORD_REFUSED_UNFINISHED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_UNFINISHED | INPUT | reason | longest_response_reached | S7 execution_topology RECORD_REFUSED_UNFINISHED |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_BEFORE_READING | INPUT | user_prompt_id | payload.user_prompt_id | S7 execution_topology RECORD_FAILED_BEFORE_READING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_BEFORE_READING | INPUT | requester_id | payload.requester_id | S7 execution_topology RECORD_FAILED_BEFORE_READING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_BEFORE_READING | INPUT | customer_id | payload.customer_id | S7 execution_topology RECORD_FAILED_BEFORE_READING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_BEFORE_READING | INPUT | identity_key | payload.identity_key | S7 execution_topology RECORD_FAILED_BEFORE_READING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_BEFORE_READING | INPUT | kind | payload.kind | S7 execution_topology RECORD_FAILED_BEFORE_READING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_BEFORE_READING | INPUT | question | payload.question | S7 execution_topology RECORD_FAILED_BEFORE_READING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_BEFORE_READING | INPUT | supporting_material | payload.supporting_material | S7 execution_topology RECORD_FAILED_BEFORE_READING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_BEFORE_READING | INPUT | outcome | FAILED | S7 execution_topology RECORD_FAILED_BEFORE_READING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_BEFORE_READING | INPUT | reason | store_failed_before_the_model_read | S7 execution_topology RECORD_FAILED_BEFORE_READING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_WHILE_WRITING | INPUT | user_prompt_id | payload.user_prompt_id | S7 execution_topology RECORD_FAILED_WHILE_WRITING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_WHILE_WRITING | INPUT | requester_id | payload.requester_id | S7 execution_topology RECORD_FAILED_WHILE_WRITING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_WHILE_WRITING | INPUT | customer_id | payload.customer_id | S7 execution_topology RECORD_FAILED_WHILE_WRITING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_WHILE_WRITING | INPUT | identity_key | payload.identity_key | S7 execution_topology RECORD_FAILED_WHILE_WRITING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_WHILE_WRITING | INPUT | kind | payload.kind | S7 execution_topology RECORD_FAILED_WHILE_WRITING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_WHILE_WRITING | INPUT | question | payload.question | S7 execution_topology RECORD_FAILED_WHILE_WRITING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_WHILE_WRITING | INPUT | supporting_material | payload.supporting_material | S7 execution_topology RECORD_FAILED_WHILE_WRITING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_WHILE_WRITING | INPUT | time_in_service_id | results.CC_ADMIT_USER_PROMPT_V0.model_record.time_in_service_id | S7 execution_topology RECORD_FAILED_WHILE_WRITING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_WHILE_WRITING | INPUT | reading | results.CC_CONFIRM_READING_FITS_V0.reading | S7 execution_topology RECORD_FAILED_WHILE_WRITING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_WHILE_WRITING | INPUT | outcome | FAILED | S7 execution_topology RECORD_FAILED_WHILE_WRITING |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_FAILED_WHILE_WRITING | INPUT | reason | writing_failed | S7 execution_topology RECORD_FAILED_WHILE_WRITING |
-
 ---
 
 ## 8. Interface Fields
-
-<!-- register:interface_fields optional -->
-| Artifact | Direction (INPUT, OUTPUT, ATTRIBUTE) | Field | Type | Required (YES, NO) | Default | Meaning |
-|----------|--------------------------------------|-------|------|--------------------|---------|---------|
-| causal_language_model::IN_REGISTER_MODEL_V0 | INPUT | staff_credentials | object | YES |  | Who is performing the operation and their role, as the business's existing arrangements assert it |
-| causal_language_model::IN_REGISTER_MODEL_V0 | INPUT | staff_id | string | YES |  | The staff member recorded against the operation in the operation trail |
-| causal_language_model::IN_REGISTER_MODEL_V0 | INPUT | description | object | YES |  | How the model is built, including the amount of text it can read at once |
-| causal_language_model::IN_REGISTER_MODEL_V0 | INPUT | fingerprint | string | YES |  | The training fingerprint, the provider's claim |
-| causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0 | INPUT | staff_credentials | object | YES |  | Who is performing the operation and their role, as the business's existing arrangements assert it |
-| causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0 | INPUT | staff_id | string | YES |  | The staff member recorded against the operation in the operation trail |
-| causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0 | INPUT | identity_key | string | YES |  | The key formed from a model's description and fingerprint |
-| causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0 | INPUT | time_in_service_id | string | YES |  | The time in service's identity, claimed once at placement |
-| causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0 | INPUT | ceiling | string | YES |  | The most sensitive kind of information the model may read |
-| causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0 | INPUT | system_prompt | string | YES |  | The business's standing instructions to the model for its time in service |
-| causal_language_model::IN_PLACE_MODEL_IN_SERVICE_V0 | INPUT | response_rules | object | YES |  | The forbidden words and patterns, the account-number shape, the freedom of word choice and the longest response |
-| causal_language_model::IN_WITHDRAW_MODEL_FROM_SERVICE_V0 | INPUT | staff_credentials | object | YES |  | Who is performing the operation and their role, as the business's existing arrangements assert it |
-| causal_language_model::IN_WITHDRAW_MODEL_FROM_SERVICE_V0 | INPUT | staff_id | string | YES |  | The staff member recorded against the operation in the operation trail |
-| causal_language_model::IN_WITHDRAW_MODEL_FROM_SERVICE_V0 | INPUT | identity_key | string | YES |  | The key formed from a model's description and fingerprint |
-| causal_language_model::IN_SUBMIT_USER_PROMPT_V0 | INPUT | user_prompt_id | string | YES |  | The user prompt's identity, named by the requester and claimed once |
-| causal_language_model::IN_SUBMIT_USER_PROMPT_V0 | INPUT | requester_id | string | YES |  | The requester who submits the user prompt |
-| causal_language_model::IN_SUBMIT_USER_PROMPT_V0 | INPUT | permitted_customers | array | YES |  | The customers the requester may act for, as the business's existing arrangements state |
-| causal_language_model::IN_SUBMIT_USER_PROMPT_V0 | INPUT | customer_id | string | YES |  | The customer the user prompt is for |
-| causal_language_model::IN_SUBMIT_USER_PROMPT_V0 | INPUT | account_numbers | array | YES |  | The customer's own account numbers, from the business's existing records |
-| causal_language_model::IN_SUBMIT_USER_PROMPT_V0 | INPUT | identity_key | string | YES |  | The key formed from a model's description and fingerprint |
-| causal_language_model::IN_SUBMIT_USER_PROMPT_V0 | INPUT | kind | string | YES |  | The most sensitive kind of information the question and its material contain |
-| causal_language_model::IN_SUBMIT_USER_PROMPT_V0 | INPUT | question | string | YES |  | What the requester asks on the customer's behalf |
-| causal_language_model::IN_SUBMIT_USER_PROMPT_V0 | INPUT | supporting_material | string | YES |  | Material carried with the question for the model to read |
-| causal_language_model::IN_SUBMIT_USER_PROMPT_V0 | INPUT | seed | integer | YES |  | The seed each adventurous word choice is drawn from |
-| causal_language_model::IN_RETRIEVE_USER_PROMPT_RECORD_V0 | INPUT | staff_credentials | object | YES |  | Who is performing the operation and their role, as the business's existing arrangements assert it |
-| causal_language_model::IN_RETRIEVE_USER_PROMPT_RECORD_V0 | INPUT | staff_id | string | YES |  | The staff member recorded against the operation in the operation trail |
-| causal_language_model::IN_RETRIEVE_USER_PROMPT_RECORD_V0 | INPUT | user_prompt_id | string | YES |  | The user prompt's identity, named by the requester and claimed once |
-| causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | INPUT | staff_credentials | object | YES |  | Who is performing the operation and their role, as the business's existing arrangements assert it |
-| causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | INPUT | authorization_rules | array | YES |  | The rules the staff member's credentials are checked against, fixed by this design |
-| causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | OUTPUT | is_authorized | boolean | YES |  | Whether the staff member is model staff |
-| causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0 | INPUT | user_prompt_id | string | YES |  | The user prompt's identity, named by the requester and claimed once |
-| causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0 | OUTPUT | address | string | YES |  | Where the claimed identity resolves to |
-| causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0 | INPUT | customer_id | string | YES |  | The customer the user prompt is for |
-| causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0 | INPUT | permitted_customers | array | YES |  | The customers the requester may act for, as the business's existing arrangements state |
-| causal_language_model::CC_CONFIRM_REQUESTER_ACTS_FOR_CUSTOMER_V0 | OUTPUT | acts_for_customer | boolean | YES |  | Whether the requester may act for the customer |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | INPUT | description | object | YES |  | How the model is built, including the amount of text it can read at once |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | INPUT | description_schema | object | YES |  | The fields a model description must carry, fixed by this design |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | INPUT | fingerprint | string | YES |  | The training fingerprint, the provider's claim |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | OUTPUT | identity_key | string | YES |  | The key formed from a model's description and fingerprint |
-| causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | OUTPUT | address | string | YES |  | Where the claimed key resolves to |
-| causal_language_model::CC_REGISTER_MODEL_V0 | INPUT | identity_key | string | YES |  | The key formed from a model's description and fingerprint |
-| causal_language_model::CC_REGISTER_MODEL_V0 | INPUT | description | object | YES |  | How the model is built, including the amount of text it can read at once |
-| causal_language_model::CC_REGISTER_MODEL_V0 | INPUT | fingerprint | string | YES |  | The training fingerprint, the provider's claim |
-| causal_language_model::CC_REGISTER_MODEL_V0 | OUTPUT | model_record | object | YES |  | The model's record, registered |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | INPUT | identity_key | string | YES |  | The key formed from a model's description and fingerprint |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | INPUT | time_in_service_id | string | YES |  | The time in service's identity, claimed once at placement |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | INPUT | ceiling | string | YES |  | The most sensitive kind of information the model may read |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | INPUT | system_prompt | string | YES |  | The business's standing instructions to the model for its time in service |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | INPUT | response_rules | object | YES |  | The forbidden words and patterns, the account-number shape, the freedom of word choice and the longest response |
-| causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | OUTPUT | time_in_service | object | YES |  | The time in service opened |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | INPUT | identity_key | string | YES |  | The key formed from a model's description and fingerprint |
-| causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | OUTPUT | model_record | object | YES |  | The model's record as it stood before withdrawal |
-| causal_language_model::CC_ADMIT_USER_PROMPT_V0 | INPUT | identity_key | string | YES |  | The key formed from a model's description and fingerprint |
-| causal_language_model::CC_ADMIT_USER_PROMPT_V0 | OUTPUT | model_record | object | YES |  | The record of the model the user prompt names, in service |
-| causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | INPUT | time_in_service_id | string | YES |  | The time in service's identity, claimed once at placement |
-| causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | INPUT | kind | string | YES |  | The most sensitive kind of information the question and its material contain |
-| causal_language_model::CC_CONFIRM_WITHIN_CEILING_V0 | OUTPUT | time_in_service | object | YES |  | The model's open time in service, with its ceiling, system prompt and response rules |
-| causal_language_model::CC_CONFIRM_READING_FITS_V0 | INPUT | system_prompt | string | YES |  | The business's standing instructions to the model for its time in service |
-| causal_language_model::CC_CONFIRM_READING_FITS_V0 | INPUT | question | string | YES |  | What the requester asks on the customer's behalf |
-| causal_language_model::CC_CONFIRM_READING_FITS_V0 | INPUT | supporting_material | string | YES |  | Material carried with the question for the model to read |
-| causal_language_model::CC_CONFIRM_READING_FITS_V0 | INPUT | reading_capacity | integer | YES |  | How many words the model can read at once; words, not a real model's tokens |
-| causal_language_model::CC_CONFIRM_READING_FITS_V0 | OUTPUT | reading | object | YES |  | Exactly what the model reads |
-| causal_language_model::CC_CONFIRM_READING_FITS_V0 | OUTPUT | reading_length | integer | YES |  | How long what the model reads is, in words |
-| causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | INPUT | response_rules | object | YES |  | The forbidden words and patterns, the account-number shape, the freedom of word choice and the longest response |
-| causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | INPUT | account_numbers | array | YES |  | The customer's own account numbers, from the business's existing records |
-| causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | INPUT | seed | integer | YES |  | The seed each adventurous word choice is drawn from |
-| causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | INPUT | reading | object | YES |  | Exactly what the model read, when it read anything |
-| causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | OUTPUT | rules_in_force | object | YES |  | The response rules in force for this user prompt, with its seed |
-| causal_language_model::CC_WRITE_MODEL_RESPONSE_V0 | OUTPUT | written_response | object | YES |  | The response as written, whether it finished, the rule that stopped it and the words stopped |
-| causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0 | INPUT | release_facts | object | YES |  | The facts of the written response one release condition reads |
-| causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0 | INPUT | release_rules | array | YES |  | The release condition, as a rule over those facts |
-| causal_language_model::CC_CONFIRM_RESPONSE_RELEASABLE_V0 | OUTPUT | releasable | boolean | YES |  | Whether the condition for release holds |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | INPUT | user_prompt_id | string | YES |  | The user prompt's identity, named by the requester and claimed once |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | INPUT | requester_id | string | YES |  | The requester who submits the user prompt |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | INPUT | customer_id | string | YES |  | The customer the user prompt is for |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | INPUT | identity_key | string | YES |  | The key formed from a model's description and fingerprint |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | INPUT | kind | string | YES |  | The most sensitive kind of information the question and its material contain |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | INPUT | question | string | YES |  | What the requester asks on the customer's behalf |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | INPUT | supporting_material | string | YES |  | Material carried with the question for the model to read |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | INPUT | outcome | string | YES |  | RESPONDED, REFUSED or FAILED |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | INPUT | time_in_service_id | string | NO |  | The time in service's identity, claimed once at placement |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | INPUT | reading | object | NO |  | Exactly what the model read, when it read anything |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | INPUT | rules_in_force | object | NO |  | The response rules in force, when the model wrote |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | INPUT | response | string | NO |  | The model response released |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | INPUT | reason | string | NO |  | Why the user prompt was refused, or where it failed |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | OUTPUT | record_id | string | YES |  | The identity of the appended user prompt record |
-| causal_language_model::CC_RECORD_USER_PROMPT_V0 | OUTPUT | sequence_number | integer | YES |  | The record's position in the user prompt records |
-| causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0 | INPUT | user_prompt_id | string | YES |  | The user prompt's identity, named by the requester and claimed once |
-| causal_language_model::CC_RETRIEVE_USER_PROMPT_RECORD_V0 | OUTPUT | user_prompt_record | array | YES |  | The record of the user prompt |
-| causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | INPUT | record | object | YES |  | The account of the performed operation |
-| causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | INPUT | staff_id | string | YES |  | The staff member recorded against the operation in the operation trail |
-| causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | INPUT | operation | string | YES |  | The operation performed |
-| causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | OUTPUT | record_id | string | YES |  | The identity of the appended trail entry |
-| causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | OUTPUT | sequence_number | integer | YES |  | The entry's position in the trail |
-| causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0 | INPUT | description | object | YES |  | How the model is built, including the amount of text it can read at once |
-| causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0 | INPUT | fingerprint | string | YES |  | The training fingerprint, the provider's claim |
-| causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0 | OUTPUT | identity_key | string | YES |  | The key formed from a model's description and fingerprint |
-| causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0 | INPUT | kind | string | YES |  | The kind of information stated |
-| causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0 | INPUT | ceiling | string | YES |  | The most sensitive kind of information the model may read |
-| causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0 | INPUT | kinds | array | YES |  | The declared kinds, least sensitive first |
-| causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0 | OUTPUT | within_ceiling | boolean | YES |  | Whether the kind is no more sensitive than the ceiling |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | INPUT | system_prompt | string | YES |  | The business's standing instructions to the model for its time in service |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | INPUT | question | string | YES |  | What the requester asks on the customer's behalf |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | INPUT | supporting_material | string | YES |  | Material carried with the question for the model to read |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | INPUT | reading_capacity | integer | YES |  | How many words the model can read at once; words, not a real model's tokens |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | OUTPUT | reading | object | YES |  | Exactly what the model reads |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | OUTPUT | reading_length | integer | YES |  | How long it is, in words |
-| causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0 | INPUT | response_rules | object | YES |  | The forbidden words and patterns, the account-number shape, the freedom of word choice and the longest response |
-| causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0 | INPUT | account_numbers | array | YES |  | The customer's own account numbers, from the business's existing records |
-| causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0 | INPUT | seed | integer | YES |  | The seed each adventurous word choice is drawn from |
-| causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0 | OUTPUT | rules_in_force | object | YES |  | The forbidden rules, the freedom of word choice and the seed in force |
-| causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0 | OUTPUT | positions | array | YES |  | One position per word up to the longest response |
-| causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | INPUT | reading | object | YES |  | Exactly what the model reads |
-| causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | INPUT | text | string | YES |  | The response so far |
-| causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | INPUT | finished | boolean | YES |  | Whether the response has finished, in which case no word is offered |
-| causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | INPUT | stopped_by | string | YES |  | The rule that stopped the response, in which case no word is offered |
-| causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | OUTPUT | candidates | array | YES |  | The words the model offers next, each with its likelihood |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | INPUT | candidates | array | YES |  | The words offered, each with its likelihood |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | INPUT | rules_in_force | object | YES |  | The response rules in force |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | INPUT | position | integer | YES |  | Which word this is |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | INPUT | text | string | YES |  | The response so far |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | INPUT | finished | boolean | YES |  | Whether the response has finished |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | INPUT | stopped_by | string | YES |  | The rule that left no permitted word, or none |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | INPUT | stopped | array | YES |  | The words stopped so far, each with its position and rule |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | OUTPUT | text | string | YES |  | The response so far, with the chosen word |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | OUTPUT | finished | boolean | YES |  | Whether the chosen word ends the response |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | OUTPUT | stopped_by | string | YES |  | The rule that left no permitted word, or none |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | OUTPUT | stopped | array | YES |  | The words stopped so far, with those stopped this pass |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | INPUT | reading | object | YES |  | Exactly what the model reads |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | INPUT | rules_in_force | object | YES |  | The response rules in force |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | INPUT | position | integer | YES |  | Which word this is |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | INPUT | text | string | YES |  | The response so far |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | INPUT | finished | boolean | YES |  | Whether the response has finished |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | INPUT | stopped_by | string | YES |  | The rule that left no permitted word, or none |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | INPUT | stopped | array | YES |  | The words stopped so far |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | OUTPUT | result | object | YES |  | The response so far, whether it finished, the rule that stopped it and the words stopped |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | INPUT | reading | object | YES |  | Exactly what the model reads |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | INPUT | rules_in_force | object | YES |  | The response rules in force |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | INPUT | positions | array | YES |  | One position per word up to the longest response |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | OUTPUT | result | object | YES |  | The response as written, whether it finished, the rule that stopped it and the words stopped |
-| causal_language_model::EV_MODEL_REGISTERED_V0 | OUTPUT | identity_key | string | YES |  | The key formed from a model's description and fingerprint |
-| causal_language_model::EV_MODEL_REGISTERED_V0 | OUTPUT | staff_id | string | YES |  | The staff member recorded against the operation in the operation trail |
-| causal_language_model::EV_MODEL_SERVICE_STARTED_V0 | OUTPUT | identity_key | string | YES |  | The key formed from a model's description and fingerprint |
-| causal_language_model::EV_MODEL_SERVICE_STARTED_V0 | OUTPUT | time_in_service_id | string | YES |  | The time in service's identity, claimed once at placement |
-| causal_language_model::EV_MODEL_SERVICE_STARTED_V0 | OUTPUT | staff_id | string | YES |  | The staff member recorded against the operation in the operation trail |
-| causal_language_model::EV_MODEL_SERVICE_ENDED_V0 | OUTPUT | identity_key | string | YES |  | The key formed from a model's description and fingerprint |
-| causal_language_model::EV_MODEL_SERVICE_ENDED_V0 | OUTPUT | staff_id | string | YES |  | The staff member recorded against the operation in the operation trail |
-| causal_language_model::EV_USER_PROMPT_RESPONDED_V0 | OUTPUT | user_prompt_id | string | YES |  | The user prompt's identity, named by the requester and claimed once |
-| causal_language_model::EV_USER_PROMPT_RESPONDED_V0 | OUTPUT | identity_key | string | YES |  | The key formed from a model's description and fingerprint |
-| causal_language_model::EV_USER_PROMPT_RESPONDED_V0 | OUTPUT | requester_id | string | YES |  | The requester who submits the user prompt |
-| causal_language_model::EV_USER_PROMPT_REFUSED_V0 | OUTPUT | user_prompt_id | string | YES |  | The user prompt's identity, named by the requester and claimed once |
-| causal_language_model::EV_USER_PROMPT_REFUSED_V0 | OUTPUT | identity_key | string | YES |  | The key formed from a model's description and fingerprint |
-| causal_language_model::EV_USER_PROMPT_REFUSED_V0 | OUTPUT | requester_id | string | YES |  | The requester who submits the user prompt |
-| causal_language_model::AC_MODEL_STAFF_V0 | ATTRIBUTE | staff_id | string | YES |  | The staff member's identity as the business knows it |
-| causal_language_model::AC_MODEL_STAFF_V0 | ATTRIBUTE | authorized | boolean | NO | false | Whether the staff member is model staff; decided by the business's existing arrangements, read here |
-| causal_language_model::AC_REQUESTER_V0 | ATTRIBUTE | requester_id | string | YES |  | The requester's identity as the business knows it |
-| causal_language_model::AC_REQUESTER_V0 | ATTRIBUTE | permitted_customers | array | NO | [] | The customers the requester may act for; decided by the business's existing arrangements, read here |
 
 ---
 
@@ -691,18 +6147,6 @@ response; any other word is appended after one space. When nothing is permitted,
 the most likely candidate is named and the response is left as it stood. `none` names no rule: the
 response has not been stopped.
 
-<!-- register:implementation_bindings optional -->
-| CT Code | Module | Callable | Operation | Kind (atom, molecule) | Purity (ct_pure, ct_impure) | Refusal (raises, returns, never) | Source Finding |
-|---------|--------|----------|-----------|-----------------------|-----------------------------|----------------------------------|----------------|
-| causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0 | causal_language_model.implementation.capability_transforms.atoms.ct_pure_form_model_identity_key_v0 | execute | FORM_MODEL_IDENTITY_KEY | atom | ct_pure | never | S7 new_artifacts CT_PURE_FORM_MODEL_IDENTITY_KEY_V0 |
-| causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0 | causal_language_model.implementation.capability_transforms.atoms.ct_pure_compare_sensitivity_v0 | execute | COMPARE_SENSITIVITY | atom | ct_pure | raises | S7 new_artifacts CT_PURE_COMPARE_SENSITIVITY_V0 |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | causal_language_model.implementation.capability_transforms.atoms.ct_pure_assemble_model_reading_v0 | execute | ASSEMBLE_MODEL_READING | atom | ct_pure | raises | S7 new_artifacts CT_PURE_ASSEMBLE_MODEL_READING_V0 |
-| causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0 | causal_language_model.implementation.capability_transforms.atoms.ct_pure_form_response_rules_v0 | execute | FORM_RESPONSE_RULES | atom | ct_pure | never | S7 new_artifacts CT_PURE_FORM_RESPONSE_RULES_V0 |
-| causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | causal_language_model.implementation.capability_transforms.atoms.ct_impure_offer_next_words_v0 | execute | OFFER_NEXT_WORDS | atom | ct_impure | never | S7 new_artifacts CT_IMPURE_OFFER_NEXT_WORDS_V0 |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | causal_language_model.implementation.capability_transforms.atoms.ct_pure_choose_permitted_word_v0 | execute | CHOOSE_PERMITTED_WORD | atom | ct_pure | returns | S7 new_artifacts CT_PURE_CHOOSE_PERMITTED_WORD_V0 |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 |  |  | WRITE_NEXT_WORD | molecule | ct_impure | returns | S7 new_artifacts CT_WRITE_NEXT_WORD_V0 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 |  |  | WRITE_RESPONSE | molecule | ct_impure | returns | S7 new_artifacts CT_WRITE_RESPONSE_V0 |
-
 ---
 
 ## 10. Vocabulary Extensions
@@ -711,72 +6155,23 @@ Every status this design routes on — ACK, NACK, SUCCESS, NOT_FOUND, ALREADY_EX
 BACKEND_ERROR — is already admitted. The one vocabulary authored is the kinds of information, in their
 declared order.
 
-<!-- register:vocabulary_extensions optional -->
-| Vocabulary Code | Extends | Group | Casing | Value | Meaning | Source Finding |
-|-----------------|---------|-------|--------|-------|---------|----------------|
-| causal_language_model::VOCAB_KIND_OF_INFORMATION_V0 | NONE | kind_of_information | lower_snake | public | The least sensitive kind | S5 provisional_codes VOCAB_KIND_OF_INFORMATION_V0 |
-| causal_language_model::VOCAB_KIND_OF_INFORMATION_V0 | NONE | kind_of_information | lower_snake | internal | More sensitive than public | S5 provisional_codes VOCAB_KIND_OF_INFORMATION_V0 |
-| causal_language_model::VOCAB_KIND_OF_INFORMATION_V0 | NONE | kind_of_information | lower_snake | confidential | More sensitive than internal | S5 provisional_codes VOCAB_KIND_OF_INFORMATION_V0 |
-| causal_language_model::VOCAB_KIND_OF_INFORMATION_V0 | NONE | kind_of_information | lower_snake | restricted | The most sensitive kind | S5 provisional_codes VOCAB_KIND_OF_INFORMATION_V0 |
-
 ---
 
 ## 11. Runtime Policies
-
-<!-- register:runtime_policies optional -->
-| RB Code | Capability | Key | Value | Source Finding |
-|---------|------------|-----|-------|----------------|
-| causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0 | capability_side_effects::CS_MUTABLE_JSON_V0 | structure | causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0 | S7 rb_declarations RB_MODEL_RESPONSE_BINDINGS_V0 |
-| causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0 | capability_side_effects::CS_REGISTRY_V0 | structure | causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0 | S7 rb_declarations RB_MODEL_RESPONSE_BINDINGS_V0 |
-| causal_language_model::RB_MODEL_RESPONSE_BINDINGS_V0 | capability_side_effects::CS_APPENDONLY_JSONL_V0 | structure | causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0 | S7 rb_declarations RB_MODEL_RESPONSE_BINDINGS_V0 |
 
 ---
 
 ## 12. Artifact Properties
 
-<!-- register:artifact_properties optional -->
-| Artifact | Property | Value | Source Finding |
-|----------|----------|-------|----------------|
-| causal_language_model::AC_MODEL_STAFF_V0 | type | ENDUSER | S5 provisional_codes AC_MODEL_STAFF_V0 |
-| causal_language_model::AC_REQUESTER_V0 | type | ENDUSER | S5 provisional_codes AC_REQUESTER_V0 |
-| causal_language_model::WF_REGISTER_MODEL_V0 | emit.EXIT_REGISTERED | causal_language_model::EV_MODEL_REGISTERED_V0 | S4 gap_register GAP-20 |
-| causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | emit.EXIT_PLACED | causal_language_model::EV_MODEL_SERVICE_STARTED_V0 | S4 gap_register GAP-20 |
-| causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | emit.EXIT_WITHDRAWN | causal_language_model::EV_MODEL_SERVICE_ENDED_V0 | S4 gap_register GAP-20 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | emit.EXIT_RESPONDED | causal_language_model::EV_USER_PROMPT_RESPONDED_V0 | S4 gap_register GAP-20 |
-| causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | emit.EXIT_REFUSED | causal_language_model::EV_USER_PROMPT_REFUSED_V0 | S4 gap_register GAP-20 |
-| causal_language_model::EV_USER_PROMPT_REFUSED_V0 | moment | refusal | S0 business_events User Prompt Refused |
-| causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0 | layer | DOMAINS | S5 provisional_codes STRUCTURE_MODEL_RESPONSE_STORAGE_V0 |
-
 ---
 
 ## 13. STRUCTURE Stores
-
-<!-- register:structure_stores optional -->
-| Store Name | Storage Type (CS_APPENDONLY_JSONL_V0, CS_MUTABLE_JSON_V0, CS_REGISTRY_V0) | Proposed Path | Used By | Source Finding |
-|------------|---------------------------------------------------------------------------|---------------|---------|----------------|
-| MODELS | CS_MUTABLE_JSON_V0 | causal_language_model/model_response/models.json | causal_language_model::CC_REGISTER_MODEL_V0 | S6 storage_governance A durable record of every model the business holds |
-| MODEL_IDENTITY_REGISTRY | CS_REGISTRY_V0 | causal_language_model/model_response/model_identity_registry.jsonl | causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | S6 storage_governance A claim on each model's identity, held once |
-| TIME_IN_SERVICE_REGISTRY | CS_REGISTRY_V0 | causal_language_model/model_response/time_in_service_registry.jsonl | causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | S6 storage_governance A claim on each time in service's identity, held once |
-| USER_PROMPT_REGISTRY | CS_REGISTRY_V0 | causal_language_model/model_response/user_prompt_registry.jsonl | causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0 | S6 storage_governance A claim on each user prompt's identity, held once |
-| TIMES_IN_SERVICE | CS_MUTABLE_JSON_V0 | causal_language_model/model_response/times_in_service.json | causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | S6 storage_governance A durable record of every time in service |
-| USER_PROMPT_RECORDS | CS_APPENDONLY_JSONL_V0 | causal_language_model/model_response/user_prompt_records.jsonl | causal_language_model::CC_RECORD_USER_PROMPT_V0 | S6 storage_governance A record of every user prompt that cannot be amended |
-| MODEL_OPERATIONS | CS_APPENDONLY_JSONL_V0 | causal_language_model/model_response/model_operations.jsonl | causal_language_model::CC_APPEND_MODEL_OPERATION_V0 | S6 storage_governance A trail of performed operations that cannot be amended |
 
 ---
 
 ## 14. Transport Bindings
 
-<!-- register:transport_bindings optional -->
-| Artifact | Direction (INGRESS, EGRESS) | Operation | Handler Kind (WF_INVOCATION, SNAPSHOT_READ) | Handler Target | Field | Bound To | Source Finding |
-|----------|-----------------------------|-----------|---------------------------------------------|----------------|-------|----------|----------------|
-| NONE IDENTIFIED |
-
 ## 15. Artifact Summary
-
-<!-- register:artifact_summary -->
-| Action (REPLACE, EXTEND, NEW) | Subdomain | Count | Artifacts |
-|-------------------------------|-----------|-------|-----------|
-| NEW | model_response | 43 | 2 AC, 5 IN, 5 WF, 15 CC, 8 CT, 5 EV, 1 VOCAB, 1 RB, 1 STRUCTURE |
 
 ---
 
@@ -785,21 +6180,11 @@ declared order.
 *Every artifact this design schedules is authored: construction renders it from the registers
 above and it is its own source of truth. Nothing here is reached by invoking a generator.*
 
-<!-- register:generation_provenance optional -->
-| Artifact | Generator | Generator Sources | Source Finding |
-|----------|-----------|-------------------|----------------|
-| NONE IDENTIFIED |
-
 ---
 
 ## 17. Declared Reach
 
 Every act reads only what model_response owns.
-
-<!-- register:declared_reach optional -->
-| Act | Consults | Source Finding |
-|-----|----------|----------------|
-| NONE IDENTIFIED |
 
 ---
 
@@ -808,250 +6193,33 @@ Every act reads only what model_response owns.
 A submission's refusal is discharged at the place that records it: that place's success ends the act
 at `EXIT_REFUSED`, which refuses. The check that found the refusal routes there and nowhere else.
 
-<!-- register:refusal_discharge optional -->
-| Operation | Refused When | Act | Step | Outcome | Source Finding |
-|-----------|--------------|-----|------|---------|----------------|
-| Register a model | Its description and fingerprint match a registered model. | causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0 | ALREADY_EXISTS | S0 operation_refusals #1 |
-| Place a model in service | The model is not registered. | causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | NOT_FOUND | S0 operation_refusals #2 |
-| Place a model in service | The model is already in service. | causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0 | VIOLATION | S0 operation_refusals #3 |
-| Withdraw a model from service | The model is not in service. | causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | VIOLATION | S0 operation_refusals #4 |
-| Withdraw a model from service | The model is not in service. | causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | causal_language_model::CC_WITHDRAW_MODEL_FROM_SERVICE_V0 | NOT_FOUND | S0 operation_refusals #4 |
-| Submit a user prompt | The model is not registered. | causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_REGISTERED | SUCCESS | S0 operation_refusals #5 |
-| Submit a user prompt | The model is not in service. | causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_IN_SERVICE | SUCCESS | S0 operation_refusals #6 |
-| Submit a user prompt | The user prompt contains a more sensitive kind of information than the model may read. | causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_ABOVE_CEILING | SUCCESS | S0 operation_refusals #7 |
-| Submit a user prompt | What the model would read is longer than the model can read at once. | causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_TOO_LONG_TO_READ | SUCCESS | S0 operation_refusals #8 |
-| Submit a user prompt | The requester is not permitted to act for the customer. | causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_NOT_PERMITTED | SUCCESS | S0 operation_refusals #9 |
-| Submit a user prompt | The model cannot finish a response without breaking a response rule. | causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_BY_RULE | SUCCESS | S0 operation_refusals #10 |
-| Submit a user prompt | The response reaches the longest response before it is finished. | causal_language_model::WF_SUBMIT_USER_PROMPT_V0 | RECORD_REFUSED_UNFINISHED | SUCCESS | S0 operation_refusals #11 |
-| Register a model, place in service, withdraw, retrieve a record | The staff member is not authorized model staff. | causal_language_model::WF_REGISTER_MODEL_V0 | causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | VIOLATION | S0 operation_refusals #12 |
-| Register a model, place in service, withdraw, retrieve a record | The staff member is not authorized model staff. | causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0 | causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | VIOLATION | S0 operation_refusals #12 |
-| Register a model, place in service, withdraw, retrieve a record | The staff member is not authorized model staff. | causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0 | causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | VIOLATION | S0 operation_refusals #12 |
-| Register a model, place in service, withdraw, retrieve a record | The staff member is not authorized model staff. | causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0 | causal_language_model::CC_CONFIRM_MODEL_STAFF_AUTHORIZED_V0 | VIOLATION | S0 operation_refusals #12 |
-
 ---
 
 ## 19. Refusal Deferrals
-
-<!-- register:refusal_deferrals optional -->
-| Operation | Refused When | Deferred To | Until | Source Finding |
-|-----------|--------------|-------------|-------|----------------|
-| NONE IDENTIFIED |
 
 ---
 
 ## 20. Refusal — Governance-Surface Discharge
 
-<!-- register:refusal_governance_discharge optional -->
-| Operation | Refused When | Phase | Governing Rule | Source Finding |
-|-----------|--------------|-------|----------------|----------------|
-| NONE IDENTIFIED |
-
 ---
 
 ## 21. Molecule Steps
-
-<!-- register:molecule_steps optional -->
-| CT Code | Step | Kind (atom, molecule, loop) | Target | Over | Iterator | Emits | Source Finding |
-|---------|------|-----------------------------|--------|------|----------|-------|----------------|
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | offered | atom | causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | — | — | — | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | chosen | atom | causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | — | — | result | S4 design_decisions #3 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | written | loop | causal_language_model::CT_WRITE_NEXT_WORD_V0 | inputs.positions | position | result | S4 design_decisions #2 |
 
 ---
 
 ## 22. Molecule Step Bindings
 
-<!-- register:molecule_step_bindings optional -->
-| CT Code | Step | Role (INPUT, CARRY, UPDATE) | Field | Bound To | Source Finding |
-|---------|------|-----------------------------|-------|----------|----------------|
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | offered | INPUT | reading | inputs.reading | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | offered | INPUT | text | inputs.text | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | offered | INPUT | finished | inputs.finished | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | offered | INPUT | stopped_by | inputs.stopped_by | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | chosen | INPUT | candidates | results.offered.candidates | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | chosen | INPUT | rules_in_force | inputs.rules_in_force | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | chosen | INPUT | position | inputs.position | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | chosen | INPUT | text | inputs.text | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | chosen | INPUT | finished | inputs.finished | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | chosen | INPUT | stopped_by | inputs.stopped_by | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | chosen | INPUT | stopped | inputs.stopped | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | written | CARRY | text | "" | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | written | CARRY | finished | false | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | written | CARRY | stopped_by | none | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | written | CARRY | stopped | [] | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | written | INPUT | position | iterator | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | written | INPUT | reading | inputs.reading | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | written | INPUT | rules_in_force | inputs.rules_in_force | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | written | INPUT | text | accumulator.text | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | written | INPUT | finished | accumulator.finished | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | written | INPUT | stopped_by | accumulator.stopped_by | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | written | INPUT | stopped | accumulator.stopped | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | written | UPDATE | text | results.text | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | written | UPDATE | finished | results.finished | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | written | UPDATE | stopped_by | results.stopped_by | S4 design_decisions #2 |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | written | UPDATE | stopped | results.stopped | S4 design_decisions #2 |
-
 ---
 
 ## 23. Test Cases
-
-<!-- register:test_cases optional -->
-| CT Code | Case | Expected Outcome (SUCCESS, VIOLATION) | Source Finding |
-|---------|------|---------------------------------------|----------------|
-| causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0 | forms_key_from_description_and_fingerprint | SUCCESS | human decision |
-| causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0 | refuses_blank_fingerprint | VIOLATION | human decision |
-| causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0 | admits_kind_within_ceiling | SUCCESS | human decision |
-| causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0 | refuses_kind_above_ceiling | VIOLATION | human decision |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | assembles_what_fits | SUCCESS | human decision |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | refuses_reading_too_long | VIOLATION | human decision |
-| causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0 | adds_the_account_rule_and_positions | SUCCESS | human decision |
-| causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | offers_candidates | SUCCESS | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | SUCCESS | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | SUCCESS | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | SUCCESS | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | SUCCESS | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | SUCCESS | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | SUCCESS | human decision |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | SUCCESS | human decision |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | writes_a_finished_response_and_offers_nothing_after | SUCCESS | human decision |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | stops_unfinished_at_the_longest_response | SUCCESS | human decision |
 
 ---
 
 ## 24. Test Case Values
 
-<!-- register:test_case_values optional -->
-| CT Code | Case | Role (INPUT, EXPECTED, ASSERT, RECORDED) | Field | Value | Source Finding |
-|---------|------|------------------------------------------|-------|-------|----------------|
-| causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0 | forms_key_from_description_and_fingerprint | INPUT | description | {reading_capacity: 64, layers: 2} | human decision |
-| causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0 | forms_key_from_description_and_fingerprint | INPUT | fingerprint | sha256:ab12 | human decision |
-| causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0 | forms_key_from_description_and_fingerprint | EXPECTED | identity_key | '{"layers":2,"reading_capacity":64}\|sha256:ab12' | human decision |
-| causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0 | refuses_blank_fingerprint | INPUT | description | {reading_capacity: 64, layers: 2} | human decision |
-| causal_language_model::CT_PURE_FORM_MODEL_IDENTITY_KEY_V0 | refuses_blank_fingerprint | INPUT | fingerprint | " " | human decision |
-| causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0 | admits_kind_within_ceiling | INPUT | kind | internal | human decision |
-| causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0 | admits_kind_within_ceiling | INPUT | ceiling | confidential | human decision |
-| causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0 | admits_kind_within_ceiling | INPUT | kinds | [public, internal, confidential, restricted] | human decision |
-| causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0 | admits_kind_within_ceiling | EXPECTED | within_ceiling | true | human decision |
-| causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0 | refuses_kind_above_ceiling | INPUT | kind | restricted | human decision |
-| causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0 | refuses_kind_above_ceiling | INPUT | ceiling | internal | human decision |
-| causal_language_model::CT_PURE_COMPARE_SENSITIVITY_V0 | refuses_kind_above_ceiling | INPUT | kinds | [public, internal, confidential, restricted] | human decision |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | assembles_what_fits | INPUT | system_prompt | Answer briefly. | human decision |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | assembles_what_fits | INPUT | question | What is my balance? | human decision |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | assembles_what_fits | INPUT | supporting_material | Account 12345678 balance 40. | human decision |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | assembles_what_fits | INPUT | reading_capacity | 20 | human decision |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | assembles_what_fits | EXPECTED | reading | {system_prompt: 'Answer briefly.', question: 'What is my balance?', supporting_material: 'Account 12345678 balance 40.'} | human decision |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | assembles_what_fits | EXPECTED | reading_length | 10 | human decision |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | refuses_reading_too_long | INPUT | system_prompt | Answer briefly. | human decision |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | refuses_reading_too_long | INPUT | question | What is my balance? | human decision |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | refuses_reading_too_long | INPUT | supporting_material | Account 12345678 balance 40. | human decision |
-| causal_language_model::CT_PURE_ASSEMBLE_MODEL_READING_V0 | refuses_reading_too_long | INPUT | reading_capacity | 5 | human decision |
-| causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0 | adds_the_account_rule_and_positions | INPUT | response_rules | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}], account_number_pattern: '[0-9](?:[ -]?[0-9]){7}', freedom: 0, longest_response: 3} | human decision |
-| causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0 | adds_the_account_rule_and_positions | INPUT | account_numbers | ['12345678'] | human decision |
-| causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0 | adds_the_account_rule_and_positions | INPUT | seed | 7 | human decision |
-| causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0 | adds_the_account_rule_and_positions | EXPECTED | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 0, seed: 7} | human decision |
-| causal_language_model::CT_PURE_FORM_RESPONSE_RULES_V0 | adds_the_account_rule_and_positions | EXPECTED | positions | [1, 2, 3] | human decision |
-| causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | offers_candidates | INPUT | reading | {system_prompt: 'Answer briefly.', question: 'What is my balance?', supporting_material: 'Account 12345678 balance 40.'} | human decision |
-| causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | offers_candidates | INPUT | text | "" | human decision |
-| causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | offers_candidates | INPUT | finished | false | human decision |
-| causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | offers_candidates | INPUT | stopped_by | none | human decision |
-| causal_language_model::CT_IMPURE_OFFER_NEXT_WORDS_V0 | offers_candidates | ASSERT | candidates | {mode: property, type: non_zero} | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | INPUT | candidates | [{word: '87654321', likelihood: 0.6}, {word: Your, likelihood: 0.3}] | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | INPUT | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 0, seed: 7} | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | INPUT | position | 1 | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | INPUT | text | "" | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | INPUT | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | INPUT | stopped_by | none | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | INPUT | stopped | [] | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | EXPECTED | text | Your | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | EXPECTED | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | EXPECTED | stopped_by | none | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_another_customers_account_and_continues | EXPECTED | stopped | [{position: 1, word: '87654321', rule: another_customers_account_number}] | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | INPUT | candidates | [{word: '4321', likelihood: 0.7}, {word: is, likelihood: 0.2}] | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | INPUT | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 0, seed: 7} | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | INPUT | position | 3 | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | INPUT | text | Account 8765 | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | INPUT | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | INPUT | stopped_by | none | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | INPUT | stopped | [] | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | EXPECTED | text | Account 8765 is | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | EXPECTED | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | EXPECTED | stopped_by | none | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | stops_an_account_number_written_across_two_words | EXPECTED | stopped | [{position: 3, word: '4321', rule: another_customers_account_number}] | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | INPUT | candidates | [{word: '5678', likelihood: 0.8}] | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | INPUT | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 0, seed: 7} | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | INPUT | position | 3 | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | INPUT | text | Account 1234 | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | INPUT | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | INPUT | stopped_by | none | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | INPUT | stopped | [] | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | EXPECTED | text | Account 1234 5678 | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | EXPECTED | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | EXPECTED | stopped_by | none | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | writes_the_customers_own_account_across_two_words | EXPECTED | stopped | [] | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | INPUT | candidates | [{word: '87654321', likelihood: 0.9}] | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | INPUT | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 0, seed: 7} | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | INPUT | position | 1 | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | INPUT | text | "" | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | INPUT | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | INPUT | stopped_by | none | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | INPUT | stopped | [] | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | EXPECTED | text | "" | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | EXPECTED | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | EXPECTED | stopped_by | another_customers_account_number | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | names_the_rule_when_no_permitted_word_remains | EXPECTED | stopped | [{position: 1, word: '87654321', rule: another_customers_account_number}] | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | INPUT | candidates | [{word: balance, likelihood: 0.6}, {word: savings, likelihood: 0.3}, {word: loan, likelihood: 0.1}] | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | INPUT | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 1, seed: 7} | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | INPUT | position | 2 | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | INPUT | text | Your | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | INPUT | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | INPUT | stopped_by | none | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | INPUT | stopped | [] | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | EXPECTED | text | Your savings | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | EXPECTED | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | EXPECTED | stopped_by | none | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | draws_an_adventurous_word_from_the_seed | EXPECTED | stopped | [] | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | INPUT | candidates | [{word: <end>, likelihood: 0.9}] | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | INPUT | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 0, seed: 7} | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | INPUT | position | 3 | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | INPUT | text | Your balance | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | INPUT | finished | false | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | INPUT | stopped_by | none | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | INPUT | stopped | [] | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | EXPECTED | text | Your balance | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | EXPECTED | finished | true | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | EXPECTED | stopped_by | none | human decision |
-| causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0 | finishes_on_the_end_of_the_response | EXPECTED | stopped | [] | human decision |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | INPUT | reading | {system_prompt: 'Answer briefly.', question: 'What is my balance?', supporting_material: 'Account 12345678 balance 40.'} | human decision |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | INPUT | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 0, seed: 7} | human decision |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | INPUT | position | 1 | human decision |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | INPUT | text | "" | human decision |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | INPUT | finished | false | human decision |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | INPUT | stopped_by | none | human decision |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | INPUT | stopped | [] | human decision |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | RECORDED | offered | {candidates: [{word: '87654321', likelihood: 0.6}, {word: Your, likelihood: 0.3}]} | human decision |
-| causal_language_model::CT_WRITE_NEXT_WORD_V0 | writes_one_permitted_word_from_a_recorded_offer | EXPECTED | result | {text: Your, finished: false, stopped_by: none, stopped: [{position: 1, word: '87654321', rule: another_customers_account_number}]} | human decision |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | writes_a_finished_response_and_offers_nothing_after | INPUT | reading | {system_prompt: 'Answer briefly.', question: 'What is my balance?', supporting_material: 'Account 12345678 balance 40.'} | human decision |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | writes_a_finished_response_and_offers_nothing_after | INPUT | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 0, seed: 7} | human decision |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | writes_a_finished_response_and_offers_nothing_after | INPUT | positions | [1, 2, 3, 4] | human decision |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | writes_a_finished_response_and_offers_nothing_after | RECORDED | written[0]/offered | {candidates: [{word: '87654321', likelihood: 0.6}, {word: Your, likelihood: 0.3}]} | human decision |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | writes_a_finished_response_and_offers_nothing_after | RECORDED | written[1]/offered | {candidates: [{word: balance, likelihood: 0.9}]} | human decision |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | writes_a_finished_response_and_offers_nothing_after | RECORDED | written[2]/offered | {candidates: [{word: <end>, likelihood: 0.9}]} | human decision |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | writes_a_finished_response_and_offers_nothing_after | RECORDED | written[3]/offered | {candidates: []} | human decision |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | writes_a_finished_response_and_offers_nothing_after | EXPECTED | result | {text: Your balance, finished: true, stopped_by: none, stopped: [{position: 1, word: '87654321', rule: another_customers_account_number}]} | human decision |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | stops_unfinished_at_the_longest_response | INPUT | reading | {system_prompt: 'Answer briefly.', question: 'What is my balance?', supporting_material: 'Account 12345678 balance 40.'} | human decision |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | stops_unfinished_at_the_longest_response | INPUT | rules_in_force | {forbidden: [{rule: no_guarantees, pattern: '\bguaranteed\b'}, {rule: another_customers_account_number, pattern: '[0-9](?:[ -]?[0-9]){7}', except: ['12345678']}], freedom: 0, seed: 7} | human decision |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | stops_unfinished_at_the_longest_response | INPUT | positions | [1] | human decision |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | stops_unfinished_at_the_longest_response | RECORDED | written[0]/offered | {candidates: [{word: Your, likelihood: 0.9}]} | human decision |
-| causal_language_model::CT_WRITE_RESPONSE_V0 | stops_unfinished_at_the_longest_response | EXPECTED | result | {text: Your, finished: false, stopped_by: none, stopped: []} | human decision |
-
 ---
 
 ## 25. Withdrawn Facts
-
-<!-- register:withdrawn_facts optional -->
-| Artifact | Fact | Reason | Source Finding |
-|----------|------|--------|----------------|
-
 
 ---
 

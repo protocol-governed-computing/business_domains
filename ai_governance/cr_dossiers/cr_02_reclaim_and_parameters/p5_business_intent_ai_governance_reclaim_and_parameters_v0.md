@@ -1,106 +1,130 @@
 # Stage 5 — Business Intent: ai_governance / reclaim and parameter result
 
-**Stage:** 5 — Business Intent
+## Machine
 
-**CR:** cr_02_reclaim_and_parameters
+```yaml
+document:
+  phase: p5
+  domain: ai_governance
+  subdomain:
+  - reclaim
+  - parameter result
+  cr: cr_02_reclaim_and_parameters
+  rule_set: transformation.schemas.REGISTER_SCHEMA_P5_V0
+registers:
+  subdomain_purpose: |2
 
-**Status:** DRAFT
-
-**Feeds:** Stage 6 — Governance Intent
+    The AI Licensing subdomain governs the business's licenses for AI tools: provisioning a license to an
+    employee, and reclaiming a license that has gone unused for the business's threshold of days. The
+    Agent Governance subdomain governs what an AI agent may do on the business's behalf: it judges an
+    agent's proposed action, checks its parameters against the rules declared for the tool, and records
+    every action it authorizes or denies. This change decides what a reclaim does when the registry
+    refuses it and what the parameter check reports, and states each act it changes under a new identity.
+  purpose_provenance:
+  - source: CR seed §0 Subdomain Purpose
+    disposition: INHERITED
+    refinement: ''
+  subdomain_purposes:
+  - subdomain: ai_licensing
+    purpose: Governs the business's AI tool licenses, and ends a reclaim the registry refuses with the license still assigned.
+    source_finding: {phase: p4, register: actors, key: AI Licensing}
+  - subdomain: agent_governance
+    purpose: Checks an agent's action against the rules declared for its tool, and reports only what its checks receive.
+    source_finding: {phase: p4, register: actors, key: Agent Governance}
+  scope_boundary:
+  - capability: End a reclaim the registry refuses
+    status: IN_SCOPE
+    notes: A next version of the reclaim, whose removal step ends the contract on a refused removal.
+    source_finding: {phase: p4, register: authoring_scope, key: GAP-01}
+  - capability: Check an action's parameters
+    status: IN_SCOPE
+    notes: A next version of the parameter check.
+    source_finding: {phase: p4, register: authoring_scope, key: GAP-02}
+  - capability: Tell a refused removal apart from a license still in use
+    status: DEFERRED
+    notes: Both leave the license assigned.
+    source_finding: {phase: p4, register: authoring_scope, key: Tell a refused removal apart from a license still in use}
+  business_objects:
+  - store_name: License registry
+    record_model: IDENTITY_REGISTRY
+    business_rationale: Unchanged, and named because a refused removal from it now ends the reclaim.
+    source_finding: {phase: p4, register: bm_entities, key: The Assignment}
+  identity_semantics:
+  - store_name: License registry
+    identity_field: Employee
+    source: Named by the reclaim request
+    uniqueness_rule: One assignment per employee; unchanged by this change.
+    cross_subdomain_relationship: None
+    source_finding: {phase: p4, register: bm_entities, key: The Assignment}
+  invariants:
+  - invariant: No reclaim carries on past a removal the registry refused.
+    business_reason: A step after a refused removal would act on an assignment still held.
+    source_finding: {phase: p1, register: business_invariants, row: 1}
+  - invariant: No license is reported reclaimed that the registry did not release.
+    business_reason: A revocation announced for a license still held is false.
+    source_finding: {phase: p1, register: business_invariants, row: 2}
+  - invariant: A check reports only what it receives.
+    business_reason: A reported result nobody received is no result.
+    source_finding: {phase: p1, register: business_invariants, row: 3}
+  - invariant: A published identity means what it meant when it was published.
+    business_reason: A citation of v5 relies on what v5 said.
+    source_finding: {phase: p1, register: business_invariants, row: 4}
+  actions:
+  - action: End
+    object: A reclaim the registry refuses
+    trigger: The registry refuses the removal
+    status: IN_SCOPE
+    source_finding: {phase: p4, register: capability_graph, key: End a reclaim the registry refuses}
+  - action: Check
+    object: An action's parameters
+    trigger: An agent proposes an action
+    status: IN_SCOPE
+    source_finding: {phase: p4, register: capability_graph, key: Check an action's parameters}
+  provisional_codes:
+  - subdomain: ai_licensing
+    provisional_code: CC_RECLAIM_UNUSED_LICENSE_V1
+    family: CC
+    summary: Reclaim license from inactive user.
+    source_finding: {phase: p4, register: design_decisions, row: 4}
+  - subdomain: agent_governance
+    provisional_code: CC_VALIDATE_TOOL_PARAMETERS_V1
+    family: CC
+    summary: Enforce declared parameter constraints for an authorized tool, reporting whether every rule passed.
+    source_finding: {phase: p4, register: design_decisions, row: 4}
+  cross_subdomain_refs: []
+```
 
 ---
 
 ## 1. Subdomain Purpose
 
-<!-- register:subdomain_purpose business_language -->
-
-The AI Licensing subdomain governs the business's licenses for AI tools: provisioning a license to an
-employee, and reclaiming a license that has gone unused for the business's threshold of days. The
-Agent Governance subdomain governs what an AI agent may do on the business's behalf: it judges an
-agent's proposed action, checks its parameters against the rules declared for the tool, and records
-every action it authorizes or denies. This change decides what a reclaim does when the registry
-refuses it and what the parameter check reports, and states each act it changes under a new identity.
-
-<!-- register:purpose_provenance business_language=refinement -->
-| Source | Disposition (INHERITED, REFINED) | Refinement |
-|--------|----------------------------------|------------|
-| CR seed §0 Subdomain Purpose | INHERITED | |
-
-<!-- register:subdomain_purposes business_language=purpose -->
-| Subdomain | Purpose | Source Finding |
-|-----------|---------|----------------|
-| ai_licensing | Governs the business's AI tool licenses, and ends a reclaim the registry refuses with the license still assigned. | S4 actors AI Licensing |
-| agent_governance | Checks an agent's action against the rules declared for its tool, and reports only what its checks receive. | S4 actors Agent Governance |
-
 ---
 
 ## 2. Scope Boundary
-
-<!-- register:scope_boundary business_language=capability,notes -->
-| Capability | Status (IN_SCOPE, DEFERRED) | Notes | Source Finding |
-|------------|-----------------------------|-------|----------------|
-| End a reclaim the registry refuses | IN_SCOPE | A next version of the reclaim, whose removal step ends the contract on a refused removal. | S4 authoring_scope GAP-01 |
-| Check an action's parameters | IN_SCOPE | A next version of the parameter check. | S4 authoring_scope GAP-02 |
-| Tell a refused removal apart from a license still in use | DEFERRED | Both leave the license assigned. | S4 authoring_scope Tell a refused removal apart from a license still in use |
 
 ---
 
 ## 3. Business Objects
 
-<!-- register:business_objects optional business_language=store_name,business_rationale -->
-| Store Name | Record Model (MUTABLE_STATE, APPEND_ONLY_JOURNAL, IDENTITY_REGISTRY, HYBRID) | Business Rationale | Source Finding |
-|------------|------------------------------------------------------------------------------|--------------------|----------------|
-| License registry | IDENTITY_REGISTRY | Unchanged, and named because a refused removal from it now ends the reclaim. | S4 bm_entities The Assignment |
-
 ---
 
 ## 4. Identity Semantics
-
-<!-- register:identity_semantics business_language=identity_field,source,uniqueness_rule,cross_subdomain_relationship -->
-| Store Name | Identity Field | Source | Uniqueness Rule | Cross-Subdomain Relationship | Source Finding |
-|------------|----------------|--------|-----------------|------------------------------|----------------|
-| License registry | Employee | Named by the reclaim request | One assignment per employee; unchanged by this change. | None | S4 bm_entities The Assignment |
 
 ---
 
 ## 5. Invariants
 
-<!-- register:invariants business_language -->
-| Invariant | Business Reason | Source Finding |
-|-----------|-----------------|----------------|
-| No reclaim carries on past a removal the registry refused. | A step after a refused removal would act on an assignment still held. | S1 business_invariants #1 |
-| No license is reported reclaimed that the registry did not release. | A revocation announced for a license still held is false. | S1 business_invariants #2 |
-| A check reports only what it receives. | A reported result nobody received is no result. | S1 business_invariants #3 |
-| A published identity means what it meant when it was published. | A citation of v5 relies on what v5 said. | S1 business_invariants #4 |
-
 ---
 
 ## 6. Actions
-
-<!-- register:actions business_language=object,trigger -->
-| Action | Object | Trigger | Status (IN_SCOPE, DEFERRED) | Source Finding |
-|--------|--------|---------|-----------------------------|----------------|
-| End | A reclaim the registry refuses | The registry refuses the removal | IN_SCOPE | S4 capability_graph End a reclaim the registry refuses |
-| Check | An action's parameters | An agent proposes an action | IN_SCOPE | S4 capability_graph Check an action's parameters |
 
 ---
 
 ## 7. Provisional Codes
 
-<!-- register:provisional_codes business_language=summary -->
-| Subdomain | Provisional Code | Family (AC, IN, WF, CC, CT, EV, RB, VOCAB, STRUCTURE, TI, TE) | Summary | Source Finding |
-|-----------|------------------|-------------------------|---------|----------------|
-| ai_licensing | CC_RECLAIM_UNUSED_LICENSE_V1 | CC | Reclaim license from inactive user. | S4 design_decisions #4 |
-| agent_governance | CC_VALIDATE_TOOL_PARAMETERS_V1 | CC | Enforce declared parameter constraints for an authorized tool, reporting whether every rule passed. | S4 design_decisions #4 |
-
 ---
 
 ## 8. Cross-Subdomain References
-
-<!-- register:cross_subdomain_refs optional business_language=role -->
-| CC Code | Defined In | Role | Source Finding |
-|---------|-----------|------|----------------|
-| NONE IDENTIFIED | | | |
 
 ---
 

@@ -1,119 +1,199 @@
 # Stage 5 — Business Intent: blockchain / identity and wallet
 
-**Stage:** 5 — Business Intent
+## Machine
 
-**CR:** cr_06_routing_closure
+```yaml
+document:
+  phase: p5
+  domain: blockchain
+  subdomain:
+  - identity
+  - wallet
+  cr: cr_06_routing_closure
+  rule_set: transformation.schemas.REGISTER_SCHEMA_P5_V0
+registers:
+  subdomain_purpose: |2
 
-**Status:** DRAFT
-
-**Feeds:** Stage 6 — Governance Intent
+    The Identity subdomain governs who an actor is and whether the business trusts them. The Wallet
+    subdomain governs the wallet an accepted person is given. Both keep records the business relies on:
+    the person's record, the address they claimed, the trail of moments in their history, and their
+    wallet. This change decides what every identity and wallet act does when one of those records cannot
+    be read or written, and states each act it changes under a new identity.
+  purpose_provenance:
+  - source: CR seed §0 Subdomain Purpose
+    disposition: INHERITED
+    refinement: ''
+  subdomain_purposes:
+  - subdomain: identity
+    purpose: Governs who an actor is and whether the business trusts them, and ends each of its acts as rejected when a record fails.
+    source_finding: {phase: p4, register: actors, key: Identity}
+  - subdomain: wallet
+    purpose: Governs the wallet an accepted person is given, and ends its act as rejected when a record fails.
+    source_finding: {phase: p4, register: actors, key: Wallet}
+  scope_boundary:
+  - capability: Stop a lookup at a failed record
+    status: IN_SCOPE
+    notes: The lookup and the read each end the contract on a failed record.
+    source_finding: {phase: p4, register: authoring_scope, key: GAP-01}
+  - capability: Stop a wallet step at a failed record
+    status: IN_SCOPE
+    notes: The claim, the write and the append each end their contract on a failed record.
+    source_finding: {phase: p4, register: authoring_scope, key: GAP-02}
+  - capability: End every act as rejected on a failed record
+    status: IN_SCOPE
+    notes: Each act routes a failed record to its rejected ending.
+    source_finding: {phase: p4, register: authoring_scope, key: GAP-03}
+  - capability: Tell a refusal apart from a failure
+    status: DEFERRED
+    notes: The business keeps two endings.
+    source_finding: {phase: p4, register: authoring_scope, key: Tell a refusal apart from a failure}
+  - capability: The superseded act's unrouted nodes
+    status: DEFERRED
+    notes: Not dispatched; nothing reaches them.
+    source_finding: {phase: p4, register: authoring_scope, key: The superseded act's unrouted nodes}
+  business_objects:
+  - store_name: Actor record
+    record_model: MUTABLE_STATE
+    business_rationale: Unchanged, and named because a failed read or write of it now ends the act.
+    source_finding: {phase: p4, register: bm_entities, key: The Person's Record}
+  - store_name: Contact address registry
+    record_model: IDENTITY_REGISTRY
+    business_rationale: Unchanged, and named because a failed lookup or claim in it now ends the act.
+    source_finding: {phase: p4, register: bm_entities, key: The Claimed Address}
+  - store_name: Wallet record
+    record_model: MUTABLE_STATE
+    business_rationale: Unchanged, and named because a failed write of it now ends the act.
+    source_finding: {phase: p4, register: bm_entities, key: The Wallet}
+  - store_name: Wallet trail
+    record_model: APPEND_ONLY_JOURNAL
+    business_rationale: Unchanged, and named because a failed append to it now ends the act.
+    source_finding: {phase: p4, register: bm_entities, key: The Trail}
+  identity_semantics:
+  - store_name: Actor record
+    identity_field: Contact address
+    source: Supplied by the person registering themselves
+    uniqueness_rule: Two actors never share a contact address; unchanged by this change.
+    cross_subdomain_relationship: Named by wallet, which looks the person up
+    source_finding: {phase: p4, register: bm_entities, key: The Person's Record}
+  - store_name: Wallet record
+    identity_field: Wallet identity
+    source: Determined when the wallet is created
+    uniqueness_rule: Two wallets never share an identity; unchanged by this change.
+    cross_subdomain_relationship: Names the accepted person it belongs to
+    source_finding: {phase: p4, register: bm_entities, key: The Wallet}
+  invariants:
+  - invariant: No act carries on past a record it could not read or write.
+    business_reason: A step after a failed record would act on something the business does not hold.
+    source_finding: {phase: p1, register: business_invariants, row: 1}
+  - invariant: Every act ends as succeeded or rejected.
+    business_reason: The business keeps two endings.
+    source_finding: {phase: p1, register: business_invariants, row: 2}
+  - invariant: A refusal changes no record.
+    business_reason: A refused request leaves the business as it found it, and records made before a failure stay.
+    source_finding: {phase: p1, register: business_invariants, row: 3}
+  - invariant: A published identity means what it meant when it was published.
+    business_reason: A citation of v5 relies on what v5 said.
+    source_finding: {phase: p1, register: business_invariants, row: 4}
+  actions:
+  - action: Reject
+    object: An act whose record failed
+    trigger: A store reports a failed record
+    status: IN_SCOPE
+    source_finding: {phase: p4, register: capability_graph, key: End every act as rejected on a failed record}
+  - action: Stop
+    object: A lookup whose record failed
+    trigger: The address registry or the actor record fails
+    status: IN_SCOPE
+    source_finding: {phase: p4, register: capability_graph, key: Stop a lookup at a failed record}
+  - action: Stop
+    object: A wallet step whose record failed
+    trigger: The wallet registry, record or trail fails
+    status: IN_SCOPE
+    source_finding: {phase: p4, register: capability_graph, key: Stop a wallet step at a failed record}
+  - action: Distinguish
+    object: A failure from a refusal
+    trigger: An act ends on a failed record
+    status: DEFERRED
+    source_finding: {phase: p4, register: authoring_scope, key: Tell a refusal apart from a failure}
+  provisional_codes:
+  - subdomain: identity
+    provisional_code: CC_RESOLVE_ACTOR_V1
+    family: CC
+    summary: Answers which actor a contact address denotes, and reports when none does.
+    source_finding: {phase: p4, register: design_decisions, row: 5}
+  - subdomain: wallet
+    provisional_code: CC_CLAIM_WALLET_IDENTITY_V1
+    family: CC
+    summary: Claims the identity, and refuses when the person already holds a wallet.
+    source_finding: {phase: p4, register: design_decisions, row: 5}
+  - subdomain: wallet
+    provisional_code: CC_CREATE_WALLET_RECORD_V1
+    family: CC
+    summary: Records the wallet with a balance of zero, its denomination and its classification.
+    source_finding: {phase: p4, register: design_decisions, row: 5}
+  - subdomain: wallet
+    provisional_code: CC_APPEND_WALLET_OCCURRENCE_V1
+    family: CC
+    summary: Records the moment on the wallet's trail.
+    source_finding: {phase: p4, register: design_decisions, row: 5}
+  - subdomain: identity
+    provisional_code: WF_REGISTER_ACTOR_V1
+    family: WF
+    summary: The governed sequence that admits a person as an unverified actor, and announces that it did.
+    source_finding: {phase: p4, register: design_decisions, row: 5}
+  - subdomain: identity
+    provisional_code: WF_ACCEPT_ACTOR_V1
+    family: WF
+    summary: The governed sequence that records an acceptance and announces it.
+    source_finding: {phase: p4, register: design_decisions, row: 5}
+  - subdomain: identity
+    provisional_code: WF_REJECT_ACTOR_V1
+    family: WF
+    summary: The governed sequence that records a rejection, with grounds required, and announces it.
+    source_finding: {phase: p4, register: design_decisions, row: 5}
+  - subdomain: wallet
+    provisional_code: WF_CREATE_WALLET_V1
+    family: WF
+    summary: The governed sequence that gives an accepted person a wallet and records that it did.
+    source_finding: {phase: p4, register: design_decisions, row: 5}
+  cross_subdomain_refs:
+  - cc_code: blockchain::CC_RESOLVE_ACTOR_V0
+    defined_in: identity
+    role: Wallet looks the person up through identity's lookup, and runs its next version, which answers for a failed record.
+    source_finding: {phase: p4, register: dependency_graph, key: 'blockchain::CC_RESOLVE_ACTOR_V0'}
+```
 
 ---
 
 ## 1. Subdomain Purpose
 
-<!-- register:subdomain_purpose business_language -->
-
-The Identity subdomain governs who an actor is and whether the business trusts them. The Wallet
-subdomain governs the wallet an accepted person is given. Both keep records the business relies on:
-the person's record, the address they claimed, the trail of moments in their history, and their
-wallet. This change decides what every identity and wallet act does when one of those records cannot
-be read or written, and states each act it changes under a new identity.
-
-<!-- register:purpose_provenance business_language=refinement -->
-| Source | Disposition (INHERITED, REFINED) | Refinement |
-|--------|----------------------------------|------------|
-| CR seed §0 Subdomain Purpose | INHERITED | |
-
-<!-- register:subdomain_purposes business_language=purpose -->
-| Subdomain | Purpose | Source Finding |
-|-----------|---------|----------------|
-| identity | Governs who an actor is and whether the business trusts them, and ends each of its acts as rejected when a record fails. | S4 actors Identity |
-| wallet | Governs the wallet an accepted person is given, and ends its act as rejected when a record fails. | S4 actors Wallet |
-
 ---
 
 ## 2. Scope Boundary
-
-<!-- register:scope_boundary business_language=capability,notes -->
-| Capability | Status (IN_SCOPE, DEFERRED) | Notes | Source Finding |
-|------------|-----------------------------|-------|----------------|
-| Stop a lookup at a failed record | IN_SCOPE | The lookup and the read each end the contract on a failed record. | S4 authoring_scope GAP-01 |
-| Stop a wallet step at a failed record | IN_SCOPE | The claim, the write and the append each end their contract on a failed record. | S4 authoring_scope GAP-02 |
-| End every act as rejected on a failed record | IN_SCOPE | Each act routes a failed record to its rejected ending. | S4 authoring_scope GAP-03 |
-| Tell a refusal apart from a failure | DEFERRED | The business keeps two endings. | S4 authoring_scope Tell a refusal apart from a failure |
-| The superseded act's unrouted nodes | DEFERRED | Not dispatched; nothing reaches them. | S4 authoring_scope The superseded act's unrouted nodes |
 
 ---
 
 ## 3. Business Objects
 
-<!-- register:business_objects optional business_language=store_name,business_rationale -->
-| Store Name | Record Model (MUTABLE_STATE, APPEND_ONLY_JOURNAL, IDENTITY_REGISTRY, HYBRID) | Business Rationale | Source Finding |
-|------------|------------------------------------------------------------------------------|--------------------|----------------|
-| Actor record | MUTABLE_STATE | Unchanged, and named because a failed read or write of it now ends the act. | S4 bm_entities The Person's Record |
-| Contact address registry | IDENTITY_REGISTRY | Unchanged, and named because a failed lookup or claim in it now ends the act. | S4 bm_entities The Claimed Address |
-| Wallet record | MUTABLE_STATE | Unchanged, and named because a failed write of it now ends the act. | S4 bm_entities The Wallet |
-| Wallet trail | APPEND_ONLY_JOURNAL | Unchanged, and named because a failed append to it now ends the act. | S4 bm_entities The Trail |
-
 ---
 
 ## 4. Identity Semantics
-
-<!-- register:identity_semantics business_language=identity_field,source,uniqueness_rule,cross_subdomain_relationship -->
-| Store Name | Identity Field | Source | Uniqueness Rule | Cross-Subdomain Relationship | Source Finding |
-|------------|----------------|--------|-----------------|------------------------------|----------------|
-| Actor record | Contact address | Supplied by the person registering themselves | Two actors never share a contact address; unchanged by this change. | Named by wallet, which looks the person up | S4 bm_entities The Person's Record |
-| Wallet record | Wallet identity | Determined when the wallet is created | Two wallets never share an identity; unchanged by this change. | Names the accepted person it belongs to | S4 bm_entities The Wallet |
 
 ---
 
 ## 5. Invariants
 
-<!-- register:invariants business_language -->
-| Invariant | Business Reason | Source Finding |
-|-----------|-----------------|----------------|
-| No act carries on past a record it could not read or write. | A step after a failed record would act on something the business does not hold. | S1 business_invariants #1 |
-| Every act ends as succeeded or rejected. | The business keeps two endings. | S1 business_invariants #2 |
-| A refusal changes no record. | A refused request leaves the business as it found it, and records made before a failure stay. | S1 business_invariants #3 |
-| A published identity means what it meant when it was published. | A citation of v5 relies on what v5 said. | S1 business_invariants #4 |
-
 ---
 
 ## 6. Actions
-
-<!-- register:actions business_language=object,trigger -->
-| Action | Object | Trigger | Status (IN_SCOPE, DEFERRED) | Source Finding |
-|--------|--------|---------|-----------------------------|----------------|
-| Reject | An act whose record failed | A store reports a failed record | IN_SCOPE | S4 capability_graph End every act as rejected on a failed record |
-| Stop | A lookup whose record failed | The address registry or the actor record fails | IN_SCOPE | S4 capability_graph Stop a lookup at a failed record |
-| Stop | A wallet step whose record failed | The wallet registry, record or trail fails | IN_SCOPE | S4 capability_graph Stop a wallet step at a failed record |
-| Distinguish | A failure from a refusal | An act ends on a failed record | DEFERRED | S4 authoring_scope Tell a refusal apart from a failure |
 
 ---
 
 ## 7. Provisional Codes
 
-<!-- register:provisional_codes business_language=summary -->
-| Subdomain | Provisional Code | Family (AC, IN, WF, CC, CT, EV, RB, VOCAB, STRUCTURE, TI, TE) | Summary | Source Finding |
-|-----------|------------------|-------------------------|---------|----------------|
-| identity | CC_RESOLVE_ACTOR_V1 | CC | Answers which actor a contact address denotes, and reports when none does. | S4 design_decisions #5 |
-| wallet | CC_CLAIM_WALLET_IDENTITY_V1 | CC | Claims the identity, and refuses when the person already holds a wallet. | S4 design_decisions #5 |
-| wallet | CC_CREATE_WALLET_RECORD_V1 | CC | Records the wallet with a balance of zero, its denomination and its classification. | S4 design_decisions #5 |
-| wallet | CC_APPEND_WALLET_OCCURRENCE_V1 | CC | Records the moment on the wallet's trail. | S4 design_decisions #5 |
-| identity | WF_REGISTER_ACTOR_V1 | WF | The governed sequence that admits a person as an unverified actor, and announces that it did. | S4 design_decisions #5 |
-| identity | WF_ACCEPT_ACTOR_V1 | WF | The governed sequence that records an acceptance and announces it. | S4 design_decisions #5 |
-| identity | WF_REJECT_ACTOR_V1 | WF | The governed sequence that records a rejection, with grounds required, and announces it. | S4 design_decisions #5 |
-| wallet | WF_CREATE_WALLET_V1 | WF | The governed sequence that gives an accepted person a wallet and records that it did. | S4 design_decisions #5 |
-
 ---
 
 ## 8. Cross-Subdomain References
-
-<!-- register:cross_subdomain_refs optional business_language=role -->
-| CC Code | Defined In | Role | Source Finding |
-|---------|-----------|------|----------------|
-| blockchain::CC_RESOLVE_ACTOR_V0 | identity | Wallet looks the person up through identity's lookup, and runs its next version, which answers for a failed record. | S4 dependency_graph blockchain::CC_RESOLVE_ACTOR_V0 |
 
 ---
 

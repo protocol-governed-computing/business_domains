@@ -1,12 +1,230 @@
 # Stage 4 — Business Model: blockchain / identity and wallet
 
-**Stage:** 4 — Business Model
+## Machine
 
-**CR:** cr_06_routing_closure
-
-**Status:** DRAFT
-
-**Feeds:** Stage 5 — Business Intent
+```yaml
+document:
+  phase: p4
+  domain: blockchain
+  subdomain:
+  - identity
+  - wallet
+  cr: cr_06_routing_closure
+  rule_set: transformation.schemas.REGISTER_SCHEMA_P4_V0
+registers:
+  actors:
+  - actor: The person
+    role: Registers, and is given a wallet once accepted. Unchanged by this change.
+    authority_class: Ordinary participant
+    source_finding: {phase: p1, register: business_vocabulary, row: 3}
+  - actor: The authority
+    role: Accepts or rejects a person. Unchanged by this change.
+    authority_class: External business authority
+    source_finding: {phase: p1, register: business_vocabulary, row: 3}
+  - actor: Identity
+    role: Ends each of its acts as rejected when a record fails.
+    authority_class: Owning subdomain
+    source_finding: {phase: p3, register: placement_decision, key: EXTEND}
+  - actor: Wallet
+    role: Ends its act as rejected when a record fails.
+    authority_class: Owning subdomain
+    source_finding: {phase: p3, register: placement_decision, key: EXTEND}
+  bm_entities:
+  - entity: The Person's Record
+    description: A person's registration, state and decision.
+    store_model: One keyed store, one record per contact address, unchanged.
+    source_finding: {phase: p2, register: entities, row: 1}
+  - entity: The Claimed Address
+    description: The contact address a person holds.
+    store_model: One registry, unchanged.
+    source_finding: {phase: p2, register: entities, row: 2}
+  - entity: The Trail
+    description: The moments in a person's or a wallet's history.
+    store_model: Append-only, unchanged.
+    source_finding: {phase: p2, register: entities, row: 3}
+  - entity: The Wallet
+    description: An accepted person's wallet and its claimed identity.
+    store_model: One keyed store and one registry, unchanged.
+    source_finding: {phase: p2, register: entities, row: 4}
+  - entity: A Failed Record
+    description: A record that could not be read or written.
+    store_model: Not stored; an answer a store gives.
+    source_finding: {phase: p2, register: entities, row: 5}
+  resources: []
+  events:
+  - event: NONE IDENTIFIED
+    trigger: This change recognises no new moment.
+    lifecycle_meaning: The moments identity and wallet announce are unchanged, and none is announced when a record fails.
+    source_finding: {phase: p1, register: business_events, row: 1}
+  relationships:
+  - subject: Identity
+    verb: stops
+    object: a lookup whose record failed
+    capability_need: Stop a lookup at a failed record
+    source_finding: {phase: p3, register: authoring_decisions, key: Stop a lookup at a failed record}
+  - subject: Wallet
+    verb: stops
+    object: a step whose record failed
+    capability_need: Stop a wallet step at a failed record
+    source_finding: {phase: p3, register: authoring_decisions, key: Stop a wallet step at a failed record}
+  - subject: Identity and wallet
+    verb: end
+    object: an act whose record failed, as rejected
+    capability_need: End every act as rejected on a failed record
+    source_finding: {phase: p3, register: authoring_decisions, key: End every act as rejected on a failed record}
+  capability_graph:
+  - capability: Stop a lookup at a failed record
+    source_finding: {phase: p3, register: authoring_decisions, key: Stop a lookup at a failed record}
+    status: CRITICAL
+    gap_register_entry: GAP-01
+    notes: The lookup and the read each end the contract on a failed record.
+  - capability: Stop a wallet step at a failed record
+    source_finding: {phase: p3, register: authoring_decisions, key: Stop a wallet step at a failed record}
+    status: CRITICAL
+    gap_register_entry: GAP-02
+    notes: The claim, the write and the append each end their contract on a failed record.
+  - capability: End every act as rejected on a failed record
+    source_finding: {phase: p3, register: authoring_decisions, key: End every act as rejected on a failed record}
+    status: CRITICAL
+    gap_register_entry: GAP-03
+    notes: Thirteen act nodes route a failed record to the rejected ending.
+  - capability: Leave records made before a failure in place
+    source_finding: {phase: p3, register: authoring_decisions, key: Leave records made before a failure in place}
+    status: SATISFIED
+    gap_register_entry: ''
+    notes: Unchanged; nothing removes what an act recorded before it failed.
+  dependency_graph:
+  - from: identity
+    to: blockchain::CC_RESOLVE_ACTOR_V0
+    dependency_type: contract replaced by its next version
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: Looking a person up}
+  - from: wallet
+    to: blockchain::CC_CLAIM_WALLET_IDENTITY_V0
+    dependency_type: contract replaced by its next version
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: Claiming a wallet's identity}
+  - from: wallet
+    to: blockchain::CC_CREATE_WALLET_RECORD_V0
+    dependency_type: contract replaced by its next version
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: Recording a wallet}
+  - from: wallet
+    to: blockchain::CC_APPEND_WALLET_OCCURRENCE_V0
+    dependency_type: contract replaced by its next version
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: Recording a moment on a wallet's trail}
+  - from: identity
+    to: capability_side_effects::CS_REGISTRY_V0
+    dependency_type: platform store
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: The stores}
+  - from: identity
+    to: capability_side_effects::CS_MUTABLE_JSON_V0
+    dependency_type: platform store
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: The stores}
+  - from: wallet
+    to: capability_side_effects::CS_APPENDONLY_JSONL_V0
+    dependency_type: platform store
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: The stores}
+  - from: identity
+    to: blockchain::CC_CLAIM_CONTACT_ADDRESS_V0
+    dependency_type: capability contract
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: The contracts that already answer for a failed record}
+  - from: identity
+    to: blockchain::CC_REGISTER_ACTOR_V0
+    dependency_type: capability contract
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: The contracts that already answer for a failed record}
+  - from: identity
+    to: blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0
+    dependency_type: capability contract
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: The contracts that already answer for a failed record}
+  - from: identity
+    to: blockchain::CC_RECORD_VERIFICATION_DECISION_V0
+    dependency_type: capability contract
+    pps_status: SATISFIED
+    source_finding: {phase: p3, register: dependency_discoveries, key: The contracts that already answer for a failed record}
+  constraint_register:
+  - number: '1'
+    constraint: Nothing changes for an act whose records are all read and written.
+    source_finding: {phase: p1, register: constraints, row: 1}
+    source: The business author
+  - number: '2'
+    constraint: Records made before a failure stay as they were made.
+    source_finding: {phase: p1, register: constraints, row: 2}
+    source: The business author
+  - number: '3'
+    constraint: No ending is added.
+    source_finding: {phase: p1, register: constraints, row: 3}
+    source: The business author
+  - number: '4'
+    constraint: A failed record ends the act. Nothing retries.
+    source_finding: {phase: p1, register: known_facts, row: 4}
+    source: The business author
+  - number: '5'
+    constraint: No published identity changes what it says, except to be stood down.
+    source_finding: {phase: p1, register: constraints, row: 4}
+    source: The business author
+  gap_register:
+  - gap_code: GAP-01
+    source_finding: {phase: p3, register: authoring_decisions, key: Stop a lookup at a failed record}
+    capability: Stop a lookup at a failed record
+    owner_subdomain: identity
+    resolution: AUTHOR_NEW
+  - gap_code: GAP-02
+    source_finding: {phase: p3, register: authoring_decisions, key: Stop a wallet step at a failed record}
+    capability: Stop a wallet step at a failed record
+    owner_subdomain: wallet
+    resolution: AUTHOR_NEW
+  - gap_code: GAP-03
+    source_finding: {phase: p3, register: authoring_decisions, key: End every act as rejected on a failed record}
+    capability: End every act as rejected on a failed record
+    owner_subdomain: identity, wallet
+    resolution: AUTHOR_NEW
+  design_decisions:
+  - number: '1'
+    decision: Each step whose store can fail ends its contract on a failed record.
+    source_finding: {phase: p3, register: analysis_findings, key: Q1}
+    rationale: A step that carries on past a failed record decides something the business never said.
+    constraints_imposed: Every step answers for every outcome its store declares.
+  - number: '2'
+    decision: Each act routes a failed record to its rejected ending.
+    source_finding: {phase: p3, register: analysis_findings, key: Q3}
+    rationale: The business keeps two endings, and a failed record is not a success.
+    constraints_imposed: Every outcome an act's contract can end with has a route.
+  - number: '3'
+    decision: A contract that can now end with a failed record says so.
+    source_finding: {phase: p3, register: analysis_findings, key: Q4}
+    rationale: A contract states every outcome it can end with.
+    constraints_imposed: No contract ends with an outcome it does not declare.
+  - number: '4'
+    decision: Records made before a failure are left as they are.
+    source_finding: {phase: p3, register: analysis_findings, key: Q5}
+    rationale: The record is added to and never rewritten.
+    constraints_imposed: No compensation, repair or backfill step may be authored.
+  - number: '5'
+    decision: Each of the eight acts is stated under a next version, and its published version is stood down unchanged.
+    source_finding: {phase: p3, register: analysis_findings, key: Q8}
+    rationale: A change of meaning is a new identity, and identity is fixed at publication.
+    constraints_imposed: The published declaration gains only its stand-down.
+  - number: '6'
+    decision: The entrances and intents that start an act are re-pointed to its next version.
+    source_finding: {phase: p3, register: analysis_findings, key: Q9}
+    rationale: Every caller starts the same act as today.
+    constraints_imposed: Only the part naming the act changes.
+  authoring_scope:
+  - capability: Stop a lookup at a failed record
+    gap_register_ref: GAP-01
+  - capability: Stop a wallet step at a failed record
+    gap_register_ref: GAP-02
+  - capability: End every act as rejected on a failed record
+    gap_register_ref: GAP-03
+```
 
 Consolidation of Stages 1–3. Every capability committed at Stage 3 appears here with the status its
 decision implies. Nothing is re-litigated and nothing new is decided. Every capability that changes
@@ -17,113 +235,29 @@ answers for the failed record its store can report.
 
 ## 1. Discovery Summary
 
-<!-- register:actors business_language -->
 ### Actors (actors)
-| Actor | Role | Authority Class | Source Finding |
-|-------|------|-----------------|----------------|
-| The person | Registers, and is given a wallet once accepted. Unchanged by this change. | Ordinary participant | S1 business_vocabulary #3 |
-| The authority | Accepts or rejects a person. Unchanged by this change. | External business authority | S1 business_vocabulary #3 |
-| Identity | Ends each of its acts as rejected when a record fails. | Owning subdomain | S3 placement_decision EXTEND |
-| Wallet | Ends its act as rejected when a record fails. | Owning subdomain | S3 placement_decision EXTEND |
 
-<!-- register:bm_entities business_language -->
 ### Entities (bm_entities)
-| Entity | Description | Store Model | Source Finding |
-|--------|-------------|-------------|----------------|
-| The Person's Record | A person's registration, state and decision. | One keyed store, one record per contact address, unchanged. | S2 entities #1 |
-| The Claimed Address | The contact address a person holds. | One registry, unchanged. | S2 entities #2 |
-| The Trail | The moments in a person's or a wallet's history. | Append-only, unchanged. | S2 entities #3 |
-| The Wallet | An accepted person's wallet and its claimed identity. | One keyed store and one registry, unchanged. | S2 entities #4 |
-| A Failed Record | A record that could not be read or written. | Not stored; an answer a store gives. | S2 entities #5 |
 
-<!-- register:resources optional business_language -->
 ### Resources
-| Resource | Description | Source Finding |
-|----------|-------------|----------------|
-| NONE IDENTIFIED |
 
-<!-- register:events business_language -->
 ### Events (events)
-| Event | Trigger | Lifecycle Meaning | Source Finding |
-|-------|---------|-------------------|----------------|
-| NONE IDENTIFIED | This change recognises no new moment. | The moments identity and wallet announce are unchanged, and none is announced when a record fails. | S1 business_events #1 |
 
-<!-- register:relationships optional business_language -->
 ### Relationships (Candidate Capabilities)
-| Subject | Verb | Object | Capability Need | Source Finding |
-|---------|------|--------|-----------------|----------------|
-| Identity | stops | a lookup whose record failed | Stop a lookup at a failed record | S3 authoring_decisions Stop a lookup at a failed record |
-| Wallet | stops | a step whose record failed | Stop a wallet step at a failed record | S3 authoring_decisions Stop a wallet step at a failed record |
-| Identity and wallet | end | an act whose record failed, as rejected | End every act as rejected on a failed record | S3 authoring_decisions End every act as rejected on a failed record |
 
 ## 2. Capability Graph (capability_graph)
 
-<!-- register:capability_graph business_language -->
-| Capability | Source Finding | Status | Gap Register Entry | Notes |
-|-----------|----------------|--------|--------------------|-------|
-| Stop a lookup at a failed record | S3 authoring_decisions Stop a lookup at a failed record | CRITICAL | GAP-01 | The lookup and the read each end the contract on a failed record. |
-| Stop a wallet step at a failed record | S3 authoring_decisions Stop a wallet step at a failed record | CRITICAL | GAP-02 | The claim, the write and the append each end their contract on a failed record. |
-| End every act as rejected on a failed record | S3 authoring_decisions End every act as rejected on a failed record | CRITICAL | GAP-03 | Thirteen act nodes route a failed record to the rejected ending. |
-| Leave records made before a failure in place | S3 authoring_decisions Leave records made before a failure in place | SATISFIED |  | Unchanged; nothing removes what an act recorded before it failed. |
-
 ## 3. Dependency Graph (dependency_graph)
-
-<!-- register:dependency_graph -->
-| From | To | Dependency Type | PPS Status | Source Finding |
-|------|----|-----------------|------------|----------------|
-| identity | blockchain::CC_RESOLVE_ACTOR_V0 | contract replaced by its next version | SATISFIED | S3 dependency_discoveries Looking a person up |
-| wallet | blockchain::CC_CLAIM_WALLET_IDENTITY_V0 | contract replaced by its next version | SATISFIED | S3 dependency_discoveries Claiming a wallet's identity |
-| wallet | blockchain::CC_CREATE_WALLET_RECORD_V0 | contract replaced by its next version | SATISFIED | S3 dependency_discoveries Recording a wallet |
-| wallet | blockchain::CC_APPEND_WALLET_OCCURRENCE_V0 | contract replaced by its next version | SATISFIED | S3 dependency_discoveries Recording a moment on a wallet's trail |
-| identity | capability_side_effects::CS_REGISTRY_V0 | platform store | SATISFIED | S3 dependency_discoveries The stores |
-| identity | capability_side_effects::CS_MUTABLE_JSON_V0 | platform store | SATISFIED | S3 dependency_discoveries The stores |
-| wallet | capability_side_effects::CS_APPENDONLY_JSONL_V0 | platform store | SATISFIED | S3 dependency_discoveries The stores |
-| identity | blockchain::CC_CLAIM_CONTACT_ADDRESS_V0 | capability contract | SATISFIED | S3 dependency_discoveries The contracts that already answer for a failed record |
-| identity | blockchain::CC_REGISTER_ACTOR_V0 | capability contract | SATISFIED | S3 dependency_discoveries The contracts that already answer for a failed record |
-| identity | blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0 | capability contract | SATISFIED | S3 dependency_discoveries The contracts that already answer for a failed record |
-| identity | blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | capability contract | SATISFIED | S3 dependency_discoveries The contracts that already answer for a failed record |
 
 ## 4. Constraint Register (constraint_register)
 
-<!-- register:constraint_register -->
-| # | Constraint | Source Finding | Source |
-|---|------------|----------------|--------|
-| 1 | Nothing changes for an act whose records are all read and written. | S1 constraints #1 | The business author |
-| 2 | Records made before a failure stay as they were made. | S1 constraints #2 | The business author |
-| 3 | No ending is added. | S1 constraints #3 | The business author |
-| 4 | A failed record ends the act. Nothing retries. | S1 known_facts #4 | The business author |
-| 5 | No published identity changes what it says, except to be stood down. | S1 constraints #4 | The business author |
-
 ## 5. Gap Register (gap_register)
-
-<!-- register:gap_register business_language -->
-| Gap Code | Source Finding | Capability | Owner Subdomain | Resolution |
-|----------|----------------|-----------|-----------------|------------|
-| GAP-01 | S3 authoring_decisions Stop a lookup at a failed record | Stop a lookup at a failed record | identity | AUTHOR_NEW |
-| GAP-02 | S3 authoring_decisions Stop a wallet step at a failed record | Stop a wallet step at a failed record | wallet | AUTHOR_NEW |
-| GAP-03 | S3 authoring_decisions End every act as rejected on a failed record | End every act as rejected on a failed record | identity, wallet | AUTHOR_NEW |
 
 ## 6. Design Decisions (design_decisions)
 
-<!-- register:design_decisions -->
-| # | Decision | Source Finding | Rationale | Constraints Imposed |
-|---|----------|----------------|-----------|---------------------|
-| 1 | Each step whose store can fail ends its contract on a failed record. | S3 analysis_findings Q1 | A step that carries on past a failed record decides something the business never said. | Every step answers for every outcome its store declares. |
-| 2 | Each act routes a failed record to its rejected ending. | S3 analysis_findings Q3 | The business keeps two endings, and a failed record is not a success. | Every outcome an act's contract can end with has a route. |
-| 3 | A contract that can now end with a failed record says so. | S3 analysis_findings Q4 | A contract states every outcome it can end with. | No contract ends with an outcome it does not declare. |
-| 4 | Records made before a failure are left as they are. | S3 analysis_findings Q5 | The record is added to and never rewritten. | No compensation, repair or backfill step may be authored. |
-| 5 | Each of the eight acts is stated under a next version, and its published version is stood down unchanged. | S3 analysis_findings Q8 | A change of meaning is a new identity, and identity is fixed at publication. | The published declaration gains only its stand-down. |
-| 6 | The entrances and intents that start an act are re-pointed to its next version. | S3 analysis_findings Q9 | Every caller starts the same act as today. | Only the part naming the act changes. |
-
 ## 7. Authoring Scope (authoring_scope)
 
-<!-- register:authoring_scope -->
 ### In Scope — This CR
-| Capability | Gap Register Ref |
-|-----------|-----------------|
-| Stop a lookup at a failed record | GAP-01 |
-| Stop a wallet step at a failed record | GAP-02 |
-| End every act as rejected on a failed record | GAP-03 |
 
 ### Deferred — Future CR
 | Capability | Deferred Reason |

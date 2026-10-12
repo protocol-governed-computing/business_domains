@@ -1,8 +1,225 @@
 # Stage 1 — Change Request: Clarification & Fact Capture: ai_governance / reclaim and parameter result
-**Stage:** 1 — Change Request (Clarification & Fact Capture)
-**CR:** cr_02_reclaim_and_parameters
-**Status:** DRAFT
-**Feeds:** Stage 2 — Domain Model Discovery
+
+## Machine
+
+```yaml
+document:
+  phase: p1
+  domain: ai_governance
+  subdomain:
+  - reclaim
+  - parameter result
+  cr: cr_02_reclaim_and_parameters
+  rule_set: transformation.schemas.REGISTER_SCHEMA_P1_V0
+registers:
+  cr_type:
+  - subdomain: ai_licensing
+    classification: MODIFY
+    rationale: A reclaim does not say what happens when the license registry refuses to remove an assignment. Nothing is added to what a reclaim does.
+    source_finding: {phase: p0, register: cr_type, row: 1}
+  - subdomain: agent_governance
+    classification: MODIFY
+    rationale: The parameter check reports a result it never receives.
+    source_finding: {phase: p0, register: cr_type, row: 2}
+  business_vocabulary:
+  - term: Reclaim
+    definition: Taking back a license that has gone unused for the business's threshold of days.
+    source_finding: {phase: p0, register: business_vocabulary, row: 1}
+  - term: Assignment
+    definition: The registry's record that a license belongs to an employee.
+    source_finding: {phase: p0, register: business_vocabulary, row: 2}
+  - term: Refused removal
+    definition: The registry's answer to a malformed request to remove an assignment.
+    source_finding: {phase: p0, register: business_vocabulary, row: 3}
+  - term: Governed action
+    definition: An agent's proposed action, judged and recorded by the business.
+    source_finding: {phase: p0, register: business_vocabulary, row: 4}
+  - term: Parameter check
+    definition: The step that checks an action's parameters against the rules declared for its tool.
+    source_finding: {phase: p0, register: business_vocabulary, row: 5}
+  - term: Parameter result
+    definition: 'What the parameter check reports: whether every declared rule passed.'
+    source_finding: {phase: p0, register: business_vocabulary, row: 6}
+  - term: Published
+    definition: Sealed into a composition that was released and cited.
+    source_finding: {phase: p0, register: business_vocabulary, row: 7}
+  - term: Successor
+    definition: The new identity that states what an act does after this change.
+    source_finding: {phase: p0, register: business_vocabulary, row: 8}
+  - term: Stood down
+    definition: Replaced by a declared successor, kept in the record and out of reach.
+    source_finding: {phase: p0, register: business_vocabulary, row: 9}
+  requested_outcomes:
+  - outcome: A reclaim the registry refuses ends with the license left assigned.
+    source_finding: {phase: p0, register: requested_outcomes, row: 1}
+  - outcome: The parameter check reports whether every declared rule passed.
+    source_finding: {phase: p0, register: requested_outcomes, row: 2}
+  - outcome: Each act whose meaning this changes has a successor, and its published identity is stood down unchanged.
+    source_finding: {phase: p0, register: requested_outcomes, row: 3}
+  - outcome: Everything in force that runs a stood-down act runs its successor.
+    source_finding: {phase: p0, register: requested_outcomes, row: 4}
+  - outcome: Every other reclaim, and every governed action, decides as it does today.
+    source_finding: {phase: p0, register: requested_outcomes, row: 5}
+  known_facts:
+  - fact: A reclaim ends as reclaimed, still active, or in error.
+    certainty: HIGH
+    source_finding: {phase: p0, register: known_facts, row: 1}
+  - fact: A license the registry did not release stays with the employee.
+    certainty: HIGH
+    source_finding: {phase: p0, register: known_facts, row: 2}
+  - fact: A reclaim the registry refused ends as still active.
+    certainty: HIGH
+    source_finding: {phase: p0, register: known_facts, row: 3}
+  - fact: A parameter that breaks a declared rule denies the action.
+    certainty: HIGH
+    source_finding: {phase: p0, register: known_facts, row: 4}
+  - fact: The check underneath answers only whether every rule passed; a broken rule denies the action.
+    certainty: HIGH
+    source_finding: {phase: p0, register: known_facts, row: 5}
+  - fact: Nothing reads the parameter result today.
+    certainty: HIGH
+    source_finding: {phase: p0, register: known_facts, row: 6}
+  - fact: Identity is fixed at publication; a change of meaning is a new identity.
+    certainty: HIGH
+    source_finding: {phase: p0, register: known_facts, row: 7}
+  - fact: A published identity stays in the record, stood down, when a successor replaces it.
+    certainty: HIGH
+    source_finding: {phase: p0, register: known_facts, row: 8}
+  - fact: A re-point changes which act a referrer runs, and nothing else about it.
+    certainty: HIGH
+    source_finding: {phase: p0, register: known_facts, row: 9}
+  system_beliefs:
+  - belief: The step that removes an assignment does not answer a refused removal.
+    why_it_matters: An unanswered refusal is carried past.
+    verification_goal: Establish which answers of the registry the removal step answers.
+    source_finding: {phase: p0, register: system_beliefs, row: 1}
+  - belief: The reclaim already ends as still active for a license that is not inactive.
+    why_it_matters: A refused removal can end there without a new ending.
+    verification_goal: Establish where the reclaim sends its still-active answer.
+    source_finding: {phase: p0, register: system_beliefs, row: 2}
+  - belief: The parameter check reads its result from a place the check underneath never writes.
+    why_it_matters: The reported result is always empty.
+    verification_goal: Establish what the check underneath returns and what the parameter check reads.
+    source_finding: {phase: p0, register: system_beliefs, row: 3}
+  - belief: Both acts this change touches were published in v5.
+    why_it_matters: Each one it changes needs a successor.
+    verification_goal: Establish which touched acts the v5 composition holds.
+    source_finding: {phase: p0, register: system_beliefs, row: 4}
+  - belief: One workflow runs each of the two contracts.
+    why_it_matters: Everything that runs a replaced contract must run its successor.
+    verification_goal: Establish everything that names each contract, by full name and by short code.
+    source_finding: {phase: p0, register: system_beliefs, row: 5}
+  assumptions: []
+  constraints:
+  - constraint: Every reclaim the registry does not refuse ends exactly as it did before this change.
+    source: Business author
+    source_finding: {phase: p0, register: constraints, row: 1}
+  - constraint: No ending is added.
+    source: Business author
+    source_finding: {phase: p0, register: constraints, row: 2}
+  - constraint: The governed action decides exactly as it does today.
+    source: Business author
+    source_finding: {phase: p0, register: constraints, row: 3}
+  - constraint: No published identity changes what it says, except to be stood down.
+    source: Business author — identity is fixed at publication.
+    source_finding: {phase: p0, register: constraints, row: 4}
+  business_invariants:
+  - invariant: No reclaim carries on past a removal the registry refused.
+    source_finding: {phase: p0, register: business_invariants, row: 1}
+  - invariant: No license is reported reclaimed that the registry did not release.
+    source_finding: {phase: p0, register: business_invariants, row: 2}
+  - invariant: A check reports only what it receives.
+    source_finding: {phase: p0, register: business_invariants, row: 3}
+  - invariant: A published identity means what it meant when it was published.
+    source_finding: {phase: p0, register: business_invariants, row: 4}
+  lifecycle_states:
+  - object: License
+    state: Assigned
+    meaning: Held by an employee. Unchanged by this change.
+    source_finding: {phase: p0, register: lifecycle_states, row: 1}
+  - object: License
+    state: Reclaimed
+    meaning: Taken back after going unused. Unchanged by this change.
+    source_finding: {phase: p0, register: lifecycle_states, row: 2}
+  - object: Published act
+    state: In force
+    meaning: Run when a request reaches it.
+    source_finding: {phase: p0, register: lifecycle_states, row: 3}
+  - object: Published act
+    state: Stood down
+    meaning: Replaced by its successor, kept in the record as published.
+    source_finding: {phase: p0, register: lifecycle_states, row: 4}
+  business_events:
+  - event: A license was revoked
+    when_it_occurs: When a reclaim removes an assignment
+    significance: Unchanged; it is not announced when the registry refuses the removal.
+    source_finding: {phase: p0, register: business_events, row: 1}
+  authority_boundaries:
+  - business_object: What a reclaim does when the registry refuses it
+    authoritative_owner: AI Licensing
+    source_finding: {phase: p0, register: authority_boundaries, row: 1}
+  - business_object: The rules declared for each tool
+    authoritative_owner: Agent Governance
+    source_finding: {phase: p0, register: authority_boundaries, row: 2}
+  - business_object: What the check underneath answers
+    authoritative_owner: The platform
+    source_finding: {phase: p0, register: authority_boundaries, row: 3}
+  out_of_scope:
+  - item: Telling a refused removal apart from a license still in use
+    reason: The business keeps three endings; both leave the license assigned.
+    source_finding: {phase: p0, register: out_of_scope, row: 1}
+  - item: Provisioning a license
+    reason: Not this change.
+    source_finding: {phase: p0, register: out_of_scope, row: 2}
+  - item: Which rules each tool declares
+    reason: Unchanged.
+    source_finding: {phase: p0, register: out_of_scope, row: 3}
+  - item: Reporting which rule failed
+    reason: The check underneath denies rather than returns it.
+    source_finding: {phase: p0, register: out_of_scope, row: 4}
+  - item: The licence-cap check nothing runs
+    reason: It stays as v5 published it.
+    source_finding: {phase: p0, register: out_of_scope, row: 5}
+  governance_scope:
+  - scope_item: ai_licensing
+    relationship: MODIFIED
+    source_finding: {phase: p0, register: governance_scope, row: 1}
+  - scope_item: agent_governance
+    relationship: MODIFIED
+    source_finding: {phase: p0, register: governance_scope, row: 2}
+  clarification_requests: []
+  acceptance_criteria:
+  - criterion: A reclaim the registry refuses ends as still active, the license stays assigned, and no revocation is announced.
+    source_finding: {phase: p0, register: acceptance_criteria, row: 1}
+  - criterion: Every reclaim the registry does not refuse ends exactly as it did before this change.
+    source_finding: {phase: p0, register: acceptance_criteria, row: 2}
+  - criterion: An action whose parameters satisfy every rule is authorized, and the parameter result says every rule passed.
+    source_finding: {phase: p0, register: acceptance_criteria, row: 3}
+  - criterion: An action whose parameters break a rule is denied and audited, as today.
+    source_finding: {phase: p0, register: acceptance_criteria, row: 4}
+  - criterion: Each act whose meaning this changes is stated under a new identity, and the published identity is unchanged except for its stand-down.
+    source_finding: {phase: p0, register: acceptance_criteria, row: 5}
+  - criterion: Nothing in force runs a stood-down act.
+    source_finding: {phase: p0, register: acceptance_criteria, row: 6}
+  identity_and_sameness:
+  - business_object: Act
+    identified_by: Its identity
+    two_are_the_same_when: Its declaration means what the published declaration meant
+    source_finding: {phase: p0, register: identity_and_sameness, row: 1}
+  lifecycle_transitions:
+  - object: Published act
+    from_state: In force
+    to_state: Stood down
+    triggered_by: This change adds its successor
+    cascade: Whatever runs it is re-pointed
+    source_finding: {phase: p0, register: lifecycle_transitions, row: 1}
+  operation_refusals:
+  - operation: Reclaiming a license
+    refused_when: The registry refuses to remove the assignment
+    business_reason: A license the registry did not release stays with the employee.
+    source_finding: {phase: p0, register: operation_refusals, row: 1}
+  authority_deferrals: []
+```
 
 Projected from the change seed. Every row is the seed's own, cited to the section it was
 said in. S1 interrogates and does not author: a question raised by restating the seed
@@ -13,218 +230,77 @@ does not.
 
 ## 1. CR Type
 
-<!-- register:cr_type business_language -->
-| Subdomain | Classification (NEW_SUBDOMAIN, EXTEND_SUBDOMAIN, MODIFY, DEPRECATE) | Rationale | Source Finding |
-|---------|-------------------------------------------------------------------|---------|--------------|
-| ai_licensing | MODIFY | A reclaim does not say what happens when the license registry refuses to remove an assignment. Nothing is added to what a reclaim does. | CR seed §1 CR Type #1 |
-| agent_governance | MODIFY | The parameter check reports a result it never receives. | CR seed §1 CR Type #2 |
-
 ---
 
 ## 2. Business Vocabulary
-
-<!-- register:business_vocabulary business_language -->
-| Term | Definition | Source Finding |
-|----|----------|--------------|
-| Reclaim | Taking back a license that has gone unused for the business's threshold of days. | CR seed §2 Business Vocabulary #1 |
-| Assignment | The registry's record that a license belongs to an employee. | CR seed §2 Business Vocabulary #2 |
-| Refused removal | The registry's answer to a malformed request to remove an assignment. | CR seed §2 Business Vocabulary #3 |
-| Governed action | An agent's proposed action, judged and recorded by the business. | CR seed §2 Business Vocabulary #4 |
-| Parameter check | The step that checks an action's parameters against the rules declared for its tool. | CR seed §2 Business Vocabulary #5 |
-| Parameter result | What the parameter check reports: whether every declared rule passed. | CR seed §2 Business Vocabulary #6 |
-| Published | Sealed into a composition that was released and cited. | CR seed §2 Business Vocabulary #7 |
-| Successor | The new identity that states what an act does after this change. | CR seed §2 Business Vocabulary #8 |
-| Stood down | Replaced by a declared successor, kept in the record and out of reach. | CR seed §2 Business Vocabulary #9 |
 
 ---
 
 ## 3. Requested Outcomes
 
-<!-- register:requested_outcomes business_language -->
-| Outcome | Source Finding |
-|-------|--------------|
-| A reclaim the registry refuses ends with the license left assigned. | CR seed §3 Requested Outcomes #1 |
-| The parameter check reports whether every declared rule passed. | CR seed §3 Requested Outcomes #2 |
-| Each act whose meaning this changes has a successor, and its published identity is stood down unchanged. | CR seed §3 Requested Outcomes #3 |
-| Everything in force that runs a stood-down act runs its successor. | CR seed §3 Requested Outcomes #4 |
-| Every other reclaim, and every governed action, decides as it does today. | CR seed §3 Requested Outcomes #5 |
-
 ---
 
 ## 4. Known Facts — Business Truths
-
-<!-- register:known_facts business_language -->
-| Fact | Certainty (HIGH, MEDIUM, LOW) | Source Finding |
-|----|-----------------------------|--------------|
-| A reclaim ends as reclaimed, still active, or in error. | HIGH | CR seed §4 Known Facts — Business Truths #1 |
-| A license the registry did not release stays with the employee. | HIGH | CR seed §4 Known Facts — Business Truths #2 |
-| A reclaim the registry refused ends as still active. | HIGH | CR seed §4 Known Facts — Business Truths #3 |
-| A parameter that breaks a declared rule denies the action. | HIGH | CR seed §4 Known Facts — Business Truths #4 |
-| The check underneath answers only whether every rule passed; a broken rule denies the action. | HIGH | CR seed §4 Known Facts — Business Truths #5 |
-| Nothing reads the parameter result today. | HIGH | CR seed §4 Known Facts — Business Truths #6 |
-| Identity is fixed at publication; a change of meaning is a new identity. | HIGH | CR seed §4 Known Facts — Business Truths #7 |
-| A published identity stays in the record, stood down, when a successor replaces it. | HIGH | CR seed §4 Known Facts — Business Truths #8 |
-| A re-point changes which act a referrer runs, and nothing else about it. | HIGH | CR seed §4 Known Facts — Business Truths #9 |
 
 ---
 
 ## 5. Existing-System Beliefs — Requiring Verification
 
-<!-- register:system_beliefs business_language -->
-| Belief | Why It Matters | Verification Goal | Source Finding |
-|------|--------------|-----------------|--------------|
-| The step that removes an assignment does not answer a refused removal. | An unanswered refusal is carried past. | Establish which answers of the registry the removal step answers. | CR seed §5 Existing-System Beliefs — Requiring Verification #1 |
-| The reclaim already ends as still active for a license that is not inactive. | A refused removal can end there without a new ending. | Establish where the reclaim sends its still-active answer. | CR seed §5 Existing-System Beliefs — Requiring Verification #2 |
-| The parameter check reads its result from a place the check underneath never writes. | The reported result is always empty. | Establish what the check underneath returns and what the parameter check reads. | CR seed §5 Existing-System Beliefs — Requiring Verification #3 |
-| Both acts this change touches were published in v5. | Each one it changes needs a successor. | Establish which touched acts the v5 composition holds. | CR seed §5 Existing-System Beliefs — Requiring Verification #4 |
-| One workflow runs each of the two contracts. | Everything that runs a replaced contract must run its successor. | Establish everything that names each contract, by full name and by short code. | CR seed §5 Existing-System Beliefs — Requiring Verification #5 |
-
 ---
 
 ## 6. Assumptions
-
-<!-- register:assumptions business_language optional -->
-| Assumption | Basis | Source Finding |
-|----------|-----|--------------|
-| NONE IDENTIFIED |
 
 ---
 
 ## 7. Constraints
 
-<!-- register:constraints business_language -->
-| Constraint | Source | Source Finding |
-|----------|------|--------------|
-| Every reclaim the registry does not refuse ends exactly as it did before this change. | Business author | CR seed §7 Constraints #1 |
-| No ending is added. | Business author | CR seed §7 Constraints #2 |
-| The governed action decides exactly as it does today. | Business author | CR seed §7 Constraints #3 |
-| No published identity changes what it says, except to be stood down. | Business author — identity is fixed at publication. | CR seed §7 Constraints #4 |
-
 ---
 
 ## 8. Business Invariants
-
-<!-- register:business_invariants business_language -->
-| Invariant | Source Finding |
-|---------|--------------|
-| No reclaim carries on past a removal the registry refused. | CR seed §8 Business Invariants #1 |
-| No license is reported reclaimed that the registry did not release. | CR seed §8 Business Invariants #2 |
-| A check reports only what it receives. | CR seed §8 Business Invariants #3 |
-| A published identity means what it meant when it was published. | CR seed §8 Business Invariants #4 |
 
 ---
 
 ## 9. Lifecycle States
 
-<!-- register:lifecycle_states business_language -->
-| Object | State | Meaning | Source Finding |
-|------|-----|-------|--------------|
-| License | Assigned | Held by an employee. Unchanged by this change. | CR seed §9 Lifecycle States #1 |
-| License | Reclaimed | Taken back after going unused. Unchanged by this change. | CR seed §9 Lifecycle States #2 |
-| Published act | In force | Run when a request reaches it. | CR seed §9 Lifecycle States #3 |
-| Published act | Stood down | Replaced by its successor, kept in the record as published. | CR seed §9 Lifecycle States #4 |
-
 ---
 
 ## 10. Business Events
-
-<!-- register:business_events business_language -->
-| Event | When It Occurs | Significance | Source Finding |
-|-----|--------------|------------|--------------|
-| A license was revoked | When a reclaim removes an assignment | Unchanged; it is not announced when the registry refuses the removal. | CR seed §10 Business Events #1 |
 
 ---
 
 ## 11. Authority Boundaries
 
-<!-- register:authority_boundaries business_language -->
-| Business Object | Authoritative Owner | Source Finding |
-|---------------|-------------------|--------------|
-| What a reclaim does when the registry refuses it | AI Licensing | CR seed §11 Authority Boundaries #1 |
-| The rules declared for each tool | Agent Governance | CR seed §11 Authority Boundaries #2 |
-| What the check underneath answers | The platform | CR seed §11 Authority Boundaries #3 |
-
 ---
 
 ## 12. Out of Scope
-
-<!-- register:out_of_scope business_language optional -->
-| Item | Reason | Source Finding |
-|----|------|--------------|
-| Telling a refused removal apart from a license still in use | The business keeps three endings; both leave the license assigned. | CR seed §12 Out of Scope #1 |
-| Provisioning a license | Not this change. | CR seed §12 Out of Scope #2 |
-| Which rules each tool declares | Unchanged. | CR seed §12 Out of Scope #3 |
-| Reporting which rule failed | The check underneath denies rather than returns it. | CR seed §12 Out of Scope #4 |
-| The licence-cap check nothing runs | It stays as v5 published it. | CR seed §12 Out of Scope #5 |
 
 ---
 
 ## 13. Governance Scope
 
-<!-- register:governance_scope business_language -->
-| Scope Item | Relationship (CREATED, EXTENDED, MODIFIED, DEPRECATED, ADJACENT) | Source Finding |
-|----------|----------------------------------------------------------------|--------------|
-| ai_licensing | MODIFIED | CR seed §13 Governance Scope #1 |
-| agent_governance | MODIFIED | CR seed §13 Governance Scope #2 |
-
 ---
 
 ## 14. Clarification Requests
-
-<!-- register:clarification_requests business_language optional -->
-| Question | Why Needed | Blocking (YES, NO) | Owner (HUMAN, SNAPSHOT, GOVERNANCE) | Source Finding |
-|--------|----------|------------------|-----------------------------------|--------------|
-| NONE IDENTIFIED |
 
 ---
 
 ## 15. Acceptance Criteria
 
-<!-- register:acceptance_criteria business_language -->
-| Criterion | Source Finding |
-|---------|--------------|
-| A reclaim the registry refuses ends as still active, the license stays assigned, and no revocation is announced. | CR seed §15 Acceptance Criteria #1 |
-| Every reclaim the registry does not refuse ends exactly as it did before this change. | CR seed §15 Acceptance Criteria #2 |
-| An action whose parameters satisfy every rule is authorized, and the parameter result says every rule passed. | CR seed §15 Acceptance Criteria #3 |
-| An action whose parameters break a rule is denied and audited, as today. | CR seed §15 Acceptance Criteria #4 |
-| Each act whose meaning this changes is stated under a new identity, and the published identity is unchanged except for its stand-down. | CR seed §15 Acceptance Criteria #5 |
-| Nothing in force runs a stood-down act. | CR seed §15 Acceptance Criteria #6 |
-
 ---
 
 ## 16. Identity and Sameness
-
-<!-- register:identity_and_sameness business_language optional -->
-| Business Object | Identified By | Two Are The Same When | Source Finding |
-|---------------|-------------|---------------------|--------------|
-| Act | Its identity | Its declaration means what the published declaration meant | CR seed §16 Identity and Sameness #1 |
 
 ---
 
 ## 17. Lifecycle Transitions
 
-<!-- register:lifecycle_transitions business_language optional -->
-| Object | From State | To State | Triggered By | Cascade | Source Finding |
-|------|----------|--------|------------|-------|--------------|
-| Published act | In force | Stood down | This change adds its successor | Whatever runs it is re-pointed | CR seed §17 Lifecycle Transitions #1 |
-
 ---
 
 ## 18. Operation Refusals
 
-<!-- register:operation_refusals business_language optional -->
-| Operation | Refused When | Business Reason | Source Finding |
-|---------|------------|---------------|--------------|
-| Reclaiming a license | The registry refuses to remove the assignment | A license the registry did not release stays with the employee. | CR seed §18 Operation Refusals #1 |
-
 ---
 
 ## 19. Authority Deferrals
-
-<!-- register:authority_deferrals business_language optional -->
-| Business Object | Deferred To | Until | Source Finding |
-|---------------|-----------|-----|--------------|
-| NONE IDENTIFIED |
 
 ---
 

@@ -34,7 +34,7 @@ LICENSING = DOMAIN / "testbed" / "ai_licensing" / "test_payloads"
 SEED = DOMAIN / "testbed" / "agent_governance" / "seed_data" / "license_facts.json"
 
 for root in (WORKSPACE / "software_governance", WORKSPACE / "business_domains",
-             WORKSPACE / "conformance_workloads", WORKSPACE / "transformation"):
+             WORKSPACE / "conformance_workloads", WORKSPACE / "transformation_compilers"):
     if str(root) not in sys.path:
         sys.path.insert(0, str(root))
 

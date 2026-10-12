@@ -1,12 +1,36 @@
 # Stage 8 — Authoring Mandate: blockchain / identity
 
-**Stage:** 8 — Authoring Mandate
+## Machine
 
-**CR:** cr_03_identity
-
-**Status:** DRAFT
-
-**Feeds:** Artifact Authoring
+```yaml
+document:
+  phase: p8
+  domain: blockchain
+  subdomain: identity
+  cr: cr_03_identity
+  rule_set: transformation.schemas.REGISTER_SCHEMA_P8_V0
+registers:
+  build_order: null
+  critical_path: null
+  mandate_artifact_summary:
+  - action: EXTEND
+    count: '1'
+    description: One capability contract, rendered whole under its own code. Four of its five steps are unchanged; the fifth calls a keyed update in place of a keyed write, taking the record the fourth step assembles as the fields to set.
+  field_declarations:
+  - code: blockchain::CC_RECORD_VERIFICATION_DECISION_V0
+    subdomain_field: identity
+  new_capabilities: null
+  new_intents: null
+  cross_subdomain_notes:
+  - code: capability_side_effects::CS_MUTABLE_JSON_V0
+    note: 'The keyed update this correction calls was added to the capability before this change was designed, on the neutral surface and not by this domain. A business domain may not author a capability, and the operation it needed did not exist: the store offered a keyed write and a filtered update, and nothing that changed part of one record addressed by its key. Identity depends on it exactly as the change that established this function depended on a clock.'
+  - code: blockchain::WF_RECORD_VERIFICATION_DECISION_V0
+    note: Composes the amended contract and is not amended. Its routing reads the contract's result statuses, which the correction preserves, so re-rendering the contract changes nothing the workflow observes.
+  - code: blockchain::CC_RESOLVE_ACTOR_V0
+    note: Reached unchanged, and the only reader of the store. From this change forward it will read records still carrying the name and preferences a decision had been stripping. It reads the record whole and asserts nothing about its shape, so more fields reach it and nothing about it needs to change.
+  - code: blockchain::TI_ACCEPT_ACTOR_V0
+    note: Unchanged, with blockchain::TI_REJECT_ACTOR_V0 and both egress declarations. They name a workflow rather than a contract, which is why a correction inside a contract is invisible to every caller.
+```
 
 Mechanically derived from the design. Every artifact the design declares appears here exactly once,
 scheduled after everything it depends on. Nothing is decided at this stage; the order is read off the
@@ -22,63 +46,29 @@ correction, and it is stated here rather than left to be inferred from an absenc
 
 ## 1. Build Dependency Order
 
-<!-- register:build_order -->
-| Wave | Step | Code | Action (REPLACE, EXTEND, NEW) | Subdomain | Depends On |
-|------|------|------|-------------------------------|-----------|------------|
-
 ---
 
 ## 2. Critical Path
-
-<!-- register:critical_path -->
-| Position | Code |
-|----------|------|
 
 ---
 
 ## 3. Artifact Summary
 
-<!-- register:mandate_artifact_summary -->
-| Action (REPLACE, EXTEND, NEW) | Count | Description |
-|-------------------------------|-------|-------------|
-| EXTEND | 1 | One capability contract, rendered whole under its own code. Four of its five steps are unchanged; the fifth calls a keyed update in place of a keyed write, taking the record the fourth step assembles as the fields to set. |
-
 ---
 
 ## 4. Field Declarations
-
-<!-- register:field_declarations -->
-| Code | Subdomain Field |
-|------|-----------------|
-| blockchain::CC_RECORD_VERIFICATION_DECISION_V0 | identity |
 
 ---
 
 ## 5. New Capabilities
 
-<!-- register:new_capabilities optional -->
-| Code | Purpose | Inputs | Outputs |
-|------|---------|--------|---------|
-
 ---
 
 ## 6. New Intents
 
-<!-- register:new_intents optional -->
-| Code | Purpose | Workflow | Inputs |
-|------|---------|----------|--------|
-
 ---
 
 ## 7. Cross-Subdomain Notes
-
-<!-- register:cross_subdomain_notes optional -->
-| Code | Note |
-|------|------|
-| capability_side_effects::CS_MUTABLE_JSON_V0 | The keyed update this correction calls was added to the capability before this change was designed, on the neutral surface and not by this domain. A business domain may not author a capability, and the operation it needed did not exist: the store offered a keyed write and a filtered update, and nothing that changed part of one record addressed by its key. Identity depends on it exactly as the change that established this function depended on a clock. |
-| blockchain::WF_RECORD_VERIFICATION_DECISION_V0 | Composes the amended contract and is not amended. Its routing reads the contract's result statuses, which the correction preserves, so re-rendering the contract changes nothing the workflow observes. |
-| blockchain::CC_RESOLVE_ACTOR_V0 | Reached unchanged, and the only reader of the store. From this change forward it will read records still carrying the name and preferences a decision had been stripping. It reads the record whole and asserts nothing about its shape, so more fields reach it and nothing about it needs to change. |
-| blockchain::TI_ACCEPT_ACTOR_V0 | Unchanged, with blockchain::TI_REJECT_ACTOR_V0 and both egress declarations. They name a workflow rather than a contract, which is why a correction inside a contract is invisible to every caller. |
 
 ---
 

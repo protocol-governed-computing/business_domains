@@ -34,7 +34,7 @@ DOMAIN = HERE.parents[2]
 WORKSPACE = DOMAIN.parents[1]
 
 for root in (WORKSPACE / "software_governance", WORKSPACE / "business_domains",
-             WORKSPACE / "conformance_workloads", WORKSPACE / "transformation",
+             WORKSPACE / "conformance_workloads", WORKSPACE / "transformation_compilers",
              WORKSPACE / "protocol_transport"):
     if str(root) not in sys.path:
         sys.path.insert(0, str(root))

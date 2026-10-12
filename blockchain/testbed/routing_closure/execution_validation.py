@@ -33,7 +33,7 @@ WORKSPACE = DOMAIN.parents[1]
 PAYLOADS = DOMAIN / "testbed" / "identity" / "test_payloads"
 
 for root in (WORKSPACE / "software_governance", WORKSPACE / "business_domains",
-             WORKSPACE / "conformance_workloads", WORKSPACE / "transformation"):
+             WORKSPACE / "conformance_workloads", WORKSPACE / "transformation_compilers"):
     if str(root) not in sys.path:
         sys.path.insert(0, str(root))
 
