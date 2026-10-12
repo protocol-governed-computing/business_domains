@@ -1,20 +1,21 @@
-# WF_REJECT_ACTOR_V1
+# WF_REJECT_ACTOR_V2
 
 ## Machine
 
 ```yaml
-fqdn: blockchain::WF_REJECT_ACTOR_V1
+fqdn: blockchain::WF_REJECT_ACTOR_V2
 artifact_kind: WORKFLOW
-version: v1
+version: v2
 governed_by: workflow::CONSTITUTION_WORKFLOW_V0
 authority: pgc.platform
 concern: identity
-supersedes: blockchain::WF_REJECT_ACTOR_V0
+supersedes: blockchain::WF_REJECT_ACTOR_V1
 runtime_binding: blockchain::RB_IDENTITY_BINDINGS_V0
 subdomain: identity
 structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
-  summary: The governed sequence that records a rejection, with grounds required, and announces it
+  summary: The governed sequence that records a rejection, with grounds required, records that moment
+    as its own, and announces it
   actor_context: blockchain::AC_PARTICIPANT_V0
   start_node: IN_ACTOR_REJECTION_V0
   nodes:
@@ -59,8 +60,11 @@ core:
       type: CC
       code: CC_APPEND_ACTOR_OCCURRENCE_V0
       inputs:
-        occurrence_fields: $.payload.occurrence_fields
-        stream_id: $.payload.stream_id
+        occurrence_fields:
+          occurrence: ACTOR_REJECTED
+          verifying_authority: $.payload.verifying_authority
+          grounds: $.payload.grounds
+        stream_id: ACTOR_OCCURRENCES
         contact_address: $.payload.contact_address
       next:
         SUCCESS: EXIT_SUCCESS
@@ -77,4 +81,4 @@ core:
 
 ## Intent
 
-The governed sequence that records a rejection, with grounds required, and announces it
+The governed sequence that records a rejection, with grounds required, records that moment as its own, and announces it

@@ -15,12 +15,5 @@
       "required": true,
       "type": "string"
     }
-  },
-  "address_path": "contact_address",
-  "address_type": "string",
-  "stream_id": "ACTOR_OCCURRENCES",
-  "occurrence_fields": {
-    "occurrence": "ACTOR_REGISTERED_UNVERIFIED",
-    "contact_address": "bob@example.test"
   }
 }

@@ -69,11 +69,7 @@ def registration(name: str, address: str) -> dict:
     return {"actor_record": {"name": name, "contact_address": address,
                              "currency_preference": "BACHI", "language": "en",
                              "state": "UNVERIFIED"},
-            "registration_schema": SCHEMA,
-            "address_path": "contact_address", "address_type": "string",
-            "stream_id": "ACTOR_OCCURRENCES",
-            "occurrence_fields": {"occurrence": "ACTOR_REGISTERED_UNVERIFIED",
-                                  "contact_address": address}}
+            "registration_schema": SCHEMA}
 
 
 def acceptance(address: str, authority: str = AUTHORITY) -> dict:
@@ -88,19 +84,13 @@ def acceptance(address: str, authority: str = AUTHORITY) -> dict:
             "states_admitting_a_decision": ["UNVERIFIED"],
             "admitted_outcomes": ["ACCEPTED", "REJECTED"],
             "decided_actor_fields": {"contact_address": address, "state": "ACCEPTED",
-                                     "verifying_authority": authority, "grounds": ""},
-            "stream_id": "ACTOR_OCCURRENCES",
-            "occurrence_fields": {"occurrence": "ACTOR_ACCEPTED", "contact_address": address,
-                                  "verifying_authority": authority, "grounds": ""}}
+                                     "verifying_authority": authority, "grounds": ""}}
 
 
-def creation(address: str, prefix: str = "wal") -> dict:
-    return {"contact_address": address, "key_material": key_material(address),
-            "wallet_id_prefix": prefix,
-            "wallet_fields": {"holder": address, "balance": 0, "denomination": "BACHI",
-                              "classification": "DEFAULT", "state": "ACTIVE"},
-            "stream_id": "WALLET_OCCURRENCES",
-            "occurrence_fields": {"occurrence": "WALLET_CREATED", "holder": address}}
+def creation(address: str, **stated) -> dict:
+    """A wallet request: the person and the key. Wallet states everything else; `stated` is what a
+    request may say besides, and the cr_07 criteria below pass it to prove wallet reads none of it."""
+    return {"contact_address": address, "key_material": key_material(address), **stated}
 
 
 class Run:
@@ -183,12 +173,12 @@ def main() -> int:
     try:
         # The ground the wallet stands on. Not a wallet criterion — identity's, exercised here
         # because a wallet cannot be created for a person who does not exist.
-        run("WF_REGISTER_ACTOR_V1", registration("Wallet Holder", HOLDER))
-        run("WF_ACCEPT_ACTOR_V1", acceptance(HOLDER))
+        run("WF_REGISTER_ACTOR_V2", registration("Wallet Holder", HOLDER))
+        run("WF_ACCEPT_ACTOR_V2", acceptance(HOLDER))
         before = run.identity_fingerprint()
 
         # 1 — the act completes, which it could not do while its reach was undeclared
-        r = run("WF_CREATE_WALLET_V1", creation(HOLDER))
+        r = run("WF_CREATE_WALLET_V2", creation(HOLDER))
         wallets = run.wallets()
         check("an accepted person is given a wallet, and the act runs to completion",
               r.status == "SUCCESS" and len(wallets) == 1,
@@ -215,7 +205,7 @@ def main() -> int:
               f"added: {', '.join(sorted(set(after) - set(before))) or 'none'}")
 
         # 5 — a wallet needs a person the business has accepted
-        r = run("WF_CREATE_WALLET_V1", creation("ghost@example.test"))
+        r = run("WF_CREATE_WALLET_V2", creation("ghost@example.test"))
         check("a wallet for a person who never registered is refused",
               r.status != "SUCCESS" and len(run.wallets()) == 1,
               f"status {r.status}, {len(run.wallets())} wallet(s)")
@@ -224,17 +214,17 @@ def main() -> int:
         # records, so the fingerprint is re-taken afterwards: what criterion 8 asks is whether a
         # *wallet* act disturbed identity, and comparing across an identity act would answer a
         # different question and answer it wrongly.
-        run("WF_REGISTER_ACTOR_V1", registration("Wallet Undecided", UNDECIDED))
+        run("WF_REGISTER_ACTOR_V2", registration("Wallet Undecided", UNDECIDED))
         mark = run.identity_fingerprint()
 
         # 6 — the reach reads state, so an unaccepted person is visible as unaccepted
-        r = run("WF_CREATE_WALLET_V1", creation(UNDECIDED))
+        r = run("WF_CREATE_WALLET_V2", creation(UNDECIDED))
         check("an unverified person is refused a wallet, and none is recorded for them",
               not any(w.get("holder") == UNDECIDED for w in run.wallets().values()),
               f"status {r.status}, {len(run.wallets())} wallet(s)")
 
         # 7 — one person, one wallet
-        r = run("WF_CREATE_WALLET_V1", creation(HOLDER))
+        r = run("WF_CREATE_WALLET_V2", creation(HOLDER))
         check("a person the business already gave a wallet is not given a second",
               r.status != "SUCCESS" and len(run.wallets()) == 1,
               f"status {r.status}, {len(run.wallets())} wallet(s)")
@@ -250,6 +240,37 @@ def main() -> int:
         check("every wallet the business holds has exactly one creation moment, and none was rewritten",
               len(run.wallet_trail()) == len(run.wallets()),
               f"{len(run.wallet_trail())} occurrence(s), {len(run.wallets())} wallet(s)")
+
+        # cr_07_own_values — wallet states every value of the record it creates. A request naming
+        # another holder, a balance, other values, a prefix and a moment of its own is the request
+        # a direct caller could send; none of it reaches the wallet.
+        FORGER = "forger@example.test"
+        run("WF_REGISTER_ACTOR_V2", registration("Wallet Forger", FORGER))
+        run("WF_ACCEPT_ACTOR_V2", acceptance(FORGER))
+        r = run("WF_CREATE_WALLET_V2", creation(
+            FORGER, wallet_id_prefix="mine",
+            wallet_fields={"holder": HOLDER, "balance": 1_000_000, "denomination": "OTHER",
+                           "classification": "PREMIUM", "state": "FROZEN"},
+            stream_id="SOMEONE_ELSES_TRAIL",
+            occurrence_fields={"occurrence": "WALLET_FUNDED", "holder": HOLDER}))
+        forged = [(k, w) for k, w in run.wallets().items() if w.get("holder") == FORGER]
+        record = forged[0][1] if forged else {}
+        check("a new wallet is held by the accepted person, with a balance of zero, BACHI, DEFAULT and "
+              "ACTIVE, whatever the request states",
+              r.status == "SUCCESS" and record == {"holder": FORGER, "balance": 0,
+                                                   "denomination": "BACHI",
+                                                   "classification": "DEFAULT", "state": "ACTIVE"},
+              f"status {r.status}, record {record}")
+        check("a new wallet's identity carries the business's prefix, whatever the request states",
+              bool(forged) and forged[0][0].startswith("wal_"),
+              f"identity {forged[0][0] if forged else None}")
+        moments = [e for e in run.wallet_trail() if forged and e.get("stream_id") == forged[0][0]]
+        check("a new wallet's trail records that the wallet was created, whatever moment the request "
+              "names",
+              len(moments) == 1 and moments[0]["record"] == {"occurrence": "WALLET_CREATED",
+                                                            "holder": FORGER}
+              and not any(e.get("stream_id") == "SOMEONE_ELSES_TRAIL" for e in run.wallet_trail()),
+              f"{[m['record'] for m in moments]}")
 
         skip("a wallet act attempting to write through the reach is refused",
              "no act writes to a consulted binding, so there is nothing to dispatch; the platform "

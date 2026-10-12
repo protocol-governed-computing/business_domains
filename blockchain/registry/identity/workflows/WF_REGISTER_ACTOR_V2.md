@@ -1,21 +1,21 @@
-# WF_REGISTER_ACTOR_V0
+# WF_REGISTER_ACTOR_V2
 
 ## Machine
 
 ```yaml
-fqdn: blockchain::WF_REGISTER_ACTOR_V0
-superseded_by:
-- blockchain::WF_REGISTER_ACTOR_V1
+fqdn: blockchain::WF_REGISTER_ACTOR_V2
 artifact_kind: WORKFLOW
-version: v0
+version: v2
 governed_by: workflow::CONSTITUTION_WORKFLOW_V0
 authority: pgc.platform
 concern: identity
+supersedes: blockchain::WF_REGISTER_ACTOR_V1
 runtime_binding: blockchain::RB_IDENTITY_BINDINGS_V0
 subdomain: identity
 structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
-  summary: The governed sequence that admits a person as an unverified actor, and announces that it did
+  summary: The governed sequence that admits a person as an unverified actor, records that moment as its
+    own, and announces it
   actor_context: blockchain::AC_PARTICIPANT_V0
   start_node: IN_ACTOR_REGISTERED_V0
   nodes:
@@ -38,12 +38,13 @@ core:
       code: CC_CLAIM_CONTACT_ADDRESS_V0
       inputs:
         actor_record: $.payload.actor_record
-        address_path: $.payload.address_path
-        address_type: $.payload.address_type
+        address_path: contact_address
+        address_type: string
       next:
         SUCCESS: CC_REGISTER_ACTOR_V0
         ALREADY_EXISTS: CC_APPEND_ACTOR_OCCURRENCE_V0
         VIOLATION: EXIT_REJECTED
+        BACKEND_ERROR: EXIT_REJECTED
     CC_REGISTER_ACTOR_V0:
       type: CC
       code: CC_REGISTER_ACTOR_V0
@@ -58,16 +59,19 @@ core:
       next:
         SUCCESS: CC_APPEND_ACTOR_OCCURRENCE_V0
         VIOLATION: EXIT_REJECTED
+        BACKEND_ERROR: EXIT_REJECTED
     CC_APPEND_ACTOR_OCCURRENCE_V0:
       type: CC
       code: CC_APPEND_ACTOR_OCCURRENCE_V0
       inputs:
-        occurrence_fields: $.payload.occurrence_fields
-        stream_id: $.payload.stream_id
+        occurrence_fields:
+          occurrence: ACTOR_REGISTERED_UNVERIFIED
+        stream_id: ACTOR_OCCURRENCES
         contact_address: $.results.CC_CLAIM_CONTACT_ADDRESS_V0.result
       next:
         SUCCESS: EXIT_SUCCESS
         VIOLATION: EXIT_REJECTED
+        BACKEND_ERROR: EXIT_REJECTED
     EXIT_SUCCESS:
       type: EXIT
       emit: blockchain::EV_ACTOR_REGISTERED_UNVERIFIED_V0
@@ -79,4 +83,4 @@ core:
 
 ## Intent
 
-The governed sequence that admits a person as an unverified actor, and announces that it did
+The governed sequence that admits a person as an unverified actor, records that moment as its own, and announces it

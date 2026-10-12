@@ -115,9 +115,9 @@ def main() -> int:
     # 1 — case O3: an acceptance whose lookup fails is rejected, and no acceptance is recorded
     c = Case(snapshot)
     try:
-        c.run("WF_REGISTER_ACTOR_V1", payload("01_register_actor.json"))
+        c.run("WF_REGISTER_ACTOR_V2", payload("01_register_actor.json"))
         c.corrupt(f"{IDENTITY}/contact_address_registry.jsonl")
-        r = c.run("WF_ACCEPT_ACTOR_V1", payload("04_accept_actor.json"))
+        r = c.run("WF_ACCEPT_ACTOR_V2", payload("04_accept_actor.json"))
         ev = trace(r)
         state = (c.read(f"{IDENTITY}/actors.json") or {}).get("ada@example.test", {}).get("state")
         check("an acceptance whose lookup of the person fails is rejected, and no acceptance is recorded",
@@ -131,9 +131,9 @@ def main() -> int:
     # 2 — a rejection whose lookup fails is rejected, and no decision is recorded
     c = Case(snapshot)
     try:
-        c.run("WF_REGISTER_ACTOR_V1", payload("07_register_bob.json"))
+        c.run("WF_REGISTER_ACTOR_V2", payload("07_register_bob.json"))
         c.corrupt(f"{IDENTITY}/contact_address_registry.jsonl")
-        r = c.run("WF_REJECT_ACTOR_V1", payload("08_reject_actor.json"))
+        r = c.run("WF_REJECT_ACTOR_V2", payload("08_reject_actor.json"))
         ev = trace(r)
         state = (c.read(f"{IDENTITY}/actors.json") or {}).get("bob@example.test", {}).get("state")
         check("a rejection whose lookup of the person fails is rejected, and no decision is recorded",
@@ -146,7 +146,7 @@ def main() -> int:
     c = Case(snapshot)
     try:
         c.corrupt(f"{IDENTITY}/contact_address_registry.jsonl")
-        r = c.run("WF_REGISTER_ACTOR_V1", payload("01_register_actor.json"))
+        r = c.run("WF_REGISTER_ACTOR_V2", payload("01_register_actor.json"))
         ev = trace(r)
         actors = c.read(f"{IDENTITY}/actors.json") or {}
         check("a registration whose address claim fails is rejected, and no person is recorded",
@@ -159,10 +159,10 @@ def main() -> int:
     holder = "routing-holder@example.test"
     c = Case(snapshot)
     try:
-        c.run("WF_REGISTER_ACTOR_V1", registration("Routing Holder", holder))
-        c.run("WF_ACCEPT_ACTOR_V1", acceptance(holder))
+        c.run("WF_REGISTER_ACTOR_V2", registration("Routing Holder", holder))
+        c.run("WF_ACCEPT_ACTOR_V2", acceptance(holder))
         c.corrupt(f"{WALLET}/wallet_identity_registry.jsonl")
-        r = c.run("WF_CREATE_WALLET_V1", creation(holder))
+        r = c.run("WF_CREATE_WALLET_V2", creation(holder))
         ev = trace(r)
         wallets = c.read(f"{WALLET}/wallets.json") or {}
         check("a wallet whose identity claim fails is rejected, and no wallet is recorded",
@@ -174,10 +174,10 @@ def main() -> int:
     # 5 — a wallet whose holder lookup fails is rejected
     c = Case(snapshot)
     try:
-        c.run("WF_REGISTER_ACTOR_V1", registration("Routing Holder", holder))
-        c.run("WF_ACCEPT_ACTOR_V1", acceptance(holder))
+        c.run("WF_REGISTER_ACTOR_V2", registration("Routing Holder", holder))
+        c.run("WF_ACCEPT_ACTOR_V2", acceptance(holder))
         c.corrupt(f"{IDENTITY}/contact_address_registry.jsonl")
-        r = c.run("WF_CREATE_WALLET_V1", creation(holder))
+        r = c.run("WF_CREATE_WALLET_V2", creation(holder))
         ev = trace(r)
         wallets = c.read(f"{WALLET}/wallets.json") or {}
         check("a wallet whose holder lookup fails is rejected, and nothing after the lookup runs",
