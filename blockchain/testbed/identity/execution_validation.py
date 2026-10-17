@@ -40,8 +40,8 @@ for root in (WORKSPACE / "software_governance", WORKSPACE / "business_domains",
         sys.path.insert(0, str(root))
 
 from runtime import api  # noqa: E402
-from resolver.registry import load_registry  # noqa: E402
-from resolver.resolver import resolve  # noqa: E402
+from pgc_transport.resolver.registry import load_registry  # noqa: E402
+from pgc_transport.resolver.resolver import resolve  # noqa: E402
 
 NS = "blockchain::"
 STORE = "blockchain/identity"
