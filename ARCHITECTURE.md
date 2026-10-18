@@ -116,8 +116,8 @@ Maturity differs, and pretending otherwise would be the wrong kind of documentat
   Qwen3 8B, hosted outside PGC: the host proposes each token, and the business chooses it, records
   it, and releases the answer from its own record. Control is inverted, because an act cannot loop
   or call out. See [`causal_language_model/ARCHITECTURE.md`](causal_language_model/ARCHITECTURE.md).
-- **ai_governance** is the least exercised of the four. Its one change dossier proved its three
-  licensing checks by the cases stated beside them, and changed no act.
+- **ai_governance** is the least exercised of the four. It governs an agent's actions and
+  provisions licences.
 
 ## 5. What it owns, and what it must never do
 
@@ -127,7 +127,8 @@ Maturity differs, and pretending otherwise would be the wrong kind of documentat
   structures, runtime bindings, and each domain's own build manifest;
 - **boundary contracts** — the ingress/egress pairs that publish an operation to the outside world;
 - **pure implementations** — leaf functions for domain arithmetic;
-- **change dossiers** — the governed record of how each domain came to be what it is;
+- **designs of record** — each domain's P7 and P8 in `design/`, generated from its registry;
+- **change dossiers** — a change in progress, P0 to P8, in `cr_dossiers/`;
 - **clients** — a small web surface where one exists.
 
 **It must never:**
@@ -208,9 +209,10 @@ To see the whole composition rather than one domain, run the inspection surface 
 
 ## 7. A change to a domain is itself governed
 
-This is the part of the repository with no counterpart in ordinary software. Each domain carries
-**change dossiers**: the record of a change from statement of the business problem through to the
-artefacts it produced, each phase admissible before the next may proceed.
+This is the part of the repository with no counterpart in ordinary software. Each domain's design of
+record in `design/` states what the domain is. A change to it is authored as a **change dossier**:
+the record of a change from statement of the business problem through to the artefacts it produces,
+each phase admissible before the next may proceed.
 
 ```
    P0  the business problem, stated
@@ -227,12 +229,12 @@ artefacts it produced, each phase admissible before the next may proceed.
    artefacts — which are then compiled like any others
 ```
 
-Every dossier pins the **baseline** it was approved against. That pin is historical and stays
+A dossier pins the **baseline** it was approved against. That pin is historical and stays
 historical: a completed change is not re-pinned to today's snapshot, because approving a decision
 against facts that arrived later asserts a re-reading of a decision nobody made.
 
-And a change need not author anything. One dossier in this repository emits a **two-line diff** — a
-defect correction, fully evidenced, all phases admissible. A lifecycle that can only describe
+And a change need not author anything. A defect correction may emit a **two-line diff**, fully
+evidenced, with all phases admissible. A lifecycle that can only describe
 creation cannot describe maintenance, which is most of what happens to software.
 
 ## 8. Layout
@@ -271,9 +273,9 @@ Adding a domain is a sibling directory; nothing upstream is touched.
 
 ## 10. How to know it works
 
-Each domain has a testbed of payloads, including ones that **must** be refused. Every domain whose
-change dossiers change its acts also has an **execution validation**: a suite that dispatches its workflows against a
-fresh data root, one criterion per acceptance criterion its dossier declared, and prints which hold.
+Each domain has a testbed of payloads, including ones that **must** be refused. Every domain also
+has an **execution validation**: a suite that dispatches its workflows against a fresh data root,
+one criterion per acceptance criterion its design declares, and prints which hold.
 The workspace regression runs all of them on every build:
 
 | suite | criteria exercised, all holding |
@@ -317,7 +319,7 @@ realize every declared transition at its own node.
 This document describes *this repository*. The architecture it realizes is developed in the papers
 indexed at **https://github.com/protocol-governed-computing**:
 
-- **An Architecture for Closed-Loop Governed Transformation** — the lifecycle the change dossiers
+- **An Architecture for Closed-Loop Governed Transformation** — the lifecycle change dossiers
   are the output of, and why a change to a domain is itself a governed act.
 - **An Architecture for Deterministic Declarative Execution** — how a declared domain becomes a
   compiled graph a domain-blind runtime executes.

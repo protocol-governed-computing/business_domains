@@ -39,9 +39,8 @@ through two ways: a test model built to break the rules, and a pretrained model 
 proposes each token while the business decides it. The test model's step is not determined by its
 inputs, so the domain holds the platform to molecules, recorded outcomes, replay and refusal
 moments; the hosted way shows a model outside PGC governed token by token. It has its own
-[`README.md`](causal_language_model/README.md) and [`ARCHITECTURE.md`](causal_language_model/ARCHITECTURE.md). `ai_governance` carries one change dossier, which proved its
-three licensing checks by the cases stated beside them. It has no execution validation of its own and
-is the least exercised.
+[`README.md`](causal_language_model/README.md) and [`ARCHITECTURE.md`](causal_language_model/ARCHITECTURE.md). `ai_governance` governs
+an agent's actions and provisions licences, and it is the least exercised of the four.
 
 **The language model is also where the platform's own defect was found.** Its submission runs one
 contract at ten places. Running it showed the platform sealed each such contract's routing once, for
@@ -127,23 +126,22 @@ causal_language_model/   same shape; subdomain `model_response`; implementation/
                          outside PGC; doc/ holds the idea and the CR sequence
 ```
 
-Every domain whose change dossiers change its acts has an **execution validation** under `testbed/` — a suite that
+Every domain has an **execution validation** under `testbed/` — a suite that
 dispatches its workflows against a fresh data root, one criterion per acceptance criterion, and
 prints which hold. The workspace regression runs all of them on every build.
 
 ## A change to a domain is itself governed
 
-Each domain carries **change dossiers** — the record of a change from the business problem as stated
-(P0) through to the authoring mandate (P8), each phase admissible before the next may be authored.
-Every dossier pins the baseline it was approved against, and that pin stays historical: a completed
-change is never re-pinned forward.
-Each phase document carries its registers as data, in one `## Machine` block. Dossiers delivered
-before v6 were written as tables and converted mechanically, with no value changed. The table-form
-originals are held at the `v5` tag, or in git history for the few delivered after it.
+Each domain carries its **design of record** in `design/`: the P7 design intent and the P8 authoring
+mandate, generated from its registry, so the design always states what the domain is. A change is
+authored as a **change dossier** in `cr_dossiers/cr_NN_<subject>/`, from the business problem as
+stated (P0) through to the authoring mandate (P8). Each phase must be admissible before the next may
+be authored. A dossier pins the composition it was approved against, and that pin stays historical:
+a completed change is never re-pinned forward. Each phase document carries its registers as data, in
+one `## Machine` block.
 
-A change need not author anything. One dossier here produces a **two-line diff** — a defect
-correction, fully evidenced, every phase admissible. A lifecycle that can only describe creation
-cannot describe maintenance.
+A change need not author anything. A defect correction may produce a two-line diff, fully evidenced,
+with every phase admissible. A lifecycle that can only describe creation cannot describe maintenance.
 
 ## What this repository is not
 
