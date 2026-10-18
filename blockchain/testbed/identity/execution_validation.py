@@ -1,8 +1,8 @@
-"""Execution validation — run identity against the acceptance criteria its CR declared.
+"""Execution validation — run identity against its acceptance criteria.
 
 `tc construction check` proves a design determines its artifacts. Neither it nor the phase oracle
 proves the composition *does what the business asked for*, because both read documents and this
-reads behaviour: every criterion in the CR's §15 is exercised by dispatching real workflows through
+reads behaviour: every acceptance criterion is exercised by dispatching real workflows through
 `protocol_runtime` against a fresh data root.
 
 Each scenario is stated as the criterion it proves, so a failure names a business promise rather
@@ -276,7 +276,7 @@ def main() -> int:
         skip("an unverified or rejected actor has submitted no transaction",
              "transaction is a later function; there is nothing yet to submit")
 
-        # cr_05_identity — identity holds every rule it applies. Each request below states rules of
+        # Identity holds every rule it applies. Each request below states rules of
         # its own, widened; each is judged by identity's. Fresh persons, so nothing above moves.
         LIN, HEDY, MAR = "linus@example.test", "hedy@example.test", "margaret@example.test"
 
@@ -329,7 +329,7 @@ def main() -> int:
               and mar.get("name") == "Margaret Hamilton" and mar.get("grounds"),
               f"status {r.status}, record {mar}")
 
-        # cr_07_own_values — each act states the moment it records, the trail it goes on, and where
+        # Each act states the moment it records, the trail it goes on, and where
         # the contact address sits. Each request below names other ones, as a direct caller could.
         LIN = "lin@example.test"
         forged = {"stream_id": "SOMEONE_ELSES_TRAIL",

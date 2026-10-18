@@ -1,19 +1,19 @@
-"""Execution validation — run wallet against the acceptance criteria its CRs declared.
+"""Execution validation — run wallet against its acceptance criteria.
 
 `tc construction check` proves a design determines its artifacts. Neither it nor the phase oracle
 proves the composition *does what the business asked for*, because both read documents and this reads
 behaviour: every criterion is exercised by dispatching real workflows through `protocol_runtime`
 against a fresh data root.
 
-**This is the first act in the composition that reads records another subdomain owns**, and most of
+**Wallet creation reads records another subdomain owns**, and most of
 what is checked here is about that. A wallet is created for a person the wallet subdomain cannot see
 for itself: identity holds who exists, the act consults identity's binding to read them, and the
 platform refuses a write through anything consulted. So the criteria come in pairs — the act
 completes, *and* identity's stores are byte for byte what they were before it ran.
 
-The reach was undeclared in the first pass of `cr_04_wallet`, and the act halted on its second step asking for
-a record it never said it would read. Criterion 1 is that halt not happening; criterion 4 is the
-reason the halt was worth fixing properly rather than by widening what the wallet owns.
+An undeclared reach would halt the act on its second step, asking for a record it never said it
+would read. Criterion 1 is that halt not happening. Criterion 4 is why the reach is declared rather
+than the wallet widened to own what it reads.
 
 State accumulates deliberately — a person must be registered and accepted before a wallet can be
 created for them — so the order is part of the evidence and the run is not idempotent. That is why it
@@ -89,7 +89,7 @@ def acceptance(address: str, authority: str = AUTHORITY) -> dict:
 
 def creation(address: str, **stated) -> dict:
     """A wallet request: the person and the key. Wallet states everything else; `stated` is what a
-    request may say besides, and the cr_07 criteria below pass it to prove wallet reads none of it."""
+    request may say besides, and the own-values criteria below pass it to prove wallet reads none of it."""
     return {"contact_address": address, "key_material": key_material(address), **stated}
 
 
@@ -241,7 +241,7 @@ def main() -> int:
               len(run.wallet_trail()) == len(run.wallets()),
               f"{len(run.wallet_trail())} occurrence(s), {len(run.wallets())} wallet(s)")
 
-        # cr_07_own_values — wallet states every value of the record it creates. A request naming
+        # The wallet states every value of the record it creates. A request naming
         # another holder, a balance, other values, a prefix and a moment of its own is the request
         # a direct caller could send; none of it reaches the wallet.
         FORGER = "forger@example.test"

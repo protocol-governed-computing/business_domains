@@ -1,4 +1,4 @@
-"""Execution validation — run identity and wallet against the criteria `cr_06_routing_closure` declared.
+"""Execution validation — run identity and wallet against their routing-closure criteria.
 
 The change answers one question for every identity and wallet act: what happens when a record the act
 needs cannot be read or written. The business answered it: the act ends as rejected, at the step

@@ -1,4 +1,4 @@
-"""Execution validation — run the reclaim against the criteria `cr_02_reclaim_closure` declared.
+"""Execution validation — run the reclaim against its routing-closure criteria.
 
 The change answers one question for the reclaim: what happens when the registry refuses to remove
 the assignment. The business answered it: the reclaim ends as still active, the license stays

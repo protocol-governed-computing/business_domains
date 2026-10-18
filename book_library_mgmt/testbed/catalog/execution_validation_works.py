@@ -1,23 +1,20 @@
-"""Execution validation for CR-2 — the catalog run against the criteria the edition change declared.
+"""Execution validation — the catalog's works: editions grouped under a work.
 
-`execution_validation.py` runs CR-1's criteria and proves this change broke nothing. It cannot prove
-this change *did* anything: every one of its twenty-three criteria was satisfied before the work
-existed. This runs CR-2's own §15 — editions grouped under a work, a further edition registered
-against a work the catalog already holds, a search that answers once per work, a retrieval that
-carries the work — and the promise that cost the most to state, which is about data rather than
-behaviour.
+`execution_validation.py` runs the catalog's registration criteria. This runs the criteria for works:
+editions grouped under a work, a further edition registered against a work the catalog already
+holds, a search that answers once per work, a retrieval that carries the work — and a promise about
+data rather than behaviour.
 
-**The existing-records promise is tested against a record this change did not write.** At P2 the
-belief that records written under the previous change exist and are readable came back
-INSUFFICIENT_EVIDENCE, because a sealed snapshot declares stores and never their contents. The only
-way to settle it is to put a pre-change record in the store and operate on it, which is what §3 does:
-a book record with no work, exactly as the previous catalog wrote one, seeded straight into the data
-root before any workflow runs. If the extended catalog cannot serve that record, the change did not
-keep its promise, however green everything upstream is.
+**The existing-records promise is tested against a record no works act wrote.** A sealed snapshot
+declares stores and never their contents, so a snapshot cannot show that a record written before
+works existed is still readable. The only way to settle it is to put such a record in the store and
+operate on it, which is what §3 does: a book record with no work, seeded straight into the data root
+before any workflow runs. If the catalog cannot serve that record, the promise does not hold,
+however green everything upstream is.
 
 State accumulates deliberately and the run is not idempotent, so it starts from an empty data root.
 
-Run:  python business_domains/book_library_mgmt/testbed/catalog/execution_validation_cr02.py [snapshot]
+Run:  python business_domains/book_library_mgmt/testbed/catalog/execution_validation_works.py [snapshot]
       ... --data-root <path>     keep the stores instead of discarding them
 Exit: 0 if every criterion holds, 1 otherwise.
 """
@@ -75,7 +72,7 @@ WORK_SCHEMA = {"title": {"required": True, "type": "string"},
 
 
 def book_payload(book, barcode, subjects=("science fiction",), staff=None) -> dict:
-    """A registration through the existing entry point — unchanged from what CR-1's callers send."""
+    """A registration through the existing entry point — the request a registration caller sends."""
     return {**auth(staff), **book, "book_schema": BOOK_SCHEMA,
             "book_fields": {**book, "subject": list(subjects), "state": "REGISTERED"},
             "barcode": barcode,
@@ -150,7 +147,7 @@ def main() -> int:
         return 1
 
     if keep is None:
-        data_root = Path(tempfile.mkdtemp(prefix="pgc_cr02_validation_"))
+        data_root = Path(tempfile.mkdtemp(prefix="pgc_works_validation_"))
     else:
         if keep.exists() and any(keep.iterdir()):
             print(f"{keep} is not empty — this run accumulates state and must start from an empty "
@@ -326,7 +323,7 @@ def main() -> int:
                    "UPDATE_BIBLIOGRAPHIC_INFORMATION"} <= performed,
               f"{len(trail)} trail entr(ies), {len(performed)} distinct operation(s)")
 
-        # cr_05_catalog — the catalog holds every rule it applies. Each request below states rules
+        # The catalog holds every rule it applies. Each request below states rules
         # of its own, widened; each is judged by the catalog's. Fresh books, so nothing above moves.
         WIDE = {"authorization_rules": [], "book_schema": {}, "edition_schema": {}, "work_schema": {}}
         intruder = {"staff_id": "intruder", "authorized": False}

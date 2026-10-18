@@ -1,9 +1,9 @@
-"""Execution validation — run the catalog against the acceptance criteria its CR declared.
+"""Execution validation — run the catalog against its registration criteria.
 
 `tc construction check` proves a design determines its artifacts. `construction_acceptance.py` proves
 the artifacts built are the ones the design determines. Neither proves the composition *does what the
-business asked for*, because both read documents and this reads behaviour: every criterion in the CR's
-§15 is exercised by dispatching real workflows through `protocol_runtime` against a fresh data root.
+business asked for*, because both read documents and this reads behaviour: every acceptance
+criterion is exercised by dispatching real workflows through `protocol_runtime` against a fresh data root.
 
 Each scenario is stated as the criterion it proves, so a failure names a business promise rather than
 a workflow. State accumulates deliberately — a book must be registered before a copy can be refused

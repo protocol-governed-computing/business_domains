@@ -283,7 +283,7 @@ The workspace regression runs all of them on every build:
 | `blockchain/testbed/identity/execution_validation.py` | 19, and 3 not exercised |
 | `blockchain/testbed/wallet/execution_validation.py` | 9, and 1 not exercised |
 | `book_library_mgmt/testbed/catalog/execution_validation.py` | 23 |
-| `book_library_mgmt/testbed/catalog/execution_validation_cr02.py` | 27 |
+| `book_library_mgmt/testbed/catalog/execution_validation_works.py` | 27 |
 | `causal_language_model/testbed/model_response/execution_validation.py` | 27 |
 | `causal_language_model/testbed/hosted_model/execution_validation.py` | 15, and 1 not exercised (Qwen3 8B, with `--qwen`) |
 

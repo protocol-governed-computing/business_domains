@@ -1,4 +1,4 @@
-"""Execution validation — run the hosted way against the acceptance criteria cr_02 declared.
+"""Execution validation — run the hosted way against its acceptance criteria.
 
 A hosted model proposes and the business decides. Every criterion here dispatches the three hosted
 acts through `protocol_runtime` against a fresh data root, driven by the host in

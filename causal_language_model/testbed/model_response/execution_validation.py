@@ -1,4 +1,4 @@
-"""Execution validation — run model_response against the acceptance criteria its CR declared.
+"""Execution validation — run model_response against its acceptance criteria.
 
 `tc construction check` proves the design determines its artifacts, and conformance proves each
 transform against its vectors. Neither proves the business gets what it asked for: that a model is
