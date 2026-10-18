@@ -6,7 +6,7 @@
 fqdn: ai_governance::TEST_DATA_CT_PURE_CHECK_TRAINING_STATUS_V0
 artifact_kind: TEST_DATA
 version: V0
-governed_by: conformance::CONSTITUTION_TEST_DATA_V2
+governed_by: conformance::CONSTITUTION_TEST_DATA_V0
 authority: pgc.platform
 concern: ai_licensing
 target: ai_governance::CT_PURE_CHECK_TRAINING_STATUS_V0

@@ -1,18 +1,17 @@
-# TI_REJECT_ACTOR_V1
+# TI_ACCEPT_ACTOR_V0
 
 ## Machine
 
 ```yaml
-fqdn: blockchain::TI_REJECT_ACTOR_V1
+fqdn: blockchain::TI_ACCEPT_ACTOR_V0
 artifact_kind: TRANSPORT_INGRESS
-version: v1
+version: v0
 governed_by: transport::CONSTITUTION_TRANSPORT_INGRESS_V0
 authority: pgc.platform
 concern: identity
-supersedes: blockchain::TI_REJECT_ACTOR_V0
-operation: blockchain.reject_actor
+operation: blockchain.accept_actor
 core:
-  summary: Admits a request to reject a registered actor, and sends the act only what the caller supplies
+  summary: Admits a request to accept a registered actor, and sends the act only what the caller supplies
 input_contract:
   contact_address:
     type: string
@@ -22,11 +21,10 @@ input_contract:
     required: true
   grounds:
     type: string
-    required: true
 context_requirements: []
 handler:
   kind: WF_INVOCATION
-  workflow: blockchain::WF_REJECT_ACTOR_V2
+  workflow: blockchain::WF_ACCEPT_ACTOR_V0
   payload_template:
     contact_address: ${input.contact_address}
     verifying_authority: ${input.verifying_authority}
@@ -37,4 +35,4 @@ handler:
 
 ## Intent
 
-Admits a request to reject a registered actor, and sends the act only what the caller supplies
+Admits a request to accept a registered actor, and sends the act only what the caller supplies

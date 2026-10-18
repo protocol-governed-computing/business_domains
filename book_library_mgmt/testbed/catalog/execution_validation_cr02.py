@@ -295,7 +295,7 @@ def main() -> int:
         # restate what it was leaving alone was turned away. Withdrawing a requirement renders the
         # boundary whole and says less than it said, so it was superseded rather than amended — and
         # superseding does not redirect a caller. This is the caller moving.
-        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1", auth() | {
+        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0", auth() | {
             "identity_key": LEGACY_KEY,
             "updated_fields": {**LEGACY, "subject": ["romance", "classic"],
                                "state": "REGISTERED"}})
@@ -366,9 +366,9 @@ def main() -> int:
         check("a physical copy is registered as registered, whatever state the request gives it",
               r.status == "SUCCESS" and copy_state == "REGISTERED", f"status {r.status}, state {copy_state}")
 
-        c = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1", {**auth(), **WIDE, "authorization_rules": RULES,
+        c = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0", {**auth(), **WIDE, "authorization_rules": RULES,
                 "identity_key": _key(ILIAD), "updated_fields": {**ILIAD, "subject": ["epic"], "state": "SUSPENDED"}})
-        emptied = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1", {**auth(), "identity_key": _key(ILIAD),
+        emptied = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0", {**auth(), "identity_key": _key(ILIAD),
                       "authorization_rules": RULES, "updated_fields": {**ILIAD, "subject": []}})
         iliad = run.store("books.json").get(_key(ILIAD), {})
         check("a correction keeps the record's state, and a correction leaving a book without its "

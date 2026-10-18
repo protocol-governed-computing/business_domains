@@ -49,7 +49,7 @@ PAYLOADS = {
 WORKFLOW = {
     "01_register_book": "WF_REGISTER_BOOK_V0",
     "02_register_physical_copy": "WF_REGISTER_PHYSICAL_COPY_V0",
-    "03_update_bibliographic_information": "WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1",
+    "03_update_bibliographic_information": "WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0",
     "04_search_catalog": "WF_SEARCH_CATALOG_V0",
     "05_retrieve_book_details": "WF_RETRIEVE_BOOK_DETAILS_V0",
     "06_retire_physical_copy": "WF_RETIRE_PHYSICAL_COPY_V0",

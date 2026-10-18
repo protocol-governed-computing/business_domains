@@ -9,11 +9,10 @@ version: v0
 governed_by: intent::CONSTITUTION_INTENT_V0
 authority: pgc.platform
 concern: identity
-supersedes: blockchain::IN_ACTOR_VERIFIED_V0
 core:
   summary: Admits a request to accept a person, with the grounds the authority chooses to state, and refuses
     one that names nobody
-  workflow: WF_ACCEPT_ACTOR_V2
+  workflow: WF_ACCEPT_ACTOR_V0
   inputs:
     contact_address:
       type: string

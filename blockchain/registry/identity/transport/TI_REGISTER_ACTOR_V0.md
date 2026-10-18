@@ -1,15 +1,14 @@
-# TI_REGISTER_ACTOR_V1
+# TI_REGISTER_ACTOR_V0
 
 ## Machine
 
 ```yaml
-fqdn: blockchain::TI_REGISTER_ACTOR_V1
+fqdn: blockchain::TI_REGISTER_ACTOR_V0
 artifact_kind: TRANSPORT_INGRESS
-version: v1
+version: v0
 governed_by: transport::CONSTITUTION_TRANSPORT_INGRESS_V0
 authority: pgc.platform
 concern: identity
-supersedes: blockchain::TI_REGISTER_ACTOR_V0
 operation: blockchain.register_actor
 core:
   summary: Admits a request to register an actor, and sends the act only what the caller supplies and
@@ -24,7 +23,7 @@ input_contract:
 context_requirements: []
 handler:
   kind: WF_INVOCATION
-  workflow: blockchain::WF_REGISTER_ACTOR_V2
+  workflow: blockchain::WF_REGISTER_ACTOR_V0
   payload_template:
     actor_record:
       name: ${input.name}

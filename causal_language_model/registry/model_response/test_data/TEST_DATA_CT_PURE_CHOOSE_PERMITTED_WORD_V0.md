@@ -6,7 +6,7 @@
 fqdn: causal_language_model::TEST_DATA_CT_PURE_CHOOSE_PERMITTED_WORD_V0
 artifact_kind: TEST_DATA
 version: V0
-governed_by: conformance::CONSTITUTION_TEST_DATA_V2
+governed_by: conformance::CONSTITUTION_TEST_DATA_V0
 authority: pgc.platform
 concern: model_response
 target: causal_language_model::CT_PURE_CHOOSE_PERMITTED_WORD_V0

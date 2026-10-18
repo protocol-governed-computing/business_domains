@@ -15,10 +15,9 @@ version: v0
 governed_by: intent::CONSTITUTION_INTENT_V0
 authority: pgc.platform
 concern: identity
-supersedes: blockchain::IN_ACTOR_VERIFIED_V0
 core:
   summary: Admits a request to reject a person, and refuses one that states no grounds
-  workflow: WF_REJECT_ACTOR_V2
+  workflow: WF_REJECT_ACTOR_V0
   inputs:
     contact_address:
       type: string

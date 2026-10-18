@@ -1,15 +1,14 @@
-# WF_CREATE_WALLET_V2
+# WF_CREATE_WALLET_V0
 
 ## Machine
 
 ```yaml
-fqdn: blockchain::WF_CREATE_WALLET_V2
+fqdn: blockchain::WF_CREATE_WALLET_V0
 artifact_kind: WORKFLOW
-version: v2
+version: v0
 governed_by: workflow::CONSTITUTION_WORKFLOW_V0
 authority: pgc.platform
 concern: wallet
-supersedes: blockchain::WF_CREATE_WALLET_V1
 runtime_binding: blockchain::RB_WALLET_BINDINGS_V0
 consults:
 - blockchain::RB_IDENTITY_BINDINGS_V0
@@ -19,17 +18,17 @@ core:
   summary: The governed sequence that gives an accepted person a wallet holding nothing, and records that
     it did
   actor_context: blockchain::AC_PARTICIPANT_V0
-  start_node: IN_WALLET_CREATION_V1
+  start_node: IN_WALLET_CREATION_V0
   nodes:
-    IN_WALLET_CREATION_V1:
+    IN_WALLET_CREATION_V0:
       type: IN
-      code: IN_WALLET_CREATION_V1
+      code: IN_WALLET_CREATION_V0
       next:
         ACK: CC_RESOLVE_ACTOR_V0
         NACK: EXIT_REJECTED
     CC_RESOLVE_ACTOR_V0:
       type: CC
-      code: CC_RESOLVE_ACTOR_V1
+      code: CC_RESOLVE_ACTOR_V0
       inputs:
         contact_address: $.payload.contact_address
       next:
@@ -58,7 +57,7 @@ core:
         VIOLATION: EXIT_REJECTED
     CC_CLAIM_WALLET_IDENTITY_V0:
       type: CC
-      code: CC_CLAIM_WALLET_IDENTITY_V1
+      code: CC_CLAIM_WALLET_IDENTITY_V0
       inputs:
         wallet_id: $.results.CC_DETERMINE_WALLET_IDENTITY_V0.id
       next:
@@ -76,7 +75,7 @@ core:
         VIOLATION: EXIT_REJECTED
     CC_CREATE_WALLET_RECORD_V0:
       type: CC
-      code: CC_CREATE_WALLET_RECORD_V1
+      code: CC_CREATE_WALLET_RECORD_V0
       inputs:
         wallet_id: $.results.CC_DETERMINE_WALLET_IDENTITY_V0.id
         wallet_fields:
@@ -91,7 +90,7 @@ core:
         BACKEND_ERROR: EXIT_REJECTED
     CC_APPEND_WALLET_OCCURRENCE_V0:
       type: CC
-      code: CC_APPEND_WALLET_OCCURRENCE_V1
+      code: CC_APPEND_WALLET_OCCURRENCE_V0
       inputs:
         stream_id: $.results.CC_DETERMINE_WALLET_IDENTITY_V0.id
         occurrence_fields:

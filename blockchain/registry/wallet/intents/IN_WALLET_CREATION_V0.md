@@ -1,19 +1,18 @@
-# IN_WALLET_CREATION_V1
+# IN_WALLET_CREATION_V0
 
 ## Machine
 
 ```yaml
-fqdn: blockchain::IN_WALLET_CREATION_V1
+fqdn: blockchain::IN_WALLET_CREATION_V0
 artifact_kind: INTENT
-version: v1
+version: v0
 governed_by: intent::CONSTITUTION_INTENT_V0
 authority: pgc.platform
 concern: wallet
-supersedes: blockchain::IN_WALLET_CREATION_V0
 core:
   summary: Admits a request naming the person a wallet is for and the key it is made from, and refuses
     one that names nobody
-  workflow: WF_CREATE_WALLET_V2
+  workflow: WF_CREATE_WALLET_V0
   inputs:
     contact_address:
       type: string

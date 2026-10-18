@@ -52,11 +52,6 @@ registers:
     owner_subdomain: identity
     status: NEW
   - family: CC
-    code: blockchain::CC_RESOLVE_ACTOR_V1
-    summary: Answers which actor a contact address denotes, and reports when none does
-    owner_subdomain: identity
-    status: NEW
-  - family: CC
     code: blockchain::CC_VALIDATE_REGISTRATION_V0
     summary: Refuses a registration lacking the person's name or their address
     owner_subdomain: identity
@@ -103,18 +98,18 @@ registers:
     owner_subdomain: identity
     status: NEW
   - family: TI
-    code: blockchain::TI_ACCEPT_ACTOR_V1
+    code: blockchain::TI_ACCEPT_ACTOR_V0
     summary: Admits a request to accept a registered actor, and sends the act only what the caller supplies
     owner_subdomain: identity
     status: NEW
   - family: TI
-    code: blockchain::TI_REGISTER_ACTOR_V1
+    code: blockchain::TI_REGISTER_ACTOR_V0
     summary: Admits a request to register an actor, and sends the act only what the caller supplies and
       the person's preferences
     owner_subdomain: identity
     status: NEW
   - family: TI
-    code: blockchain::TI_REJECT_ACTOR_V1
+    code: blockchain::TI_REJECT_ACTOR_V0
     summary: Admits a request to reject a registered actor, and sends the act only what the caller supplies
     owner_subdomain: identity
     status: NEW
@@ -137,19 +132,19 @@ registers:
     owner_subdomain: identity
     status: NEW
   - family: WF
-    code: blockchain::WF_ACCEPT_ACTOR_V2
+    code: blockchain::WF_ACCEPT_ACTOR_V0
     summary: The governed sequence that records an acceptance, records that moment as its own, and announces
       it
     owner_subdomain: identity
     status: NEW
   - family: WF
-    code: blockchain::WF_REGISTER_ACTOR_V2
+    code: blockchain::WF_REGISTER_ACTOR_V0
     summary: The governed sequence that admits a person as an unverified actor, records that moment as
       its own, and announces it
     owner_subdomain: identity
     status: NEW
   - family: WF
-    code: blockchain::WF_REJECT_ACTOR_V2
+    code: blockchain::WF_REJECT_ACTOR_V0
     summary: The governed sequence that records a rejection, with grounds required, records that moment
       as its own, and announces it
     owner_subdomain: identity
@@ -160,27 +155,12 @@ registers:
     owner_subdomain: wallet
     status: NEW
   - family: CC
-    code: blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
-    summary: Records the moment on the wallet's trail
-    owner_subdomain: wallet
-    status: NEW
-  - family: CC
     code: blockchain::CC_CLAIM_WALLET_IDENTITY_V0
     summary: Claims the identity, and refuses when the person already holds a wallet
     owner_subdomain: wallet
     status: NEW
   - family: CC
-    code: blockchain::CC_CLAIM_WALLET_IDENTITY_V1
-    summary: Claims the identity, and refuses when the person already holds a wallet
-    owner_subdomain: wallet
-    status: NEW
-  - family: CC
     code: blockchain::CC_CREATE_WALLET_RECORD_V0
-    summary: Records the wallet with a balance of zero, its denomination and its classification
-    owner_subdomain: wallet
-    status: NEW
-  - family: CC
-    code: blockchain::CC_CREATE_WALLET_RECORD_V1
     summary: Records the wallet with a balance of zero, its denomination and its classification
     owner_subdomain: wallet
     status: NEW
@@ -211,7 +191,7 @@ registers:
     owner_subdomain: wallet
     status: NEW
   - family: IN
-    code: blockchain::IN_WALLET_CREATION_V1
+    code: blockchain::IN_WALLET_CREATION_V0
     summary: Admits a request naming the person a wallet is for and the key it is made from, and refuses
       one that names nobody
     owner_subdomain: wallet
@@ -232,14 +212,14 @@ registers:
     owner_subdomain: wallet
     status: NEW
   - family: WF
-    code: blockchain::WF_CREATE_WALLET_V2
+    code: blockchain::WF_CREATE_WALLET_V0
     summary: The governed sequence that gives an accepted person a wallet holding nothing, and records
       that it did
     owner_subdomain: wallet
     status: NEW
   rb_declarations:
   - rb_code: blockchain::RB_IDENTITY_BINDINGS_V0
-    binds_wf: blockchain::WF_ACCEPT_ACTOR_V2
+    binds_wf: blockchain::WF_ACCEPT_ACTOR_V0
     cs_bindings:
     - capability_side_effects::CS_MUTABLE_JSON_V0
     - capability_side_effects::CS_APPENDONLY_JSONL_V0
@@ -247,7 +227,7 @@ registers:
     - capability_side_effects::CS_CLOCK_V0
     storage_structure: blockchain::STRUCTURE_IDENTITY_STORAGE_V0
   - rb_code: blockchain::RB_IDENTITY_BINDINGS_V0
-    binds_wf: blockchain::WF_REGISTER_ACTOR_V2
+    binds_wf: blockchain::WF_REGISTER_ACTOR_V0
     cs_bindings:
     - capability_side_effects::CS_MUTABLE_JSON_V0
     - capability_side_effects::CS_APPENDONLY_JSONL_V0
@@ -255,7 +235,7 @@ registers:
     - capability_side_effects::CS_CLOCK_V0
     storage_structure: blockchain::STRUCTURE_IDENTITY_STORAGE_V0
   - rb_code: blockchain::RB_IDENTITY_BINDINGS_V0
-    binds_wf: blockchain::WF_REJECT_ACTOR_V2
+    binds_wf: blockchain::WF_REJECT_ACTOR_V0
     cs_bindings:
     - capability_side_effects::CS_MUTABLE_JSON_V0
     - capability_side_effects::CS_APPENDONLY_JSONL_V0
@@ -263,7 +243,7 @@ registers:
     - capability_side_effects::CS_CLOCK_V0
     storage_structure: blockchain::STRUCTURE_IDENTITY_STORAGE_V0
   - rb_code: blockchain::RB_WALLET_BINDINGS_V0
-    binds_wf: blockchain::WF_CREATE_WALLET_V2
+    binds_wf: blockchain::WF_CREATE_WALLET_V0
     cs_bindings:
     - capability_side_effects::CS_MUTABLE_JSON_V0
     - capability_side_effects::CS_APPENDONLY_JSONL_V0
@@ -271,13 +251,13 @@ registers:
     - capability_side_effects::CS_CLOCK_V0
     storage_structure: blockchain::STRUCTURE_WALLET_STORAGE_V0
   execution_topology:
-  - workflow: blockchain::WF_ACCEPT_ACTOR_V2
+  - workflow: blockchain::WF_ACCEPT_ACTOR_V0
     node: IN_ACTOR_ACCEPTANCE_V0
     node_type: IN
     routing:
       ACK: CC_RESOLVE_ACTOR_V0
       NACK: EXIT_REJECTED
-  - workflow: blockchain::WF_ACCEPT_ACTOR_V2
+  - workflow: blockchain::WF_ACCEPT_ACTOR_V0
     node: CC_RESOLVE_ACTOR_V0
     node_type: CC
     routing:
@@ -285,42 +265,41 @@ registers:
       NOT_FOUND: EXIT_REJECTED
       VIOLATION: EXIT_REJECTED
       BACKEND_ERROR: EXIT_REJECTED
-    runs: CC_RESOLVE_ACTOR_V1
-  - workflow: blockchain::WF_ACCEPT_ACTOR_V2
+  - workflow: blockchain::WF_ACCEPT_ACTOR_V0
     node: CC_RECORD_VERIFICATION_DECISION_V0
     node_type: CC
     routing:
       SUCCESS: CC_APPEND_ACTOR_OCCURRENCE_V0
       VIOLATION: EXIT_REJECTED
       BACKEND_ERROR: EXIT_REJECTED
-  - workflow: blockchain::WF_ACCEPT_ACTOR_V2
+  - workflow: blockchain::WF_ACCEPT_ACTOR_V0
     node: CC_APPEND_ACTOR_OCCURRENCE_V0
     node_type: CC
     routing:
       SUCCESS: EXIT_SUCCESS
       VIOLATION: EXIT_REJECTED
       BACKEND_ERROR: EXIT_REJECTED
-  - workflow: blockchain::WF_ACCEPT_ACTOR_V2
+  - workflow: blockchain::WF_ACCEPT_ACTOR_V0
     node: EXIT_SUCCESS
     node_type: EXIT
     routing: null
-  - workflow: blockchain::WF_ACCEPT_ACTOR_V2
+  - workflow: blockchain::WF_ACCEPT_ACTOR_V0
     node: EXIT_REJECTED
     node_type: EXIT
     routing: null
-  - workflow: blockchain::WF_REGISTER_ACTOR_V2
+  - workflow: blockchain::WF_REGISTER_ACTOR_V0
     node: IN_ACTOR_REGISTERED_V0
     node_type: IN
     routing:
       ACK: CC_VALIDATE_REGISTRATION_V0
       NACK: EXIT_REJECTED
-  - workflow: blockchain::WF_REGISTER_ACTOR_V2
+  - workflow: blockchain::WF_REGISTER_ACTOR_V0
     node: CC_VALIDATE_REGISTRATION_V0
     node_type: CC
     routing:
       SUCCESS: CC_CLAIM_CONTACT_ADDRESS_V0
       VIOLATION: EXIT_REJECTED
-  - workflow: blockchain::WF_REGISTER_ACTOR_V2
+  - workflow: blockchain::WF_REGISTER_ACTOR_V0
     node: CC_CLAIM_CONTACT_ADDRESS_V0
     node_type: CC
     routing:
@@ -328,41 +307,41 @@ registers:
       ALREADY_EXISTS: CC_APPEND_ACTOR_OCCURRENCE_V0
       VIOLATION: EXIT_REJECTED
       BACKEND_ERROR: EXIT_REJECTED
-  - workflow: blockchain::WF_REGISTER_ACTOR_V2
+  - workflow: blockchain::WF_REGISTER_ACTOR_V0
     node: CC_REGISTER_ACTOR_V0
     node_type: CC
     routing:
       SUCCESS: CC_APPEND_ACTOR_OCCURRENCE_V0
       VIOLATION: EXIT_REJECTED
       BACKEND_ERROR: EXIT_REJECTED
-  - workflow: blockchain::WF_REGISTER_ACTOR_V2
+  - workflow: blockchain::WF_REGISTER_ACTOR_V0
     node: CC_APPEND_ACTOR_OCCURRENCE_V0
     node_type: CC
     routing:
       SUCCESS: EXIT_SUCCESS
       VIOLATION: EXIT_REJECTED
       BACKEND_ERROR: EXIT_REJECTED
-  - workflow: blockchain::WF_REGISTER_ACTOR_V2
+  - workflow: blockchain::WF_REGISTER_ACTOR_V0
     node: EXIT_SUCCESS
     node_type: EXIT
     routing: null
-  - workflow: blockchain::WF_REGISTER_ACTOR_V2
+  - workflow: blockchain::WF_REGISTER_ACTOR_V0
     node: EXIT_REJECTED
     node_type: EXIT
     routing: null
-  - workflow: blockchain::WF_REJECT_ACTOR_V2
+  - workflow: blockchain::WF_REJECT_ACTOR_V0
     node: IN_ACTOR_REJECTION_V0
     node_type: IN
     routing:
       ACK: CC_REQUIRE_REJECTION_GROUNDS_V0
       NACK: EXIT_REJECTED
-  - workflow: blockchain::WF_REJECT_ACTOR_V2
+  - workflow: blockchain::WF_REJECT_ACTOR_V0
     node: CC_REQUIRE_REJECTION_GROUNDS_V0
     node_type: CC
     routing:
       SUCCESS: CC_RESOLVE_ACTOR_V0
       VIOLATION: EXIT_REJECTED
-  - workflow: blockchain::WF_REJECT_ACTOR_V2
+  - workflow: blockchain::WF_REJECT_ACTOR_V0
     node: CC_RESOLVE_ACTOR_V0
     node_type: CC
     routing:
@@ -370,36 +349,35 @@ registers:
       NOT_FOUND: EXIT_REJECTED
       VIOLATION: EXIT_REJECTED
       BACKEND_ERROR: EXIT_REJECTED
-    runs: CC_RESOLVE_ACTOR_V1
-  - workflow: blockchain::WF_REJECT_ACTOR_V2
+  - workflow: blockchain::WF_REJECT_ACTOR_V0
     node: CC_RECORD_VERIFICATION_DECISION_V0
     node_type: CC
     routing:
       SUCCESS: CC_APPEND_ACTOR_OCCURRENCE_V0
       VIOLATION: EXIT_REJECTED
       BACKEND_ERROR: EXIT_REJECTED
-  - workflow: blockchain::WF_REJECT_ACTOR_V2
+  - workflow: blockchain::WF_REJECT_ACTOR_V0
     node: CC_APPEND_ACTOR_OCCURRENCE_V0
     node_type: CC
     routing:
       SUCCESS: EXIT_SUCCESS
       VIOLATION: EXIT_REJECTED
       BACKEND_ERROR: EXIT_REJECTED
-  - workflow: blockchain::WF_REJECT_ACTOR_V2
+  - workflow: blockchain::WF_REJECT_ACTOR_V0
     node: EXIT_SUCCESS
     node_type: EXIT
     routing: null
-  - workflow: blockchain::WF_REJECT_ACTOR_V2
+  - workflow: blockchain::WF_REJECT_ACTOR_V0
     node: EXIT_REJECTED
     node_type: EXIT
     routing: null
-  - workflow: blockchain::WF_CREATE_WALLET_V2
-    node: IN_WALLET_CREATION_V1
+  - workflow: blockchain::WF_CREATE_WALLET_V0
+    node: IN_WALLET_CREATION_V0
     node_type: IN
     routing:
       ACK: CC_RESOLVE_ACTOR_V0
       NACK: EXIT_REJECTED
-  - workflow: blockchain::WF_CREATE_WALLET_V2
+  - workflow: blockchain::WF_CREATE_WALLET_V0
     node: CC_RESOLVE_ACTOR_V0
     node_type: CC
     routing:
@@ -407,20 +385,19 @@ registers:
       NOT_FOUND: EXIT_REJECTED
       VIOLATION: EXIT_REJECTED
       BACKEND_ERROR: EXIT_REJECTED
-    runs: CC_RESOLVE_ACTOR_V1
-  - workflow: blockchain::WF_CREATE_WALLET_V2
+  - workflow: blockchain::WF_CREATE_WALLET_V0
     node: CC_REQUIRE_ACCEPTED_HOLDER_V0
     node_type: CC
     routing:
       SUCCESS: CC_DETERMINE_WALLET_IDENTITY_V0
       VIOLATION: EXIT_REJECTED
-  - workflow: blockchain::WF_CREATE_WALLET_V2
+  - workflow: blockchain::WF_CREATE_WALLET_V0
     node: CC_DETERMINE_WALLET_IDENTITY_V0
     node_type: CC
     routing:
       SUCCESS: CC_CLAIM_WALLET_IDENTITY_V0
       VIOLATION: EXIT_REJECTED
-  - workflow: blockchain::WF_CREATE_WALLET_V2
+  - workflow: blockchain::WF_CREATE_WALLET_V0
     node: CC_CLAIM_WALLET_IDENTITY_V0
     node_type: CC
     routing:
@@ -428,34 +405,31 @@ registers:
       ALREADY_EXISTS: EXIT_REJECTED
       VIOLATION: EXIT_REJECTED
       BACKEND_ERROR: EXIT_REJECTED
-    runs: CC_CLAIM_WALLET_IDENTITY_V1
-  - workflow: blockchain::WF_CREATE_WALLET_V2
+  - workflow: blockchain::WF_CREATE_WALLET_V0
     node: CC_ESTABLISH_WALLET_ADDRESS_V0
     node_type: CC
     routing:
       SUCCESS: CC_CREATE_WALLET_RECORD_V0
       VIOLATION: EXIT_REJECTED
-  - workflow: blockchain::WF_CREATE_WALLET_V2
+  - workflow: blockchain::WF_CREATE_WALLET_V0
     node: CC_CREATE_WALLET_RECORD_V0
     node_type: CC
     routing:
       SUCCESS: CC_APPEND_WALLET_OCCURRENCE_V0
       VIOLATION: EXIT_REJECTED
       BACKEND_ERROR: EXIT_REJECTED
-    runs: CC_CREATE_WALLET_RECORD_V1
-  - workflow: blockchain::WF_CREATE_WALLET_V2
+  - workflow: blockchain::WF_CREATE_WALLET_V0
     node: CC_APPEND_WALLET_OCCURRENCE_V0
     node_type: CC
     routing:
       SUCCESS: EXIT_SUCCESS
       VIOLATION: EXIT_REJECTED
       BACKEND_ERROR: EXIT_REJECTED
-    runs: CC_APPEND_WALLET_OCCURRENCE_V1
-  - workflow: blockchain::WF_CREATE_WALLET_V2
+  - workflow: blockchain::WF_CREATE_WALLET_V0
     node: EXIT_SUCCESS
     node_type: EXIT
     routing: null
-  - workflow: blockchain::WF_CREATE_WALLET_V2
+  - workflow: blockchain::WF_CREATE_WALLET_V0
     node: EXIT_REJECTED
     node_type: EXIT
     routing: null
@@ -800,50 +774,6 @@ registers:
       SUCCESS: continue
       NOT_FOUND: exit
       VIOLATION: exit
-    interpreted_by: null
-    semantic_status: SUCCESS
-    interface:
-      in:
-        key_or_address: key_or_address
-      out:
-        target_ref: target_ref
-  - cc_code: blockchain::CC_RESOLVE_ACTOR_V0
-    step: '2'
-    step_name: read_actor
-    capability: capability_side_effects::CS_MUTABLE_JSON_V0
-    kind: CS
-    operation: READ
-    store: ACTORS
-    consumes:
-    - key
-    produces:
-    - value
-    routing:
-      SUCCESS: continue
-      NOT_FOUND: exit
-      VIOLATION: exit
-    interpreted_by: null
-    semantic_status: SUCCESS
-    interface:
-      in:
-        key: key
-      out:
-        value: value
-  - cc_code: blockchain::CC_RESOLVE_ACTOR_V1
-    step: '1'
-    step_name: resolve_address
-    capability: capability_side_effects::CS_REGISTRY_V0
-    kind: CS
-    operation: RESOLVE
-    store: CONTACT_ADDRESS_REGISTRY
-    consumes:
-    - key_or_address
-    produces:
-    - target_ref
-    routing:
-      SUCCESS: continue
-      NOT_FOUND: exit
-      VIOLATION: exit
       BACKEND_ERROR: exit
     interpreted_by: null
     semantic_status: SUCCESS
@@ -852,7 +782,7 @@ registers:
         key_or_address: key_or_address
       out:
         target_ref: target_ref
-  - cc_code: blockchain::CC_RESOLVE_ACTOR_V1
+  - cc_code: blockchain::CC_RESOLVE_ACTOR_V0
     step: '2'
     step_name: read_actor
     capability: capability_side_effects::CS_MUTABLE_JSON_V0
@@ -976,69 +906,6 @@ registers:
     routing:
       SUCCESS: continue
       VIOLATION: exit
-    interpreted_by: null
-    semantic_status: SUCCESS
-    interface:
-      in:
-        stream_id: stream_id
-        record: record
-      out:
-        result_status: result_status
-  - cc_code: blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
-    step: '1'
-    step_name: read_occurred_at
-    capability: capability_side_effects::CS_CLOCK_V0
-    kind: CS
-    operation: NOW
-    store: null
-    consumes: null
-    produces:
-    - timestamp
-    routing:
-      SUCCESS: continue
-      BACKEND_ERROR: exit
-    interpreted_by: null
-    semantic_status: SUCCESS
-    interface:
-      in: {}
-      out:
-        timestamp: timestamp
-  - cc_code: blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
-    step: '2'
-    step_name: assemble_occurrence
-    capability: capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0
-    kind: CT
-    operation: null
-    store: null
-    consumes:
-    - fields
-    produces:
-    - record
-    routing:
-      SUCCESS: continue
-      VIOLATION: exit
-    interpreted_by: null
-    semantic_status: SUCCESS
-    interface:
-      in:
-        fields: fields
-      out:
-        record: record
-  - cc_code: blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
-    step: '3'
-    step_name: append_occurrence
-    capability: capability_side_effects::CS_APPENDONLY_JSONL_V0
-    kind: CS
-    operation: APPEND
-    store: WALLET_OCCURRENCES
-    consumes:
-    - stream_id
-    - record
-    produces:
-    - result_status
-    routing:
-      SUCCESS: continue
-      VIOLATION: exit
       BACKEND_ERROR: exit
     interpreted_by: null
     semantic_status: SUCCESS
@@ -1063,28 +930,6 @@ registers:
       SUCCESS: continue
       ALREADY_EXISTS: exit
       VIOLATION: exit
-    interpreted_by: null
-    semantic_status: SUCCESS
-    interface:
-      in:
-        key: key
-      out:
-        result_status: result_status
-  - cc_code: blockchain::CC_CLAIM_WALLET_IDENTITY_V1
-    step: '1'
-    step_name: claim_wallet_identity
-    capability: capability_side_effects::CS_REGISTRY_V0
-    kind: CS
-    operation: REGISTER
-    store: WALLET_IDENTITIES
-    consumes:
-    - key
-    produces:
-    - result_status
-    routing:
-      SUCCESS: continue
-      ALREADY_EXISTS: exit
-      VIOLATION: exit
       BACKEND_ERROR: exit
     interpreted_by: null
     semantic_status: SUCCESS
@@ -1134,69 +979,6 @@ registers:
       out:
         record: record
   - cc_code: blockchain::CC_CREATE_WALLET_RECORD_V0
-    step: '3'
-    step_name: write_wallet
-    capability: capability_side_effects::CS_MUTABLE_JSON_V0
-    kind: CS
-    operation: WRITE
-    store: WALLETS
-    consumes:
-    - key
-    - value
-    produces:
-    - result_status
-    routing:
-      SUCCESS: continue
-      VIOLATION: exit
-    interpreted_by: null
-    semantic_status: SUCCESS
-    interface:
-      in:
-        key: key
-        value: value
-      out:
-        result_status: result_status
-  - cc_code: blockchain::CC_CREATE_WALLET_RECORD_V1
-    step: '1'
-    step_name: read_created_at
-    capability: capability_side_effects::CS_CLOCK_V0
-    kind: CS
-    operation: NOW
-    store: null
-    consumes: null
-    produces:
-    - timestamp
-    routing:
-      SUCCESS: continue
-      BACKEND_ERROR: exit
-    interpreted_by: null
-    semantic_status: SUCCESS
-    interface:
-      in: {}
-      out:
-        timestamp: timestamp
-  - cc_code: blockchain::CC_CREATE_WALLET_RECORD_V1
-    step: '2'
-    step_name: assemble_wallet
-    capability: capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0
-    kind: CT
-    operation: null
-    store: null
-    consumes:
-    - fields
-    produces:
-    - record
-    routing:
-      SUCCESS: continue
-      VIOLATION: exit
-    interpreted_by: null
-    semantic_status: SUCCESS
-    interface:
-      in:
-        fields: fields
-      out:
-        record: record
-  - cc_code: blockchain::CC_CREATE_WALLET_RECORD_V1
     step: '3'
     step_name: write_wallet
     capability: capability_side_effects::CS_MUTABLE_JSON_V0
@@ -1545,26 +1327,6 @@ registers:
     direction: OUTPUT
     field: value
     bound_to: capability_result.value
-  - owner: blockchain::CC_RESOLVE_ACTOR_V1
-    step: resolve_address
-    direction: INPUT
-    field: key_or_address
-    bound_to: inputs.contact_address
-  - owner: blockchain::CC_RESOLVE_ACTOR_V1
-    step: resolve_address
-    direction: OUTPUT
-    field: target_ref
-    bound_to: capability_result.target_ref
-  - owner: blockchain::CC_RESOLVE_ACTOR_V1
-    step: read_actor
-    direction: INPUT
-    field: key
-    bound_to: inputs.contact_address
-  - owner: blockchain::CC_RESOLVE_ACTOR_V1
-    step: read_actor
-    direction: OUTPUT
-    field: value
-    bound_to: capability_result.value
   - owner: blockchain::CC_VALIDATE_REGISTRATION_V0
     step: read_registration
     direction: INPUT
@@ -1608,38 +1370,38 @@ registers:
     direction: OUTPUT
     field: valid
     bound_to: capability_result.valid
-  - owner: blockchain::WF_ACCEPT_ACTOR_V2
+  - owner: blockchain::WF_ACCEPT_ACTOR_V0
     step: CC_RESOLVE_ACTOR_V0
     direction: INPUT
     field: contact_address
     bound_to: payload.contact_address
-  - owner: blockchain::WF_ACCEPT_ACTOR_V2
+  - owner: blockchain::WF_ACCEPT_ACTOR_V0
     step: CC_RECORD_VERIFICATION_DECISION_V0
     direction: INPUT
     field: current_state
     bound_to: results.CC_RESOLVE_ACTOR_V0.value.state
-  - owner: blockchain::WF_ACCEPT_ACTOR_V2
+  - owner: blockchain::WF_ACCEPT_ACTOR_V0
     step: CC_RECORD_VERIFICATION_DECISION_V0
     direction: INPUT
     field: decision
     bound_to:
       literal: ACCEPTED
-  - owner: blockchain::WF_ACCEPT_ACTOR_V2
+  - owner: blockchain::WF_ACCEPT_ACTOR_V0
     step: CC_RECORD_VERIFICATION_DECISION_V0
     direction: INPUT
     field: verifying_authority
     bound_to: payload.verifying_authority
-  - owner: blockchain::WF_ACCEPT_ACTOR_V2
+  - owner: blockchain::WF_ACCEPT_ACTOR_V0
     step: CC_RECORD_VERIFICATION_DECISION_V0
     direction: INPUT
     field: contact_address
     bound_to: payload.contact_address
-  - owner: blockchain::WF_ACCEPT_ACTOR_V2
+  - owner: blockchain::WF_ACCEPT_ACTOR_V0
     step: CC_RECORD_VERIFICATION_DECISION_V0
     direction: INPUT
     field: grounds
     bound_to: payload.grounds
-  - owner: blockchain::WF_ACCEPT_ACTOR_V2
+  - owner: blockchain::WF_ACCEPT_ACTOR_V0
     step: CC_APPEND_ACTOR_OCCURRENCE_V0
     direction: INPUT
     field: occurrence_fields
@@ -1648,40 +1410,40 @@ registers:
         occurrence: ACTOR_ACCEPTED
         verifying_authority: $.payload.verifying_authority
         grounds: $.payload.grounds
-  - owner: blockchain::WF_ACCEPT_ACTOR_V2
+  - owner: blockchain::WF_ACCEPT_ACTOR_V0
     step: CC_APPEND_ACTOR_OCCURRENCE_V0
     direction: INPUT
     field: stream_id
     bound_to:
       literal: ACTOR_OCCURRENCES
-  - owner: blockchain::WF_ACCEPT_ACTOR_V2
+  - owner: blockchain::WF_ACCEPT_ACTOR_V0
     step: CC_APPEND_ACTOR_OCCURRENCE_V0
     direction: INPUT
     field: contact_address
     bound_to: payload.contact_address
-  - owner: blockchain::WF_REGISTER_ACTOR_V2
+  - owner: blockchain::WF_REGISTER_ACTOR_V0
     step: CC_VALIDATE_REGISTRATION_V0
     direction: INPUT
     field: actor_record
     bound_to: payload.actor_record
-  - owner: blockchain::WF_REGISTER_ACTOR_V2
+  - owner: blockchain::WF_REGISTER_ACTOR_V0
     step: CC_CLAIM_CONTACT_ADDRESS_V0
     direction: INPUT
     field: actor_record
     bound_to: payload.actor_record
-  - owner: blockchain::WF_REGISTER_ACTOR_V2
+  - owner: blockchain::WF_REGISTER_ACTOR_V0
     step: CC_CLAIM_CONTACT_ADDRESS_V0
     direction: INPUT
     field: address_path
     bound_to:
       literal: contact_address
-  - owner: blockchain::WF_REGISTER_ACTOR_V2
+  - owner: blockchain::WF_REGISTER_ACTOR_V0
     step: CC_CLAIM_CONTACT_ADDRESS_V0
     direction: INPUT
     field: address_type
     bound_to:
       literal: string
-  - owner: blockchain::WF_REGISTER_ACTOR_V2
+  - owner: blockchain::WF_REGISTER_ACTOR_V0
     step: CC_REGISTER_ACTOR_V0
     direction: INPUT
     field: actor_fields
@@ -1692,66 +1454,66 @@ registers:
         state: UNVERIFIED
         currency_preference: $.payload.actor_record.currency_preference
         language: $.payload.actor_record.language
-  - owner: blockchain::WF_REGISTER_ACTOR_V2
+  - owner: blockchain::WF_REGISTER_ACTOR_V0
     step: CC_REGISTER_ACTOR_V0
     direction: INPUT
     field: contact_address
     bound_to: results.CC_CLAIM_CONTACT_ADDRESS_V0.result
-  - owner: blockchain::WF_REGISTER_ACTOR_V2
+  - owner: blockchain::WF_REGISTER_ACTOR_V0
     step: CC_APPEND_ACTOR_OCCURRENCE_V0
     direction: INPUT
     field: occurrence_fields
     bound_to:
       literal:
         occurrence: ACTOR_REGISTERED_UNVERIFIED
-  - owner: blockchain::WF_REGISTER_ACTOR_V2
+  - owner: blockchain::WF_REGISTER_ACTOR_V0
     step: CC_APPEND_ACTOR_OCCURRENCE_V0
     direction: INPUT
     field: stream_id
     bound_to:
       literal: ACTOR_OCCURRENCES
-  - owner: blockchain::WF_REGISTER_ACTOR_V2
+  - owner: blockchain::WF_REGISTER_ACTOR_V0
     step: CC_APPEND_ACTOR_OCCURRENCE_V0
     direction: INPUT
     field: contact_address
     bound_to: results.CC_CLAIM_CONTACT_ADDRESS_V0.result
-  - owner: blockchain::WF_REJECT_ACTOR_V2
+  - owner: blockchain::WF_REJECT_ACTOR_V0
     step: CC_REQUIRE_REJECTION_GROUNDS_V0
     direction: INPUT
     field: grounds
     bound_to: payload.grounds
-  - owner: blockchain::WF_REJECT_ACTOR_V2
+  - owner: blockchain::WF_REJECT_ACTOR_V0
     step: CC_RESOLVE_ACTOR_V0
     direction: INPUT
     field: contact_address
     bound_to: payload.contact_address
-  - owner: blockchain::WF_REJECT_ACTOR_V2
+  - owner: blockchain::WF_REJECT_ACTOR_V0
     step: CC_RECORD_VERIFICATION_DECISION_V0
     direction: INPUT
     field: current_state
     bound_to: results.CC_RESOLVE_ACTOR_V0.value.state
-  - owner: blockchain::WF_REJECT_ACTOR_V2
+  - owner: blockchain::WF_REJECT_ACTOR_V0
     step: CC_RECORD_VERIFICATION_DECISION_V0
     direction: INPUT
     field: decision
     bound_to:
       literal: REJECTED
-  - owner: blockchain::WF_REJECT_ACTOR_V2
+  - owner: blockchain::WF_REJECT_ACTOR_V0
     step: CC_RECORD_VERIFICATION_DECISION_V0
     direction: INPUT
     field: verifying_authority
     bound_to: payload.verifying_authority
-  - owner: blockchain::WF_REJECT_ACTOR_V2
+  - owner: blockchain::WF_REJECT_ACTOR_V0
     step: CC_RECORD_VERIFICATION_DECISION_V0
     direction: INPUT
     field: contact_address
     bound_to: payload.contact_address
-  - owner: blockchain::WF_REJECT_ACTOR_V2
+  - owner: blockchain::WF_REJECT_ACTOR_V0
     step: CC_RECORD_VERIFICATION_DECISION_V0
     direction: INPUT
     field: grounds
     bound_to: payload.grounds
-  - owner: blockchain::WF_REJECT_ACTOR_V2
+  - owner: blockchain::WF_REJECT_ACTOR_V0
     step: CC_APPEND_ACTOR_OCCURRENCE_V0
     direction: INPUT
     field: occurrence_fields
@@ -1760,13 +1522,13 @@ registers:
         occurrence: ACTOR_REJECTED
         verifying_authority: $.payload.verifying_authority
         grounds: $.payload.grounds
-  - owner: blockchain::WF_REJECT_ACTOR_V2
+  - owner: blockchain::WF_REJECT_ACTOR_V0
     step: CC_APPEND_ACTOR_OCCURRENCE_V0
     direction: INPUT
     field: stream_id
     bound_to:
       literal: ACTOR_OCCURRENCES
-  - owner: blockchain::WF_REJECT_ACTOR_V2
+  - owner: blockchain::WF_REJECT_ACTOR_V0
     step: CC_APPEND_ACTOR_OCCURRENCE_V0
     direction: INPUT
     field: contact_address
@@ -1801,52 +1563,12 @@ registers:
     direction: OUTPUT
     field: result_status
     bound_to: capability_result.result_status
-  - owner: blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
-    step: read_occurred_at
-    direction: OUTPUT
-    field: timestamp
-    bound_to: capability_result.timestamp
-  - owner: blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
-    step: assemble_occurrence
-    direction: INPUT
-    field: fields
-    bound_to: inputs.occurrence_fields
-  - owner: blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
-    step: assemble_occurrence
-    direction: OUTPUT
-    field: record
-    bound_to: capability_result.record
-  - owner: blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
-    step: append_occurrence
-    direction: INPUT
-    field: stream_id
-    bound_to: inputs.stream_id
-  - owner: blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
-    step: append_occurrence
-    direction: INPUT
-    field: record
-    bound_to: results.assemble_occurrence.record
-  - owner: blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
-    step: append_occurrence
-    direction: OUTPUT
-    field: result_status
-    bound_to: capability_result.result_status
   - owner: blockchain::CC_CLAIM_WALLET_IDENTITY_V0
     step: claim_wallet_identity
     direction: INPUT
     field: key
     bound_to: inputs.wallet_id
   - owner: blockchain::CC_CLAIM_WALLET_IDENTITY_V0
-    step: claim_wallet_identity
-    direction: OUTPUT
-    field: result_status
-    bound_to: capability_result.result_status
-  - owner: blockchain::CC_CLAIM_WALLET_IDENTITY_V1
-    step: claim_wallet_identity
-    direction: INPUT
-    field: key
-    bound_to: inputs.wallet_id
-  - owner: blockchain::CC_CLAIM_WALLET_IDENTITY_V1
     step: claim_wallet_identity
     direction: OUTPUT
     field: result_status
@@ -1877,36 +1599,6 @@ registers:
     field: value
     bound_to: results.assemble_wallet.record
   - owner: blockchain::CC_CREATE_WALLET_RECORD_V0
-    step: write_wallet
-    direction: OUTPUT
-    field: result_status
-    bound_to: capability_result.result_status
-  - owner: blockchain::CC_CREATE_WALLET_RECORD_V1
-    step: read_created_at
-    direction: OUTPUT
-    field: timestamp
-    bound_to: capability_result.timestamp
-  - owner: blockchain::CC_CREATE_WALLET_RECORD_V1
-    step: assemble_wallet
-    direction: INPUT
-    field: fields
-    bound_to: inputs.wallet_fields
-  - owner: blockchain::CC_CREATE_WALLET_RECORD_V1
-    step: assemble_wallet
-    direction: OUTPUT
-    field: record
-    bound_to: capability_result.record
-  - owner: blockchain::CC_CREATE_WALLET_RECORD_V1
-    step: write_wallet
-    direction: INPUT
-    field: key
-    bound_to: inputs.wallet_id
-  - owner: blockchain::CC_CREATE_WALLET_RECORD_V1
-    step: write_wallet
-    direction: INPUT
-    field: value
-    bound_to: results.assemble_wallet.record
-  - owner: blockchain::CC_CREATE_WALLET_RECORD_V1
     step: write_wallet
     direction: OUTPUT
     field: result_status
@@ -1951,50 +1643,50 @@ registers:
     direction: OUTPUT
     field: is_accepted
     bound_to: capability_result.is_member
-  - owner: blockchain::WF_CREATE_WALLET_V2
+  - owner: blockchain::WF_CREATE_WALLET_V0
     step: CC_RESOLVE_ACTOR_V0
     direction: INPUT
     field: contact_address
     bound_to: payload.contact_address
-  - owner: blockchain::WF_CREATE_WALLET_V2
+  - owner: blockchain::WF_CREATE_WALLET_V0
     step: CC_REQUIRE_ACCEPTED_HOLDER_V0
     direction: INPUT
     field: holder_state
     bound_to: results.CC_RESOLVE_ACTOR_V0.value.state
-  - owner: blockchain::WF_CREATE_WALLET_V2
+  - owner: blockchain::WF_CREATE_WALLET_V0
     step: CC_REQUIRE_ACCEPTED_HOLDER_V0
     direction: INPUT
     field: states_admitting_a_wallet
     bound_to:
       literal:
       - ACCEPTED
-  - owner: blockchain::WF_CREATE_WALLET_V2
+  - owner: blockchain::WF_CREATE_WALLET_V0
     step: CC_DETERMINE_WALLET_IDENTITY_V0
     direction: INPUT
     field: holder
     bound_to: results.CC_RESOLVE_ACTOR_V0.value.contact_address
-  - owner: blockchain::WF_CREATE_WALLET_V2
+  - owner: blockchain::WF_CREATE_WALLET_V0
     step: CC_DETERMINE_WALLET_IDENTITY_V0
     direction: INPUT
     field: wallet_id_prefix
     bound_to:
       literal: wal
-  - owner: blockchain::WF_CREATE_WALLET_V2
+  - owner: blockchain::WF_CREATE_WALLET_V0
     step: CC_CLAIM_WALLET_IDENTITY_V0
     direction: INPUT
     field: wallet_id
     bound_to: results.CC_DETERMINE_WALLET_IDENTITY_V0.id
-  - owner: blockchain::WF_CREATE_WALLET_V2
+  - owner: blockchain::WF_CREATE_WALLET_V0
     step: CC_ESTABLISH_WALLET_ADDRESS_V0
     direction: INPUT
     field: key_material
     bound_to: payload.key_material
-  - owner: blockchain::WF_CREATE_WALLET_V2
+  - owner: blockchain::WF_CREATE_WALLET_V0
     step: CC_CREATE_WALLET_RECORD_V0
     direction: INPUT
     field: wallet_id
     bound_to: results.CC_DETERMINE_WALLET_IDENTITY_V0.id
-  - owner: blockchain::WF_CREATE_WALLET_V2
+  - owner: blockchain::WF_CREATE_WALLET_V0
     step: CC_CREATE_WALLET_RECORD_V0
     direction: INPUT
     field: wallet_fields
@@ -2005,12 +1697,12 @@ registers:
         denomination: BACHI
         classification: DEFAULT
         state: ACTIVE
-  - owner: blockchain::WF_CREATE_WALLET_V2
+  - owner: blockchain::WF_CREATE_WALLET_V0
     step: CC_APPEND_WALLET_OCCURRENCE_V0
     direction: INPUT
     field: stream_id
     bound_to: results.CC_DETERMINE_WALLET_IDENTITY_V0.id
-  - owner: blockchain::WF_CREATE_WALLET_V2
+  - owner: blockchain::WF_CREATE_WALLET_V0
     step: CC_APPEND_WALLET_OCCURRENCE_V0
     direction: INPUT
     field: occurrence_fields
@@ -2201,20 +1893,6 @@ registers:
     required: 'YES'
     default: null
     meaning: value
-  - artifact: blockchain::CC_RESOLVE_ACTOR_V1
-    direction: INPUT
-    field: contact_address
-    type: string
-    required: 'YES'
-    default: null
-    meaning: contact address
-  - artifact: blockchain::CC_RESOLVE_ACTOR_V1
-    direction: OUTPUT
-    field: value
-    type: object
-    required: 'YES'
-    default: null
-    meaning: value
   - artifact: blockchain::CC_VALIDATE_REGISTRATION_V0
     direction: INPUT
     field: actor_record
@@ -2372,56 +2050,56 @@ registers:
     required: 'YES'
     default: null
     meaning: grounds
-  - artifact: blockchain::TI_ACCEPT_ACTOR_V1
+  - artifact: blockchain::TI_ACCEPT_ACTOR_V0
     direction: INPUT
     field: contact_address
     type: string
     required: 'YES'
     default: null
     meaning: contact address
-  - artifact: blockchain::TI_ACCEPT_ACTOR_V1
+  - artifact: blockchain::TI_ACCEPT_ACTOR_V0
     direction: INPUT
     field: verifying_authority
     type: string
     required: 'YES'
     default: null
     meaning: verifying authority
-  - artifact: blockchain::TI_ACCEPT_ACTOR_V1
+  - artifact: blockchain::TI_ACCEPT_ACTOR_V0
     direction: INPUT
     field: grounds
     type: string
     required: 'NO'
     default: null
     meaning: grounds
-  - artifact: blockchain::TI_REGISTER_ACTOR_V1
+  - artifact: blockchain::TI_REGISTER_ACTOR_V0
     direction: INPUT
     field: name
     type: string
     required: 'YES'
     default: null
     meaning: name
-  - artifact: blockchain::TI_REGISTER_ACTOR_V1
+  - artifact: blockchain::TI_REGISTER_ACTOR_V0
     direction: INPUT
     field: contact_address
     type: string
     required: 'YES'
     default: null
     meaning: contact address
-  - artifact: blockchain::TI_REJECT_ACTOR_V1
+  - artifact: blockchain::TI_REJECT_ACTOR_V0
     direction: INPUT
     field: contact_address
     type: string
     required: 'YES'
     default: null
     meaning: contact address
-  - artifact: blockchain::TI_REJECT_ACTOR_V1
+  - artifact: blockchain::TI_REJECT_ACTOR_V0
     direction: INPUT
     field: verifying_authority
     type: string
     required: 'YES'
     default: null
     meaning: verifying authority
-  - artifact: blockchain::TI_REJECT_ACTOR_V1
+  - artifact: blockchain::TI_REJECT_ACTOR_V0
     direction: INPUT
     field: grounds
     type: string
@@ -2449,27 +2127,6 @@ registers:
     required: 'YES'
     default: null
     meaning: result status
-  - artifact: blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
-    direction: INPUT
-    field: stream_id
-    type: string
-    required: 'YES'
-    default: null
-    meaning: stream id
-  - artifact: blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
-    direction: INPUT
-    field: occurrence_fields
-    type: object
-    required: 'YES'
-    default: null
-    meaning: occurrence fields
-  - artifact: blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
-    direction: OUTPUT
-    field: result_status
-    type: string
-    required: 'YES'
-    default: null
-    meaning: result status
   - artifact: blockchain::CC_CLAIM_WALLET_IDENTITY_V0
     direction: INPUT
     field: wallet_id
@@ -2478,20 +2135,6 @@ registers:
     default: null
     meaning: wallet id
   - artifact: blockchain::CC_CLAIM_WALLET_IDENTITY_V0
-    direction: OUTPUT
-    field: result_status
-    type: string
-    required: 'YES'
-    default: null
-    meaning: result status
-  - artifact: blockchain::CC_CLAIM_WALLET_IDENTITY_V1
-    direction: INPUT
-    field: wallet_id
-    type: string
-    required: 'YES'
-    default: null
-    meaning: wallet id
-  - artifact: blockchain::CC_CLAIM_WALLET_IDENTITY_V1
     direction: OUTPUT
     field: result_status
     type: string
@@ -2513,27 +2156,6 @@ registers:
     default: null
     meaning: wallet fields
   - artifact: blockchain::CC_CREATE_WALLET_RECORD_V0
-    direction: OUTPUT
-    field: result_status
-    type: string
-    required: 'YES'
-    default: null
-    meaning: result status
-  - artifact: blockchain::CC_CREATE_WALLET_RECORD_V1
-    direction: INPUT
-    field: wallet_id
-    type: string
-    required: 'YES'
-    default: null
-    meaning: wallet id
-  - artifact: blockchain::CC_CREATE_WALLET_RECORD_V1
-    direction: INPUT
-    field: wallet_fields
-    type: object
-    required: 'YES'
-    default: null
-    meaning: wallet fields
-  - artifact: blockchain::CC_CREATE_WALLET_RECORD_V1
     direction: OUTPUT
     field: result_status
     type: string
@@ -2639,14 +2261,14 @@ registers:
     default: null
     meaning: When the moment occurred
     format: date-time
-  - artifact: blockchain::IN_WALLET_CREATION_V1
+  - artifact: blockchain::IN_WALLET_CREATION_V0
     direction: INPUT
     field: contact_address
     type: string
     required: 'YES'
     default: null
     meaning: contact address
-  - artifact: blockchain::IN_WALLET_CREATION_V1
+  - artifact: blockchain::IN_WALLET_CREATION_V0
     direction: INPUT
     field: key_material
     type: string
@@ -2746,33 +2368,9 @@ registers:
   - artifact: blockchain::AC_PARTICIPANT_V0
     property: type
     value: ENDUSER
-  - artifact: blockchain::CC_RESOLVE_ACTOR_V1
-    property: supersedes
-    value:
-    - blockchain::CC_RESOLVE_ACTOR_V0
-  - artifact: blockchain::IN_ACTOR_ACCEPTANCE_V0
-    property: supersedes
-    value:
-    - blockchain::IN_ACTOR_VERIFIED_V0
-  - artifact: blockchain::IN_ACTOR_REJECTION_V0
-    property: supersedes
-    value:
-    - blockchain::IN_ACTOR_VERIFIED_V0
   - artifact: blockchain::STRUCTURE_IDENTITY_STORAGE_V0
     property: layer
     value: DOMAINS
-  - artifact: blockchain::TI_ACCEPT_ACTOR_V1
-    property: supersedes
-    value:
-    - blockchain::TI_ACCEPT_ACTOR_V0
-  - artifact: blockchain::TI_REGISTER_ACTOR_V1
-    property: supersedes
-    value:
-    - blockchain::TI_REGISTER_ACTOR_V0
-  - artifact: blockchain::TI_REJECT_ACTOR_V1
-    property: supersedes
-    value:
-    - blockchain::TI_REJECT_ACTOR_V0
   - artifact: blockchain::TE_ACCEPT_ACTOR_V0
     property: result_class.SUCCESS
     value: SUCCESS
@@ -2818,66 +2416,34 @@ registers:
   - artifact: blockchain::TE_REJECT_ACTOR_V0
     property: evidence_policy
     value: reference_only
-  - artifact: blockchain::WF_ACCEPT_ACTOR_V2
-    property: supersedes
-    value:
-    - blockchain::WF_ACCEPT_ACTOR_V1
-  - artifact: blockchain::WF_ACCEPT_ACTOR_V2
+  - artifact: blockchain::WF_ACCEPT_ACTOR_V0
     property: actor_context
     value: blockchain::AC_PARTICIPANT_V0
-  - artifact: blockchain::WF_ACCEPT_ACTOR_V2
+  - artifact: blockchain::WF_ACCEPT_ACTOR_V0
     property: emit.EXIT_SUCCESS
     value:
     - blockchain::EV_ACTOR_ACCEPTED_V0
-  - artifact: blockchain::WF_REGISTER_ACTOR_V2
-    property: supersedes
-    value:
-    - blockchain::WF_REGISTER_ACTOR_V1
-  - artifact: blockchain::WF_REGISTER_ACTOR_V2
+  - artifact: blockchain::WF_REGISTER_ACTOR_V0
     property: actor_context
     value: blockchain::AC_PARTICIPANT_V0
-  - artifact: blockchain::WF_REGISTER_ACTOR_V2
+  - artifact: blockchain::WF_REGISTER_ACTOR_V0
     property: emit.EXIT_SUCCESS
     value:
     - blockchain::EV_ACTOR_REGISTERED_UNVERIFIED_V0
-  - artifact: blockchain::WF_REJECT_ACTOR_V2
-    property: supersedes
-    value:
-    - blockchain::WF_REJECT_ACTOR_V1
-  - artifact: blockchain::WF_REJECT_ACTOR_V2
+  - artifact: blockchain::WF_REJECT_ACTOR_V0
     property: actor_context
     value: blockchain::AC_PARTICIPANT_V0
-  - artifact: blockchain::WF_REJECT_ACTOR_V2
+  - artifact: blockchain::WF_REJECT_ACTOR_V0
     property: emit.EXIT_SUCCESS
     value:
     - blockchain::EV_ACTOR_REJECTED_V0
-  - artifact: blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
-    property: supersedes
-    value:
-    - blockchain::CC_APPEND_WALLET_OCCURRENCE_V0
-  - artifact: blockchain::CC_CLAIM_WALLET_IDENTITY_V1
-    property: supersedes
-    value:
-    - blockchain::CC_CLAIM_WALLET_IDENTITY_V0
-  - artifact: blockchain::CC_CREATE_WALLET_RECORD_V1
-    property: supersedes
-    value:
-    - blockchain::CC_CREATE_WALLET_RECORD_V0
-  - artifact: blockchain::IN_WALLET_CREATION_V1
-    property: supersedes
-    value:
-    - blockchain::IN_WALLET_CREATION_V0
   - artifact: blockchain::STRUCTURE_WALLET_STORAGE_V0
     property: layer
     value: DOMAINS
-  - artifact: blockchain::WF_CREATE_WALLET_V2
-    property: supersedes
-    value:
-    - blockchain::WF_CREATE_WALLET_V1
-  - artifact: blockchain::WF_CREATE_WALLET_V2
+  - artifact: blockchain::WF_CREATE_WALLET_V0
     property: actor_context
     value: blockchain::AC_PARTICIPANT_V0
-  - artifact: blockchain::WF_CREATE_WALLET_V2
+  - artifact: blockchain::WF_CREATE_WALLET_V0
     property: emit.EXIT_SUCCESS
     value:
     - blockchain::EV_WALLET_CREATED_V0
@@ -2885,13 +2451,12 @@ registers:
   - store_name: ACTORS
     storage_type: CS_MUTABLE_JSON_V0
     proposed_path: blockchain/identity/actors.json
-    used_by: blockchain::CC_RECORD_VERIFICATION_DECISION_V0, blockchain::CC_REGISTER_ACTOR_V0, blockchain::CC_RESOLVE_ACTOR_V0,
-      blockchain::CC_RESOLVE_ACTOR_V1
+    used_by: blockchain::CC_RECORD_VERIFICATION_DECISION_V0, blockchain::CC_REGISTER_ACTOR_V0, blockchain::CC_RESOLVE_ACTOR_V0
     structure: blockchain::STRUCTURE_IDENTITY_STORAGE_V0
   - store_name: CONTACT_ADDRESS_REGISTRY
     storage_type: CS_REGISTRY_V0
     proposed_path: blockchain/identity/contact_address_registry.jsonl
-    used_by: blockchain::CC_CLAIM_CONTACT_ADDRESS_V0, blockchain::CC_RESOLVE_ACTOR_V0, blockchain::CC_RESOLVE_ACTOR_V1
+    used_by: blockchain::CC_CLAIM_CONTACT_ADDRESS_V0, blockchain::CC_RESOLVE_ACTOR_V0
     structure: blockchain::STRUCTURE_IDENTITY_STORAGE_V0
   - store_name: ACTOR_OCCURRENCES
     storage_type: CS_APPENDONLY_JSONL_V0
@@ -2901,87 +2466,87 @@ registers:
   - store_name: WALLETS
     storage_type: CS_MUTABLE_JSON_V0
     proposed_path: blockchain/wallet/wallets.json
-    used_by: blockchain::CC_CREATE_WALLET_RECORD_V0, blockchain::CC_CREATE_WALLET_RECORD_V1
+    used_by: blockchain::CC_CREATE_WALLET_RECORD_V0
     structure: blockchain::STRUCTURE_WALLET_STORAGE_V0
   - store_name: WALLET_OCCURRENCES
     storage_type: CS_APPENDONLY_JSONL_V0
     proposed_path: blockchain/wallet/wallet_occurrences.jsonl
-    used_by: blockchain::CC_APPEND_WALLET_OCCURRENCE_V0, blockchain::CC_APPEND_WALLET_OCCURRENCE_V1
+    used_by: blockchain::CC_APPEND_WALLET_OCCURRENCE_V0
     structure: blockchain::STRUCTURE_WALLET_STORAGE_V0
   - store_name: WALLET_IDENTITIES
     storage_type: CS_REGISTRY_V0
     proposed_path: blockchain/wallet/wallet_identity_registry.jsonl
-    used_by: blockchain::CC_CLAIM_WALLET_IDENTITY_V0, blockchain::CC_CLAIM_WALLET_IDENTITY_V1
+    used_by: blockchain::CC_CLAIM_WALLET_IDENTITY_V0
     structure: blockchain::STRUCTURE_WALLET_STORAGE_V0
   transport_bindings:
-  - artifact: blockchain::TI_ACCEPT_ACTOR_V1
+  - artifact: blockchain::TI_ACCEPT_ACTOR_V0
     direction: INGRESS
     operation: blockchain.accept_actor
     handler_kind: WF_INVOCATION
-    handler_target: blockchain::WF_ACCEPT_ACTOR_V2
+    handler_target: blockchain::WF_ACCEPT_ACTOR_V0
     field: contact_address
     bound_to: ${input.contact_address}
-  - artifact: blockchain::TI_ACCEPT_ACTOR_V1
+  - artifact: blockchain::TI_ACCEPT_ACTOR_V0
     direction: INGRESS
     operation: blockchain.accept_actor
     handler_kind: WF_INVOCATION
-    handler_target: blockchain::WF_ACCEPT_ACTOR_V2
+    handler_target: blockchain::WF_ACCEPT_ACTOR_V0
     field: verifying_authority
     bound_to: ${input.verifying_authority}
-  - artifact: blockchain::TI_ACCEPT_ACTOR_V1
+  - artifact: blockchain::TI_ACCEPT_ACTOR_V0
     direction: INGRESS
     operation: blockchain.accept_actor
     handler_kind: WF_INVOCATION
-    handler_target: blockchain::WF_ACCEPT_ACTOR_V2
+    handler_target: blockchain::WF_ACCEPT_ACTOR_V0
     field: grounds
     bound_to: ${input.grounds}
-  - artifact: blockchain::TI_REGISTER_ACTOR_V1
+  - artifact: blockchain::TI_REGISTER_ACTOR_V0
     direction: INGRESS
     operation: blockchain.register_actor
     handler_kind: WF_INVOCATION
-    handler_target: blockchain::WF_REGISTER_ACTOR_V2
+    handler_target: blockchain::WF_REGISTER_ACTOR_V0
     field: actor_record.name
     bound_to: ${input.name}
-  - artifact: blockchain::TI_REGISTER_ACTOR_V1
+  - artifact: blockchain::TI_REGISTER_ACTOR_V0
     direction: INGRESS
     operation: blockchain.register_actor
     handler_kind: WF_INVOCATION
-    handler_target: blockchain::WF_REGISTER_ACTOR_V2
+    handler_target: blockchain::WF_REGISTER_ACTOR_V0
     field: actor_record.contact_address
     bound_to: ${input.contact_address}
-  - artifact: blockchain::TI_REGISTER_ACTOR_V1
+  - artifact: blockchain::TI_REGISTER_ACTOR_V0
     direction: INGRESS
     operation: blockchain.register_actor
     handler_kind: WF_INVOCATION
-    handler_target: blockchain::WF_REGISTER_ACTOR_V2
+    handler_target: blockchain::WF_REGISTER_ACTOR_V0
     field: actor_record.currency_preference
     bound_to: BACHI
-  - artifact: blockchain::TI_REGISTER_ACTOR_V1
+  - artifact: blockchain::TI_REGISTER_ACTOR_V0
     direction: INGRESS
     operation: blockchain.register_actor
     handler_kind: WF_INVOCATION
-    handler_target: blockchain::WF_REGISTER_ACTOR_V2
+    handler_target: blockchain::WF_REGISTER_ACTOR_V0
     field: actor_record.language
     bound_to: en
-  - artifact: blockchain::TI_REJECT_ACTOR_V1
+  - artifact: blockchain::TI_REJECT_ACTOR_V0
     direction: INGRESS
     operation: blockchain.reject_actor
     handler_kind: WF_INVOCATION
-    handler_target: blockchain::WF_REJECT_ACTOR_V2
+    handler_target: blockchain::WF_REJECT_ACTOR_V0
     field: contact_address
     bound_to: ${input.contact_address}
-  - artifact: blockchain::TI_REJECT_ACTOR_V1
+  - artifact: blockchain::TI_REJECT_ACTOR_V0
     direction: INGRESS
     operation: blockchain.reject_actor
     handler_kind: WF_INVOCATION
-    handler_target: blockchain::WF_REJECT_ACTOR_V2
+    handler_target: blockchain::WF_REJECT_ACTOR_V0
     field: verifying_authority
     bound_to: ${input.verifying_authority}
-  - artifact: blockchain::TI_REJECT_ACTOR_V1
+  - artifact: blockchain::TI_REJECT_ACTOR_V0
     direction: INGRESS
     operation: blockchain.reject_actor
     handler_kind: WF_INVOCATION
-    handler_target: blockchain::WF_REJECT_ACTOR_V2
+    handler_target: blockchain::WF_REJECT_ACTOR_V0
     field: grounds
     bound_to: ${input.grounds}
   - artifact: blockchain::TE_ACCEPT_ACTOR_V0
@@ -3098,7 +2663,7 @@ registers:
     field: sequence_number
     bound_to: surface.sequence_number
   declared_reach:
-  - act: blockchain::WF_CREATE_WALLET_V2
+  - act: blockchain::WF_CREATE_WALLET_V0
     consults:
     - blockchain::RB_IDENTITY_BINDINGS_V0
   molecule_steps: []
@@ -3135,25 +2700,24 @@ registers:
   artifact_summary:
   - action: NEW
     subdomain: identity
-    count: '26'
+    count: '25'
     artifacts: blockchain::AC_PARTICIPANT_V0, blockchain::CC_APPEND_ACTOR_OCCURRENCE_V0, blockchain::CC_CLAIM_CONTACT_ADDRESS_V0,
       blockchain::CC_RECORD_VERIFICATION_DECISION_V0, blockchain::CC_REGISTER_ACTOR_V0, blockchain::CC_REQUIRE_REJECTION_GROUNDS_V0,
-      blockchain::CC_RESOLVE_ACTOR_V0, blockchain::CC_RESOLVE_ACTOR_V1, blockchain::CC_VALIDATE_REGISTRATION_V0,
-      blockchain::EV_ACTOR_ACCEPTED_V0, blockchain::EV_ACTOR_REGISTERED_UNVERIFIED_V0, blockchain::EV_ACTOR_REJECTED_V0,
-      blockchain::IN_ACTOR_ACCEPTANCE_V0, blockchain::IN_ACTOR_REGISTERED_V0, blockchain::IN_ACTOR_REJECTION_V0,
-      blockchain::STRUCTURE_IDENTITY_STORAGE_V0, blockchain::RB_IDENTITY_BINDINGS_V0, blockchain::TI_ACCEPT_ACTOR_V1,
-      blockchain::TI_REGISTER_ACTOR_V1, blockchain::TI_REJECT_ACTOR_V1, blockchain::TE_ACCEPT_ACTOR_V0,
-      blockchain::TE_REGISTER_ACTOR_V0, blockchain::TE_REJECT_ACTOR_V0, blockchain::WF_ACCEPT_ACTOR_V2,
-      blockchain::WF_REGISTER_ACTOR_V2, blockchain::WF_REJECT_ACTOR_V2
+      blockchain::CC_RESOLVE_ACTOR_V0, blockchain::CC_VALIDATE_REGISTRATION_V0, blockchain::EV_ACTOR_ACCEPTED_V0,
+      blockchain::EV_ACTOR_REGISTERED_UNVERIFIED_V0, blockchain::EV_ACTOR_REJECTED_V0, blockchain::IN_ACTOR_ACCEPTANCE_V0,
+      blockchain::IN_ACTOR_REGISTERED_V0, blockchain::IN_ACTOR_REJECTION_V0, blockchain::STRUCTURE_IDENTITY_STORAGE_V0,
+      blockchain::RB_IDENTITY_BINDINGS_V0, blockchain::TI_ACCEPT_ACTOR_V0, blockchain::TI_REGISTER_ACTOR_V0,
+      blockchain::TI_REJECT_ACTOR_V0, blockchain::TE_ACCEPT_ACTOR_V0, blockchain::TE_REGISTER_ACTOR_V0,
+      blockchain::TE_REJECT_ACTOR_V0, blockchain::WF_ACCEPT_ACTOR_V0, blockchain::WF_REGISTER_ACTOR_V0,
+      blockchain::WF_REJECT_ACTOR_V0
   - action: NEW
     subdomain: wallet
-    count: '16'
-    artifacts: blockchain::CC_APPEND_WALLET_OCCURRENCE_V0, blockchain::CC_APPEND_WALLET_OCCURRENCE_V1,
-      blockchain::CC_CLAIM_WALLET_IDENTITY_V0, blockchain::CC_CLAIM_WALLET_IDENTITY_V1, blockchain::CC_CREATE_WALLET_RECORD_V0,
-      blockchain::CC_CREATE_WALLET_RECORD_V1, blockchain::CC_DETERMINE_WALLET_IDENTITY_V0, blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0,
-      blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0, blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0, blockchain::EV_WALLET_CREATED_V0,
-      blockchain::IN_WALLET_CREATION_V1, blockchain::STRUCTURE_WALLET_STORAGE_V0, blockchain::RB_WALLET_BINDINGS_V0,
-      blockchain::VOCAB_WALLET_CLASSIFICATION_V0, blockchain::WF_CREATE_WALLET_V2
+    count: '13'
+    artifacts: blockchain::CC_APPEND_WALLET_OCCURRENCE_V0, blockchain::CC_CLAIM_WALLET_IDENTITY_V0, blockchain::CC_CREATE_WALLET_RECORD_V0,
+      blockchain::CC_DETERMINE_WALLET_IDENTITY_V0, blockchain::CC_ESTABLISH_WALLET_ADDRESS_V0, blockchain::CC_REQUIRE_ACCEPTED_HOLDER_V0,
+      blockchain::CT_PURE_DERIVE_WALLET_ADDRESS_V0, blockchain::EV_WALLET_CREATED_V0, blockchain::IN_WALLET_CREATION_V0,
+      blockchain::STRUCTURE_WALLET_STORAGE_V0, blockchain::RB_WALLET_BINDINGS_V0, blockchain::VOCAB_WALLET_CLASSIFICATION_V0,
+      blockchain::WF_CREATE_WALLET_V0
   refusal_discharge: []
   refusal_deferrals: []
   refusal_governance_discharge: []

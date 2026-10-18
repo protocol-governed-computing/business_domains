@@ -212,11 +212,6 @@ registers:
     summary: A request to change a registered book's description
     owner_subdomain: catalog
     status: NEW
-  - family: IN
-    code: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    summary: A request to change a registered book's description
-    owner_subdomain: catalog
-    status: NEW
   - family: STRUCTURE
     code: book_library_mgmt::STRUCTURE_CATALOG_STORAGE_V0
     summary: Declares the stores the catalog owns and the paths they occupy
@@ -275,11 +270,6 @@ registers:
     status: NEW
   - family: WF
     code: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    summary: The governed sequence that corrects what the library publishes about a book
-    owner_subdomain: catalog
-    status: NEW
-  - family: WF
-    code: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
     summary: Corrects what the library publishes about a registered book
     owner_subdomain: catalog
     status: NEW
@@ -349,13 +339,6 @@ registers:
     storage_structure: book_library_mgmt::STRUCTURE_CATALOG_STORAGE_V0
   - rb_code: book_library_mgmt::RB_CATALOG_BINDINGS_V0
     binds_wf: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    cs_bindings:
-    - capability_side_effects::CS_MUTABLE_JSON_V0
-    - capability_side_effects::CS_REGISTRY_V0
-    - capability_side_effects::CS_APPENDONLY_JSONL_V0
-    storage_structure: book_library_mgmt::STRUCTURE_CATALOG_STORAGE_V0
-  - rb_code: book_library_mgmt::RB_CATALOG_BINDINGS_V0
-    binds_wf: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
     cs_bindings:
     - capability_side_effects::CS_MUTABLE_JSON_V0
     - capability_side_effects::CS_REGISTRY_V0
@@ -778,49 +761,6 @@ registers:
     node_type: EXIT
     routing: null
   - workflow: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    node: EXIT_REJECTED
-    node_type: EXIT
-    routing: null
-  - workflow: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    node: IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    node_type: IN
-    routing:
-      ACK: CC_CONFIRM_STAFF_AUTHORIZED_V0
-      NACK: EXIT_REJECTED
-  - workflow: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    node: CC_CONFIRM_STAFF_AUTHORIZED_V0
-    node_type: CC
-    routing:
-      SUCCESS: CC_RESOLVE_BOOK_IDENTITY_V0
-      VIOLATION: EXIT_REJECTED
-  - workflow: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    node: CC_RESOLVE_BOOK_IDENTITY_V0
-    node_type: CC
-    routing:
-      SUCCESS: CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-      NOT_FOUND: EXIT_REJECTED
-      VIOLATION: EXIT_REJECTED
-      BACKEND_ERROR: EXIT_REJECTED
-  - workflow: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    node: CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    node_type: CC
-    routing:
-      SUCCESS: CC_APPEND_CATALOG_OPERATION_V0
-      NOT_FOUND: EXIT_REJECTED
-      VIOLATION: EXIT_REJECTED
-      BACKEND_ERROR: EXIT_REJECTED
-  - workflow: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    node: CC_APPEND_CATALOG_OPERATION_V0
-    node_type: CC
-    routing:
-      SUCCESS: EXIT_COMPLETED
-      VIOLATION: EXIT_REJECTED
-      BACKEND_ERROR: EXIT_REJECTED
-  - workflow: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    node: EXIT_COMPLETED
-    node_type: EXIT
-    routing: null
-  - workflow: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
     node: EXIT_REJECTED
     node_type: EXIT
     routing: null
@@ -3353,11 +3293,6 @@ registers:
     field: staff_credentials
     bound_to: payload.staff_credentials
   - owner: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    step: CC_CONFIRM_STAFF_AUTHORIZED_V0
-    direction: INPUT
-    field: authorization_rules
-    bound_to: payload.authorization_rules
-  - owner: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
     step: CC_RESOLVE_BOOK_IDENTITY_V0
     direction: INPUT
     field: identity_key
@@ -3375,11 +3310,6 @@ registers:
   - owner: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
     step: CC_APPEND_CATALOG_OPERATION_V0
     direction: INPUT
-    field: staff_id
-    bound_to: payload.staff_id
-  - owner: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    step: CC_APPEND_CATALOG_OPERATION_V0
-    direction: INPUT
     field: operation
     bound_to:
       literal: UPDATE_BIBLIOGRAPHIC_INFORMATION
@@ -3392,42 +3322,7 @@ registers:
         operation: UPDATE_BIBLIOGRAPHIC_INFORMATION
         staff_id: $.payload.staff_id
         subject: $.payload.identity_key
-  - owner: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    step: CC_CONFIRM_STAFF_AUTHORIZED_V0
-    direction: INPUT
-    field: staff_credentials
-    bound_to: payload.staff_credentials
-  - owner: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    step: CC_RESOLVE_BOOK_IDENTITY_V0
-    direction: INPUT
-    field: identity_key
-    bound_to: payload.identity_key
-  - owner: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    step: CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    direction: INPUT
-    field: identity_key
-    bound_to: payload.identity_key
-  - owner: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    step: CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    direction: INPUT
-    field: updated_fields
-    bound_to: payload.updated_fields
-  - owner: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    step: CC_APPEND_CATALOG_OPERATION_V0
-    direction: INPUT
-    field: operation
-    bound_to:
-      literal: UPDATE_BIBLIOGRAPHIC_INFORMATION
-  - owner: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    step: CC_APPEND_CATALOG_OPERATION_V0
-    direction: INPUT
-    field: record
-    bound_to:
-      literal:
-        operation: UPDATE_BIBLIOGRAPHIC_INFORMATION
-        staff_id: $.payload.staff_id
-        subject: $.payload.identity_key
-  - owner: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
+  - owner: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
     step: CC_APPEND_CATALOG_OPERATION_V0
     direction: INPUT
     field: staff_id
@@ -4379,11 +4274,11 @@ registers:
     meaning: staff credentials
   - artifact: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
     direction: INPUT
-    field: authorization_rules
-    type: array
+    field: staff_id
+    type: string
     required: 'YES'
     default: null
-    meaning: authorization rules
+    meaning: staff id
   - artifact: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
     direction: INPUT
     field: identity_key
@@ -4392,62 +4287,6 @@ registers:
     default: null
     meaning: identity key
   - artifact: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    direction: INPUT
-    field: title
-    type: string
-    required: 'YES'
-    default: null
-    meaning: title
-  - artifact: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    direction: INPUT
-    field: author
-    type: string
-    required: 'YES'
-    default: null
-    meaning: author
-  - artifact: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    direction: INPUT
-    field: publication_year
-    type: integer
-    required: 'YES'
-    default: null
-    meaning: publication year
-  - artifact: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    direction: INPUT
-    field: updated_fields
-    type: object
-    required: 'YES'
-    default: null
-    meaning: updated fields
-  - artifact: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    direction: INPUT
-    field: staff_id
-    type: string
-    required: 'YES'
-    default: null
-    meaning: staff id
-  - artifact: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    direction: INPUT
-    field: staff_credentials
-    type: object
-    required: 'YES'
-    default: null
-    meaning: staff credentials
-  - artifact: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    direction: INPUT
-    field: staff_id
-    type: string
-    required: 'YES'
-    default: null
-    meaning: staff id
-  - artifact: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    direction: INPUT
-    field: identity_key
-    type: string
-    required: 'YES'
-    default: null
-    meaning: identity key
-  - artifact: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
     direction: INPUT
     field: updated_fields
     type: object
@@ -4497,10 +4336,6 @@ registers:
   - artifact: book_library_mgmt::AC_LIBRARY_STAFF_V0
     property: type
     value: ENDUSER
-  - artifact: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    property: supersedes
-    value:
-    - book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
   - artifact: book_library_mgmt::STRUCTURE_CATALOG_STORAGE_V0
     property: layer
     value: DOMAINS
@@ -4557,17 +4392,6 @@ registers:
     property: actor_context
     value: book_library_mgmt::AC_LIBRARY_STAFF_V0
   - artifact: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    property: emit.EXIT_COMPLETED
-    value:
-    - book_library_mgmt::EV_BIBLIOGRAPHIC_INFORMATION_UPDATED_V0
-  - artifact: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    property: supersedes
-    value:
-    - book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-  - artifact: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    property: actor_context
-    value: book_library_mgmt::AC_LIBRARY_STAFF_V0
-  - artifact: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
     property: emit.EXIT_COMPLETED
     value:
     - book_library_mgmt::EV_BIBLIOGRAPHIC_INFORMATION_UPDATED_V0
@@ -4739,7 +4563,7 @@ registers:
   artifact_summary:
   - action: NEW
     subdomain: catalog
-    count: '53'
+    count: '51'
     artifacts: book_library_mgmt::AC_LIBRARY_STAFF_V0, book_library_mgmt::CC_APPEND_CATALOG_OPERATION_V0,
       book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0, book_library_mgmt::CC_CLAIM_BOOK_IDENTITY_V0, book_library_mgmt::CC_CLAIM_COPY_BARCODE_V0,
       book_library_mgmt::CC_CLAIM_WORK_IDENTITY_V0, book_library_mgmt::CC_CONFIRM_STAFF_AUTHORIZED_V0,
@@ -4755,12 +4579,10 @@ registers:
       book_library_mgmt::IN_REGISTER_BOOK_V0, book_library_mgmt::IN_REGISTER_PHYSICAL_COPY_V0, book_library_mgmt::IN_REINSTATE_BOOK_RECORD_V0,
       book_library_mgmt::IN_REINSTATE_PHYSICAL_COPY_V0, book_library_mgmt::IN_RETIRE_BOOK_RECORD_V0, book_library_mgmt::IN_RETIRE_PHYSICAL_COPY_V0,
       book_library_mgmt::IN_RETRIEVE_BOOK_DETAILS_V0, book_library_mgmt::IN_SEARCH_CATALOG_V0, book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0,
-      book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1, book_library_mgmt::STRUCTURE_CATALOG_STORAGE_V0,
-      book_library_mgmt::RB_CATALOG_BINDINGS_V0, book_library_mgmt::WF_REGISTER_ADDITIONAL_EDITION_V0,
+      book_library_mgmt::STRUCTURE_CATALOG_STORAGE_V0, book_library_mgmt::RB_CATALOG_BINDINGS_V0, book_library_mgmt::WF_REGISTER_ADDITIONAL_EDITION_V0,
       book_library_mgmt::WF_REGISTER_BOOK_V0, book_library_mgmt::WF_REGISTER_PHYSICAL_COPY_V0, book_library_mgmt::WF_REINSTATE_BOOK_RECORD_V0,
       book_library_mgmt::WF_REINSTATE_PHYSICAL_COPY_V0, book_library_mgmt::WF_RETIRE_BOOK_RECORD_V0, book_library_mgmt::WF_RETIRE_PHYSICAL_COPY_V0,
-      book_library_mgmt::WF_RETRIEVE_BOOK_DETAILS_V0, book_library_mgmt::WF_SEARCH_CATALOG_V0, book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0,
-      book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
+      book_library_mgmt::WF_RETRIEVE_BOOK_DETAILS_V0, book_library_mgmt::WF_SEARCH_CATALOG_V0, book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
   refusal_discharge: []
   refusal_deferrals: []
   refusal_governance_discharge: []

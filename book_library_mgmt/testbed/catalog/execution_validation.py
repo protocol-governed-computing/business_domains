@@ -199,7 +199,7 @@ def main() -> int:
         # 8 — bibliographic information is updated, and a later retrieval returns the new version
         # Through the act in force, V1. A caller states only the fields it changes, not the title,
         # author and year it is leaving alone.
-        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1", auth() | {
+        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0", auth() | {
             "identity_key": ODYSSEY_KEY,
             "updated_fields": {**ODYSSEY, "subject": ["epic", "poetry", "greek"],
                                "state": "REGISTERED"}})
@@ -290,7 +290,7 @@ def main() -> int:
 
         # 17 — an update that would duplicate another registered book is refused
         run("WF_REGISTER_BOOK_V0", book_payload(ILIAD, "BC-0100"))
-        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1", auth() | {
+        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0", auth() | {
             "identity_key": "the iliad|homer|1611",
             "updated_fields": {**ODYSSEY, "subject": ["epic"], "state": "REGISTERED"}})
         check("an update that would duplicate another registered book is refused",

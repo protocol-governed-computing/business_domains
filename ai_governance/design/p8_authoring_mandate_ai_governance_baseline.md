@@ -177,62 +177,49 @@ registers:
     depends_on: null
   - wave: '1'
     step: '28'
-    code: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1
-    action: NEW
-    subdomain: agent_governance
-    depends_on: null
-  - wave: '1'
-    step: '29'
     code: ai_governance::CC_APPEND_AUDIT_EVENT_V0
     action: NEW
     subdomain: ai_licensing
     depends_on: null
   - wave: '1'
-    step: '30'
+    step: '29'
     code: ai_governance::CC_PROVISION_LICENSE_V0
     action: NEW
     subdomain: ai_licensing
     depends_on: null
   - wave: '1'
-    step: '31'
+    step: '30'
     code: ai_governance::IN_AGENT_ACTION_REQUESTED_V0
     action: NEW
     subdomain: agent_governance
     depends_on: null
   - wave: '1'
-    step: '32'
+    step: '31'
     code: ai_governance::IN_DENY_PROVISION_V0
     action: NEW
     subdomain: ai_licensing
     depends_on: null
   - wave: '1'
-    step: '33'
+    step: '32'
     code: ai_governance::IN_PROVISION_AI_LICENSE_V0
     action: NEW
     subdomain: ai_licensing
     depends_on: null
   - wave: '1'
-    step: '34'
+    step: '33'
     code: ai_governance::IN_RECLAIM_LICENSE_V0
     action: NEW
     subdomain: ai_licensing
     depends_on: null
   - wave: '2'
-    step: '35'
+    step: '34'
     code: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0
     action: NEW
     subdomain: ai_licensing
     depends_on:
     - ai_governance::CT_PURE_EVALUATE_INACTIVITY_V0
   - wave: '2'
-    step: '36'
-    code: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
-    action: NEW
-    subdomain: ai_licensing
-    depends_on:
-    - ai_governance::CT_PURE_EVALUATE_INACTIVITY_V0
-  - wave: '2'
-    step: '37'
+    step: '35'
     code: ai_governance::CC_VALIDATE_ELIGIBILITY_V0
     action: NEW
     subdomain: ai_licensing
@@ -240,21 +227,21 @@ registers:
     - ai_governance::CT_PURE_CHECK_TRAINING_STATUS_V0
     - ai_governance::CT_PURE_CHECK_QUOTA_AVAILABLE_V0
   - wave: '2'
-    step: '38'
+    step: '36'
     code: ai_governance::RB_AGENT_GOVERNANCE_BINDINGS_V0
     action: NEW
     subdomain: agent_governance
     depends_on:
     - ai_governance::STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0
   - wave: '2'
-    step: '39'
+    step: '37'
     code: ai_governance::RB_LICENSE_BINDINGS_V0
     action: NEW
     subdomain: ai_licensing
     depends_on:
     - ai_governance::STRUCTURE_AI_LICENSING_STORAGE_V0
   - wave: '3'
-    step: '40'
+    step: '38'
     code: ai_governance::WF_GOVERN_AGENT_ACTION_V0
     action: NEW
     subdomain: agent_governance
@@ -271,7 +258,7 @@ registers:
     - ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0
     - ai_governance::CC_RECORD_GOVERNED_ACTION_V0
   - wave: '3'
-    step: '41'
+    step: '39'
     code: ai_governance::WF_AUTO_RECLAIM_V0
     action: NEW
     subdomain: ai_licensing
@@ -282,7 +269,7 @@ registers:
     - ai_governance::IN_RECLAIM_LICENSE_V0
     - ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0
   - wave: '3'
-    step: '42'
+    step: '40'
     code: ai_governance::WF_DENY_PROVISION_V0
     action: NEW
     subdomain: ai_licensing
@@ -293,7 +280,7 @@ registers:
     - ai_governance::IN_DENY_PROVISION_V0
     - ai_governance::CC_APPEND_AUDIT_EVENT_V0
   - wave: '3'
-    step: '43'
+    step: '41'
     code: ai_governance::WF_PROVISION_AI_LICENSING_V0
     action: NEW
     subdomain: ai_licensing
@@ -314,8 +301,8 @@ registers:
     code: ai_governance::WF_GOVERN_AGENT_ACTION_V0
   mandate_artifact_summary:
   - action: NEW
-    count: '43'
-    description: 2 STRUCTURE, 1 VOCAB, 5 AC, 9 EV, 3 CT, 13 CC, 4 IN, 4 WF, 2 RB
+    count: '41'
+    description: 2 STRUCTURE, 1 VOCAB, 5 AC, 9 EV, 3 CT, 11 CC, 4 IN, 4 WF, 2 RB
   field_declarations:
   - code: ai_governance::STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0
     subdomain_field: agent_governance
@@ -371,8 +358,6 @@ registers:
     subdomain_field: agent_governance
   - code: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0
     subdomain_field: agent_governance
-  - code: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1
-    subdomain_field: agent_governance
   - code: ai_governance::CC_APPEND_AUDIT_EVENT_V0
     subdomain_field: ai_licensing
   - code: ai_governance::CC_PROVISION_LICENSE_V0
@@ -386,8 +371,6 @@ registers:
   - code: ai_governance::IN_RECLAIM_LICENSE_V0
     subdomain_field: ai_licensing
   - code: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0
-    subdomain_field: ai_licensing
-  - code: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
     subdomain_field: ai_licensing
   - code: ai_governance::CC_VALIDATE_ELIGIBILITY_V0
     subdomain_field: ai_licensing
@@ -436,6 +419,6 @@ registers:
   cross_subdomain_notes: []
 ```
 
-The 43 artifacts of `ai_governance`'s design of record, scheduled in dependency order. Written by
+The 41 artifacts of `ai_governance`'s design of record, scheduled in dependency order. Written by
 `python -m transformation.record` from the P7 beside it. The mandate orders the build; it decides
 nothing.

@@ -173,12 +173,12 @@ def main() -> int:
     try:
         # The ground the wallet stands on. Not a wallet criterion — identity's, exercised here
         # because a wallet cannot be created for a person who does not exist.
-        run("WF_REGISTER_ACTOR_V2", registration("Wallet Holder", HOLDER))
-        run("WF_ACCEPT_ACTOR_V2", acceptance(HOLDER))
+        run("WF_REGISTER_ACTOR_V0", registration("Wallet Holder", HOLDER))
+        run("WF_ACCEPT_ACTOR_V0", acceptance(HOLDER))
         before = run.identity_fingerprint()
 
         # 1 — the act completes, which it could not do while its reach was undeclared
-        r = run("WF_CREATE_WALLET_V2", creation(HOLDER))
+        r = run("WF_CREATE_WALLET_V0", creation(HOLDER))
         wallets = run.wallets()
         check("an accepted person is given a wallet, and the act runs to completion",
               r.status == "SUCCESS" and len(wallets) == 1,
@@ -205,7 +205,7 @@ def main() -> int:
               f"added: {', '.join(sorted(set(after) - set(before))) or 'none'}")
 
         # 5 — a wallet needs a person the business has accepted
-        r = run("WF_CREATE_WALLET_V2", creation("ghost@example.test"))
+        r = run("WF_CREATE_WALLET_V0", creation("ghost@example.test"))
         check("a wallet for a person who never registered is refused",
               r.status != "SUCCESS" and len(run.wallets()) == 1,
               f"status {r.status}, {len(run.wallets())} wallet(s)")
@@ -214,17 +214,17 @@ def main() -> int:
         # records, so the fingerprint is re-taken afterwards: what criterion 8 asks is whether a
         # *wallet* act disturbed identity, and comparing across an identity act would answer a
         # different question and answer it wrongly.
-        run("WF_REGISTER_ACTOR_V2", registration("Wallet Undecided", UNDECIDED))
+        run("WF_REGISTER_ACTOR_V0", registration("Wallet Undecided", UNDECIDED))
         mark = run.identity_fingerprint()
 
         # 6 — the reach reads state, so an unaccepted person is visible as unaccepted
-        r = run("WF_CREATE_WALLET_V2", creation(UNDECIDED))
+        r = run("WF_CREATE_WALLET_V0", creation(UNDECIDED))
         check("an unverified person is refused a wallet, and none is recorded for them",
               not any(w.get("holder") == UNDECIDED for w in run.wallets().values()),
               f"status {r.status}, {len(run.wallets())} wallet(s)")
 
         # 7 — one person, one wallet
-        r = run("WF_CREATE_WALLET_V2", creation(HOLDER))
+        r = run("WF_CREATE_WALLET_V0", creation(HOLDER))
         check("a person the business already gave a wallet is not given a second",
               r.status != "SUCCESS" and len(run.wallets()) == 1,
               f"status {r.status}, {len(run.wallets())} wallet(s)")
@@ -245,9 +245,9 @@ def main() -> int:
         # another holder, a balance, other values, a prefix and a moment of its own is the request
         # a direct caller could send; none of it reaches the wallet.
         FORGER = "forger@example.test"
-        run("WF_REGISTER_ACTOR_V2", registration("Wallet Forger", FORGER))
-        run("WF_ACCEPT_ACTOR_V2", acceptance(FORGER))
-        r = run("WF_CREATE_WALLET_V2", creation(
+        run("WF_REGISTER_ACTOR_V0", registration("Wallet Forger", FORGER))
+        run("WF_ACCEPT_ACTOR_V0", acceptance(FORGER))
+        r = run("WF_CREATE_WALLET_V0", creation(
             FORGER, wallet_id_prefix="mine",
             wallet_fields={"holder": HOLDER, "balance": 1_000_000, "denomination": "OTHER",
                            "classification": "PREMIUM", "state": "FROZEN"},

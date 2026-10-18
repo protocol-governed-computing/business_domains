@@ -62,11 +62,6 @@ registers:
     status: NEW
   - family: CC
     code: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0
-    summary: Enforce declared parameter constraints for authorized tool
-    owner_subdomain: agent_governance
-    status: NEW
-  - family: CC
-    code: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1
     summary: Enforce declared parameter constraints for an authorized tool
     owner_subdomain: agent_governance
     status: NEW
@@ -122,11 +117,6 @@ registers:
     status: NEW
   - family: CC
     code: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0
-    summary: Reclaim license from inactive user
-    owner_subdomain: ai_licensing
-    status: NEW
-  - family: CC
-    code: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
     summary: Reclaim license from inactive user
     owner_subdomain: ai_licensing
     status: NEW
@@ -299,7 +289,6 @@ registers:
     routing:
       SUCCESS: CC_RECORD_GOVERNED_ACTION_V0
       VIOLATION: CC_AUDIT_PARAMETER_VIOLATION
-    runs: CC_VALIDATE_TOOL_PARAMETERS_V1
   - workflow: ai_governance::WF_GOVERN_AGENT_ACTION_V0
     node: CC_RECORD_GOVERNED_ACTION_V0
     node_type: CC
@@ -382,7 +371,6 @@ registers:
       VIOLATION: EXIT_ACTIVE
       NOT_FOUND: EXIT_ERROR
       BACKEND_ERROR: EXIT_ERROR
-    runs: CC_RECLAIM_UNUSED_LICENSE_V1
   - workflow: ai_governance::WF_AUTO_RECLAIM_V0
     node: CC_APPEND_AUDIT_EVENT_RECLAIMED
     node_type: CC
@@ -825,54 +813,6 @@ registers:
     - rules
     produces:
     - validation_result
-    - rules
-    routing:
-      SUCCESS: continue
-      VIOLATION: exit
-    interpreted_by: null
-    semantic_status: SUCCESS
-    interface:
-      in:
-        parameters: parameters
-        rules: rules
-      out:
-        validation_result: validation_result
-        rules: rules
-  - cc_code: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1
-    step: '1'
-    step_name: lookup_parameter_rules
-    capability: capability_transforms::CT_PURE_LOOKUP_V0
-    kind: CT
-    operation: null
-    store: null
-    consumes:
-    - key
-    - map
-    produces:
-    - rules
-    routing:
-      SUCCESS: continue
-      VIOLATION: exit
-    interpreted_by: null
-    semantic_status: SUCCESS
-    interface:
-      in:
-        key: key
-        map: map
-      out:
-        rules: rules
-  - cc_code: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1
-    step: '2'
-    step_name: validate_parameters
-    capability: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
-    kind: CT
-    operation: null
-    store: null
-    consumes:
-    - parameters
-    - rules
-    produces:
-    - validation_result
     routing:
       SUCCESS: continue
       VIOLATION: exit
@@ -980,55 +920,6 @@ registers:
         is_inactive: is_inactive
         days_inactive: days_inactive
   - cc_code: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0
-    step: '2'
-    step_name: deregister_license
-    capability: capability_side_effects::CS_REGISTRY_V0
-    kind: CS
-    operation: DEREGISTER
-    store: null
-    consumes:
-    - key_or_address
-    produces:
-    - result_status
-    routing:
-      SUCCESS: exit
-      NOT_FOUND: exit
-      BACKEND_ERROR: exit
-    interpreted_by: null
-    semantic_status: SUCCESS
-    interface:
-      in:
-        key_or_address: key_or_address
-      out:
-        result_status: result_status
-  - cc_code: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
-    step: '1'
-    step_name: evaluate_inactivity
-    capability: ai_governance::CT_PURE_EVALUATE_INACTIVITY_V0
-    kind: CT
-    operation: null
-    store: null
-    consumes:
-    - last_active_date
-    - evaluation_date
-    - threshold_days
-    produces:
-    - is_inactive
-    - days_inactive
-    routing:
-      SUCCESS: continue
-      VIOLATION: exit
-    interpreted_by: null
-    semantic_status: SUCCESS
-    interface:
-      in:
-        last_active_date: last_active_date
-        evaluation_date: evaluation_date
-        threshold_days: threshold_days
-      out:
-        is_inactive: is_inactive
-        days_inactive: days_inactive
-  - cc_code: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
     step: '2'
     step_name: deregister_license
     capability: capability_side_effects::CS_REGISTRY_V0
@@ -1408,64 +1299,6 @@ registers:
     step: validate_parameters
     direction: OUTPUT
     field: validation_result
-    bound_to: capability_result.value
-  - owner: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0
-    step: validate_parameters
-    direction: OUTPUT
-    field: rules
-    bound_to: results.lookup_parameter_rules.rules
-  - owner: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1
-    step: lookup_parameter_rules
-    direction: INPUT
-    field: key
-    bound_to: inputs.tool_name
-  - owner: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1
-    step: lookup_parameter_rules
-    direction: INPUT
-    field: map
-    bound_to:
-      literal:
-        READ_RECORD:
-        - field: record_type
-          op: in
-          allowed:
-          - license_pool
-          - user_profile
-        - field: id
-          op: not_null
-        PROVISION_STANDARD_LICENSE:
-        - field: tier
-          op: eq
-          value: standard
-        - field: quantity
-          op: lte
-          value: 100
-        PROVISION_PREMIUM_LICENSE:
-        - field: tier
-          op: eq
-          value: premium
-        - field: quantity
-          op: lte
-          value: 50
-  - owner: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1
-    step: lookup_parameter_rules
-    direction: OUTPUT
-    field: rules
-    bound_to: capability_result.result
-  - owner: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1
-    step: validate_parameters
-    direction: INPUT
-    field: parameters
-    bound_to: inputs.parameters
-  - owner: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1
-    step: validate_parameters
-    direction: INPUT
-    field: rules
-    bound_to: results.lookup_parameter_rules.rules
-  - owner: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1
-    step: validate_parameters
-    direction: OUTPUT
-    field: validation_result
     bound_to: capability_result.valid
   - owner: ai_governance::WF_GOVERN_AGENT_ACTION_V0
     step: CC_NORMALIZE_AGENT_REQUEST_V0
@@ -1701,41 +1534,6 @@ registers:
     field: key_or_address
     bound_to: inputs.employee_id
   - owner: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0
-    step: deregister_license
-    direction: OUTPUT
-    field: result_status
-    bound_to: result_status
-  - owner: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
-    step: evaluate_inactivity
-    direction: INPUT
-    field: last_active_date
-    bound_to: inputs.last_active_date
-  - owner: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
-    step: evaluate_inactivity
-    direction: INPUT
-    field: evaluation_date
-    bound_to: inputs.evaluation_date
-  - owner: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
-    step: evaluate_inactivity
-    direction: INPUT
-    field: threshold_days
-    bound_to: inputs.threshold_days
-  - owner: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
-    step: evaluate_inactivity
-    direction: OUTPUT
-    field: is_inactive
-    bound_to: capability_result.is_inactive
-  - owner: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
-    step: evaluate_inactivity
-    direction: OUTPUT
-    field: days_inactive
-    bound_to: capability_result.days_inactive
-  - owner: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
-    step: deregister_license
-    direction: INPUT
-    field: key_or_address
-    bound_to: inputs.employee_id
-  - owner: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
     step: deregister_license
     direction: OUTPUT
     field: result_status
@@ -2191,34 +1989,6 @@ registers:
   - artifact: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0
     direction: OUTPUT
     field: validation_result
-    type: object
-    required: 'NO'
-    default: null
-    meaning: validation result
-  - artifact: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1
-    direction: INPUT
-    field: tool_name
-    type: string
-    required: 'YES'
-    default: null
-    meaning: tool name
-  - artifact: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1
-    direction: INPUT
-    field: parameters
-    type: object
-    required: 'YES'
-    default: null
-    meaning: parameters
-  - artifact: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1
-    direction: OUTPUT
-    field: rules
-    type: array
-    required: 'NO'
-    default: null
-    meaning: rules
-  - artifact: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1
-    direction: OUTPUT
-    field: validation_result
     type: boolean
     required: 'NO'
     default: null
@@ -2487,64 +2257,6 @@ registers:
     default: null
     meaning: is inactive
   - artifact: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0
-    direction: OUTPUT
-    field: days_inactive
-    type: integer
-    required: 'NO'
-    default: null
-    meaning: days inactive
-  - artifact: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
-    direction: INPUT
-    field: license_id
-    type: string
-    required: 'YES'
-    default: null
-    meaning: license id
-  - artifact: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
-    direction: INPUT
-    field: employee_id
-    type: string
-    required: 'YES'
-    default: null
-    meaning: employee id
-  - artifact: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
-    direction: INPUT
-    field: last_active_date
-    type: string
-    required: 'YES'
-    default: null
-    meaning: last active date
-    format: date-time
-  - artifact: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
-    direction: INPUT
-    field: evaluation_date
-    type: string
-    required: 'YES'
-    default: null
-    meaning: evaluation date
-    format: date-time
-  - artifact: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
-    direction: INPUT
-    field: threshold_days
-    type: integer
-    required: 'YES'
-    default: 30
-    meaning: threshold days
-  - artifact: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
-    direction: OUTPUT
-    field: result_status
-    type: string
-    required: 'NO'
-    default: null
-    meaning: result status
-  - artifact: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
-    direction: OUTPUT
-    field: is_inactive
-    type: boolean
-    required: 'NO'
-    default: null
-    meaning: is inactive
-  - artifact: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
     direction: OUTPUT
     field: days_inactive
     type: integer
@@ -2954,10 +2666,6 @@ registers:
   - artifact: ai_governance::AC_SYSTEM_GOVERNOR_V0
     property: type
     value: system
-  - artifact: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1
-    property: supersedes
-    value:
-    - ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0
   - artifact: ai_governance::STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0
     property: description
     value: Maps entity types to storage implementations and paths
@@ -3024,10 +2732,6 @@ registers:
   - artifact: ai_governance::AC_SYSTEM_V0
     property: type
     value: system
-  - artifact: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
-    property: supersedes
-    value:
-    - ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0
   - artifact: ai_governance::STRUCTURE_AI_LICENSING_STORAGE_V0
     property: description
     value: Maps licensing entity stores to paths under the instance data root.
@@ -3107,7 +2811,7 @@ registers:
   - store_name: LICENSE_REGISTRY
     storage_type: CS_REGISTRY_V0
     proposed_path: ai_governance/ai_licensing/license_registry.json
-    used_by: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1
+    used_by: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0
     structure: ai_governance::STRUCTURE_AI_LICENSING_STORAGE_V0
   - store_name: LICENSE_AUDIT
     storage_type: CS_APPENDONLY_JSONL_V0
@@ -3255,19 +2959,19 @@ registers:
   artifact_summary:
   - action: NEW
     subdomain: agent_governance
-    count: '17'
+    count: '16'
     artifacts: ai_governance::AC_AGENT_V0, ai_governance::AC_ENTERPRISE_RUNTIME_V0, ai_governance::AC_SYSTEM_GOVERNOR_V0,
       ai_governance::CC_BIND_LICENSE_TO_TOOL_SURFACE_V0, ai_governance::CC_CHECK_TOOL_DECLARED_V0, ai_governance::CC_NORMALIZE_AGENT_REQUEST_V0,
       ai_governance::CC_RECORD_DENIED_ACTION_V0, ai_governance::CC_RECORD_GOVERNED_ACTION_V0, ai_governance::CC_RESOLVE_LICENSE_TIER_V0,
-      ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0, ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V1, ai_governance::EV_AGENT_ACTION_AUTHORIZED_V0,
-      ai_governance::EV_AGENT_ACTION_DENIED_V0, ai_governance::IN_AGENT_ACTION_REQUESTED_V0, ai_governance::STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0,
+      ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0, ai_governance::EV_AGENT_ACTION_AUTHORIZED_V0, ai_governance::EV_AGENT_ACTION_DENIED_V0,
+      ai_governance::IN_AGENT_ACTION_REQUESTED_V0, ai_governance::STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0,
       ai_governance::RB_AGENT_GOVERNANCE_BINDINGS_V0, ai_governance::WF_GOVERN_AGENT_ACTION_V0
   - action: NEW
     subdomain: ai_licensing
-    count: '26'
+    count: '25'
     artifacts: ai_governance::AC_EMPLOYEE_V0, ai_governance::AC_SYSTEM_V0, ai_governance::CC_APPEND_AUDIT_EVENT_V0,
-      ai_governance::CC_PROVISION_LICENSE_V0, ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0, ai_governance::CC_RECLAIM_UNUSED_LICENSE_V1,
-      ai_governance::CC_VALIDATE_ELIGIBILITY_V0, ai_governance::CT_PURE_CHECK_QUOTA_AVAILABLE_V0, ai_governance::CT_PURE_CHECK_TRAINING_STATUS_V0,
+      ai_governance::CC_PROVISION_LICENSE_V0, ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0, ai_governance::CC_VALIDATE_ELIGIBILITY_V0,
+      ai_governance::CT_PURE_CHECK_QUOTA_AVAILABLE_V0, ai_governance::CT_PURE_CHECK_TRAINING_STATUS_V0,
       ai_governance::CT_PURE_EVALUATE_INACTIVITY_V0, ai_governance::EV_EMPLOYEE_REGISTERED_V0, ai_governance::EV_LICENSE_CAP_SET_V0,
       ai_governance::EV_LICENSE_PROVISIONED_V0, ai_governance::EV_LICENSE_REVOKED_V0, ai_governance::EV_PROVISION_DENIED_V0,
       ai_governance::EV_TRAINING_COMPLETED_V0, ai_governance::EV_USAGE_RECORDED_V0, ai_governance::IN_DENY_PROVISION_V0,

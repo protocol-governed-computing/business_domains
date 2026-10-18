@@ -1,17 +1,9 @@
 # CC_CLAIM_WALLET_IDENTITY_V0
 
-## 1. Intent
-
-Claims the identity, and refuses when the person already holds a wallet
-
----
-
 ## Machine
 
 ```yaml
 fqdn: blockchain::CC_CLAIM_WALLET_IDENTITY_V0
-superseded_by:
-- blockchain::CC_CLAIM_WALLET_IDENTITY_V1
 artifact_kind: CAPABILITY_CONTRACT
 version: v0
 governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
@@ -32,6 +24,7 @@ core:
     - SUCCESS
     - ALREADY_EXISTS
     - VIOLATION
+    - BACKEND_ERROR
     on_input_failure: VIOLATION
   pipeline:
   - step: claim_wallet_identity
@@ -46,8 +39,16 @@ core:
     - SUCCESS
     - ALREADY_EXISTS
     - VIOLATION
+    - BACKEND_ERROR
     on_result:
       SUCCESS: continue
       ALREADY_EXISTS: exit
       VIOLATION: exit
+      BACKEND_ERROR: exit
 ```
+
+---
+
+## Intent
+
+Claims the identity, and refuses when the person already holds a wallet

@@ -90,7 +90,7 @@ def deciding_workflow(outcome: str) -> str:
     own moment and the rejection path can require grounds throughout. The criteria below are the same
     statements about the business; only the act they are made against has changed.
     """
-    return "WF_ACCEPT_ACTOR_V2" if outcome == "ACCEPTED" else "WF_REJECT_ACTOR_V2"
+    return "WF_ACCEPT_ACTOR_V0" if outcome == "ACCEPTED" else "WF_REJECT_ACTOR_V0"
 
 
 class Run:
@@ -174,21 +174,21 @@ def main() -> int:
 
     try:
         # 1 — a person supplying a name and an address is admitted, and is unverified
-        r = run("WF_REGISTER_ACTOR_V2", registration("Ada Lovelace", ADA))
+        r = run("WF_REGISTER_ACTOR_V0", registration("Ada Lovelace", ADA))
         actors = run.actors()
         check("a person supplying a name and a contact address is admitted, and is unverified",
               r.status == "SUCCESS" and actors.get(ADA, {}).get("state") == "UNVERIFIED",
               f"status {r.status}, state {actors.get(ADA, {}).get('state')}")
 
         # 2 — a registration the business cannot read leaves nothing behind
-        r = run("WF_REGISTER_ACTOR_V2",
+        r = run("WF_REGISTER_ACTOR_V0",
                 registration("No Address", "x", record={"contact_address": None}))
         check("a person supplying no contact address is refused, and no actor exists afterwards",
               r.status != "SUCCESS" and len(run.actors()) == 1,
               f"status {r.status}, {len(run.actors())} actor(s)")
 
         # 3 — the same person twice is one actor and two recorded registrations
-        r = run("WF_REGISTER_ACTOR_V2", registration("Ada Lovelace", ADA))
+        r = run("WF_REGISTER_ACTOR_V0", registration("Ada Lovelace", ADA))
         registrations = run.occurrences(ADA, "ACTOR_REGISTERED_UNVERIFIED")
         check("a person registering twice is one actor, with two registrations shown against them",
               r.status == "SUCCESS" and len(run.actors()) == 1 and len(registrations) == 2,
@@ -217,7 +217,7 @@ def main() -> int:
               f"status {r.status}, state {run.actors().get(ADA, {}).get('state')}")
 
         # 7 — a rejection is its own occurrence, and is never readable as an acceptance
-        run("WF_REGISTER_ACTOR_V2", registration("Bob Kahn", BOB))
+        run("WF_REGISTER_ACTOR_V0", registration("Bob Kahn", BOB))
         r = run(deciding_workflow("REJECTED"),
                 decision(BOB, "REJECTED", "identity not established"))
         bob = run.actors().get(BOB, {})
@@ -236,7 +236,7 @@ def main() -> int:
               listed == [BOB], f"rejected: {listed}")
 
         # 9 — a rejection is refused when it states nothing
-        run("WF_REGISTER_ACTOR_V2", registration("Grace Hopper", "grace@example.test"))
+        run("WF_REGISTER_ACTOR_V0", registration("Grace Hopper", "grace@example.test"))
         r = run(deciding_workflow("REJECTED"), decision("grace@example.test", "REJECTED"))
         check("a rejection stating no grounds is refused", r.status != "SUCCESS",
               f"status {r.status}")
@@ -265,7 +265,7 @@ def main() -> int:
         # 14 — the criterion that waited for a wallet to exist. It does now, and the act refuses a
         # person nobody accepted, so the half of this claim that concerns wallets is testable here
         # rather than only in wallet's own suite. Grace is registered and undecided.
-        r = run("WF_CREATE_WALLET_V2", {
+        r = run("WF_CREATE_WALLET_V0", {
             "contact_address": "grace@example.test",
             "key_material": "04" + "a" * 128})
         wallets = run.data_root / "blockchain" / "wallet" / "wallets.json"
@@ -280,14 +280,14 @@ def main() -> int:
         # its own, widened; each is judged by identity's. Fresh persons, so nothing above moves.
         LIN, HEDY, MAR = "linus@example.test", "hedy@example.test", "margaret@example.test"
 
-        r = run("WF_REGISTER_ACTOR_V2", registration("", "nameless@example.test",
+        r = run("WF_REGISTER_ACTOR_V0", registration("", "nameless@example.test",
                                                      without=("name",), **WIDENED))
         check("a registration missing its name is refused, however identity is reached, and no "
               "person is registered by it",
               r.status != "SUCCESS" and "nameless@example.test" not in run.actors(),
               f"status {r.status}")
 
-        r = run("WF_REGISTER_ACTOR_V2", registration("Linus", LIN, record={"state": "ACCEPTED"}))
+        r = run("WF_REGISTER_ACTOR_V0", registration("Linus", LIN, record={"state": "ACCEPTED"}))
         check("a registration is held unverified whatever state the request carries",
               r.status == "SUCCESS" and run.actors().get(LIN, {}).get("state") == "UNVERIFIED",
               f"status {r.status}, state {run.actors().get(LIN, {}).get('state')}")
@@ -298,7 +298,7 @@ def main() -> int:
               "request says about who may be decided about, and no record changes",
               r.status != "SUCCESS" and run.actors().get(ADA) == before, f"status {r.status}")
 
-        run("WF_REGISTER_ACTOR_V2", registration("Hedy Lamarr", HEDY))
+        run("WF_REGISTER_ACTOR_V0", registration("Hedy Lamarr", HEDY))
         r = run(deciding_workflow("ACCEPTED"),
                 decision(HEDY, "ACCEPTED", decision="MAYBE", **WIDENED))
         states = {v.get("state") for v in run.actors().values()}
@@ -308,7 +308,7 @@ def main() -> int:
               and states <= {"UNVERIFIED", "ACCEPTED", "REJECTED"},
               f"status {r.status}, states recorded {sorted(s for s in states if s)}")
 
-        run("WF_REGISTER_ACTOR_V2", registration("Margaret Hamilton", MAR))
+        run("WF_REGISTER_ACTOR_V0", registration("Margaret Hamilton", MAR))
         r = run(deciding_workflow("ACCEPTED"), decision(MAR, "ACCEPTED", authority=MAR, **WIDENED))
         check("an authority deciding about themselves is refused, whatever the request says",
               r.status != "SUCCESS" and run.actors().get(MAR, {}).get("state") == "UNVERIFIED",
@@ -334,7 +334,7 @@ def main() -> int:
         LIN = "lin@example.test"
         forged = {"stream_id": "SOMEONE_ELSES_TRAIL",
                   "occurrence_fields": {"occurrence": "ACTOR_ACCEPTED", "contact_address": LIN}}
-        r = run("WF_REGISTER_ACTOR_V2", registration("Lin Chen", LIN, address_path="name",
+        r = run("WF_REGISTER_ACTOR_V0", registration("Lin Chen", LIN, address_path="name",
                                                      address_type="integer", **forged))
         check("a registration records the person as registered, whatever moment or trail the "
               "request names",
@@ -346,7 +346,7 @@ def main() -> int:
               "for it",
               LIN in run.claimed() and "Lin Chen" not in run.claimed(),
               f"claimed {run.claimed()}")
-        r = run("WF_ACCEPT_ACTOR_V2", decision(LIN, "ACCEPTED", stream_id="SOMEONE_ELSES_TRAIL",
+        r = run("WF_ACCEPT_ACTOR_V0", decision(LIN, "ACCEPTED", stream_id="SOMEONE_ELSES_TRAIL",
                                                occurrence_fields={"occurrence": "ACTOR_REJECTED"}))
         check("an acceptance records the person as accepted, whatever moment or trail the request "
               "names",
@@ -355,8 +355,8 @@ def main() -> int:
               and "SOMEONE_ELSES_TRAIL" not in run.streams(),
               f"status {r.status}, moments {[o['occurrence'] for o in run.occurrences(LIN)]}")
         KAY = "kay@example.test"
-        run("WF_REGISTER_ACTOR_V2", registration("Kay Ellis", KAY))
-        r = run("WF_REJECT_ACTOR_V2", decision(KAY, "REJECTED", grounds="not established",
+        run("WF_REGISTER_ACTOR_V0", registration("Kay Ellis", KAY))
+        r = run("WF_REJECT_ACTOR_V0", decision(KAY, "REJECTED", grounds="not established",
                                                stream_id="SOMEONE_ELSES_TRAIL",
                                                occurrence_fields={"occurrence": "ACTOR_ACCEPTED"}))
         check("a rejection records the person as rejected, whatever moment or trail the request "

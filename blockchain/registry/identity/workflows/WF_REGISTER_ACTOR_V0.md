@@ -1,15 +1,14 @@
-# WF_REGISTER_ACTOR_V2
+# WF_REGISTER_ACTOR_V0
 
 ## Machine
 
 ```yaml
-fqdn: blockchain::WF_REGISTER_ACTOR_V2
+fqdn: blockchain::WF_REGISTER_ACTOR_V0
 artifact_kind: WORKFLOW
-version: v2
+version: v0
 governed_by: workflow::CONSTITUTION_WORKFLOW_V0
 authority: pgc.platform
 concern: identity
-supersedes: blockchain::WF_REGISTER_ACTOR_V1
 runtime_binding: blockchain::RB_IDENTITY_BINDINGS_V0
 subdomain: identity
 structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0

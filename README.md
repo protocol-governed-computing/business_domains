@@ -94,7 +94,7 @@ curl -s -X POST http://localhost:8000/blockchain -H 'Content-Type: application/j
 { "outcome": "SUCCESS", "result_class": "SUCCESS",
   "result": { "contact_address": "ada@example.com",
               "occurrence": "ACTOR_REGISTERED_UNVERIFIED", "sequence_number": 1 },
-  "evidence": [ "trace:traces/blockchain/WF_REGISTER_ACTOR_V2/…" ] }
+  "evidence": [ "trace:traces/blockchain/WF_REGISTER_ACTOR_V0/…" ] }
 ```
 
 Accepting an unknown address returns a governed `NOT_FOUND` without writing anything; registering
@@ -105,7 +105,7 @@ To run a workflow directly against the sealed snapshot, without any web surface:
 
 ```bash
 cd ../protocol_runtime
-./run.sh run --wf blockchain::WF_REGISTER_ACTOR_V2 \
+./run.sh run --wf blockchain::WF_REGISTER_ACTOR_V0 \
              --payload ../business_domains/blockchain/testbed/identity/test_payloads/01_register_actor.json \
              --data-root /tmp/pgc_instance
 ```

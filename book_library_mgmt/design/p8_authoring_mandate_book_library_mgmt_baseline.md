@@ -210,14 +210,8 @@ registers:
     action: NEW
     subdomain: catalog
     depends_on: null
-  - wave: '1'
-    step: '34'
-    code: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    action: NEW
-    subdomain: catalog
-    depends_on: null
   - wave: '2'
-    step: '35'
+    step: '34'
     code: book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0
     action: NEW
     subdomain: catalog
@@ -225,56 +219,56 @@ registers:
     - book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0
     - book_library_mgmt::CT_PURE_SELECT_RECORDS_V0
   - wave: '2'
-    step: '36'
+    step: '35'
     code: book_library_mgmt::CC_CLAIM_BOOK_IDENTITY_V0
     action: NEW
     subdomain: catalog
     depends_on:
     - book_library_mgmt::CT_PURE_FORM_BOOK_IDENTITY_KEY_V0
   - wave: '2'
-    step: '37'
+    step: '36'
     code: book_library_mgmt::CC_CLAIM_WORK_IDENTITY_V0
     action: NEW
     subdomain: catalog
     depends_on:
     - book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0
   - wave: '2'
-    step: '38'
+    step: '37'
     code: book_library_mgmt::CC_REGISTER_BOOK_V0
     action: NEW
     subdomain: catalog
     depends_on:
     - book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0
   - wave: '2'
-    step: '39'
+    step: '38'
     code: book_library_mgmt::CC_RESOLVE_WORK_V0
     action: NEW
     subdomain: catalog
     depends_on:
     - book_library_mgmt::CT_PURE_FORM_WORK_IDENTITY_KEY_V0
   - wave: '2'
-    step: '40'
+    step: '39'
     code: book_library_mgmt::CC_SEARCH_CATALOG_V0
     action: NEW
     subdomain: catalog
     depends_on:
     - book_library_mgmt::CT_PURE_GROUP_RECORDS_V0
   - wave: '2'
-    step: '41'
+    step: '40'
     code: book_library_mgmt::CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
     action: NEW
     subdomain: catalog
     depends_on:
     - book_library_mgmt::CT_PURE_FORM_BOOK_IDENTITY_KEY_V0
   - wave: '2'
-    step: '42'
+    step: '41'
     code: book_library_mgmt::RB_CATALOG_BINDINGS_V0
     action: NEW
     subdomain: catalog
     depends_on:
     - book_library_mgmt::STRUCTURE_CATALOG_STORAGE_V0
   - wave: '3'
-    step: '43'
+    step: '42'
     code: book_library_mgmt::WF_REGISTER_ADDITIONAL_EDITION_V0
     action: NEW
     subdomain: catalog
@@ -290,7 +284,7 @@ registers:
     - book_library_mgmt::CC_REGISTER_ADDITIONAL_EDITION_V0
     - book_library_mgmt::CC_APPEND_CATALOG_OPERATION_V0
   - wave: '3'
-    step: '44'
+    step: '43'
     code: book_library_mgmt::WF_REGISTER_BOOK_V0
     action: NEW
     subdomain: catalog
@@ -310,7 +304,7 @@ registers:
     - book_library_mgmt::CC_REGISTER_PHYSICAL_COPY_V0
     - book_library_mgmt::CC_APPEND_CATALOG_OPERATION_V0
   - wave: '3'
-    step: '45'
+    step: '44'
     code: book_library_mgmt::WF_REGISTER_PHYSICAL_COPY_V0
     action: NEW
     subdomain: catalog
@@ -324,7 +318,7 @@ registers:
     - book_library_mgmt::CC_REGISTER_PHYSICAL_COPY_V0
     - book_library_mgmt::CC_APPEND_CATALOG_OPERATION_V0
   - wave: '3'
-    step: '46'
+    step: '45'
     code: book_library_mgmt::WF_REINSTATE_BOOK_RECORD_V0
     action: NEW
     subdomain: catalog
@@ -336,7 +330,7 @@ registers:
     - book_library_mgmt::CC_REINSTATE_BOOK_RECORD_V0
     - book_library_mgmt::CC_APPEND_CATALOG_OPERATION_V0
   - wave: '3'
-    step: '47'
+    step: '46'
     code: book_library_mgmt::WF_REINSTATE_PHYSICAL_COPY_V0
     action: NEW
     subdomain: catalog
@@ -348,7 +342,7 @@ registers:
     - book_library_mgmt::CC_REINSTATE_PHYSICAL_COPY_V0
     - book_library_mgmt::CC_APPEND_CATALOG_OPERATION_V0
   - wave: '3'
-    step: '48'
+    step: '47'
     code: book_library_mgmt::WF_RETIRE_BOOK_RECORD_V0
     action: NEW
     subdomain: catalog
@@ -361,7 +355,7 @@ registers:
     - book_library_mgmt::CC_RETIRE_BOOK_RECORD_V0
     - book_library_mgmt::CC_APPEND_CATALOG_OPERATION_V0
   - wave: '3'
-    step: '49'
+    step: '48'
     code: book_library_mgmt::WF_RETIRE_PHYSICAL_COPY_V0
     action: NEW
     subdomain: catalog
@@ -374,7 +368,7 @@ registers:
     - book_library_mgmt::CC_RETIRE_PHYSICAL_COPY_V0
     - book_library_mgmt::CC_APPEND_CATALOG_OPERATION_V0
   - wave: '3'
-    step: '50'
+    step: '49'
     code: book_library_mgmt::WF_RETRIEVE_BOOK_DETAILS_V0
     action: NEW
     subdomain: catalog
@@ -386,7 +380,7 @@ registers:
     - book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0
     - book_library_mgmt::CC_APPEND_CATALOG_OPERATION_V0
   - wave: '3'
-    step: '51'
+    step: '50'
     code: book_library_mgmt::WF_SEARCH_CATALOG_V0
     action: NEW
     subdomain: catalog
@@ -398,7 +392,7 @@ registers:
     - book_library_mgmt::CC_SEARCH_CATALOG_V0
     - book_library_mgmt::CC_APPEND_CATALOG_OPERATION_V0
   - wave: '3'
-    step: '52'
+    step: '51'
     code: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
     action: NEW
     subdomain: catalog
@@ -407,20 +401,6 @@ registers:
     - book_library_mgmt::AC_LIBRARY_STAFF_V0
     - book_library_mgmt::EV_BIBLIOGRAPHIC_INFORMATION_UPDATED_V0
     - book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    - book_library_mgmt::CC_CONFIRM_STAFF_AUTHORIZED_V0
-    - book_library_mgmt::CC_RESOLVE_BOOK_IDENTITY_V0
-    - book_library_mgmt::CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    - book_library_mgmt::CC_APPEND_CATALOG_OPERATION_V0
-  - wave: '3'
-    step: '53'
-    code: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    action: NEW
-    subdomain: catalog
-    depends_on:
-    - book_library_mgmt::RB_CATALOG_BINDINGS_V0
-    - book_library_mgmt::AC_LIBRARY_STAFF_V0
-    - book_library_mgmt::EV_BIBLIOGRAPHIC_INFORMATION_UPDATED_V0
-    - book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
     - book_library_mgmt::CC_CONFIRM_STAFF_AUTHORIZED_V0
     - book_library_mgmt::CC_RESOLVE_BOOK_IDENTITY_V0
     - book_library_mgmt::CC_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
@@ -434,8 +414,8 @@ registers:
     code: book_library_mgmt::WF_REGISTER_ADDITIONAL_EDITION_V0
   mandate_artifact_summary:
   - action: NEW
-    count: '53'
-    description: 1 STRUCTURE, 1 AC, 6 EV, 4 CT, 18 CC, 11 IN, 11 WF, 1 RB
+    count: '51'
+    description: 1 STRUCTURE, 1 AC, 6 EV, 4 CT, 18 CC, 10 IN, 10 WF, 1 RB
   field_declarations:
   - code: book_library_mgmt::STRUCTURE_CATALOG_STORAGE_V0
     subdomain_field: catalog
@@ -503,8 +483,6 @@ registers:
     subdomain_field: catalog
   - code: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
     subdomain_field: catalog
-  - code: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    subdomain_field: catalog
   - code: book_library_mgmt::CC_ASSEMBLE_BOOK_DETAILS_V0
     subdomain_field: catalog
   - code: book_library_mgmt::CC_CLAIM_BOOK_IDENTITY_V0
@@ -540,8 +518,6 @@ registers:
   - code: book_library_mgmt::WF_SEARCH_CATALOG_V0
     subdomain_field: catalog
   - code: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    subdomain_field: catalog
-  - code: book_library_mgmt::WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
     subdomain_field: catalog
   new_capabilities:
   - code: book_library_mgmt::CT_PURE_FORM_BOOK_IDENTITY_KEY_V0
@@ -603,15 +579,10 @@ registers:
   - code: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
     purpose: A request to change a registered book's description
     workflow: WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
-    inputs: staff_credentials:object, authorization_rules:array, identity_key:string, title:string, author:string,
-      publication_year:integer, updated_fields:object, staff_id:string
-  - code: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
-    purpose: A request to change a registered book's description
-    workflow: WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
     inputs: staff_credentials:object, staff_id:string, identity_key:string, updated_fields:object
   cross_subdomain_notes: []
 ```
 
-The 53 artifacts of `book_library_mgmt`'s design of record, scheduled in dependency order. Written by
+The 51 artifacts of `book_library_mgmt`'s design of record, scheduled in dependency order. Written by
 `python -m transformation.record` from the P7 beside it. The mandate orders the build; it decides
 nothing.
