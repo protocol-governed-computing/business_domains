@@ -747,6 +747,7 @@ registers:
     handler_target: blockchain::WF_RECORD_VERIFICATION_DECISION_V0
     field: grounds
     bound_to: surface.record.grounds
+    required: false
     source_finding: {phase: p7, register: interface_fields, key: 'blockchain::TE_ACCEPT_ACTOR_V0 grounds'}
   - artifact: blockchain::TE_ACCEPT_ACTOR_V0
     direction: EGRESS

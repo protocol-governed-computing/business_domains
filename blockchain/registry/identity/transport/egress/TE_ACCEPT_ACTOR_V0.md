@@ -28,6 +28,7 @@ output_contract:
   from: surface.record.verifying_authority
 - field: grounds
   from: surface.record.grounds
+  required: false
 - field: occurred_at
   from: surface.record.occurred_at
 - field: sequence_number
