@@ -4725,6 +4725,26 @@ registers:
     value: causal_language_model::STRUCTURE_MODEL_RESPONSE_STORAGE_V0
     source_finding: {phase: p7, register: rb_declarations, key: RB_MODEL_RESPONSE_BINDINGS_V0}
   artifact_properties:
+  - artifact: causal_language_model::WF_REGISTER_MODEL_V0
+    property: actor_context
+    value: causal_language_model::AC_MODEL_STAFF_V0
+    source_finding: {phase: p7, register: new_artifacts, key: WF_REGISTER_MODEL_V0}
+  - artifact: causal_language_model::WF_PLACE_MODEL_IN_SERVICE_V0
+    property: actor_context
+    value: causal_language_model::AC_MODEL_STAFF_V0
+    source_finding: {phase: p7, register: new_artifacts, key: WF_PLACE_MODEL_IN_SERVICE_V0}
+  - artifact: causal_language_model::WF_WITHDRAW_MODEL_FROM_SERVICE_V0
+    property: actor_context
+    value: causal_language_model::AC_MODEL_STAFF_V0
+    source_finding: {phase: p7, register: new_artifacts, key: WF_WITHDRAW_MODEL_FROM_SERVICE_V0}
+  - artifact: causal_language_model::WF_RETRIEVE_USER_PROMPT_RECORD_V0
+    property: actor_context
+    value: causal_language_model::AC_MODEL_STAFF_V0
+    source_finding: {phase: p7, register: new_artifacts, key: WF_RETRIEVE_USER_PROMPT_RECORD_V0}
+  - artifact: causal_language_model::WF_SUBMIT_USER_PROMPT_V0
+    property: actor_context
+    value: causal_language_model::AC_REQUESTER_V0
+    source_finding: {phase: p7, register: new_artifacts, key: WF_SUBMIT_USER_PROMPT_V0}
   - artifact: causal_language_model::AC_MODEL_STAFF_V0
     property: type
     value: ENDUSER

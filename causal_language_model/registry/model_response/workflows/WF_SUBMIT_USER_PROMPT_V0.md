@@ -15,7 +15,7 @@ structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0
 core:
   summary: Admitting a user prompt, writing the response under the rules, releasing or refusing it, and
     recording it
-  actor_context: causal_language_model::AC_MODEL_STAFF_V0
+  actor_context: causal_language_model::AC_REQUESTER_V0
   start_node: IN_SUBMIT_USER_PROMPT_V0
   nodes:
     IN_SUBMIT_USER_PROMPT_V0:
