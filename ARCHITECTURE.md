@@ -242,7 +242,7 @@ blockchain/
     registry/identity/      workflows · intents · contracts · events · actors ·
                             storage structure · runtime bindings · transport contracts
     client/                 web client, HTTP binding table, composition launcher
-    cr_dossiers/            the governed record of each change, with its baseline pin
+    design/                 the design of record: P7 and P8, generated from the registry
     testbed/                payloads, including ones that must be refused
 
 book_library_mgmt/          same shape; subdomain `catalog`; plus implementation/ transforms

@@ -281,12 +281,9 @@ rule set before the next phase begins:
 - **Construction:** a generator produces the artifacts from the design. A check confirms that the
   design determines every fact of every artifact.
 
-A person approves the phases. The dossiers are in `cr_dossiers/`:
-
-- **`cr_01_model_response`** built the test model's way.
-- **`cr_02_hosted_model`** built the hosted way. The first delivery was then run against Qwen3 8B.
-  The model exposed the partial-number leak, the lookalike and the invented number. So the change was
-  withdrawn and redone from P0, with grounding added. `delivery.md` tells that story.
+A person approves the phases. The domain's design of record is in `design/`: one P7 and one P8,
+generated from the registry, which construction renders back into the registry. A change to the
+domain is a dossier designed against the composition.
 
 ## 11. Layout
 
@@ -301,7 +298,7 @@ causal_language_model/
 ├── testbed/
 │   ├── model_response/          execution validation of the test model's way
 │   └── hosted_model/            execution validation of the hosted way
-├── cr_dossiers/                 the governed record of each change
+├── design/                      the design of record, generated from the registry
 └── doc/                         background notes
 ```
 
@@ -320,7 +317,7 @@ causal_language_model/
 | Check | What it proves | Command |
 |---|---|---|
 | Transform conformance | Every transform against its declared test cases | runs at build |
-| Construction check | The design determines every artifact | `tc construction check cr_dossiers/cr_02_hosted_model …` |
+| Construction acceptance | The design of record determines every artifact | `transformation_compilers/scripts/testbed/construction_acceptance.py` |
 | Test model's way | 27 acceptance criteria, including replay | `testbed/model_response/execution_validation.py` |
 | Hosted way | 15 acceptance criteria with the test model and a scripted model; the 16th with Qwen3 8B | `testbed/hosted_model/execution_validation.py [--qwen]` |
 | Full regression | Clean rebuild, every check, every domain | `bash .github/process/regression.sh --all` |

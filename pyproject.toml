@@ -46,7 +46,7 @@ Standard = "https://doi.org/10.5281/zenodo.22150616"
 # ct_pure_derive_wallet_address_v0` — so the top-level names are fixed by snapshots
 # already sealed and cannot be nested under a prefix.
 #
-# testbed/, client/, registry/, cr_dossiers/ and snapshot/ are excluded: harnesses,
+# testbed/, client/, registry/, design/ and snapshot/ are excluded: harnesses,
 # browser surfaces and declarations, none of which a runtime imports. The registry
 # in particular stays repository-side, resolved through PGC_PLATFORM_ROOT and
 # PGC_DOMAIN_ROOTS, so a wheel never carries a competing governance surface.

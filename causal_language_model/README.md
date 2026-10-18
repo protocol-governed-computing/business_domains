@@ -190,7 +190,4 @@ python business_domains/causal_language_model/testbed/hosted_model/execution_val
 ## Where to read next
 
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) — how the domain meets the claims above.
-- `cr_dossiers/cr_01_model_response/` — how the test model's way was designed and delivered.
-- `cr_dossiers/cr_02_hosted_model/` — how the hosted way was designed. It includes the business's own
-  statement of the problem (`p0_business_problem_statement.md`) and what the model uncovered
-  (`delivery.md`).
+- `design/` — the domain's design of record, P7 and P8, generated from the registry.
