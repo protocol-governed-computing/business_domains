@@ -69,11 +69,9 @@ core:
       description: Employee requesting license
     context:
       type: object
-      required: false
       description: Runtime context data (training_completed, assigned_count, cap, reason_code)
     generated:
       type: object
-      required: false
       description: Generated data (license_id)
 
   outcomes:

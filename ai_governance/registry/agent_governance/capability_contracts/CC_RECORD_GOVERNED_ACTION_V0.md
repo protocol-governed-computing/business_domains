@@ -98,7 +98,10 @@ core:
       type: string
 
   result_status_contract:
-    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]
+    allowed:
+    - BACKEND_ERROR
+    - VIOLATION
+    - SUCCESS
     on_input_failure: VIOLATION
 
   pipeline:

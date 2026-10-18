@@ -45,6 +45,7 @@ concern: ai_licensing
 
 core:
   summary: Provision Denied
+  subdomain: ai_licensing
   description: Emitted when license provisioning is denied (first-class terminal outcome)
 
   schema:
@@ -53,9 +54,6 @@ core:
       required: true
     reason_code:
       type: string
-      enum:
-        - TRAINING_INCOMPLETE
-        - CAP_REACHED
       required: true
     timestamp:
       type: string

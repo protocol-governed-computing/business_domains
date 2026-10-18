@@ -48,6 +48,7 @@ concern: agent_governance
 
 core:
   summary: Agent action denied by governance
+  subdomain: agent_governance
   description: Emitted when an agent-proposed action is structurally denied at any governance stage
 
   schema:

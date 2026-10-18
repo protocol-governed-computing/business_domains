@@ -45,6 +45,7 @@ concern: ai_licensing
 
 core:
   summary: License Revoked
+  subdomain: ai_licensing
   description: Emitted when a license is revoked and returned to pool
 
   schema:
@@ -53,8 +54,6 @@ core:
       required: true
     reason:
       type: string
-      enum:
-        - INACTIVITY
       required: true
     timestamp:
       type: string

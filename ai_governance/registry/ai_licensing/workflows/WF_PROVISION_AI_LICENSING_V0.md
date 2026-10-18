@@ -131,17 +131,13 @@ core:
 
     EXIT_PROVISIONED:
       type: EXIT
-      reason: COMPLETED
       emit: ai_governance::EV_LICENSE_PROVISIONED_V0
     EXIT_DENIED:
       type: EXIT
-      reason: COMPLETED
       emit: ai_governance::EV_PROVISION_DENIED_V0
     EXIT_REJECTED:
       type: EXIT
-      reason: EXITED
 
     EXIT_ERROR:
       type: EXIT
-      reason: FAILED
 ```

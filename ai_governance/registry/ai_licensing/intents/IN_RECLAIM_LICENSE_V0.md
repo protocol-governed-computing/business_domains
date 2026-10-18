@@ -73,7 +73,6 @@ core:
       description: Inactivity threshold in days
     context:
       type: object
-      required: false
       description: Runtime context data (employee_id, last_active_date, evaluation_date, days_inactive)
 
   outcomes:

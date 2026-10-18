@@ -44,6 +44,7 @@ concern: ai_licensing
 
 core:
   summary: License Cap Set
+  subdomain: ai_licensing
   description: Emitted when a license cap is established
 
   schema:
@@ -54,4 +55,9 @@ core:
       type: string
       format: date-time
       required: true
+    timestamp:
+      type: string
+      format: date-time
+      required: true
+      description: When the moment occurred
 ```

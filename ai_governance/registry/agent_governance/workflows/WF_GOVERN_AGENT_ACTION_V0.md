@@ -221,29 +221,22 @@ core:
 
     EXIT_SUCCESS:
       type: EXIT
-      reason: COMPLETED
       emit: ai_governance::EV_AGENT_ACTION_AUTHORIZED_V0
     EXIT_UNDECLARED_TOOL:
       type: EXIT
-      reason: COMPLETED
       emit: ai_governance::EV_AGENT_ACTION_DENIED_V0
     EXIT_UNAUTHORIZED_ACTOR:
       type: EXIT
-      reason: COMPLETED
       emit: ai_governance::EV_AGENT_ACTION_DENIED_V0
     EXIT_UNAUTHORIZED_TOOL:
       type: EXIT
-      reason: COMPLETED
       emit: ai_governance::EV_AGENT_ACTION_DENIED_V0
     EXIT_PARAMETER_VIOLATION:
       type: EXIT
-      reason: COMPLETED
       emit: ai_governance::EV_AGENT_ACTION_DENIED_V0
     EXIT_ERROR:
       type: EXIT
-      reason: FAILED
 
     EXIT_REJECTED:
       type: EXIT
-      reason: EXITED
 ```

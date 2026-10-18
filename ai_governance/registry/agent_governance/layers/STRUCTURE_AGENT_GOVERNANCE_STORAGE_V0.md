@@ -38,6 +38,7 @@ concern: agent_governance
 
 core:
   summary: Agent governance domain storage topology
+  subdomain: agent_governance
   description: Maps entity types to storage implementations and paths
 
   layer: DOMAINS

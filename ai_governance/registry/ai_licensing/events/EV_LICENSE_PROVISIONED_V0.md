@@ -45,6 +45,7 @@ concern: ai_licensing
 
 core:
   summary: License Provisioned
+  subdomain: ai_licensing
   description: Emitted when a license is successfully provisioned
 
   schema:

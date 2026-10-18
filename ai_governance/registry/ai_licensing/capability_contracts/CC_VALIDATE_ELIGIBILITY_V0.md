@@ -87,7 +87,9 @@ core:
       type: boolean
 
   result_status_contract:
-    allowed: [SUCCESS, VIOLATION]
+    allowed:
+    - VIOLATION
+    - SUCCESS
     on_input_failure: VIOLATION
 
   pipeline:

@@ -76,10 +76,6 @@ core:
       required: true
     decision:
       type: string
-      enum:
-        - PROVISIONED
-        - DENIED
-        - RECLAIMED
       required: true
     reason_code:
       type: string
@@ -93,7 +89,10 @@ core:
       type: string
 
   result_status_contract:
-    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]
+    allowed:
+    - BACKEND_ERROR
+    - SUCCESS
+    - VIOLATION
     on_input_failure: VIOLATION
 
   pipeline:

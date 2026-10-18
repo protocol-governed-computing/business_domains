@@ -83,7 +83,6 @@ core:
       description: Domain context for the request
     request_id:
       type: string
-      required: false
       description: Client-provided request correlation ID
 
   outcomes:

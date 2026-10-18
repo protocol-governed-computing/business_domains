@@ -48,6 +48,7 @@ concern: agent_governance
 
 core:
   summary: Agent action authorized by governance
+  subdomain: agent_governance
   description: Emitted when an agent-proposed action passes all governance checks and is authorized for execution
 
   schema:

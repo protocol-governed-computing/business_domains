@@ -69,15 +69,6 @@ core:
   summary: Autonomous license reclamation
   actor_context: ai_governance::AC_SYSTEM_V0
 
-  admission:
-    requires:
-      - EV_LICENSE_PROVISIONED_V0
-    forbids:
-      - EV_LICENSE_REVOKED_V0
-    bindings:
-      EV_LICENSE_PROVISIONED_V0:
-        license_id: license_id
-        employee_id: employee_id
 
   start_node: IN_RECLAIM_LICENSE_V0
 
@@ -122,17 +113,13 @@ core:
 
     EXIT_RECLAIMED:
       type: EXIT
-      reason: COMPLETED
       emit: ai_governance::EV_LICENSE_REVOKED_V0
     EXIT_ACTIVE:
       type: EXIT
-      reason: COMPLETED
 
     EXIT_REJECTED:
       type: EXIT
-      reason: EXITED
 
     EXIT_ERROR:
       type: EXIT
-      reason: FAILED
 ```

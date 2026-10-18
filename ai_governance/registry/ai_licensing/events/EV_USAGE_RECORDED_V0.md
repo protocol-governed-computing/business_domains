@@ -44,6 +44,7 @@ concern: ai_licensing
 
 core:
   summary: Usage Recorded
+  subdomain: ai_licensing
   description: Emitted when license usage activity is recorded
 
   schema:
@@ -54,4 +55,9 @@ core:
       type: string
       format: date-time
       required: true
+    timestamp:
+      type: string
+      format: date-time
+      required: true
+      description: When the moment occurred
 ```

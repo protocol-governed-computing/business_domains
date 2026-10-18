@@ -83,7 +83,11 @@ core:
       type: boolean
 
   result_status_contract:
-    allowed: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]
+    allowed:
+    - NOT_FOUND
+    - VIOLATION
+    - BACKEND_ERROR
+    - SUCCESS
     on_input_failure: VIOLATION
 
   pipeline:

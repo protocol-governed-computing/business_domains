@@ -5,7 +5,7 @@
 ```yaml
 fqdn: book_library_mgmt::IN_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
 artifact_kind: INTENT
-version: v0
+version: v1
 governed_by: intent::CONSTITUTION_INTENT_V0
 authority: pgc.platform
 concern: catalog

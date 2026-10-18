@@ -63,9 +63,6 @@ core:
     IN_DENY_PROVISION_V0:
       type: IN
       code: IN_DENY_PROVISION_V0
-      payload_schema:
-        employee_id: string
-        reason_code: string
       next:
         ACK: CC_APPEND_AUDIT_EVENT_V0
         NACK: EXIT_ERROR
@@ -85,9 +82,7 @@ core:
 
     EXIT_DENIED:
       type: EXIT
-      reason: COMPLETED
       emit: ai_governance::EV_PROVISION_DENIED_V0
     EXIT_ERROR:
       type: EXIT
-      reason: FAILED
 ```

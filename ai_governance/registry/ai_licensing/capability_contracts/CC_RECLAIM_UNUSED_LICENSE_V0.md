@@ -100,7 +100,11 @@ core:
       type: integer
 
   result_status_contract:
-    allowed: [SUCCESS, VIOLATION, NOT_FOUND, BACKEND_ERROR]
+    allowed:
+    - VIOLATION
+    - SUCCESS
+    - NOT_FOUND
+    - BACKEND_ERROR
     on_input_failure: VIOLATION
 
   pipeline:

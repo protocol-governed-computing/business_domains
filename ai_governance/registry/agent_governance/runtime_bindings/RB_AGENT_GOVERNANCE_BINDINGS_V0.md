@@ -53,15 +53,9 @@ core:
 
   bindings:
     capability_side_effects::CS_MUTABLE_JSON_V0:
-      type: CS
-      host: MutableJsonRuntime
-      operation: READ_WRITE
       policy: {}
 
     capability_side_effects::CS_REGISTRY_V0:
-      type: CS
-      host: RegistryRuntime
-      operation: READ_WRITE
       policy:
         path: "{{module_data_root}}/ai_governance/agent_governance/governance_actions.json"
         strict: true

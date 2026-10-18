@@ -44,6 +44,7 @@ concern: ai_licensing
 
 core:
   summary: Employee Registered
+  subdomain: ai_licensing
   description: Emitted when an employee is registered in the system
 
   schema:

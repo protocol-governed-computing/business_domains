@@ -12,7 +12,7 @@ The actor whose authorization every catalog operation binds
 fqdn: book_library_mgmt::AC_LIBRARY_STAFF_V0
 artifact_kind: ACTOR
 version: v0
-governed_by: governance::CONSTITUTION_GOVERNANCE_V0
+governed_by: actor::CONSTITUTION_ACTOR_IDENTITY_V0
 authority: pgc.platform
 concern: catalog
 core:
