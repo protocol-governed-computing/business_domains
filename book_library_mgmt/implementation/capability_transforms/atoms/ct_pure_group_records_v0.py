@@ -67,6 +67,5 @@ def execute(inputs: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
         groups.setdefault(record.get(attribute, MISSING), []).append(record)
 
     return {
-        "result_status": "SUCCESS",
         "grouped": [{"key": key, "records": records} for key, records in groups.items()],
     }

@@ -92,4 +92,4 @@ def execute(inputs: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
     digest.update(raw)
     address = "0x" + digest.digest()[-ADDRESS_BYTES:].hex()
 
-    return {"result_status": "SUCCESS", "address": address}
+    return {"address": address}

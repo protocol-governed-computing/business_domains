@@ -93,4 +93,4 @@ def execute(inputs: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
             f"(days_inactive={days_inactive} < threshold_days={threshold_days})"
         )
 
-    return {"result_status": "SUCCESS", "is_inactive": True, "days_inactive": days_inactive}
+    return {"is_inactive": True, "days_inactive": days_inactive}

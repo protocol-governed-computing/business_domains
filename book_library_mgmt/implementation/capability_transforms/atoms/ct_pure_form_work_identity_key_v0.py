@@ -74,4 +74,4 @@ def execute(inputs: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
             f"truncated key silently merges two different works into one"
         )
 
-    return {"result_status": "SUCCESS", "work_key": work_key}
+    return {"work_key": work_key}

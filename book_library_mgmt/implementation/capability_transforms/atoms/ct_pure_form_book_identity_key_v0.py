@@ -93,4 +93,4 @@ def execute(inputs: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
             f"because a truncated key is a silent collision between two different books"
         )
 
-    return {"result_status": "SUCCESS", "identity_key": identity_key}
+    return {"identity_key": identity_key}

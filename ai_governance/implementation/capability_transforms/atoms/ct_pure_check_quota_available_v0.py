@@ -61,4 +61,4 @@ def execute(inputs: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
             f"(assigned_count={assigned_count}, quota={quota})"
         )
 
-    return {"result_status": "SUCCESS", "quota_available": True, "remaining": remaining}
+    return {"quota_available": True, "remaining": remaining}

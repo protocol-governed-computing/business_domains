@@ -48,4 +48,4 @@ def execute(inputs: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
             "CT_PURE_CHECK_TRAINING_STATUS_V0: required training is not complete"
         )
 
-    return {"result_status": "SUCCESS", "training_eligible": True}
+    return {"training_eligible": True}

@@ -62,4 +62,4 @@ def execute(inputs: Dict[str, Any], context: Any = None) -> Dict[str, Any]:
 
     # No refusal on an empty result. Whether nothing matching is a problem is the caller's
     # judgement, and a read has no business making it on the caller's behalf.
-    return {"result_status": "SUCCESS", "extracted": extracted}
+    return {"extracted": extracted}
