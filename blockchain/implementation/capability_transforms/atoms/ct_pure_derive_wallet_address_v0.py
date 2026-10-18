@@ -17,8 +17,7 @@ Key material is supplied, never generated:
     entropy is a side effect, and a side effect here would put secret material inside the one layer
     the platform declares has none.
 
-    RI-0's `CT_PURE_DERIVE_WALLET_KEYPAIRS_V0` did generate: BIP39 entropy, an HD seed, and two
-    derived keypairs. Only its address step is carried over. The rest is deliberately absent.
+    So there is no BIP39 entropy, HD seed or keypair derivation here: only the address step.
 
 Inputs:
     key_material — string; an uncompressed secp256k1 public key as hex, with or without the `0x`

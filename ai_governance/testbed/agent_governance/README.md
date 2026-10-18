@@ -47,22 +47,22 @@ Request
 ### One-time: seed data
 
 `license_facts.json` holds the user → license mapping. It lives in `seed_data/` and
-must be visible to the runtime at `$PGS_DATA_ROOT/ai_governance/ai_licensing/license_facts.json`.
+must be visible to the runtime at `$PGC_DATA_ROOT/ai_governance/ai_licensing/license_facts.json`.
 
 **Symlink (recommended — no copying, seed_data stays the source of truth):**
 
 ```bash
-mkdir -p "$PGS_DATA_ROOT/ai_governance/ai_licensing"
+mkdir -p "$PGC_DATA_ROOT/ai_governance/ai_licensing"
 ln -sf \
   "$(pwd)/seed_data/license_facts.json" \
-  "$PGS_DATA_ROOT/ai_governance/ai_licensing/license_facts.json"
+  "$PGC_DATA_ROOT/ai_governance/ai_licensing/license_facts.json"
 ```
 
 **Or copy once:**
 
 ```bash
-mkdir -p "$PGS_DATA_ROOT/ai_governance/ai_licensing"
-cp seed_data/license_facts.json "$PGS_DATA_ROOT/ai_governance/ai_licensing/license_facts.json"
+mkdir -p "$PGC_DATA_ROOT/ai_governance/ai_licensing"
+cp seed_data/license_facts.json "$PGC_DATA_ROOT/ai_governance/ai_licensing/license_facts.json"
 ```
 
 ### Seed users
@@ -78,17 +78,17 @@ cp seed_data/license_facts.json "$PGS_DATA_ROOT/ai_governance/ai_licensing/licen
 ## Running a Scenario
 
 ```bash
-pgs_runtime run \
+protocol_runtime run \
   --wf ai_governance::WF_GOVERN_AGENT_ACTION_V0 \
   --payload <path-to-payload.json> \
-  --data-root "$PGS_DATA_ROOT" \
-  --workspace "$PGS_WORKSPACE"
+  --data-root "$PGC_DATA_ROOT" \
+  --snapshot "$PGC_SNAPSHOT_ROOT"
 ```
 
 To inspect the audit trail after running:
 
 ```bash
-cat "$PGS_DATA_ROOT/ai_governance/agent_governance/governance_audit.jsonl" | python3 -c "
+cat "$PGC_DATA_ROOT/ai_governance/agent_governance/governance_audit.jsonl" | python3 -c "
 import sys, json
 for i, line in enumerate(sys.stdin, 1):
     r = json.loads(line)['record']
@@ -228,8 +228,8 @@ Enterprise tier is irrelevant — the tool surface is closed before license is c
 | What tools are declared? | `CC_CHECK_TOOL_DECLARED_V0` pipeline `allowed_set` |
 | What tools does a tier get? | `CC_BIND_LICENSE_TO_TOOL_SURFACE_V0` step 1 `map` |
 | What parameter rules apply? | `CC_VALIDATE_TOOL_PARAMETERS_V0` step 1 `map` |
-| What happened at runtime? | `$PGS_DATA_ROOT/ai_governance/agent_governance/governance_audit.jsonl` |
-| Full execution trace? | `$PGS_WORKSPACE/traces/` |
+| What happened at runtime? | `$PGC_DATA_ROOT/ai_governance/agent_governance/governance_audit.jsonl` |
+| Full execution trace? | `$PGC_DATA_ROOT/traces/` |
 
 ### Two classes of protocol bug
 

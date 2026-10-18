@@ -1,9 +1,7 @@
 /**
  * blockchain_bridge.js — Thin client for blockchain/identity over the PGC transport boundary.
  *
- * Descended from RI-0's pgs_bridge.js, which described itself as "zero schema awareness, zero
- * workflow branching, zero validation". That is still the whole design; what changed is what it
- * says on the wire. RI-0 POSTed a WORKFLOW identity to /api/run. This speaks only public Operation
+ * Zero schema awareness, zero workflow branching, zero validation. It speaks only public Operation
  * Identities (blockchain.register_actor, blockchain.accept_actor, blockchain.reject_actor) and
  * never names a workflow — an operation identity is not a workflow identity, and the workflow an
  * operation reaches may be re-pointed without this file changing.
@@ -30,7 +28,7 @@ async function submitOperation(formId) {
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
 
-    // Harvest every data-field into params, exactly as RI-0 did. An empty control is omitted
+    // Harvest every data-field into params. An empty control is omitted
     // rather than sent blank, so "not supplied" reaches the boundary as absence — which is what an
     // optional field means and what a required one is refused for.
     const params = {};
