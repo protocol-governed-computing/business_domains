@@ -55,8 +55,8 @@ declared rules. The rules decide deterministically: the same text so far and the
 always produce the same choice. The business records every step, so anyone can later see what was
 offered, what was chosen, and which rule stopped each rejected candidate.
 
-The model still does what it is good at: it proposes likely next words. The business now makes the
-decision the model used to make.
+The model does what it is good at: it proposes likely next words. The business decides which one
+is said.
 
 ---
 

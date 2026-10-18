@@ -197,9 +197,8 @@ def main() -> int:
         ODYSSEY_KEY = "the odyssey|homer|1614"
 
         # 8 — bibliographic information is updated, and a later retrieval returns the new version
-        # Through the successor. CR-02 superseded V0, and a superseded workflow is no place execution
-        # can start, so this criterion is held by the act now in force. V1 no longer asks a caller to
-        # restate the title, author and year it is leaving alone.
+        # Through the act in force, V1. A caller states only the fields it changes, not the title,
+        # author and year it is leaving alone.
         r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1", auth() | {
             "identity_key": ODYSSEY_KEY,
             "updated_fields": {**ODYSSEY, "subject": ["epic", "poetry", "greek"],

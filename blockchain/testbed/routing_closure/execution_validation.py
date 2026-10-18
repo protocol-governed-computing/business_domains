@@ -12,8 +12,8 @@ workflow through `protocol_runtime` and reads three things back:
 - the contracts the trace shows starting, which must stop at the failed one;
 - the records, which must not show the act's effect.
 
-Criterion 1 is case O3 of the SoSyM study: before this change, an acceptance whose lookup failed was
-recorded as an acceptance.
+Criterion 1 is case O3 of the SoSyM study: an acceptance whose lookup fails must not be recorded as
+an acceptance.
 
 Run:  python business_domains/blockchain/testbed/routing_closure/execution_validation.py [snapshot]
 Exit: 0 if every exercised criterion holds, 1 otherwise.

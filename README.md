@@ -33,8 +33,8 @@ exist yet — a timed test, and the transaction half of the wallet claim — and
 older than a run that starts from none. `blockchain::wallet` is
 delivered and validated, and it is the domain that demonstrates **consulting** another subdomain's
 records without writing them. `book_library_mgmt` announces: six of its ten acts emit the moments
-they complete, from the ending that completes them. Both `identity` and the catalog now hold every
-rule they apply, so a request no longer states the rules it is judged by. `causal_language_model` answers
+they complete, from the ending that completes them. Both `identity` and the catalog hold every
+rule they apply, so a request never states the rules it is judged by. `causal_language_model` answers
 through two ways: a test model built to break the rules, and a pretrained model (Qwen3 8B) whose host
 proposes each token while the business decides it. The test model's step is not determined by its
 inputs, so the domain holds the platform to molecules, recorded outcomes, replay and refusal
