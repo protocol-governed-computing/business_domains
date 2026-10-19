@@ -1,0 +1,19 @@
+{
+  "actor_record": {
+    "name": "Ada Lovelace",
+    "contact_address": "ada@example.test",
+    "currency_preference": "BACHI",
+    "language": "en",
+    "state": "UNVERIFIED"
+  },
+  "registration_schema": {
+    "name": {
+      "required": true,
+      "type": "string"
+    },
+    "contact_address": {
+      "required": true,
+      "type": "string"
+    }
+  }
+}

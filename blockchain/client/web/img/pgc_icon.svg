@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="t d">
+  <title id="t">Protocol-Governed Computing</title>
+  <desc id="d">A governance ring enclosing three stages bound to a central sealed snapshot.</desc>
+
+  <!-- Colour rides on presentation attributes so every renderer honours it. The stylesheet only
+       adjusts the line work for a dark background, where the cascade beats the attribute; the
+       discs are solid blocks that hold on either page, so they are left alone. -->
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .ring { stroke: #8FA8CE; fill: none; }
+      /* A solid black hub needs an edge once the page behind it is dark. */
+      .hub  { stroke: #8FA8CE; stroke-width: 4; }
+    }
+  </style>
+
+  <!-- Governance: the closed boundary everything sits inside. -->
+  <circle class="ring" cx="256" cy="256" r="236" fill="none" stroke="#14305C" stroke-width="10"/>
+
+  <!-- Bindings, drawn only in the gap so the mark needs no background keyline. -->
+  <g class="ring" fill="none" stroke="#14305C" stroke-width="13">
+    <path d="M200.6 224.0 L174.6 209.0 M311.4 224.0 L337.4 209.0 M256 320 L256 350"/>
+  </g>
+
+  <!-- The three stages, bound to the hub and to nothing else. The white one carries a keyline,
+       or it disappears on a light page. -->
+  <circle cx="120.9" cy="178" r="62" fill="#C8102E"/>
+  <circle cx="391.1" cy="178" r="62" fill="#FFFFFF" stroke="#14305C" stroke-width="9"/>
+  <circle cx="256"   cy="412" r="62" fill="#1F6FD0"/>
+
+  <!-- The snapshot: sealed, and the only interface between the three. -->
+  <circle class="hub" cx="256" cy="256" r="64" fill="#000000"/>
+</svg>
