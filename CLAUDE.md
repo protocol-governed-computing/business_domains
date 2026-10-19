@@ -22,7 +22,7 @@ runtime does those, from the sealed snapshot. What a domain implements is its ca
 and nothing else.
 
 - **Org:** `protocol-governed-computing`. **Repo:** `business_domains`. **Package:** `pgc-domains`.
-- **All development happens on `dev/18`** (the workspace's current development branch). The user
+- **All development happens on the current `dev/N` branch** (the workspace's development cycle). The user
   runs every git command.
 
 ## Layout
