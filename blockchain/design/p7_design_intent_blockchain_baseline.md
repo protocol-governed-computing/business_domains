@@ -1141,7 +1141,7 @@ registers:
     direction: INPUT
     field: target_cs
     bound_to:
-      literal: CS_MUTABLE_JSON_V0
+      literal: capability_side_effects::CS_MUTABLE_JSON_V0
   - owner: blockchain::CC_CLAIM_CONTACT_ADDRESS_V0
     step: claim_address
     direction: INPUT

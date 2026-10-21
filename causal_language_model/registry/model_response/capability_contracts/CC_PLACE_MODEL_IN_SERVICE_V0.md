@@ -100,7 +100,7 @@ core:
     store: TIME_IN_SERVICE_REGISTRY
     inputs:
       key: $.inputs.time_in_service_id
-      target_cs: CS_MUTABLE_JSON_V0
+      target_cs: capability_side_effects::CS_MUTABLE_JSON_V0
       target_ref: TIMES_IN_SERVICE
     outputs:
       address: $.capability_result.address

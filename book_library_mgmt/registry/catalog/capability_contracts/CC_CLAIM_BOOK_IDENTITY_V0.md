@@ -62,7 +62,7 @@ core:
     store: BOOK_IDENTITY_REGISTRY
     inputs:
       key: $.results.form_identity_key.identity_key
-      target_cs: CS_MUTABLE_JSON_V0
+      target_cs: capability_side_effects::CS_MUTABLE_JSON_V0
       target_ref: BOOKS
     outputs:
       address: $.capability_result.address

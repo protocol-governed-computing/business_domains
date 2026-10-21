@@ -1102,7 +1102,7 @@ registers:
     field: record
     bound_to:
       literal:
-        event_code: EV_AGENT_ACTION_DENIED_V0
+        event_code: ai_governance::EV_AGENT_ACTION_DENIED_V0
         action_id: $.results.generate_action_id.action_id
         tool_name: $.inputs.tool_name
         requesting_user_id: $.inputs.requesting_user_id
@@ -1177,7 +1177,7 @@ registers:
     field: record
     bound_to:
       literal:
-        event_code: EV_AGENT_ACTION_AUTHORIZED_V0
+        event_code: ai_governance::EV_AGENT_ACTION_AUTHORIZED_V0
         action_id: $.results.generate_action_id.action_id
         tool_name: $.inputs.tool_name
         requesting_user_id: $.inputs.requesting_user_id
@@ -1492,7 +1492,7 @@ registers:
     direction: INPUT
     field: target_cs
     bound_to:
-      literal: CS_REGISTRY_V0
+      literal: capability_side_effects::CS_REGISTRY_V0
   - owner: ai_governance::CC_PROVISION_LICENSE_V0
     step: register_license
     direction: INPUT
@@ -1593,7 +1593,7 @@ registers:
     direction: INPUT
     field: event_type
     bound_to:
-      literal: EV_LICENSE_REVOKED_V0
+      literal: ai_governance::EV_LICENSE_REVOKED_V0
   - owner: ai_governance::WF_AUTO_RECLAIM_V0
     step: CC_APPEND_AUDIT_EVENT_RECLAIMED
     direction: INPUT
@@ -1624,7 +1624,7 @@ registers:
     direction: INPUT
     field: event_type
     bound_to:
-      literal: EV_PROVISION_DENIED_V0
+      literal: ai_governance::EV_PROVISION_DENIED_V0
   - owner: ai_governance::WF_DENY_PROVISION_V0
     step: CC_APPEND_AUDIT_EVENT_V0
     direction: INPUT
@@ -1676,7 +1676,7 @@ registers:
     direction: INPUT
     field: event_type
     bound_to:
-      literal: EV_LICENSE_PROVISIONED_V0
+      literal: ai_governance::EV_LICENSE_PROVISIONED_V0
   - owner: ai_governance::WF_PROVISION_AI_LICENSING_V0
     step: CC_APPEND_AUDIT_EVENT_SUCCESS
     direction: INPUT
@@ -1710,7 +1710,7 @@ registers:
     direction: INPUT
     field: event_type
     bound_to:
-      literal: EV_PROVISION_DENIED_V0
+      literal: ai_governance::EV_PROVISION_DENIED_V0
   - owner: ai_governance::WF_PROVISION_AI_LICENSING_V0
     step: CC_APPEND_AUDIT_EVENT_DENIED
     direction: INPUT

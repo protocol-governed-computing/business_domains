@@ -2048,7 +2048,7 @@ registers:
     direction: INPUT
     field: target_cs
     bound_to:
-      literal: CS_MUTABLE_JSON_V0
+      literal: capability_side_effects::CS_MUTABLE_JSON_V0
   - owner: book_library_mgmt::CC_CLAIM_BOOK_IDENTITY_V0
     step: claim_identity
     direction: INPUT
@@ -2075,7 +2075,7 @@ registers:
     direction: INPUT
     field: target_cs
     bound_to:
-      literal: CS_MUTABLE_JSON_V0
+      literal: capability_side_effects::CS_MUTABLE_JSON_V0
   - owner: book_library_mgmt::CC_CLAIM_COPY_BARCODE_V0
     step: claim_barcode
     direction: INPUT
@@ -2117,7 +2117,7 @@ registers:
     direction: INPUT
     field: target_cs
     bound_to:
-      literal: CS_MUTABLE_JSON_V0
+      literal: capability_side_effects::CS_MUTABLE_JSON_V0
   - owner: book_library_mgmt::CC_CLAIM_WORK_IDENTITY_V0
     step: claim_work
     direction: INPUT

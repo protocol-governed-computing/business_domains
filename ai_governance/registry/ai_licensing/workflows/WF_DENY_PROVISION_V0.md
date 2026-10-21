@@ -71,7 +71,7 @@ core:
       type: CC
       code: CC_APPEND_AUDIT_EVENT_V0
       inputs:
-        event_type: EV_PROVISION_DENIED_V0
+        event_type: ai_governance::EV_PROVISION_DENIED_V0
         employee_id: $.payload.employee_id
         decision: DENIED
         reason_code: $.payload.reason_code

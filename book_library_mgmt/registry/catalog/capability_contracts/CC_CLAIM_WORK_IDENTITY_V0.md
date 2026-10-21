@@ -58,7 +58,7 @@ core:
     store: WORK_IDENTITY_REGISTRY
     inputs:
       key: $.results.form_work_key.work_key
-      target_cs: CS_MUTABLE_JSON_V0
+      target_cs: capability_side_effects::CS_MUTABLE_JSON_V0
       target_ref: WORKS
     outputs:
       address: $.capability_result.address

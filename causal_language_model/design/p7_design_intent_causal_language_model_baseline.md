@@ -2219,7 +2219,7 @@ registers:
     direction: INPUT
     field: target_cs
     bound_to:
-      literal: CS_MUTABLE_JSON_V0
+      literal: capability_side_effects::CS_MUTABLE_JSON_V0
   - owner: causal_language_model::CC_CLAIM_MODEL_IDENTITY_V0
     step: claim_identity
     direction: INPUT
@@ -2246,7 +2246,7 @@ registers:
     direction: INPUT
     field: target_cs
     bound_to:
-      literal: CS_APPENDONLY_JSONL_V0
+      literal: capability_side_effects::CS_APPENDONLY_JSONL_V0
   - owner: causal_language_model::CC_CLAIM_USER_PROMPT_IDENTITY_V0
     step: claim_user_prompt
     direction: INPUT
@@ -2579,7 +2579,7 @@ registers:
     direction: INPUT
     field: target_cs
     bound_to:
-      literal: CS_MUTABLE_JSON_V0
+      literal: capability_side_effects::CS_MUTABLE_JSON_V0
   - owner: causal_language_model::CC_PLACE_MODEL_IN_SERVICE_V0
     step: claim_time_in_service
     direction: INPUT

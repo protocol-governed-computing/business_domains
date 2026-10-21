@@ -99,7 +99,7 @@ core:
       type: CC
       code: CC_APPEND_AUDIT_EVENT_V0
       inputs:
-        event_type: EV_LICENSE_REVOKED_V0
+        event_type: ai_governance::EV_LICENSE_REVOKED_V0
         employee_id: $.payload.context.employee_id
         decision: RECLAIMED
         reason_code: INACTIVITY

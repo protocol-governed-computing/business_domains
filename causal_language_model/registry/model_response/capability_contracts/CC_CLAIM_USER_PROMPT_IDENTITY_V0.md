@@ -33,7 +33,7 @@ core:
     store: USER_PROMPT_REGISTRY
     inputs:
       key: $.inputs.user_prompt_id
-      target_cs: CS_APPENDONLY_JSONL_V0
+      target_cs: capability_side_effects::CS_APPENDONLY_JSONL_V0
       target_ref: USER_PROMPT_RECORDS
     outputs:
       address: $.capability_result.address

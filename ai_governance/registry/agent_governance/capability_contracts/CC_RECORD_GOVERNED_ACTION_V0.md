@@ -159,7 +159,7 @@ core:
       store: GOVERNANCE_AUDIT
       inputs:
         record:
-          event_code: "EV_AGENT_ACTION_AUTHORIZED_V0"
+          event_code: ai_governance::EV_AGENT_ACTION_AUTHORIZED_V0
           action_id: $.results.generate_action_id.action_id
           tool_name: $.inputs.tool_name
           requesting_user_id: $.inputs.requesting_user_id

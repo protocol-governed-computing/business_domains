@@ -62,7 +62,7 @@ core:
     store: CONTACT_ADDRESS_REGISTRY
     inputs:
       key: $.results.extract_address.result
-      target_cs: CS_MUTABLE_JSON_V0
+      target_cs: capability_side_effects::CS_MUTABLE_JSON_V0
       target_ref: ACTORS
     outputs:
       address: $.capability_result.address

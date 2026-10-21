@@ -153,64 +153,66 @@ registers:
     depends_on: null
   - wave: '1'
     step: '24'
-    code: ai_governance::CC_RECORD_DENIED_ACTION_V0
-    action: NEW
-    subdomain: agent_governance
-    depends_on: null
-  - wave: '1'
-    step: '25'
-    code: ai_governance::CC_RECORD_GOVERNED_ACTION_V0
-    action: NEW
-    subdomain: agent_governance
-    depends_on: null
-  - wave: '1'
-    step: '26'
     code: ai_governance::CC_RESOLVE_LICENSE_TIER_V0
     action: NEW
     subdomain: agent_governance
     depends_on: null
   - wave: '1'
-    step: '27'
+    step: '25'
     code: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0
     action: NEW
     subdomain: agent_governance
     depends_on: null
   - wave: '1'
-    step: '28'
+    step: '26'
     code: ai_governance::CC_APPEND_AUDIT_EVENT_V0
     action: NEW
     subdomain: ai_licensing
     depends_on: null
   - wave: '1'
-    step: '29'
+    step: '27'
     code: ai_governance::CC_PROVISION_LICENSE_V0
     action: NEW
     subdomain: ai_licensing
     depends_on: null
   - wave: '1'
-    step: '30'
+    step: '28'
     code: ai_governance::IN_AGENT_ACTION_REQUESTED_V0
     action: NEW
     subdomain: agent_governance
     depends_on: null
   - wave: '1'
-    step: '31'
+    step: '29'
     code: ai_governance::IN_DENY_PROVISION_V0
     action: NEW
     subdomain: ai_licensing
     depends_on: null
   - wave: '1'
-    step: '32'
+    step: '30'
     code: ai_governance::IN_PROVISION_AI_LICENSE_V0
     action: NEW
     subdomain: ai_licensing
     depends_on: null
   - wave: '1'
-    step: '33'
+    step: '31'
     code: ai_governance::IN_RECLAIM_LICENSE_V0
     action: NEW
     subdomain: ai_licensing
     depends_on: null
+  - wave: '2'
+    step: '32'
+    code: ai_governance::CC_RECORD_DENIED_ACTION_V0
+    action: NEW
+    subdomain: agent_governance
+    depends_on:
+    - ai_governance::EV_AGENT_ACTION_DENIED_V0
+  - wave: '2'
+    step: '33'
+    code: ai_governance::CC_RECORD_GOVERNED_ACTION_V0
+    action: NEW
+    subdomain: agent_governance
+    depends_on:
+    - ai_governance::EV_AGENT_ACTION_AUTHORIZED_V0
   - wave: '2'
     step: '34'
     code: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0
@@ -294,9 +296,9 @@ registers:
     - ai_governance::CC_PROVISION_LICENSE_V0
   critical_path:
   - position: '1'
-    code: ai_governance::STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0
+    code: ai_governance::EV_AGENT_ACTION_AUTHORIZED_V0
   - position: '2'
-    code: ai_governance::RB_AGENT_GOVERNANCE_BINDINGS_V0
+    code: ai_governance::CC_RECORD_GOVERNED_ACTION_V0
   - position: '3'
     code: ai_governance::WF_GOVERN_AGENT_ACTION_V0
   mandate_artifact_summary:
@@ -350,10 +352,6 @@ registers:
     subdomain_field: agent_governance
   - code: ai_governance::CC_NORMALIZE_AGENT_REQUEST_V0
     subdomain_field: agent_governance
-  - code: ai_governance::CC_RECORD_DENIED_ACTION_V0
-    subdomain_field: agent_governance
-  - code: ai_governance::CC_RECORD_GOVERNED_ACTION_V0
-    subdomain_field: agent_governance
   - code: ai_governance::CC_RESOLVE_LICENSE_TIER_V0
     subdomain_field: agent_governance
   - code: ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0
@@ -370,6 +368,10 @@ registers:
     subdomain_field: ai_licensing
   - code: ai_governance::IN_RECLAIM_LICENSE_V0
     subdomain_field: ai_licensing
+  - code: ai_governance::CC_RECORD_DENIED_ACTION_V0
+    subdomain_field: agent_governance
+  - code: ai_governance::CC_RECORD_GOVERNED_ACTION_V0
+    subdomain_field: agent_governance
   - code: ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0
     subdomain_field: ai_licensing
   - code: ai_governance::CC_VALIDATE_ELIGIBILITY_V0

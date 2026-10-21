@@ -86,7 +86,7 @@ core:
       op: REGISTER
       inputs:
         key: $.inputs.employee_id
-        target_cs: CS_REGISTRY_V0
+        target_cs: capability_side_effects::CS_REGISTRY_V0
         target_ref: $.inputs.license_id
       outputs:
         result_status: $.result_status

@@ -39,7 +39,7 @@ core:
     store: COPY_BARCODE_REGISTRY
     inputs:
       key: $.inputs.barcode
-      target_cs: CS_MUTABLE_JSON_V0
+      target_cs: capability_side_effects::CS_MUTABLE_JSON_V0
       target_ref: PHYSICAL_COPIES
     outputs:
       address: $.capability_result.address
