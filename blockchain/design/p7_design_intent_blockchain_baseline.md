@@ -2287,48 +2287,56 @@ registers:
     extends: null
     group: result_status
     casing: UPPER_SNAKE
+    names_kind: null
     value: DEFAULT
     meaning: DEFAULT
   - vocabulary_code: blockchain::VOCAB_WALLET_CLASSIFICATION_V0
     extends: null
     group: result_status
     casing: UPPER_SNAKE
+    names_kind: null
     value: PRIVATE
     meaning: PRIVATE
   - vocabulary_code: blockchain::VOCAB_WALLET_CLASSIFICATION_V0
     extends: null
     group: result_status
     casing: UPPER_SNAKE
+    names_kind: null
     value: BUSINESS
     meaning: BUSINESS
   - vocabulary_code: blockchain::VOCAB_WALLET_CLASSIFICATION_V0
     extends: null
     group: result_status
     casing: UPPER_SNAKE
+    names_kind: null
     value: SAVINGS
     meaning: SAVINGS
   - vocabulary_code: blockchain::VOCAB_WALLET_CLASSIFICATION_V0
     extends: null
     group: result_status
     casing: UPPER_SNAKE
+    names_kind: null
     value: INVESTMENT
     meaning: INVESTMENT
   - vocabulary_code: blockchain::VOCAB_WALLET_CLASSIFICATION_V0
     extends: null
     group: result_status
     casing: UPPER_SNAKE
+    names_kind: null
     value: MINT
     meaning: MINT
   - vocabulary_code: blockchain::VOCAB_WALLET_CLASSIFICATION_V0
     extends: null
     group: result_status
     casing: UPPER_SNAKE
+    names_kind: null
     value: BURN
     meaning: BURN
   - vocabulary_code: blockchain::VOCAB_WALLET_CLASSIFICATION_V0
     extends: null
     group: result_status
     casing: UPPER_SNAKE
+    names_kind: null
     value: POOL
     meaning: POOL
   runtime_policies:

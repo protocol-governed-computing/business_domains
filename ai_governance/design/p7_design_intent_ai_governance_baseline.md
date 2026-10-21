@@ -2612,6 +2612,7 @@ registers:
     extends: vocabulary::VOCAB_EXECUTION_STATES_V0
     group: result_status
     casing: UPPER_SNAKE
+    names_kind: null
     value: CAP_REACHED
     meaning: CAP_REACHED
   runtime_policies:

@@ -6399,24 +6399,28 @@ registers:
     extends: null
     group: kind_of_information
     casing: lower_snake
+    names_kind: null
     value: public
     meaning: public
   - vocabulary_code: causal_language_model::VOCAB_KIND_OF_INFORMATION_V0
     extends: null
     group: kind_of_information
     casing: lower_snake
+    names_kind: null
     value: internal
     meaning: internal
   - vocabulary_code: causal_language_model::VOCAB_KIND_OF_INFORMATION_V0
     extends: null
     group: kind_of_information
     casing: lower_snake
+    names_kind: null
     value: confidential
     meaning: confidential
   - vocabulary_code: causal_language_model::VOCAB_KIND_OF_INFORMATION_V0
     extends: null
     group: kind_of_information
     casing: lower_snake
+    names_kind: null
     value: restricted
     meaning: restricted
   runtime_policies:
