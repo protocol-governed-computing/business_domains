@@ -45,7 +45,7 @@ concern: ai_licensing
 core:
   summary: Employee Actor
   description: Represents a person eligible for AI license provisioning
-  type: person
+  type: human
 
   attributes:
     employee_id:

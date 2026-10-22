@@ -6439,13 +6439,13 @@ registers:
   artifact_properties:
   - artifact: causal_language_model::AC_MODEL_HOST_V0
     property: type
-    value: ENDUSER
+    value: system
   - artifact: causal_language_model::AC_MODEL_STAFF_V0
     property: type
-    value: ENDUSER
+    value: human
   - artifact: causal_language_model::AC_REQUESTER_V0
     property: type
-    value: ENDUSER
+    value: human
   - artifact: causal_language_model::EV_USER_PROMPT_REFUSED_V0
     property: moment
     value: refusal

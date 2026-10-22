@@ -11,7 +11,7 @@ authority: pgc.platform
 concern: model_response
 core:
   summary: The actor whose authorization every model staff operation binds
-  type: ENDUSER
+  type: human
   attributes:
     staff_id:
       type: string

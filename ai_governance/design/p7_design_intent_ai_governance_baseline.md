@@ -2726,7 +2726,7 @@ registers:
     value: Represents a person eligible for AI license provisioning
   - artifact: ai_governance::AC_EMPLOYEE_V0
     property: type
-    value: person
+    value: human
   - artifact: ai_governance::AC_SYSTEM_V0
     property: description
     value: Represents a protocol authority for fact injection and automation

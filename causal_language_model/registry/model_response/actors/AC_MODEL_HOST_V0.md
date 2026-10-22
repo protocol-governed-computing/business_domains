@@ -11,7 +11,7 @@ authority: pgc.platform
 concern: model_response
 core:
   summary: The host of a model in service, which proposes and holds no authority
-  type: ENDUSER
+  type: system
   attributes:
     host_id:
       type: string

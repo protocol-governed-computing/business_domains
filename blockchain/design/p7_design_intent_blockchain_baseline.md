@@ -2375,7 +2375,7 @@ registers:
   artifact_properties:
   - artifact: blockchain::AC_PARTICIPANT_V0
     property: type
-    value: ENDUSER
+    value: human
   - artifact: blockchain::STRUCTURE_IDENTITY_STORAGE_V0
     property: layer
     value: DOMAINS

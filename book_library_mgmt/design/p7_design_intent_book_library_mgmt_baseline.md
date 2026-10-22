@@ -4335,7 +4335,7 @@ registers:
   artifact_properties:
   - artifact: book_library_mgmt::AC_LIBRARY_STAFF_V0
     property: type
-    value: ENDUSER
+    value: human
   - artifact: book_library_mgmt::STRUCTURE_CATALOG_STORAGE_V0
     property: layer
     value: DOMAINS

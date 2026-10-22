@@ -17,7 +17,7 @@ authority: pgc.platform
 concern: catalog
 core:
   summary: The actor whose authorization every catalog operation binds
-  type: ENDUSER
+  type: human
   attributes:
     staff_id:
       type: string

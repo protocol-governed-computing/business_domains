@@ -11,7 +11,7 @@ authority: pgc.platform
 concern: model_response
 core:
   summary: The actor who submits a user prompt for one customer
-  type: ENDUSER
+  type: human
   attributes:
     requester_id:
       type: string
