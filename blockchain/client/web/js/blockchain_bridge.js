@@ -157,3 +157,19 @@ document.addEventListener('DOMContentLoaded', function () {
         if (carried) field.value = carried;
     }
 });
+
+// The compiled workflows this page explains, drawn from their graphs in the sealed snapshot by the
+// inspector's workflow diagram. The page names a workflow only to draw it, never to reach it.
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('svg[data-graph]').forEach(async (svg) => {
+        try {
+            const graph = await fetch(svg.dataset.graph).then((r) => {
+                if (!r.ok) throw new Error(svg.dataset.graph);
+                return r.json();
+            });
+            window.WorkflowDiagram.draw(svg, graph, { entrance: svg.dataset.entrance });
+        } catch (e) {
+            svg.outerHTML = '<p class="wf-missing">The compiled workflow is unavailable: ' + e.message + '</p>';
+        }
+    });
+});

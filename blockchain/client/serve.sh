@@ -35,13 +35,14 @@ export PGC_SNAPSHOT_ROOT="${PGC_SNAPSHOT_ROOT:-$UMBRELLA/snapshot}"
 # Writes are atomic per file (temp + fsync + replace) but are not locked across read-modify-write:
 # one instance driven by one person is safe, concurrent writers can lose an update.
 export PGC_DATA_ROOT="${PGC_DATA_ROOT:-$UMBRELLA/data/blockchain}"
-# Static mounts (all READ-ONLY, config-driven). Three roots:
+# Static mounts (all READ-ONLY, config-driven). Four roots:
 #   /          the web client (splash + identity's two screens)
 #   /traces    live per-run evidence from the instance data root (transient)
 #   /snapshot  live inspection of the assembled snapshot (compiled artifacts)
+#   /diagram   the inspector's workflow diagram, which the screens draw their workflows with
 # The answer's evidence reference resolves under /traces, so the record of what happened is one
 # click from the answer that reports it.
-export PGC_STATIC_MOUNTS="/=$CLIENT/web;/traces=$PGC_DATA_ROOT/traces;/snapshot=$PGC_SNAPSHOT_ROOT"
+export PGC_STATIC_MOUNTS="/=$CLIENT/web;/traces=$PGC_DATA_ROOT/traces;/snapshot=$PGC_SNAPSHOT_ROOT;/diagram=$PGC_INSPECTOR_ROOT/client/web/workflow/js"
 export PGC_HTTP_PORT="${PGC_HTTP_PORT:-8000}"
 
 echo "PGC blockchain/identity client (snapshot-bound)"

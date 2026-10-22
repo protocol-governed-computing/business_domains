@@ -376,11 +376,11 @@ body {
     opacity: .65;
 }
 
-/* ── Compiled workflow projection ───────────────────────────────────────────
-   The DAG the runtime actually traverses, served live from the sealed snapshot
-   under the read-only /snapshot mount. Live means never stale: if the snapshot
-   is rebuilt the picture changes with it, and if it is cleaned the image fails
-   soft rather than showing something that was true once. */
+/* ── Compiled workflow ───────────────────────────────────────────────────────
+   The graph the runtime actually traverses, read live from the sealed snapshot
+   under the read-only /snapshot mount and drawn by the inspector's workflow
+   diagram. Live means never stale: if the snapshot is rebuilt the drawing
+   changes with it. */
 .explainer { border: 1px solid #e2e8f0; border-radius: 6px; padding: 0; margin: 28px 0 0; background: #f8fafc; }
 .explainer summary {
     font-size: 14px; font-weight: bold; color: #0b1e3c; padding: 14px 18px; cursor: pointer;
@@ -392,5 +392,11 @@ body {
 .explainer-body { padding: 0 18px 16px; display: flex; flex-direction: column; gap: 10px; }
 .explainer-body p { font-size: 14px; color: #475569; line-height: 1.6; }
 .explainer-body code { background: #f1f5f9; padding: 1px 4px; border-radius: 3px; font-size: 12px; }
-.wf-projection { max-width: 100%; border: 1px solid #e2e8f0; border-radius: 6px; margin-top: 4px; background: #fff; }
-.wf-missing { display: none; color: #991b1b; font-size: 13px; }
+svg.workflow { width: 100%; height: auto; display: block; margin: 4px 0; background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; }
+svg.workflow .box rect { fill: #f8fafc; stroke: #94a3b8; stroke-width: 1.2; }
+svg.workflow .box .kind { fill: #64748b; font: bold 11px 'Courier New', monospace; }
+svg.workflow .box .name { fill: #0b1e3c; font: 13px Arial, Helvetica, sans-serif; }
+svg.workflow .edge path { fill: none; stroke: #94a3b8; stroke-width: 1.2; }
+svg.workflow .edge text { fill: #64748b; font: 10px 'Courier New', monospace; }
+svg.workflow .arrow { fill: #94a3b8; }
+.wf-missing { color: #991b1b; font-size: 13px; }
