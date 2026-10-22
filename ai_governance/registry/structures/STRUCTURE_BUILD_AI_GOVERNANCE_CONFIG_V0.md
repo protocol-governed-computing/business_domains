@@ -61,9 +61,6 @@ output_configuration:
   trust_attestation_path:
     layer: GOVERNANCE
     subpath: compiled/trust
-  visualization_projection_path:
-    layer: GOVERNANCE
-    subpath: compiled/visualization
   layer_outputs:
     AI_GOVERNANCE:
       layer: AI_GOVERNANCE

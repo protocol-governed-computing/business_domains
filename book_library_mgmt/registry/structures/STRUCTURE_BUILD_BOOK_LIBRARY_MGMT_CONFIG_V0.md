@@ -67,9 +67,6 @@ output_configuration:
   trust_attestation_path:
     layer: GOVERNANCE
     subpath: compiled/trust
-  visualization_projection_path:
-    layer: GOVERNANCE
-    subpath: compiled/visualization
   layer_outputs:
     BOOK_LIBRARY_MGMT:
       layer: BOOK_LIBRARY_MGMT
