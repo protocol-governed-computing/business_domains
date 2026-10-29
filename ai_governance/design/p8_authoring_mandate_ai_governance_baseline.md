@@ -372,7 +372,7 @@ registers:
     - ai_governance::CC_RECORD_AI_LICENSING_MOMENT_V0
   - wave: '3'
     step: '55'
-    code: ai_governance::WF_RECLAIM_LICENSE_V0
+    code: ai_governance::WF_RECLAIM_LICENSE_V1
     action: NEW
     subdomain: ai_licensing
     depends_on:
@@ -557,7 +557,7 @@ registers:
     subdomain_field: agent_governance
   - code: ai_governance::WF_PROVISION_LICENSE_V0
     subdomain_field: ai_licensing
-  - code: ai_governance::WF_RECLAIM_LICENSE_V0
+  - code: ai_governance::WF_RECLAIM_LICENSE_V1
     subdomain_field: ai_licensing
   - code: ai_governance::WF_RECORD_LICENSE_USAGE_V0
     subdomain_field: ai_licensing
@@ -583,7 +583,7 @@ registers:
     inputs: employee_id:string, tier:string
   - code: ai_governance::IN_RECLAIM_LICENSE_V1
     purpose: A request to reclaim license
-    workflow: WF_RECLAIM_LICENSE_V0
+    workflow: WF_RECLAIM_LICENSE_V1
     inputs: employee_id:string
   - code: ai_governance::IN_RECORD_LICENSE_USAGE_V0
     purpose: A request to record license usage

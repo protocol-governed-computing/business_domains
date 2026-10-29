@@ -12,7 +12,7 @@ concern: ai_licensing
 supersedes: ai_governance::IN_RECLAIM_LICENSE_V0
 core:
   summary: A request to reclaim license
-  workflow: WF_RECLAIM_LICENSE_V0
+  workflow: WF_RECLAIM_LICENSE_V1
   inputs:
     employee_id:
       type: string

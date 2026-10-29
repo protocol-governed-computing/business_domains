@@ -42,7 +42,7 @@ DOMAIN_DATA = "ai_governance"
 
 ACTS = {"register": "WF_REGISTER_EMPLOYEE_V0", "train": "WF_RECORD_TRAINING_COMPLETED_V0",
         "cap": "WF_SET_LICENSE_CAP_V0", "provision": "WF_PROVISION_LICENSE_V0",
-        "use": "WF_RECORD_LICENSE_USAGE_V0", "reclaim": "WF_RECLAIM_LICENSE_V0",
+        "use": "WF_RECORD_LICENSE_USAGE_V0", "reclaim": "WF_RECLAIM_LICENSE_V1",
         "govern": "WF_GOVERN_AGENT_ACTION_V1"}
 
 STAMP = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?")

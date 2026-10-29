@@ -1,15 +1,15 @@
-# WF_RECLAIM_LICENSE_V0
+# WF_RECLAIM_LICENSE_V1
 
 ## Machine
 
 ```yaml
-fqdn: ai_governance::WF_RECLAIM_LICENSE_V0
+fqdn: ai_governance::WF_RECLAIM_LICENSE_V1
 artifact_kind: WORKFLOW
-version: v0
+version: v1
 governed_by: workflow::CONSTITUTION_WORKFLOW_V0
 authority: pgc.platform
 concern: ai_licensing
-supersedes: ai_governance::WF_AUTO_RECLAIM_V0
+supersedes: ai_governance::WF_RECLAIM_LICENSE_V0
 runtime_binding: ai_governance::RB_LICENSE_BINDINGS_V1
 subdomain: ai_licensing
 structure: execution::STRUCTURE_RUNTIME_EXECUTION_V0
@@ -51,7 +51,7 @@ core:
       next:
         SUCCESS: CC_MOVE_LICENSE_FROM_ACTIVE_V0
         NOT_FOUND: EXIT_REJECTED
-        VIOLATION: EXIT_REJECTED
+        VIOLATION: EXIT_STILL_ACTIVE
         BACKEND_ERROR: EXIT_REJECTED
     CC_MOVE_LICENSE_FROM_ACTIVE_V0:
       type: CC

@@ -1,9 +1,9 @@
 """Execution validation — run the reclaim against its routing-closure criteria.
 
 The change answers one question for the reclaim: what happens when the registry refuses to release
-the license. The business answered it: the license stays assigned and active, and no revocation is
-announced. The derived reclaim releases the license before it moves it, so a refused release ends
-the reclaim there, as rejected, before anything is changed.
+the license. The business answered it: the reclaim ends as still active, the license stays assigned,
+and no revocation is announced (cr_02). The reclaim releases the license before it moves it, so a
+refused release ends the reclaim before anything is changed (cr_05).
 
 Each criterion licenses one employee on a fresh data root through AI licensing's own acts, then
 dispatches a real reclaim through `protocol_runtime` and reads back:
@@ -70,7 +70,7 @@ class Case:
         return lines
 
     def reclaim(self) -> list[dict]:
-        return self.run("WF_RECLAIM_LICENSE_V0", {"employee_id": EMPLOYEE})
+        return self.run("WF_RECLAIM_LICENSE_V1", {"employee_id": EMPLOYEE})
 
     def age(self, days: int) -> None:
         """Stand in a license unused for `days`: move every time the business recorded back."""
@@ -133,9 +133,9 @@ def main() -> int:
     finally:
         RegistryExecutor.deregister = real
     try:
-        check("a reclaim the registry refuses ends as rejected, the license stays assigned and active, "
+        check("a reclaim the registry refuses ends as still active, the license stays assigned and active, "
               "and no revocation is announced",
-              ending(ev) == "EXIT_REJECTED" and c.assigned() and not announced(ev) and not errors(ev),
+              ending(ev) == "EXIT_STILL_ACTIVE" and c.assigned() and not announced(ev) and not errors(ev),
               f"ending {ending(ev)}, assigned {c.assigned()}, {announced(ev)} announcement(s), "
               f"{errors(ev)} error(s)")
         check("the reclaim stops at the refused release, and nothing after it runs",

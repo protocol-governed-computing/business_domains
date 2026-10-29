@@ -1,0 +1,11 @@
+# testbed/routing_closure/execution_validation.py, after delivery
+  OK    a reclaim the registry refuses ends as still active, the license stays assigned and active, and no revocation is announced
+          ending EXIT_STILL_ACTIVE, assigned True, 0 announcement(s), 0 error(s)
+  OK    the reclaim stops at the refused release, and nothing after it runs
+          contracts started: 3
+  OK    a reclaim the registry accepts ends as completed, the license is released, and the revocation is announced
+          ending EXIT_COMPLETED, assigned False, 1 announcement(s)
+  OK    a license still in use ends as still active, and stays assigned
+          ending EXIT_STILL_ACTIVE, assigned True, 0 announcement(s)
+
+  4/4 criteria hold  (0 not exercised)

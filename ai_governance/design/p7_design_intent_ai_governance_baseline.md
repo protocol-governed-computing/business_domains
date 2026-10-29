@@ -286,7 +286,7 @@ registers:
     owner_subdomain: ai_licensing
     status: NEW
   - family: WF
-    code: ai_governance::WF_RECLAIM_LICENSE_V0
+    code: ai_governance::WF_RECLAIM_LICENSE_V1
     summary: 'The governed sequence that performs: reclaim license'
     owner_subdomain: ai_licensing
     status: NEW
@@ -327,7 +327,7 @@ registers:
     - capability_side_effects::CS_CLOCK_V0
     storage_structure: ai_governance::STRUCTURE_AI_LICENSING_STORAGE_V1
   - rb_code: ai_governance::RB_LICENSE_BINDINGS_V1
-    binds_wf: ai_governance::WF_RECLAIM_LICENSE_V0
+    binds_wf: ai_governance::WF_RECLAIM_LICENSE_V1
     cs_bindings:
     - capability_side_effects::CS_MUTABLE_JSON_V0
     - capability_side_effects::CS_REGISTRY_V0
@@ -604,13 +604,13 @@ registers:
     node: EXIT_DENIED
     node_type: EXIT
     routing: null
-  - workflow: ai_governance::WF_RECLAIM_LICENSE_V0
+  - workflow: ai_governance::WF_RECLAIM_LICENSE_V1
     node: IN_RECLAIM_LICENSE_V1
     node_type: IN
     routing:
       ACK: CC_RESOLVE_LICENSE_V0
       NACK: EXIT_REJECTED
-  - workflow: ai_governance::WF_RECLAIM_LICENSE_V0
+  - workflow: ai_governance::WF_RECLAIM_LICENSE_V1
     node: CC_RESOLVE_LICENSE_V0
     node_type: CC
     routing:
@@ -618,44 +618,44 @@ registers:
       VIOLATION: EXIT_REJECTED
       NOT_FOUND: EXIT_REJECTED
       BACKEND_ERROR: EXIT_REJECTED
-  - workflow: ai_governance::WF_RECLAIM_LICENSE_V0
+  - workflow: ai_governance::WF_RECLAIM_LICENSE_V1
     node: CC_REQUIRE_LICENSE_UNUSED_FOR_DAYS_V0
     node_type: CC
     routing:
       SUCCESS: CC_RELEASE_LICENSE_IDENTITY_V0
       BACKEND_ERROR: EXIT_REJECTED
       VIOLATION: EXIT_STILL_ACTIVE
-  - workflow: ai_governance::WF_RECLAIM_LICENSE_V0
+  - workflow: ai_governance::WF_RECLAIM_LICENSE_V1
     node: CC_RELEASE_LICENSE_IDENTITY_V0
     node_type: CC
     routing:
       SUCCESS: CC_MOVE_LICENSE_FROM_ACTIVE_V0
       NOT_FOUND: EXIT_REJECTED
-      VIOLATION: EXIT_REJECTED
+      VIOLATION: EXIT_STILL_ACTIVE
       BACKEND_ERROR: EXIT_REJECTED
-  - workflow: ai_governance::WF_RECLAIM_LICENSE_V0
+  - workflow: ai_governance::WF_RECLAIM_LICENSE_V1
     node: CC_MOVE_LICENSE_FROM_ACTIVE_V0
     node_type: CC
     routing:
       SUCCESS: CC_RECORD_AI_LICENSING_MOMENT_V0
       VIOLATION: EXIT_REJECTED
       BACKEND_ERROR: EXIT_REJECTED
-  - workflow: ai_governance::WF_RECLAIM_LICENSE_V0
+  - workflow: ai_governance::WF_RECLAIM_LICENSE_V1
     node: CC_RECORD_AI_LICENSING_MOMENT_V0
     node_type: CC
     routing:
       SUCCESS: EXIT_COMPLETED
       VIOLATION: EXIT_REJECTED
       BACKEND_ERROR: EXIT_REJECTED
-  - workflow: ai_governance::WF_RECLAIM_LICENSE_V0
+  - workflow: ai_governance::WF_RECLAIM_LICENSE_V1
     node: EXIT_COMPLETED
     node_type: EXIT
     routing: null
-  - workflow: ai_governance::WF_RECLAIM_LICENSE_V0
+  - workflow: ai_governance::WF_RECLAIM_LICENSE_V1
     node: EXIT_REJECTED
     node_type: EXIT
     routing: null
-  - workflow: ai_governance::WF_RECLAIM_LICENSE_V0
+  - workflow: ai_governance::WF_RECLAIM_LICENSE_V1
     node: EXIT_STILL_ACTIVE
     node_type: EXIT
     routing: null
@@ -3328,44 +3328,44 @@ registers:
     field: reason
     bound_to:
       literal: LICENSE_ALREADY_HELD
-  - owner: ai_governance::WF_RECLAIM_LICENSE_V0
+  - owner: ai_governance::WF_RECLAIM_LICENSE_V1
     step: CC_RESOLVE_LICENSE_V0
     direction: INPUT
     field: employee_id
     bound_to: payload.employee_id
-  - owner: ai_governance::WF_RECLAIM_LICENSE_V0
+  - owner: ai_governance::WF_RECLAIM_LICENSE_V1
     step: CC_REQUIRE_LICENSE_UNUSED_FOR_DAYS_V0
     direction: INPUT
     field: last_used_at
     bound_to: results.CC_RESOLVE_LICENSE_V0.license_record.last_used_at
-  - owner: ai_governance::WF_RECLAIM_LICENSE_V0
+  - owner: ai_governance::WF_RECLAIM_LICENSE_V1
     step: CC_RELEASE_LICENSE_IDENTITY_V0
     direction: INPUT
     field: license_id
     bound_to: results.CC_RESOLVE_LICENSE_V0.license_record.license_id
-  - owner: ai_governance::WF_RECLAIM_LICENSE_V0
+  - owner: ai_governance::WF_RECLAIM_LICENSE_V1
     step: CC_MOVE_LICENSE_FROM_ACTIVE_V0
     direction: INPUT
     field: to_state
     bound_to:
       literal: RECLAIMED
-  - owner: ai_governance::WF_RECLAIM_LICENSE_V0
+  - owner: ai_governance::WF_RECLAIM_LICENSE_V1
     step: CC_MOVE_LICENSE_FROM_ACTIVE_V0
     direction: INPUT
     field: license_id
     bound_to: results.CC_RESOLVE_LICENSE_V0.license_record.license_id
-  - owner: ai_governance::WF_RECLAIM_LICENSE_V0
+  - owner: ai_governance::WF_RECLAIM_LICENSE_V1
     step: CC_RECORD_AI_LICENSING_MOMENT_V0
     direction: INPUT
     field: occurrence
     bound_to:
       literal: LICENSE_REVOKED
-  - owner: ai_governance::WF_RECLAIM_LICENSE_V0
+  - owner: ai_governance::WF_RECLAIM_LICENSE_V1
     step: CC_RECORD_AI_LICENSING_MOMENT_V0
     direction: INPUT
     field: employee_id
     bound_to: payload.employee_id
-  - owner: ai_governance::WF_RECLAIM_LICENSE_V0
+  - owner: ai_governance::WF_RECLAIM_LICENSE_V1
     step: CC_RECORD_AI_LICENSING_MOMENT_V0
     direction: INPUT
     field: license_id
@@ -4475,14 +4475,14 @@ registers:
     property: emit.EXIT_DENIED
     value:
     - ai_governance::EV_PROVISION_DENIED_V1
-  - artifact: ai_governance::WF_RECLAIM_LICENSE_V0
+  - artifact: ai_governance::WF_RECLAIM_LICENSE_V1
     property: supersedes
     value:
-    - ai_governance::WF_AUTO_RECLAIM_V0
-  - artifact: ai_governance::WF_RECLAIM_LICENSE_V0
+    - ai_governance::WF_RECLAIM_LICENSE_V0
+  - artifact: ai_governance::WF_RECLAIM_LICENSE_V1
     property: actor_context
     value: ai_governance::AC_SYSTEM_V0
-  - artifact: ai_governance::WF_RECLAIM_LICENSE_V0
+  - artifact: ai_governance::WF_RECLAIM_LICENSE_V1
     property: emit.EXIT_COMPLETED
     value:
     - ai_governance::EV_LICENSE_REVOKED_V1
@@ -4674,7 +4674,7 @@ registers:
       ai_governance::IN_PROVISION_LICENSE_V0, ai_governance::IN_RECLAIM_LICENSE_V1, ai_governance::IN_RECORD_LICENSE_USAGE_V0,
       ai_governance::IN_RECORD_TRAINING_COMPLETED_V0, ai_governance::IN_REGISTER_EMPLOYEE_V0, ai_governance::IN_SET_LICENSE_CAP_V0,
       ai_governance::STRUCTURE_AI_LICENSING_STORAGE_V1, ai_governance::RB_LICENSE_BINDINGS_V1, ai_governance::WF_PROVISION_LICENSE_V0,
-      ai_governance::WF_RECLAIM_LICENSE_V0, ai_governance::WF_RECORD_LICENSE_USAGE_V0, ai_governance::WF_RECORD_TRAINING_COMPLETED_V0,
+      ai_governance::WF_RECLAIM_LICENSE_V1, ai_governance::WF_RECORD_LICENSE_USAGE_V0, ai_governance::WF_RECORD_TRAINING_COMPLETED_V0,
       ai_governance::WF_REGISTER_EMPLOYEE_V0, ai_governance::WF_SET_LICENSE_CAP_V0
   refusal_discharge: []
   refusal_deferrals: []
