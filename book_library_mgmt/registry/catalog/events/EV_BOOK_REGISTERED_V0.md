@@ -1,11 +1,5 @@
 # EV_BOOK_REGISTERED_V0
 
-## 1. Intent
-
-A book entered the catalog and acquired its authoritative record
-
----
-
 ## Machine
 
 ```yaml
@@ -16,8 +10,8 @@ governed_by: event::CONSTITUTION_EVENT_V0
 authority: pgc.platform
 concern: catalog
 core:
-  summary: A book entered the catalog and acquired its authoritative record
-  description: A book entered the catalog and acquired its authoritative record
+  summary: A book registered
+  description: A book registered
   subdomain: catalog
   schema:
     identity_key:
@@ -44,3 +38,9 @@ core:
       required: true
       description: When the moment occurred
 ```
+
+---
+
+## Intent
+
+A book registered

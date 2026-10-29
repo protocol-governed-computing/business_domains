@@ -1,11 +1,5 @@
 # EV_ACTOR_REGISTERED_UNVERIFIED_V0
 
-## 1. Intent
-
-The moment a person is admitted and trusted with nothing
-
----
-
 ## Machine
 
 ```yaml
@@ -16,8 +10,8 @@ governed_by: event::CONSTITUTION_EVENT_V0
 authority: pgc.platform
 concern: identity
 core:
-  summary: The moment a person is admitted and trusted with nothing
-  description: The moment a person is admitted and trusted with nothing
+  summary: A actor registered unverified
+  description: A actor registered unverified
   subdomain: identity
   schema:
     contact_address:
@@ -32,3 +26,9 @@ core:
       required: true
       description: When the moment occurred
 ```
+
+---
+
+## Intent
+
+A actor registered unverified

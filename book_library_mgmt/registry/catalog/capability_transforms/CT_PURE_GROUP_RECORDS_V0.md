@@ -1,11 +1,5 @@
 # CT_PURE_GROUP_RECORDS_V0
 
-## 1. Intent
-
-Groups records by the value of a named attribute, returning one group per distinct value
-
----
-
 ## Machine
 
 ```yaml
@@ -37,3 +31,9 @@ machine:
     module: book_library_mgmt.implementation.capability_transforms.atoms.ct_pure_group_records_v0
     callable: execute
 ```
+
+---
+
+## Intent
+
+Groups records by the value of a named attribute, returning one group per distinct value

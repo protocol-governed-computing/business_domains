@@ -1,11 +1,5 @@
 # CT_PURE_FORM_WORK_IDENTITY_KEY_V0
 
-## 1. Intent
-
-Forms the single key claimed for a work from its title and author
-
----
-
 ## Machine
 
 ```yaml
@@ -37,3 +31,9 @@ machine:
     module: book_library_mgmt.implementation.capability_transforms.atoms.ct_pure_form_work_identity_key_v0
     callable: execute
 ```
+
+---
+
+## Intent
+
+Forms the single key claimed for a work from its title and author

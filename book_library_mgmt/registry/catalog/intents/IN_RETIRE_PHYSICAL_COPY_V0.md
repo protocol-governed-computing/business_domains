@@ -10,8 +10,8 @@ governed_by: intent::CONSTITUTION_INTENT_V0
 authority: pgc.platform
 concern: catalog
 core:
-  summary: A request to retire a lost or damaged copy
-  workflow: WF_RETIRE_PHYSICAL_COPY_V0
+  summary: A request to retire physical copy
+  workflow: WF_RETIRE_PHYSICAL_COPY_V1
   inputs:
     staff_credentials:
       type: object
@@ -33,4 +33,4 @@ core:
 
 ## Intent
 
-A request to retire a lost or damaged copy
+A request to retire physical copy

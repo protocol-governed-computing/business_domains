@@ -1,11 +1,5 @@
 # EV_WALLET_CREATED_V0
 
-## 1. Intent
-
-Announces that a wallet was created, for whom, and when
-
----
-
 ## Machine
 
 ```yaml
@@ -16,8 +10,8 @@ governed_by: event::CONSTITUTION_EVENT_V0
 authority: pgc.platform
 concern: wallet
 core:
-  summary: Announces that a wallet was created, for whom, and when
-  description: Announces that a wallet was created, for whom, and when
+  summary: A wallet created
+  description: A wallet created
   subdomain: wallet
   schema:
     wallet_id:
@@ -35,3 +29,9 @@ core:
       required: true
       description: When the moment occurred
 ```
+
+---
+
+## Intent
+
+A wallet created

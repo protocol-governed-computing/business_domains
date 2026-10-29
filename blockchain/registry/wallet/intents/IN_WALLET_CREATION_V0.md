@@ -10,9 +10,8 @@ governed_by: intent::CONSTITUTION_INTENT_V0
 authority: pgc.platform
 concern: wallet
 core:
-  summary: Admits a request naming the person a wallet is for and the key it is made from, and refuses
-    one that names nobody
-  workflow: WF_CREATE_WALLET_V0
+  summary: A request to create wallet
+  workflow: WF_CREATE_WALLET_V1
   inputs:
     contact_address:
       type: string
@@ -31,4 +30,4 @@ core:
 
 ## Intent
 
-Admits a request naming the person a wallet is for and the key it is made from, and refuses one that names nobody
+A request to create wallet

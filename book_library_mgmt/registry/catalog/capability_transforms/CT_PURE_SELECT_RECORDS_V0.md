@@ -1,11 +1,5 @@
 # CT_PURE_SELECT_RECORDS_V0
 
-## 1. Intent
-
-Selects the records matching stated criteria and returns none when none match
-
----
-
 ## Machine
 
 ```yaml
@@ -37,3 +31,9 @@ machine:
     module: book_library_mgmt.implementation.capability_transforms.atoms.ct_pure_select_records_v0
     callable: execute
 ```
+
+---
+
+## Intent
+
+Selects the records matching stated criteria and returns none when none match

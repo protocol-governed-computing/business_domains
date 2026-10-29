@@ -135,7 +135,7 @@ def main() -> int:
 
     try:
         # 1 — a book is registered with its first copy, and the catalog holds one record for it
-        r = run("WF_REGISTER_BOOK_V0", book_payload(ODYSSEY, "BC-0001"))
+        r = run("WF_REGISTER_BOOK_V1", book_payload(ODYSSEY, "BC-0001"))
         books = run.store("books.json")
         check("register a book with at least one copy; exactly one record results",
               r.status == "SUCCESS" and len(books) == 1,
@@ -145,14 +145,14 @@ def main() -> int:
               f"{len(run.store('physical_copies.json'))} copy record(s)")
 
         # 2 — the same three identifying attributes are refused
-        r = run("WF_REGISTER_BOOK_V0", book_payload(ODYSSEY, "BC-0002"))
+        r = run("WF_REGISTER_BOOK_V1", book_payload(ODYSSEY, "BC-0002"))
         check("a registration matching title, author and publication year is refused",
               r.status != "SUCCESS" and len(run.store("books.json")) == 1,
               f"status {r.status}")
 
         # 2b — case and spacing do not make a different book
         variant = {"title": "  the   odyssey ", "author": "HOMER", "publication_year": 1614}
-        r = run("WF_REGISTER_BOOK_V0", book_payload(variant, "BC-0003"))
+        r = run("WF_REGISTER_BOOK_V1", book_payload(variant, "BC-0003"))
         check("case and spacing do not produce a second record",
               r.status != "SUCCESS" and len(run.store("books.json")) == 1,
               f"status {r.status}")
@@ -161,11 +161,11 @@ def main() -> int:
         no_copy = book_payload(ILIAD, "BC-0010")
         no_copy["barcode"] = ""
         no_copy["copy_fields"] = {}
-        r = run("WF_REGISTER_BOOK_V0", no_copy)
+        r = run("WF_REGISTER_BOOK_V1", no_copy)
         check("a registration offering no physical copy is refused", r.status != "SUCCESS",
               f"status {r.status}")
 
-        r = run("WF_REGISTER_BOOK_V0", book_payload(ILIAD, "BC-0011", subjects=()))
+        r = run("WF_REGISTER_BOOK_V1", book_payload(ILIAD, "BC-0011", subjects=()))
         check("a registration carrying no subject is refused", r.status != "SUCCESS",
               f"status {r.status}")
 
@@ -173,13 +173,13 @@ def main() -> int:
         second = auth() | {"identity_key": "the odyssey|homer|1614", "barcode": "BC-0004",
                            "copy_fields": {"barcode": "BC-0004", "state": "REGISTERED",
                                            **ODYSSEY}}
-        r = run("WF_REGISTER_PHYSICAL_COPY_V0", second)
+        r = run("WF_REGISTER_PHYSICAL_COPY_V1", second)
         copies = run.store("physical_copies.json")
         check("a further copy is registered against the book", r.status == "SUCCESS" and len(copies) == 2,
               f"status {r.status}, {len(copies)} copy record(s)")
 
         # 6 — a barcode the library already owns is refused
-        r = run("WF_REGISTER_PHYSICAL_COPY_V0", second)
+        r = run("WF_REGISTER_PHYSICAL_COPY_V1", second)
         check("a copy registration duplicating an owned barcode is refused",
               r.status != "SUCCESS" and len(run.store("physical_copies.json")) == 2,
               f"status {r.status}")
@@ -189,7 +189,7 @@ def main() -> int:
         # the scenarios before it happened to leave. Counting from a literal made the criterion fail
         # whenever an earlier scenario legitimately added a record.
         before = run.store("books.json")
-        r = run("WF_REGISTER_BOOK_V0", book_payload(ILIAD, "BC-0020", staff=INTRUDER))
+        r = run("WF_REGISTER_BOOK_V1", book_payload(ILIAD, "BC-0020", staff=INTRUDER))
         check("an unauthorized staff member cannot perform an operation",
               r.status != "SUCCESS" and run.store("books.json") == before,
               f"status {r.status}, catalog {'unchanged' if run.store('books.json') == before else 'changed'}")
@@ -199,7 +199,7 @@ def main() -> int:
         # 8 — bibliographic information is updated, and a later retrieval returns the new version
         # Through the act in force, V1. A caller states only the fields it changes, not the title,
         # author and year it is leaving alone.
-        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0", auth() | {
+        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1", auth() | {
             "identity_key": ODYSSEY_KEY,
             "updated_fields": {**ODYSSEY, "subject": ["epic", "poetry", "greek"],
                                "state": "REGISTERED"}})
@@ -212,7 +212,7 @@ def main() -> int:
         # What the search must return is every registered book carrying a subject, which is a
         # question for the store rather than a number written here: the scenarios above leave a
         # varying set behind, and a literal count asserts their history instead of the search.
-        r = run("WF_SEARCH_CATALOG_V0", auth() | {"search_criteria": {"subject": "present",
+        r = run("WF_SEARCH_CATALOG_V3", auth() | {"search_criteria": {"subject": "present",
                                                                      "state": "REGISTERED"}})
         found = (r.surface or {}).get("matching_books") or []
         with_subject = [b for b in run.store("books.json").values()
@@ -221,7 +221,7 @@ def main() -> int:
               r.status == "SUCCESS" and len(found) == len(with_subject),
               f"status {r.status}, {len(found)} match(es) against {len(with_subject)} registered")
 
-        r = run("WF_SEARCH_CATALOG_V0", auth() | {
+        r = run("WF_SEARCH_CATALOG_V3", auth() | {
             "search_criteria": {"title": "The Odyssey", "state": "REGISTERED"}})
         by_title = (r.surface or {}).get("matching_books") or []
         check("a search by title locates a registered book by name",
@@ -231,14 +231,14 @@ def main() -> int:
               all("barcode" not in b for b in by_title), f"{len(by_title)} match(es) inspected")
 
         # 10 — complete details include the copies the library holds
-        r = run("WF_RETRIEVE_BOOK_DETAILS_V0", auth() | {"identity_key": ODYSSEY_KEY})
+        r = run("WF_RETRIEVE_BOOK_DETAILS_V1", auth() | {"identity_key": ODYSSEY_KEY})
         surface = r.surface or {}
         check("complete details are retrieved, including the copies held",
               r.status == "SUCCESS" and len(surface.get("copies_held") or []) == 2,
               f"status {r.status}, {len(surface.get('copies_held') or [])} copy/copies")
 
         # 11 — retiring a copy leaves the book record alone
-        r = run("WF_RETIRE_PHYSICAL_COPY_V0", auth() | {"barcode": "BC-0004"})
+        r = run("WF_RETIRE_PHYSICAL_COPY_V1", auth() | {"barcode": "BC-0004"})
         copies = run.store("physical_copies.json")
         check("a copy is retired, and the book record is unaffected",
               r.status == "SUCCESS" and copies.get("BC-0004", {}).get("state") == "RETIRED"
@@ -246,14 +246,14 @@ def main() -> int:
               f"status {r.status}, copy {copies.get('BC-0004', {}).get('state')}")
 
         # 12 — and reinstating it puts it back
-        r = run("WF_REINSTATE_PHYSICAL_COPY_V0", auth() | {"barcode": "BC-0004"})
+        r = run("WF_REINSTATE_PHYSICAL_COPY_V2", auth() | {"barcode": "BC-0004"})
         check("a retired copy is returned to the registered state",
               r.status == "SUCCESS"
               and run.store("physical_copies.json")["BC-0004"]["state"] == "REGISTERED",
               f"status {r.status}")
 
         # 13 — retiring the book leaves its copies alone
-        r = run("WF_RETIRE_BOOK_RECORD_V0", auth() | {"identity_key": ODYSSEY_KEY})
+        r = run("WF_RETIRE_BOOK_RECORD_V1", auth() | {"identity_key": ODYSSEY_KEY})
         books, copies = run.store("books.json"), run.store("physical_copies.json")
         check("a book is retired, and its physical copies are unaffected",
               r.status == "SUCCESS" and books[ODYSSEY_KEY]["state"] == "RETIRED"
@@ -261,18 +261,18 @@ def main() -> int:
               f"status {r.status}, book {books[ODYSSEY_KEY]['state']}")
 
         # 14 — a retired book is out of search, and still retrievable
-        r = run("WF_SEARCH_CATALOG_V0", auth() | {
+        r = run("WF_SEARCH_CATALOG_V3", auth() | {
             "search_criteria": {"title": "The Odyssey", "state": "REGISTERED"}})
         check("a retired book does not appear in search results",
               not ((r.surface or {}).get("matching_books") or []),
               f"{len((r.surface or {}).get('matching_books') or [])} match(es)")
 
-        r = run("WF_RETRIEVE_BOOK_DETAILS_V0", auth() | {"identity_key": ODYSSEY_KEY})
+        r = run("WF_RETRIEVE_BOOK_DETAILS_V1", auth() | {"identity_key": ODYSSEY_KEY})
         check("a retired book's details can still be retrieved", r.status == "SUCCESS",
               f"status {r.status}")
 
         # 15 — a copy may be registered against a retired book
-        r = run("WF_REGISTER_PHYSICAL_COPY_V0", auth() | {
+        r = run("WF_REGISTER_PHYSICAL_COPY_V1", auth() | {
             "identity_key": ODYSSEY_KEY, "barcode": "BC-0005",
             "copy_fields": {"barcode": "BC-0005", "state": "REGISTERED", **ODYSSEY}})
         check("a copy is registered against a retired book",
@@ -280,17 +280,17 @@ def main() -> int:
               f"status {r.status}")
 
         # 16 — and reinstating the book puts it back in search
-        r = run("WF_REINSTATE_BOOK_RECORD_V0", auth() | {"identity_key": ODYSSEY_KEY})
+        r = run("WF_REINSTATE_BOOK_RECORD_V2", auth() | {"identity_key": ODYSSEY_KEY})
         reinstated = r.status == "SUCCESS"
-        r = run("WF_SEARCH_CATALOG_V0", auth() | {
+        r = run("WF_SEARCH_CATALOG_V3", auth() | {
             "search_criteria": {"title": "The Odyssey", "state": "REGISTERED"}})
         check("a retired book is returned to registered and appears in search again",
               reinstated and len((r.surface or {}).get("matching_books") or []) == 1,
               f"reinstated {reinstated}, {len((r.surface or {}).get('matching_books') or [])} match(es)")
 
         # 17 — an update that would duplicate another registered book is refused
-        run("WF_REGISTER_BOOK_V0", book_payload(ILIAD, "BC-0100"))
-        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0", auth() | {
+        run("WF_REGISTER_BOOK_V1", book_payload(ILIAD, "BC-0100"))
+        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1", auth() | {
             "identity_key": "the iliad|homer|1611",
             "updated_fields": {**ODYSSEY, "subject": ["epic"], "state": "REGISTERED"}})
         check("an update that would duplicate another registered book is refused",

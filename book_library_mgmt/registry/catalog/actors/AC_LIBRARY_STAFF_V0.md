@@ -1,11 +1,5 @@
 # AC_LIBRARY_STAFF_V0
 
-## 1. Intent
-
-The actor whose authorization every catalog operation binds
-
----
-
 ## Machine
 
 ```yaml
@@ -26,3 +20,9 @@ core:
       type: boolean
       default: false
 ```
+
+---
+
+## Intent
+
+The actor whose authorization every catalog operation binds

@@ -47,15 +47,15 @@ PAYLOADS = {
 }
 
 WORKFLOW = {
-    "01_register_book": "WF_REGISTER_BOOK_V0",
-    "02_register_physical_copy": "WF_REGISTER_PHYSICAL_COPY_V0",
-    "03_update_bibliographic_information": "WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0",
-    "04_search_catalog": "WF_SEARCH_CATALOG_V0",
-    "05_retrieve_book_details": "WF_RETRIEVE_BOOK_DETAILS_V0",
-    "06_retire_physical_copy": "WF_RETIRE_PHYSICAL_COPY_V0",
-    "07_reinstate_physical_copy": "WF_REINSTATE_PHYSICAL_COPY_V0",
-    "08_retire_book_record": "WF_RETIRE_BOOK_RECORD_V0",
-    "09_reinstate_book_record": "WF_REINSTATE_BOOK_RECORD_V0",
+    "01_register_book": "WF_REGISTER_BOOK_V1",
+    "02_register_physical_copy": "WF_REGISTER_PHYSICAL_COPY_V1",
+    "03_update_bibliographic_information": "WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1",
+    "04_search_catalog": "WF_SEARCH_CATALOG_V3",
+    "05_retrieve_book_details": "WF_RETRIEVE_BOOK_DETAILS_V1",
+    "06_retire_physical_copy": "WF_RETIRE_PHYSICAL_COPY_V1",
+    "07_reinstate_physical_copy": "WF_REINSTATE_PHYSICAL_COPY_V2",
+    "08_retire_book_record": "WF_RETIRE_BOOK_RECORD_V1",
+    "09_reinstate_book_record": "WF_REINSTATE_BOOK_RECORD_V2",
 }
 
 

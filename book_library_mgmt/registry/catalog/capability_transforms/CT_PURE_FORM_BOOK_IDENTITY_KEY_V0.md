@@ -1,11 +1,5 @@
 # CT_PURE_FORM_BOOK_IDENTITY_KEY_V0
 
-## 1. Intent
-
-Forms the single key the registry claims from the three identifying attributes
-
----
-
 ## Machine
 
 ```yaml
@@ -40,3 +34,9 @@ machine:
     module: book_library_mgmt.implementation.capability_transforms.atoms.ct_pure_form_book_identity_key_v0
     callable: execute
 ```
+
+---
+
+## Intent
+
+Forms the single key the registry claims from the three identifying attributes

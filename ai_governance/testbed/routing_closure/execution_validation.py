@@ -1,19 +1,21 @@
 """Execution validation — run the reclaim against its routing-closure criteria.
 
-The change answers one question for the reclaim: what happens when the registry refuses to remove
-the assignment. The business answered it: the reclaim ends as still active, the license stays
-assigned, and no revocation is announced.
+The change answers one question for the reclaim: what happens when the registry refuses to release
+the license. The business answered it: the license stays assigned and active, and no revocation is
+announced. The derived reclaim releases the license before it moves it, so a refused release ends
+the reclaim there, as rejected, before anything is changed.
 
-Each criterion provisions a license on a fresh data root, then dispatches a real reclaim through
-`protocol_runtime` and reads three things back:
+Each criterion licenses one employee on a fresh data root through AI licensing's own acts, then
+dispatches a real reclaim through `protocol_runtime` and reads back:
 
 - the ending the trace records;
 - whether the trace announces anything;
-- whether the registry still holds the assignment.
+- whether the business still holds the license, assigned and active.
 
-The registry refuses a removal only when it is handed no key, and the contract refuses that earlier,
+The registry refuses a release only when it is handed no key, and the contract refuses that earlier,
 at its own inputs. So criterion 1 stands in for the registry's removal, for that run only, and has
-it answer VIOLATION. Criteria 2 and 3 replace nothing.
+it answer VIOLATION. A license unused for 30 days is stood in by moving every time the business
+recorded 40 days back.
 
 Run:  python business_domains/ai_governance/testbed/routing_closure/execution_validation.py [snapshot]
 Exit: 0 if every exercised criterion holds, 1 otherwise.
@@ -22,16 +24,16 @@ Exit: 0 if every exercised criterion holds, 1 otherwise.
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import sys
 import tempfile
+from datetime import datetime, timedelta
 from pathlib import Path
 
 HERE = Path(__file__).resolve()
 DOMAIN = HERE.parents[2]
 WORKSPACE = DOMAIN.parents[1]
-LICENSING = DOMAIN / "testbed" / "ai_licensing" / "test_payloads"
-SEED = DOMAIN / "testbed" / "agent_governance" / "seed_data" / "license_facts.json"
 
 for root in (WORKSPACE / "software_governance", WORKSPACE / "business_domains",
              WORKSPACE / "conformance_workloads", WORKSPACE / "transformation_compilers"):
@@ -45,29 +47,19 @@ from capability_side_effects.implementation.CS_REGISTRY_V0.impl.executor import 
 NS = "ai_governance::"
 STORE = "ai_governance/ai_licensing"
 EMPLOYEE = "e-7526"
-LICENSE = "lic-7526"
-
-
-def reclaim(last_active: str) -> dict:
-    return {"license_id": LICENSE, "threshold_days": 30,
-            "context": {"employee_id": EMPLOYEE, "last_active_date": last_active,
-                        "evaluation_date": "2026-06-01T00:00:00Z", "days_inactive": 151}}
-
-
-INACTIVE = "2026-01-01T00:00:00Z"
-ACTIVE = "2026-05-25T00:00:00Z"
+STAMP = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?")
 
 
 class Case:
-    """One fresh data root, with one license provisioned on it."""
+    """One fresh data root, with one employee licensed on it."""
 
     def __init__(self, snapshot: Path):
         self.snapshot = snapshot
         self.root = Path(tempfile.mkdtemp(prefix="pgc_reclaim_closure_"))
-        (self.root / STORE).mkdir(parents=True)
-        shutil.copy(SEED, self.root / STORE)
-        self.run("WF_PROVISION_AI_LICENSING_V0",
-                 json.loads((LICENSING / "provision_ai_licensing_payload.json").read_text()))
+        self.run("WF_SET_LICENSE_CAP_V0", {"cap": 10})
+        self.run("WF_REGISTER_EMPLOYEE_V0", {"employee_id": EMPLOYEE})
+        self.run("WF_RECORD_TRAINING_COMPLETED_V0", {"employee_id": EMPLOYEE})
+        self.run("WF_PROVISION_LICENSE_V0", {"employee_id": EMPLOYEE, "tier": "standard"})
 
     def run(self, wf: str, body: dict) -> list[dict]:
         result = api.run_workflow(wf_fqdn=NS + wf, payload=body,
@@ -77,12 +69,27 @@ class Case:
             lines += [json.loads(line) for line in f.read_text().splitlines() if line.strip()]
         return lines
 
+    def reclaim(self) -> list[dict]:
+        return self.run("WF_RECLAIM_LICENSE_V0", {"employee_id": EMPLOYEE})
+
+    def age(self, days: int) -> None:
+        """Stand in a license unused for `days`: move every time the business recorded back."""
+        def back(m):
+            text = m.group(0)
+            moved = (datetime.fromisoformat(text.replace("Z", "+00:00")) - timedelta(days=days)).isoformat()
+            return moved.replace("+00:00", "Z") if text.endswith("Z") else moved
+        for p in (self.root / STORE).rglob("*"):
+            if p.is_file() and p.suffix in (".json", ".jsonl"):
+                p.write_text(STAMP.sub(back, p.read_text()))
+
     def assigned(self) -> bool:
-        """Whether the registry's latest entry for the employee still holds the license."""
-        path = self.root / STORE / "license_registry.json"
-        entries = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
-        latest = [e for e in entries if e.get("key") == EMPLOYEE][-1:]
-        return bool(latest) and not latest[0].get("tombstone") and latest[0].get("target_ref") == LICENSE
+        """Whether the business still holds the employee's license, claimed and active."""
+        licenses = json.loads((self.root / STORE / "licenses.json").read_text())
+        held = [lic for lic in licenses.values() if lic.get("employee_id") == EMPLOYEE]
+        path = self.root / STORE / "license_identity_registry.jsonl"
+        claims = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+        claimed = {c["key"] for c in claims if not c.get("tombstone")} - {c["key"] for c in claims if c.get("tombstone")}
+        return bool(held) and held[0].get("state") == "ACTIVE" and held[0]["license_id"] in claimed
 
     def close(self) -> None:
         shutil.rmtree(self.root, ignore_errors=True)
@@ -116,43 +123,46 @@ def main() -> int:
     def check(criterion: str, held: bool, detail: str = "") -> None:
         results.append((criterion, held, detail))
 
-    # 1 — a reclaim the registry refuses ends as still active, and nothing is announced
+    # 1 — a reclaim the registry refuses leaves the license assigned, and nothing is announced
     c = Case(snapshot)
+    c.age(40)
     real = RegistryExecutor.deregister
     RegistryExecutor.deregister = lambda self, payload: {"result_status": "VIOLATION"}
     try:
-        ev = c.run("WF_AUTO_RECLAIM_V0", reclaim(INACTIVE))
+        ev = c.reclaim()
     finally:
         RegistryExecutor.deregister = real
     try:
-        check("a reclaim the registry refuses ends as still active, the license stays assigned, and "
-              "no revocation is announced",
-              ending(ev) == "EXIT_ACTIVE" and c.assigned() and not announced(ev) and not errors(ev),
+        check("a reclaim the registry refuses ends as rejected, the license stays assigned and active, "
+              "and no revocation is announced",
+              ending(ev) == "EXIT_REJECTED" and c.assigned() and not announced(ev) and not errors(ev),
               f"ending {ending(ev)}, assigned {c.assigned()}, {announced(ev)} announcement(s), "
               f"{errors(ev)} error(s)")
-        check("the reclaim stops at the refused removal, and nothing after it runs",
-              started(ev) == 1, f"contracts started: {started(ev)}")
+        check("the reclaim stops at the refused release, and nothing after it runs",
+              started(ev) == 3, f"contracts started: {started(ev)}")
     finally:
         c.close()
 
-    # 2 — a reclaim the registry does not refuse ends as it did before
+    # 2 — a reclaim the registry does not refuse reclaims the license
     c = Case(snapshot)
+    c.age(40)
     try:
-        ev = c.run("WF_AUTO_RECLAIM_V0", reclaim(INACTIVE))
-        check("a reclaim the registry accepts ends as reclaimed, the license is released, and the "
+        ev = c.reclaim()
+        check("a reclaim the registry accepts ends as completed, the license is released, and the "
               "revocation is announced",
-              ending(ev) == "EXIT_RECLAIMED" and not c.assigned() and announced(ev) == 1
+              ending(ev) == "EXIT_COMPLETED" and not c.assigned() and announced(ev) == 1
               and not errors(ev),
               f"ending {ending(ev)}, assigned {c.assigned()}, {announced(ev)} announcement(s)")
     finally:
         c.close()
 
-    # 3 — a license still in use ends as still active, as it did before
+    # 3 — a license used within 30 days ends as still active
     c = Case(snapshot)
     try:
-        ev = c.run("WF_AUTO_RECLAIM_V0", reclaim(ACTIVE))
+        c.run("WF_RECORD_LICENSE_USAGE_V0", {"employee_id": EMPLOYEE})
+        ev = c.reclaim()
         check("a license still in use ends as still active, and stays assigned",
-              ending(ev) == "EXIT_ACTIVE" and c.assigned() and not announced(ev) and not errors(ev),
+              ending(ev) == "EXIT_STILL_ACTIVE" and c.assigned() and not announced(ev) and not errors(ev),
               f"ending {ending(ev)}, assigned {c.assigned()}, {announced(ev)} announcement(s)")
     finally:
         c.close()

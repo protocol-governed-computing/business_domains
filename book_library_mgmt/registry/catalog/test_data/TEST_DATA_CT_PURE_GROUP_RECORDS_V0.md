@@ -36,6 +36,8 @@ cases:
         edition: 1
 ```
 
+---
+
 ## Intent
 
-Records are grouped by the attribute's value, one group per distinct value, in first-seen order.
+

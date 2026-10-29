@@ -10,9 +10,8 @@ governed_by: intent::CONSTITUTION_INTENT_V0
 authority: pgc.platform
 concern: catalog
 core:
-  summary: The boundary that admits a request to register a further edition of a work the catalog already
-    holds
-  workflow: WF_REGISTER_ADDITIONAL_EDITION_V0
+  summary: A request to register additional edition
+  workflow: WF_REGISTER_ADDITIONAL_EDITION_V1
   inputs:
     staff_credentials:
       type: object
@@ -43,4 +42,4 @@ core:
 
 ## Intent
 
-The boundary that admits a request to register a further edition of a work the catalog already holds
+A request to register additional edition

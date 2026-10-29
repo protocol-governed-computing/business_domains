@@ -167,7 +167,7 @@ def main() -> int:
         run.seed_legacy_record()
 
         # 1 — a work enters the catalog with the edition that evidences it
-        r = run("WF_REGISTER_BOOK_V0", book_payload(DUNE_1965, "BC-0001"))
+        r = run("WF_REGISTER_BOOK_V1", book_payload(DUNE_1965, "BC-0001"))
         works, books = run.store("works.json"), run.store("books.json")
         check("registering an edition of an unheld work creates the work and the edition",
               r.status == "SUCCESS" and WORK_KEY in works and len(books) == 2,
@@ -179,7 +179,7 @@ def main() -> int:
               f"work_key {books.get(_key(DUNE_1965), {}).get('work_key')!r}")
 
         # 3 — a further edition of a work the catalog already holds
-        r = run("WF_REGISTER_ADDITIONAL_EDITION_V0", edition_payload(DUNE_1984))
+        r = run("WF_REGISTER_ADDITIONAL_EDITION_V1", edition_payload(DUNE_1984))
         works, books = run.store("works.json"), run.store("books.json")
         check("an additional edition of an existing work is registered",
               r.status == "SUCCESS" and _key(DUNE_1984) in books,
@@ -189,7 +189,7 @@ def main() -> int:
               f"{len(works)} work(s)")
 
         # 4 — and a third, so a search has three editions to answer once for
-        r = run("WF_REGISTER_ADDITIONAL_EDITION_V0", edition_payload(DUNE_2005))
+        r = run("WF_REGISTER_ADDITIONAL_EDITION_V1", edition_payload(DUNE_2005))
         books = run.store("books.json")
         editions = [b for b in books.values() if b.get("work_key") == WORK_KEY]
         check("three editions of one work are held, grouped under one work",
@@ -197,13 +197,13 @@ def main() -> int:
               f"{len(editions)} edition(s), {len(run.store('works.json'))} work(s)")
 
         # 5 — a registration repeating an edition's identity is refused
-        r = run("WF_REGISTER_ADDITIONAL_EDITION_V0", edition_payload(DUNE_1984))
+        r = run("WF_REGISTER_ADDITIONAL_EDITION_V1", edition_payload(DUNE_1984))
         check("a registration repeating an edition's identity is refused",
               r.status != "SUCCESS" and len(run.store("books.json")) == 4,
               f"status {r.status}, {len(run.store('books.json'))} edition(s)")
 
         # 6 — search answers once per work, not once per edition
-        r = run("WF_SEARCH_CATALOG_V0", auth() | {
+        r = run("WF_SEARCH_CATALOG_V3", auth() | {
             "search_criteria": {"title": "Dune", "state": "REGISTERED"}})
         groups = _groups(r.surface)
         check("a search for a work with three editions returns one result, not three",
@@ -219,13 +219,13 @@ def main() -> int:
 
         # 8 — an edition registered as a further edition holds no copy until one is registered,
         #     and the catalog must still be able to answer about it
-        r = run("WF_RETRIEVE_BOOK_DETAILS_V0", auth() | {"identity_key": _key(DUNE_1984)})
+        r = run("WF_RETRIEVE_BOOK_DETAILS_V1", auth() | {"identity_key": _key(DUNE_1984)})
         check("an edition holding no copies is still retrievable",
               r.status == "SUCCESS",
               f"status {r.status} — a further edition requires no copy, so this is reachable")
 
         # 9 — a copy belongs to the edition it was registered against
-        r = run("WF_REGISTER_PHYSICAL_COPY_V0", auth() | DUNE_1984 | {
+        r = run("WF_REGISTER_PHYSICAL_COPY_V1", auth() | DUNE_1984 | {
             "barcode": "BC-0002", "identity_key": _key(DUNE_1984),
             "copy_fields": {"barcode": "BC-0002", "state": "REGISTERED", **DUNE_1984}})
         copies = run.store("physical_copies.json")
@@ -235,7 +235,7 @@ def main() -> int:
               f"status {r.status}")
 
         # 9b — retrieval answers about one edition, its copies, and the work it belongs to
-        r = run("WF_RETRIEVE_BOOK_DETAILS_V0", auth() | {"identity_key": _key(DUNE_1984)})
+        r = run("WF_RETRIEVE_BOOK_DETAILS_V1", auth() | {"identity_key": _key(DUNE_1984)})
         surface = r.surface or {}
         check("an edition's complete details are retrieved, with the copies held",
               r.status == "SUCCESS" and (surface.get("book_record") or {}).get("publication_year")
@@ -246,7 +246,7 @@ def main() -> int:
               f"work_record {surface.get('work_record')!r}")
 
         # 10 — retiring one edition leaves the work's other editions alone
-        r = run("WF_RETIRE_BOOK_RECORD_V0", auth() | {"identity_key": _key(DUNE_1984)})
+        r = run("WF_RETIRE_BOOK_RECORD_V1", auth() | {"identity_key": _key(DUNE_1984)})
         books = run.store("books.json")
         siblings = [b for k, b in books.items()
                     if b.get("work_key") == WORK_KEY and k != _key(DUNE_1984)]
@@ -261,7 +261,7 @@ def main() -> int:
               f"{len(run.store('works.json'))} work(s)")
 
         # 12 — and the edition comes back
-        r = run("WF_REINSTATE_BOOK_RECORD_V0", auth() | {"identity_key": _key(DUNE_1984)})
+        r = run("WF_REINSTATE_BOOK_RECORD_V2", auth() | {"identity_key": _key(DUNE_1984)})
         check("a retired edition is returned to the registered state",
               r.status == "SUCCESS"
               and run.store("books.json")[_key(DUNE_1984)]["state"] == "REGISTERED",
@@ -270,7 +270,7 @@ def main() -> int:
         # --- the existing-records promise: everything below operates on the seeded record ---
 
         # 13 — a record written before this change is still found by search
-        r = run("WF_SEARCH_CATALOG_V0", auth() | {
+        r = run("WF_SEARCH_CATALOG_V3", auth() | {
             "search_criteria": {"title": "Emma", "state": "REGISTERED"}})
         found = [m for g in _groups(r.surface) for m in g.get("records", [])
                  if m.get("identity_key") == LEGACY_KEY]
@@ -279,7 +279,7 @@ def main() -> int:
               f"status {r.status}, {len(found)} match(es)")
 
         # 14 — and retrieved in full
-        r = run("WF_RETRIEVE_BOOK_DETAILS_V0", auth() | {"identity_key": LEGACY_KEY})
+        r = run("WF_RETRIEVE_BOOK_DETAILS_V1", auth() | {"identity_key": LEGACY_KEY})
         surface = r.surface or {}
         check("a record written before this change is retrieved in full, without recreation",
               r.status == "SUCCESS"
@@ -292,7 +292,7 @@ def main() -> int:
         # restate what it was leaving alone was turned away. Withdrawing a requirement renders the
         # boundary whole and says less than it said, so it was superseded rather than amended — and
         # superseding does not redirect a caller. This is the caller moving.
-        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0", auth() | {
+        r = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1", auth() | {
             "identity_key": LEGACY_KEY,
             "updated_fields": {**LEGACY, "subject": ["romance", "classic"],
                                "state": "REGISTERED"}})
@@ -302,13 +302,13 @@ def main() -> int:
               f"status {r.status}")
 
         # 16 — and retired
-        r = run("WF_RETIRE_BOOK_RECORD_V0", auth() | {"identity_key": LEGACY_KEY})
+        r = run("WF_RETIRE_BOOK_RECORD_V1", auth() | {"identity_key": LEGACY_KEY})
         check("a record written before this change can be retired",
               r.status == "SUCCESS" and run.store("books.json")[LEGACY_KEY]["state"] == "RETIRED",
               f"status {r.status}")
 
         # 17 — and reinstated
-        r = run("WF_REINSTATE_BOOK_RECORD_V0", auth() | {"identity_key": LEGACY_KEY})
+        r = run("WF_REINSTATE_BOOK_RECORD_V2", auth() | {"identity_key": LEGACY_KEY})
         check("a record written before this change can be reinstated",
               r.status == "SUCCESS"
               and run.store("books.json")[LEGACY_KEY]["state"] == "REGISTERED",
@@ -329,8 +329,8 @@ def main() -> int:
         intruder = {"staff_id": "intruder", "authorized": False}
         ODYSSEY = {"title": "The Odyssey", "author": "Homer", "publication_year": 1996}
 
-        r = run("WF_REGISTER_BOOK_V0", {**book_payload(ODYSSEY, "BC-ODY-1", staff=intruder), **WIDE})
-        s = run("WF_SEARCH_CATALOG_V0", {**auth(intruder), **WIDE, "search_criteria": {"title": "Dune"}})
+        r = run("WF_REGISTER_BOOK_V1", {**book_payload(ODYSSEY, "BC-ODY-1", staff=intruder), **WIDE})
+        s = run("WF_SEARCH_CATALOG_V3", {**auth(intruder), **WIDE, "search_criteria": {"title": "Dune"}})
         check("a catalog operation requested by anyone the library has not authorized is refused, "
               "whatever rules the request states, and no record changes",
               r.status != "SUCCESS" and s.status != "SUCCESS" and _key(ODYSSEY) not in run.store("books.json"),
@@ -338,9 +338,9 @@ def main() -> int:
 
         bare_book = book_payload(ODYSSEY, "BC-ODY-2")
         bare_book["book_fields"].pop("subject")
-        r = run("WF_REGISTER_BOOK_V0", {**bare_book, **WIDE, "authorization_rules": RULES})
+        r = run("WF_REGISTER_BOOK_V1", {**bare_book, **WIDE, "authorization_rules": RULES})
         EDITION = {"title": "Dune", "author": "Frank Herbert", "publication_year": 2021}
-        e = run("WF_REGISTER_ADDITIONAL_EDITION_V0",
+        e = run("WF_REGISTER_ADDITIONAL_EDITION_V1",
                 {**edition_payload(EDITION), **WIDE, "authorization_rules": RULES, "subject": "science fiction"})
         check("a book, a work or a further edition missing what the library says it must contain is "
               "refused, whatever description the request states, and nothing is registered by it",
@@ -348,7 +348,7 @@ def main() -> int:
               and _key(ODYSSEY) not in run.store("books.json") and _key(EDITION) not in run.store("books.json"),
               f"book {r.status}, edition {e.status}")
 
-        r = run("WF_REGISTER_BOOK_V0", {**book_payload(ODYSSEY, "BC-ODY-3", subjects=("epic",)), **WIDE,
+        r = run("WF_REGISTER_BOOK_V1", {**book_payload(ODYSSEY, "BC-ODY-3", subjects=("epic",)), **WIDE,
                                          "authorization_rules": RULES})
         recorded = run.store("books.json").get(_key(ODYSSEY), {})
         check("what the catalog checks for a registration is what it records",
@@ -358,14 +358,14 @@ def main() -> int:
         ILIAD = {"title": "The Iliad", "author": "Homer", "publication_year": 1990}
         retired_copy = book_payload(ILIAD, "BC-ILI-1")
         retired_copy["copy_fields"]["state"] = "RETIRED"
-        r = run("WF_REGISTER_BOOK_V0", retired_copy)
+        r = run("WF_REGISTER_BOOK_V1", retired_copy)
         copy_state = run.store("physical_copies.json").get("BC-ILI-1", {}).get("state")
         check("a physical copy is registered as registered, whatever state the request gives it",
               r.status == "SUCCESS" and copy_state == "REGISTERED", f"status {r.status}, state {copy_state}")
 
-        c = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0", {**auth(), **WIDE, "authorization_rules": RULES,
+        c = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1", {**auth(), **WIDE, "authorization_rules": RULES,
                 "identity_key": _key(ILIAD), "updated_fields": {**ILIAD, "subject": ["epic"], "state": "SUSPENDED"}})
-        emptied = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0", {**auth(), "identity_key": _key(ILIAD),
+        emptied = run("WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1", {**auth(), "identity_key": _key(ILIAD),
                       "authorization_rules": RULES, "updated_fields": {**ILIAD, "subject": []}})
         iliad = run.store("books.json").get(_key(ILIAD), {})
         check("a correction keeps the record's state, and a correction leaving a book without its "

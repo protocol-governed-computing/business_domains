@@ -1,11 +1,5 @@
 # EV_ACTOR_REJECTED_V0
 
-## 1. Intent
-
-The moment an authority records a decision not to trust an actor
-
----
-
 ## Machine
 
 ```yaml
@@ -16,8 +10,8 @@ governed_by: event::CONSTITUTION_EVENT_V0
 authority: pgc.platform
 concern: identity
 core:
-  summary: The moment an authority records a decision not to trust an actor
-  description: The moment an authority records a decision not to trust an actor
+  summary: A actor rejected
+  description: A actor rejected
   subdomain: identity
   schema:
     contact_address:
@@ -38,3 +32,9 @@ core:
       required: true
       description: When the moment occurred
 ```
+
+---
+
+## Intent
+
+A actor rejected

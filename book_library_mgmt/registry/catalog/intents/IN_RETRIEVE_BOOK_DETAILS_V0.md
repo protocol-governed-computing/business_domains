@@ -10,8 +10,8 @@ governed_by: intent::CONSTITUTION_INTENT_V0
 authority: pgc.platform
 concern: catalog
 core:
-  summary: A request for a book's complete details with the copies held
-  workflow: WF_RETRIEVE_BOOK_DETAILS_V0
+  summary: A request to retrieve book details
+  workflow: WF_RETRIEVE_BOOK_DETAILS_V1
   inputs:
     staff_credentials:
       type: object
@@ -33,4 +33,4 @@ core:
 
 ## Intent
 
-A request for a book's complete details with the copies held
+A request to retrieve book details

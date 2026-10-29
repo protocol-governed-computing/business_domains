@@ -10,8 +10,8 @@ governed_by: intent::CONSTITUTION_INTENT_V0
 authority: pgc.platform
 concern: identity
 core:
-  summary: A request to admit a person as an actor
-  workflow: WF_REGISTER_ACTOR_V0
+  summary: A request to register actor
+  workflow: WF_REGISTER_ACTOR_V3
   inputs:
     actor_record:
       type: object
@@ -27,4 +27,4 @@ core:
 
 ## Intent
 
-A request to admit a person as an actor
+A request to register actor

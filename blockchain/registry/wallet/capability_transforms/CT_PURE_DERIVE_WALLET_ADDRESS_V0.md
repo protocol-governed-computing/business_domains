@@ -1,11 +1,5 @@
 # CT_PURE_DERIVE_WALLET_ADDRESS_V0
 
-## 1. Intent
-
-Derives an address from supplied key material; the same material always yields the same address
-
----
-
 ## Machine
 
 ```yaml
@@ -34,3 +28,9 @@ machine:
     module: blockchain.implementation.capability_transforms.atoms.ct_pure_derive_wallet_address_v0
     callable: execute
 ```
+
+---
+
+## Intent
+
+Derives an address from supplied key material; the same material always yields the same address

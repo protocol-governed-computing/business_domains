@@ -20,6 +20,8 @@ cases:
     work_key: the odyssey|homer
 ```
 
+---
+
 ## Intent
 
-A work is keyed by title and author, normalized exactly as an edition is.
+

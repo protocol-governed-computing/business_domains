@@ -1,11 +1,5 @@
 # AC_PARTICIPANT_V0
 
-## 1. Intent
-
-The ordinary participant who registers themselves and is decided about
-
----
-
 ## Machine
 
 ```yaml
@@ -16,7 +10,7 @@ governed_by: actor::CONSTITUTION_ACTOR_IDENTITY_V0
 authority: pgc.platform
 concern: identity
 core:
-  summary: The ordinary participant who registers themselves and is decided about
+  summary: The participant who acts for themselves
   type: human
   attributes:
     contact_address:
@@ -32,3 +26,9 @@ core:
       type: string
       default: en
 ```
+
+---
+
+## Intent
+
+The participant who acts for themselves

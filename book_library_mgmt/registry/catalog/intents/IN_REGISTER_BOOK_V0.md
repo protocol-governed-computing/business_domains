@@ -10,8 +10,8 @@ governed_by: intent::CONSTITUTION_INTENT_V0
 authority: pgc.platform
 concern: catalog
 core:
-  summary: A request to register a book together with its first physical copy
-  workflow: WF_REGISTER_BOOK_V0
+  summary: A request to register book
+  workflow: WF_REGISTER_BOOK_V1
   inputs:
     staff_credentials:
       type: object
@@ -48,4 +48,4 @@ core:
 
 ## Intent
 
-A request to register a book together with its first physical copy
+A request to register book

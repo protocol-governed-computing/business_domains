@@ -1,11 +1,5 @@
 # TE_REJECT_ACTOR_V0
 
-## 1. Intent
-
-Classifies the endings of rejecting an actor, including the actor that does not exist, and projects what was recorded.
-
----
-
 ## Machine
 
 ```yaml
@@ -39,3 +33,9 @@ result_classification:
 default_result_class: EXECUTION_FAILURE
 evidence_policy: reference_only
 ```
+
+---
+
+## Intent
+
+Classifies the endings of rejecting an actor, including the actor that does not exist, and projects what was recorded.

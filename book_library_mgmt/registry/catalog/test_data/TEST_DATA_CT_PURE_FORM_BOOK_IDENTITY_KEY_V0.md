@@ -27,6 +27,8 @@ cases:
     publication_year: 1614
 ```
 
+---
+
 ## Intent
 
-Case does not change which book is meant, and a blank title is refused.
+

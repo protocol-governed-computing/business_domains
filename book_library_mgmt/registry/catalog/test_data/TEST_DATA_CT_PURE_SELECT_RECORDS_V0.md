@@ -27,6 +27,8 @@ cases:
       title: Iliad
 ```
 
+---
+
 ## Intent
 
-The records matching every criterion are selected.
+

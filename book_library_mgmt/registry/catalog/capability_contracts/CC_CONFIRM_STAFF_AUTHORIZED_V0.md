@@ -10,7 +10,7 @@ governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
 authority: pgc.platform
 concern: catalog
 core:
-  summary: Confirm the staff member may perform catalog operations
+  summary: Confirm the staff member may perform the operation
   inputs:
     staff_credentials:
       type: object
@@ -49,4 +49,4 @@ core:
 
 ## Intent
 
-Confirm the staff member may perform catalog operations
+Confirm the staff member may perform the operation

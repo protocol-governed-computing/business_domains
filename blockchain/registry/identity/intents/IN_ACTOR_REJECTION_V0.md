@@ -1,11 +1,5 @@
 # IN_ACTOR_REJECTION_V0
 
-## 1. Intent
-
-Admits a request to reject a person, and refuses one that states no grounds
-
----
-
 ## Machine
 
 ```yaml
@@ -16,8 +10,8 @@ governed_by: intent::CONSTITUTION_INTENT_V0
 authority: pgc.platform
 concern: identity
 core:
-  summary: Admits a request to reject a person, and refuses one that states no grounds
-  workflow: WF_REJECT_ACTOR_V0
+  summary: A request to reject actor
+  workflow: WF_REJECT_ACTOR_V1
   inputs:
     contact_address:
       type: string
@@ -34,3 +28,9 @@ core:
     NACK:
       description: Request rejected
 ```
+
+---
+
+## Intent
+
+A request to reject actor

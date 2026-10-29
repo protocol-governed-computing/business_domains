@@ -10,8 +10,8 @@ governed_by: intent::CONSTITUTION_INTENT_V0
 authority: pgc.platform
 concern: catalog
 core:
-  summary: A request to register a further copy against a registered book
-  workflow: WF_REGISTER_PHYSICAL_COPY_V0
+  summary: A request to register physical copy
+  workflow: WF_REGISTER_PHYSICAL_COPY_V1
   inputs:
     staff_credentials:
       type: object
@@ -39,4 +39,4 @@ core:
 
 ## Intent
 
-A request to register a further copy against a registered book
+A request to register physical copy

@@ -1,11 +1,5 @@
 # TE_REGISTER_ACTOR_V0
 
-## 1. Intent
-
-Classifies the endings of registering an actor and projects the contact address, the occurrence, its time and its position.
-
----
-
 ## Machine
 
 ```yaml
@@ -35,3 +29,9 @@ result_classification:
 default_result_class: EXECUTION_FAILURE
 evidence_policy: reference_only
 ```
+
+---
+
+## Intent
+
+Classifies the endings of registering an actor and projects the contact address, the occurrence, its time and its position.

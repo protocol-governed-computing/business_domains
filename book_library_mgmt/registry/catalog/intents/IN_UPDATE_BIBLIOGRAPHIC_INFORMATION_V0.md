@@ -10,8 +10,8 @@ governed_by: intent::CONSTITUTION_INTENT_V0
 authority: pgc.platform
 concern: catalog
 core:
-  summary: A request to change a registered book's description
-  workflow: WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V0
+  summary: A request to update bibliographic information
+  workflow: WF_UPDATE_BIBLIOGRAPHIC_INFORMATION_V1
   inputs:
     staff_credentials:
       type: object
@@ -36,4 +36,4 @@ core:
 
 ## Intent
 
-A request to change a registered book's description
+A request to update bibliographic information

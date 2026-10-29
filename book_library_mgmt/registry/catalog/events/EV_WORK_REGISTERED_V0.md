@@ -1,11 +1,5 @@
 # EV_WORK_REGISTERED_V0
 
-## 1. Intent
-
-The moment a work enters the catalog, created by the edition that evidences it
-
----
-
 ## Machine
 
 ```yaml
@@ -16,8 +10,8 @@ governed_by: event::CONSTITUTION_EVENT_V0
 authority: pgc.platform
 concern: catalog
 core:
-  summary: The moment a work enters the catalog, created by the edition that evidences it
-  description: The moment a work enters the catalog, created by the edition that evidences it
+  summary: A work registered
+  description: A work registered
   subdomain: catalog
   schema:
     work_key:
@@ -35,3 +29,9 @@ core:
       required: true
       description: When the moment occurred
 ```
+
+---
+
+## Intent
+
+A work registered

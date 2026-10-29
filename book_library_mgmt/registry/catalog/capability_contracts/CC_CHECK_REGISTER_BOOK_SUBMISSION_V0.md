@@ -1,0 +1,112 @@
+# CC_CHECK_REGISTER_BOOK_SUBMISSION_V0
+
+## Machine
+
+```yaml
+fqdn: book_library_mgmt::CC_CHECK_REGISTER_BOOK_SUBMISSION_V0
+artifact_kind: CAPABILITY_CONTRACT
+version: v0
+governed_by: capability_contracts::CONSTITUTION_CAPABILITY_CONTRACT_V0
+authority: pgc.platform
+concern: catalog
+core:
+  summary: Refuse a request to register book that lacks what it requires
+  inputs:
+    book_fields:
+      type: object
+      required: true
+    barcode:
+      type: string
+    work_fields:
+      type: object
+      required: true
+  outputs:
+    valid:
+      type: boolean
+      required: true
+  result_status_contract:
+    allowed:
+    - VIOLATION
+    - SUCCESS
+    on_input_failure: VIOLATION
+  pipeline:
+  - step: check_book_fields
+    transform: capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0
+    inputs:
+      record: $.inputs.book_fields
+      schema:
+        title:
+          type: string
+          required: true
+        author:
+          type: string
+          required: true
+        publication_year:
+          type: integer
+          required: true
+        subject:
+          type: array
+          required: true
+    outputs:
+      violations: $.capability_result.violations
+    result_surface:
+    - SUCCESS
+    - VIOLATION
+    on_result:
+      SUCCESS: continue
+      VIOLATION: exit
+  - step: check_work_fields
+    transform: capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0
+    inputs:
+      record: $.inputs.work_fields
+      schema:
+        title:
+          type: string
+          required: true
+        author:
+          type: string
+          required: true
+    outputs:
+      violations: $.capability_result.violations
+    result_surface:
+    - SUCCESS
+    - VIOLATION
+    on_result:
+      SUCCESS: continue
+      VIOLATION: exit
+  - step: refuse_incomplete_submission
+    transform: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0
+    inputs:
+      parameters:
+        book_violations: $.results.check_book_fields.violations
+        subject: $.inputs.book_fields.subject
+        barcode: $.inputs.barcode
+        work_violations: $.results.check_work_fields.violations
+      rules:
+      - field: barcode
+        op: neq
+        value: ''
+      - field: book_violations
+        op: eq
+        value: []
+      - field: subject
+        op: neq
+        value: []
+      - field: work_violations
+        op: eq
+        value: []
+    outputs:
+      valid: $.capability_result.valid
+    result_surface:
+    - SUCCESS
+    - VIOLATION
+    on_result:
+      SUCCESS: exit
+      VIOLATION: exit
+```
+
+---
+
+## Intent
+
+Refuse a request to register book that lacks what it requires

@@ -3,66 +3,61 @@
 ## Business Process
 
 An AI agent acts on behalf of a human user. Before the agent may invoke any tool,
-the platform must answer four sequential questions:
+the business answers these questions in order:
 
-1. **Is the request well-formed?** — Normalize the request and generate a deterministic
-   intent hash for audit correlation.
+1. **Is the request complete?** — A request missing what the act needs is rejected.
 2. **Does the tool exist?** — Only tools declared in the closed registry may be
    referenced. Anything else is structurally absent.
-3. **Is the user licensed?** — Look up the user's license record. No active license means
-   no authority, regardless of which tool was requested.
+3. **Is the user licensed?** — Read the license AI licensing holds for the user. No active
+   license means no authority, regardless of which tool was requested.
 4. **Does the license cover this tool?** — Each tier grants a specific, closed set of
    tools. Standard cannot invoke premium tools; enterprise can.
 5. **Are the parameters valid?** — Tool-specific parameter rules (max quantity, allowed
    values, etc.) are enforced declaratively before the action is recorded.
 
-Every outcome — authorized or denied — produces an immutable audit record
-(`governance_audit.jsonl`). Authorized actions are also registered in
-`governance_actions.json` for idempotency tracking.
+Every judgment — authorized or denied — is recorded in the audit trail
+(`governance_audit.jsonl`). An authorized action is registered once in `actions.json`, however
+often it is proposed.
 
 ### License Tiers and Tool Surface
 
 | Tier       | Allowed Tools                                                   |
 |------------|-----------------------------------------------------------------|
-| `none`     | `READ_RECORD`                                                   |
 | `standard` | `READ_RECORD`, `PROVISION_STANDARD_LICENSE`                     |
 | `enterprise` | `READ_RECORD`, `PROVISION_STANDARD_LICENSE`, `PROVISION_PREMIUM_LICENSE` |
 
-### Workflow: `WF_GOVERN_AGENT_ACTION_V0`
+### Workflow: `WF_GOVERN_AGENT_ACTION_V1`
 
 ```
 Request
-  → Normalize (intent hash)
-  → Check tool declared      — VIOLATION → Audit: UNDECLARED_TOOL
-  → Resolve license tier     — NOT_FOUND / VIOLATION → Audit: UNAUTHORIZED_ACTOR
-  → Bind license to tools    — VIOLATION → Audit: UNAUTHORIZED_TOOL
-  → Validate parameters      — VIOLATION → Audit: PARAMETER_VIOLATION
-  → Record governed action   → EXIT_SUCCESS
+  → Check the submission       — incomplete → EXIT_REJECTED
+  → Require tool declared      — VIOLATION → Audit: UNDECLARED_TOOL
+  → Resolve the license        — NOT_FOUND / VIOLATION → Audit: UNAUTHORIZED_ACTOR
+  → Require license active     — VIOLATION → Audit: UNAUTHORIZED_ACTOR
+  → Require tier grants tool   — VIOLATION → Audit: UNAUTHORIZED_TOOL
+  → Require parameters satisfy rules — VIOLATION → Audit: PARAMETER_VIOLATION
+  → Form, claim and write the action, audit the judgment → EXIT_COMPLETED
 ```
 
 ---
 
 ## Setup
 
-### One-time: seed data
+### One-time: license the seed users
 
-`license_facts.json` holds the user → license mapping. It lives in `seed_data/` and
-must be visible to the runtime at `$PGC_DATA_ROOT/ai_governance/ai_licensing/license_facts.json`.
-
-**Symlink (recommended — no copying, seed_data stays the source of truth):**
+Agent governance reads the license AI licensing holds for the requesting user, and writes nothing
+there. License the seed users through AI licensing's own acts, in this order:
 
 ```bash
-mkdir -p "$PGC_DATA_ROOT/ai_governance/ai_licensing"
-ln -sf \
-  "$(pwd)/seed_data/license_facts.json" \
-  "$PGC_DATA_ROOT/ai_governance/ai_licensing/license_facts.json"
-```
-
-**Or copy once:**
-
-```bash
-mkdir -p "$PGC_DATA_ROOT/ai_governance/ai_licensing"
-cp seed_data/license_facts.json "$PGC_DATA_ROOT/ai_governance/ai_licensing/license_facts.json"
+P=../ai_licensing/test_payloads
+for step in SET_LICENSE_CAP:01_set_license_cap \
+            REGISTER_EMPLOYEE:02_register_employee_std RECORD_TRAINING_COMPLETED:03_record_training_std \
+            PROVISION_LICENSE:04_provision_license_std \
+            REGISTER_EMPLOYEE:05_register_employee_ent RECORD_TRAINING_COMPLETED:06_record_training_ent \
+            PROVISION_LICENSE:07_provision_license_ent; do
+  protocol_runtime run --wf "ai_governance::WF_${step%%:*}_V0" --payload "$P/${step#*:}.json" \
+    --data-root "$PGC_DATA_ROOT" --snapshot "$PGC_SNAPSHOT_ROOT"
+done
 ```
 
 ### Seed users
@@ -71,7 +66,7 @@ cp seed_data/license_facts.json "$PGC_DATA_ROOT/ai_governance/ai_licensing/licen
 |----------------|----------------|--------------|
 | `EMP_STD_001`  | active         | standard     |
 | `EMP_ENT_001`  | active         | enterprise   |
-| `EMP_NONE_001` | *(not in file)*| none         |
+| `EMP_NONE_001` | *(never licensed)* | none     |
 
 ---
 
@@ -79,7 +74,7 @@ cp seed_data/license_facts.json "$PGC_DATA_ROOT/ai_governance/ai_licensing/licen
 
 ```bash
 protocol_runtime run \
-  --wf ai_governance::WF_GOVERN_AGENT_ACTION_V0 \
+  --wf ai_governance::WF_GOVERN_AGENT_ACTION_V1 \
   --payload <path-to-payload.json> \
   --data-root "$PGC_DATA_ROOT" \
   --snapshot "$PGC_SNAPSHOT_ROOT"
@@ -110,7 +105,7 @@ for i, line in enumerate(sys.stdin, 1):
 ```
 
 **Expected decision:** `AUTHORIZED`
-**Audit event:** `EV_AGENT_ACTION_AUTHORIZED_V0`
+**Audit event:** `EV_AGENT_ACTION_AUTHORIZED_V1`
 **Path:** full happy path — all five gates pass, action recorded.
 
 ---
@@ -125,8 +120,8 @@ for i, line in enumerate(sys.stdin, 1):
 ```
 
 **Expected decision:** `DENIED` — `UNAUTHORIZED_ACTOR`
-**Path:** Normalize → CheckTool (pass) → ResolveLicense **NOT_FOUND** → Audit denial.
-`EMP_NONE_001` is not in `license_facts.json`.
+**Path:** tool declared (pass) → resolve the license **NOT_FOUND** → audit denial.
+`EMP_NONE_001` was never licensed.
 
 ---
 
@@ -140,7 +135,7 @@ for i, line in enumerate(sys.stdin, 1):
 ```
 
 **Expected decision:** `DENIED` — `UNAUTHORIZED_TOOL`
-**Path:** ResolveLicense (standard tier) → BindLicense: `PROVISION_PREMIUM_LICENSE` not in
+**Path:** resolve the license (standard tier) → tier grants tool: `PROVISION_PREMIUM_LICENSE` not in
 `["READ_RECORD", "PROVISION_STANDARD_LICENSE"]` → **VIOLATION** → Audit denial.
 
 ---
@@ -169,7 +164,7 @@ for i, line in enumerate(sys.stdin, 1):
 ```
 
 **Expected decision:** `DENIED` — `UNDECLARED_TOOL`
-**Path:** Normalize → CheckTool: `DELETE_DATABASE` absent from closed registry
+**Path:** tool declared: `DELETE_DATABASE` absent from the closed set
 → **VIOLATION** → Audit denial. The workflow exits at the second gate;
 license is never consulted.
 
@@ -186,7 +181,7 @@ license is never consulted.
 
 **Expected decision:** `DENIED` — `PARAMETER_VIOLATION`
 **Path:** All four earlier gates pass (declared, licensed, authorized tier), then
-ValidateParameters: `quantity=200` exceeds declared max → **VIOLATION** → Audit denial.
+parameters satisfy rules: `quantity=200` exceeds the declared max → **VIOLATION** → Audit denial.
 
 ---
 
@@ -200,7 +195,7 @@ ValidateParameters: `quantity=200` exceeds declared max → **VIOLATION** → Au
 ```
 
 **Expected decision:** `DENIED` — `UNDECLARED_TOOL`
-**Path:** CheckTool: `EXECUTE_SHELL_COMMAND` not in registry → **VIOLATION** → Audit denial.
+**Path:** tool declared: `EXECUTE_SHELL_COMMAND` not in the closed set → **VIOLATION** → Audit denial.
 Enterprise tier is irrelevant — the tool surface is closed before license is checked.
 
 ---
@@ -225,16 +220,16 @@ Enterprise tier is irrelevant — the tool surface is closed before license is c
 
 | Question | Artifact |
 |---|---|
-| What tools are declared? | `CC_CHECK_TOOL_DECLARED_V0` pipeline `allowed_set` |
-| What tools does a tier get? | `CC_BIND_LICENSE_TO_TOOL_SURFACE_V0` step 1 `map` |
-| What parameter rules apply? | `CC_VALIDATE_TOOL_PARAMETERS_V0` step 1 `map` |
+| What tools are declared? | `CC_REQUIRE_TOOL_DECLARED_V0` |
+| What tools does a tier get? | `CC_REQUIRE_TIER_GRANTS_TOOL_V0` |
+| What parameter rules apply? | `CC_REQUIRE_PARAMETERS_SATISFY_RULES_V0` |
 | What happened at runtime? | `$PGC_DATA_ROOT/ai_governance/agent_governance/governance_audit.jsonl` |
 | Full execution trace? | `$PGC_DATA_ROOT/traces/` |
 
 ### Two classes of protocol bug
 
 **Routing bugs** (visible in graph topology): wrong `next` condition on a WF node, or
-wrong `on_result` key in a CC step. The compiled graph (`WF_GOVERN_AGENT_ACTION_V0.graph.json`)
+wrong `on_result` key in a CC step. The compiled graph (`WF_GOVERN_AGENT_ACTION_V1.graph.json`)
 shows these — every edge is an `on_result` condition.
 
 **Binding bugs** (invisible in graph topology): wrong `$.path` expression in a CC step's

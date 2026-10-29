@@ -1,11 +1,5 @@
 # EV_BIBLIOGRAPHIC_INFORMATION_UPDATED_V0
 
-## 1. Intent
-
-The authoritative description of a book changed
-
----
-
 ## Machine
 
 ```yaml
@@ -16,8 +10,8 @@ governed_by: event::CONSTITUTION_EVENT_V0
 authority: pgc.platform
 concern: catalog
 core:
-  summary: The authoritative description of a book changed
-  description: The authoritative description of a book changed
+  summary: A bibliographic information updated
+  description: A bibliographic information updated
   subdomain: catalog
   schema:
     identity_key:
@@ -32,3 +26,9 @@ core:
       required: true
       description: When the moment occurred
 ```
+
+---
+
+## Intent
+
+A bibliographic information updated

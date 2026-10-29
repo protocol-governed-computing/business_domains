@@ -1,11 +1,5 @@
 # EV_PHYSICAL_COPY_RETIRED_V0
 
-## 1. Intent
-
-The library no longer holds that copy
-
----
-
 ## Machine
 
 ```yaml
@@ -16,8 +10,8 @@ governed_by: event::CONSTITUTION_EVENT_V0
 authority: pgc.platform
 concern: catalog
 core:
-  summary: The library no longer holds that copy
-  description: The library no longer holds that copy
+  summary: A physical copy retired
+  description: A physical copy retired
   subdomain: catalog
   schema:
     barcode:
@@ -32,3 +26,9 @@ core:
       required: true
       description: When the moment occurred
 ```
+
+---
+
+## Intent
+
+A physical copy retired

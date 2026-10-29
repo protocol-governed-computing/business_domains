@@ -10,9 +10,8 @@ governed_by: intent::CONSTITUTION_INTENT_V0
 authority: pgc.platform
 concern: identity
 core:
-  summary: Admits a request to accept a person, with the grounds the authority chooses to state, and refuses
-    one that names nobody
-  workflow: WF_ACCEPT_ACTOR_V0
+  summary: A request to accept actor
+  workflow: WF_ACCEPT_ACTOR_V1
   inputs:
     contact_address:
       type: string
@@ -33,4 +32,4 @@ core:
 
 ## Intent
 
-Admits a request to accept a person, with the grounds the authority chooses to state, and refuses one that names nobody
+A request to accept actor

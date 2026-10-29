@@ -10,8 +10,8 @@ governed_by: intent::CONSTITUTION_INTENT_V0
 authority: pgc.platform
 concern: catalog
 core:
-  summary: A request to retire a book record judged obsolete
-  workflow: WF_RETIRE_BOOK_RECORD_V0
+  summary: A request to retire book record
+  workflow: WF_RETIRE_BOOK_RECORD_V1
   inputs:
     staff_credentials:
       type: object
@@ -33,4 +33,4 @@ core:
 
 ## Intent
 
-A request to retire a book record judged obsolete
+A request to retire book record

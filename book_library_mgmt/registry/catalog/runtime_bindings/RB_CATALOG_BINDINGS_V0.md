@@ -1,11 +1,5 @@
 # RB_CATALOG_BINDINGS_V0
 
-## 1. Intent
-
-Binds the catalog's workflows to the stores and mechanisms they use
-
----
-
 ## Machine
 
 ```yaml
@@ -29,3 +23,9 @@ core:
       policy:
         structure: book_library_mgmt::STRUCTURE_CATALOG_STORAGE_V0
 ```
+
+---
+
+## Intent
+
+Binds the catalog's workflows to the stores and mechanisms they use
