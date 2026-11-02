@@ -95,6 +95,7 @@ pass. Only executing the function and reading what it left behind catches that.
 | **book_library_mgmt** | `catalog` | register works, editions and physical copies; retire and reinstate them; update bibliographic information; search |
 | **ai_governance** | `agent_governance`, `ai_licensing` | admit or deny an AI agent's action; provision, deny and reclaim licences |
 | **causal_language_model** | `model_response` | register a language model and place it in service under a ceiling, a system prompt and response rules; answer through a test model or a hosted pretrained model, the business choosing every token; answer a user prompt only in words those rules permit; record every user prompt, answered or refused |
+| **webmail** | `mailbox` | list a folder a page at a time, newest received first; open a message and show its plain text, which makes it read; mark a message read or unread; a host outside PGC reaches the mail provider and carries out only the changes the business decides; record every request, answered or refused, by identifier only |
 
 **A domain is a namespace; a subdomain is a division within it.** `ai_governance` is the case that
 makes the distinction concrete: two subdomains, one namespace, one compiled domain. They are not two
@@ -286,6 +287,7 @@ The workspace regression runs all of them on every build:
 | `book_library_mgmt/testbed/catalog/execution_validation_works.py` | 27 |
 | `causal_language_model/testbed/model_response/execution_validation.py` | 27 |
 | `causal_language_model/testbed/hosted_model/execution_validation.py` | 15, and 1 not exercised (Qwen3 8B, with `--qwen`) |
+| `webmail/testbed/mailbox/execution_validation.py` | 15 |
 
 To run a single workflow against the sealed snapshot:
 

@@ -61,6 +61,7 @@ include = [
   "blockchain.implementation*",
   "book_library_mgmt.implementation*",
   "causal_language_model.implementation*",
+  "webmail.implementation*",
 ]
 namespaces = true
 
