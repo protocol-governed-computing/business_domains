@@ -1,0 +1,34 @@
+# AC_PARTICIPANT_V0
+
+## Machine
+
+```yaml
+fqdn: blockchain::AC_PARTICIPANT_V0
+artifact_kind: ACTOR
+version: v0
+governed_by: actor::CONSTITUTION_ACTOR_IDENTITY_V0
+authority: pgc.platform
+concern: identity
+core:
+  summary: The participant who acts for themselves
+  type: human
+  attributes:
+    contact_address:
+      type: string
+      required: true
+    name:
+      type: string
+      required: true
+    currency_preference:
+      type: string
+      default: BACHI
+    language:
+      type: string
+      default: en
+```
+
+---
+
+## Intent
+
+The participant who acts for themselves

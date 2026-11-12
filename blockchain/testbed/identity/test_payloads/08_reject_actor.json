@@ -1,0 +1,6 @@
+{
+  "contact_address": "bob@example.test",
+  "verifying_authority": "authority-01",
+  "decision": "REJECTED",
+  "grounds": "identity not established"
+}
